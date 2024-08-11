@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+  /* body {
+    @apply bg-white   dark:bg-gray-600
+           text-black dark:text-gray-200;
+  } */
+  /* :root {
+    --header-color: #333333;
+    --background-color: #fbfbfb;
+    --text-color: #000000;
+  } */
+
+  .theme-light {
+    --header-color: #006fc9;
+    --background-color: #f2f2f2;
+    --text-color: #323130;
+  }
+
+  .theme-gray {
+    --header-color: #111928;
+    --background-color: #4b5563;
+    --text-color: #e5e7eb;
+  }
+
+  .theme-dark {
+    --header-color: #333333;
+    --background-color: #282828;
+    --text-color: #e5e7eb;
+  }
+
+  body {
+    @apply bg-[var(--background-color)] text-[var(--text-color)];
+  }
+
+  body::-webkit-scrollbar {
+    display: none; 
+  }
+  
+  div.contents-header, AppHeader, header {
+    background-color: var(--header-color);
+  }
+
+  div.contents-body {
+    background-color: var(--background-color);
+  }
+
+  div svg,  
+  AppHeader a,
+  AppHeader button {
+    color: var(--text-color);
+  }
+
+  .delete-icon {
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #fff;
+    background-image: url('assets/img/bin.svg');
+    color: transparent;
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+  }
+
+  #viewer {
+    transition: opacity 0.3s ease;
+  }
+
+  #viewer.hidden {
+    opacity: 0;
+  }
+
+}

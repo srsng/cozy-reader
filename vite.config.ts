@@ -17,6 +17,11 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
   server: {
