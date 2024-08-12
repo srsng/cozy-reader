@@ -18,7 +18,7 @@
     </div>
 
     <!-- 中间部分 -->
-    <div class="center-section flex items-center">
+    <div id="app-title" class="center-section flex items-center">
       <p>{{ appTitle }}</p>
     </div>
 
@@ -74,9 +74,10 @@ export default {
   },
   methods: {
     goHome() {
-      this.$router.push({ path: "/" });
+      this.$router.push({ name: "Home" });
     },
     triggerUpload() {
+      console.log("trigger upload not ok...");
       document.getElementById("bookInput").click();
     },
     cycleTheme,

@@ -7,3 +7,5 @@ export { default as IconContents } from "@/components/icons/IconContents.vue";
 export { default as IconLeftArrow } from "@/components/icons/IconLeftArrow.vue";
 export { default as IconRightArrow } from "@/components/icons/IconRightArrow.vue";
 export { default as IconHome } from "@/components/icons/IconHome.vue";
+export { default as IconToTop } from "@/components/icons/IconToTop.vue";
+export { default as IconToBottom } from "@/components/icons/IconToBottom.vue";

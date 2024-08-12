@@ -1,46 +1,22 @@
 <template>
-  <header class="sticky top-0 z-[3000] w-full backdrop-blur-md text-sm py-3">
+  <header class="sticky top-0 z-[3000] w-full backdrop-blur-md text-sm pt-8">
     <nav
       class="flex items-center justify-between px-6 py-1"
       aria-label="Global"
     >
       <div class="flex items-center select-none space-x-4">
           <!-- 主页按钮 -->
-          <button @click="goHome" class="bg-no-repeat">
-            <svg
-              class="size-8 sm:szie-6"
-              viewBox="0 0 1024 1024"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill="currentColor"
-                d="M805.695 973.009c-1.963 0-3.541-0.054-4.672-0.111L203.268 972.898c-40.042 0-63.091-16.865-75.375-31.013-26.919-31.003-24.757-73.037-23.543-84.7l0-359.53 64 0 0 363.913-0.302 1.883c-0.761 6.401-0.833 26.277 8.289 36.609 1.93 2.186 7.803 8.838 26.932 8.838l600.308 0 0.75 0.082c2.153 0.076 22.315 0.434 34.996-11.557 8.454-7.994 12.74-21.212 12.74-39.288L852.063 497.379l64 0 0 360.756c0 45.871-18.247 72.371-33.555 86.525C854.974 970.12 820.092 973.008 805.695 973.009z"
-                p-id="4265"
-              ></path>
-              <path
-                fill="currentColor"
-                d="M136.349 527.688 38 527.688c-13.291 0-25.197-8.214-29.916-20.639-4.718-12.425-1.266-26.472 8.674-35.294l472.219-419.09c12.02-10.668 30.087-10.766 42.223-0.227l478.781 415.791c9.955 8.646 13.588 22.513 9.151 34.929s-16.035 20.84-29.216 21.219l-104.938 3.012c-0.313 0.01-0.624 0.014-0.936 0.014-17.247 0-31.471-13.729-31.97-31.082-0.507-17.666 13.403-32.398 31.069-32.905l22.931-0.658L510.448 119.179 122.266 463.688l14.083 0c17.673 0 32 14.327 32 32S154.022 527.688 136.349 527.688z"
-                p-id="4266"
-              ></path>
-              <path
-                fill="currentColor"
-                d="M403 941.201c-14.912 0-27-12.088-27-27L376 688.355c0.002-4.866 1.234-24.9 20.021-43.995 22.8-23.173 61.458-34.923 114.901-34.923 52.638 0 90.876 11.911 113.652 35.403 19.225 19.828 20.464 40.706 20.426 46.244l0 222.25c0 14.912-12.088 27-27 27s-27-12.088-27-27L591 691.402c-0.179-1.167-1.308-6.104-8.017-11.541-7.569-6.134-26.997-16.424-72.062-16.424-52.272 0-70.848 13.145-76.408 18.795-2.73 2.775-3.876 5.136-4.357 6.627-0.073 0.225-0.123 0.411-0.157 0.549l0 224.793C430 929.113 417.912 941.201 403 941.201z"
-                p-id="4267"
-              ></path>
-            </svg>
-          </button>
+          
           <!-- 退出程序按钮 -->
-          <ExitButton class="mt-1"></ExitButton>
+
       </div>
       <!-- 标题 -->
       <div class="flex-grow text-center">
-        <div id="book-title" class="font-bold text-lg"></div>
+        <div id="book-title" class="font-bold text-lg" @click="$emit('content-change')"></div>
       </div>
-      <!-- 主题切换按钮与目录按钮 -->
-
-      <div class="flex items-center select-none space-x-4">
-        <div @click="cycleTheme">
+        <!-- 主题切换按钮与目录按钮 -->
+        <!-- <div class="flex items-center select-none space-x-4">
+        <div>
           <svg
             class="size-8 sm:size-6 fill-current cursor-pointer hover:text-blue-600"
             viewBox="0 0 1024 1024"
@@ -68,7 +44,7 @@
             ></path>
           </svg>
         </button>
-      </div>
+        </div> -->
     </nav>
   </header>
 
@@ -80,21 +56,23 @@
 
   <div
     @click="goPrev"
-    class="select-none fill-current text-transparent fixed top-0 left-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-[url('assets/img/back.svg')] dark:bg-[url('assets/img/back-white.svg')] bg-no-repeat bg-[center_left_10px]"
+    id="go-prev"
+    class="select-none fill-current text-transparent fixed top-0 left-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_left_12px]"
   >
     Prev
   </div>
 
   <div
     @click="goNext"
-    class="select-none fill-current text-transparent fixed top-0 right-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-[url('assets/img/forward.svg')] dark:bg-[url('assets/img/forward-white.svg')] bg-no-repeat bg-[center_right_10px]"
+    id="go-next"
+    class="select-none fill-current text-transparent fixed top-0 right-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_right_12px]"
   >
     Next
   </div>
 
   <div
     id="hs-overlay-right"
-    class="contents-header hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 end-0 transition-all duration-300 transform h-full max-w-xs w-full z-[4800] border-s"
+    class="contents-header py-8 hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 end-0 transition-all duration-300 transform h-full max-w-xs w-full z-[4800] border-s"
     tabindex="-1"
   >
     <div class="flex justify-between items-center py-3 px-4 border-b">
@@ -172,17 +150,13 @@ import localforage from "localforage";
 import {
   getThemesStr,
   getCurrentTheme,
-  cycleTheme,
   initTheme,
 } from "@/theme/theme";
 
-import ExitButton from "@/components/common/ExitButton.vue";
 
 export default {
   name: "BookReader",
-  components: {
-    ExitButton,
-  },
+  components: { },
   props: {
     fileName: {
       type: String,
@@ -199,9 +173,33 @@ export default {
     };
   },
   methods: {
-    cycleTheme,
+    getChapterTitle() {
+      // 获取当前章节的 CFI
+      const cfi = this.rendition.currentLocation().start.cfi;
+      // 获取当前章节的信息
+      const currentChapter = this.book.spine.get(cfi);
+      // 对于当前章节，获取第一个h标签
+      const firstHeading = currentChapter.document.querySelector("h1, h2, h3, h4");
+      if (firstHeading) {
+        const title1 = firstHeading.title;
+        const title2 = firstHeading.textContent;
+        // 如果title1、title2有一个为空，则取另一个；如果两个都非空，则取长度较长的那个
+        if (title1 && title2) {
+          return title1.length > title2.length ? title1 : title2;
+        }
+      return title1 || title2;
+      }
+    },
+    setChapterTitle() {
+      const cTitle = document.getElementById("chapter-title")
+      const title = this.getChapterTitle();
+      console.log("title", title);
+      if (cTitle) cTitle.textContent = title;
+    },
     conslelogToc() {
       console.log("book", this.book);
+      console.log("rendition", this.rendition);
+      this.setChapterTitle();
     },
     async loadBook() {
       try {
@@ -217,7 +215,7 @@ export default {
             fullsize: true,
             enableSwipe: false,
           });
-
+          
           this.defineHooks();
           await this.loadTOC();
           await this.displayBook();
@@ -226,7 +224,8 @@ export default {
           const metadata = await this.book.loaded.metadata;
           const fullTitle = metadata.title;
           const truncatedTitle = fullTitle.split(":")[0].trim();
-          document.getElementById("book-title").textContent = truncatedTitle;
+          const bookTitle = document.getElementById("book-title");
+          if(bookTitle) { bookTitle.textContent = truncatedTitle; }
         } else {
           console.error("Book not found in local storage or invalid book data");
           this.$router.push({ name: "Home" });
@@ -365,6 +364,7 @@ export default {
         .prose h4 { font-size: 1.2em; line-height: 120%;}
         .prose strong {font-weight: 700; }
         .prose a { color: #6eaadc; text-decoration: none; }
+        a:hover { text-decoration: underline; cursor: pointer; }
         .prose ul, .prose ol { margin-top: 1em; margin-bottom: 1em; padding-left: 1.5em; }
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}

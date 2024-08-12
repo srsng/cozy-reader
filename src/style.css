@@ -100,7 +100,8 @@
     font-size: 12px;
   }
 
-  .titlebar-button:hover {
+  .titlebar-button:hover,
+  .footerbar-button:hover {
     background: #5bbec3;
   }
 

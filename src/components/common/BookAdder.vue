@@ -2,7 +2,7 @@
     <input
         type="file"
         @change="handleFileChange"
-        id="bookInput"
+        id="book-adder"
         multiple
         style="display: none"
     />
