@@ -68,7 +68,7 @@ export default {
   props: {
     appTitle: {
       type: String,
-      default: "cozy reader",
+      default: "Cozy Reader",
       required: true,
     },
   },
@@ -77,8 +77,8 @@ export default {
       this.$router.push({ name: "Home" });
     },
     triggerUpload() {
-      console.log("trigger upload not ok...");
-      document.getElementById("bookInput").click();
+      alert("this button is not ok now...\n try the right one");
+      // document.getElementById("bookInput").click();
     },
     cycleTheme,
   },

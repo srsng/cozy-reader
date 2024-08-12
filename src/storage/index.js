@@ -15,6 +15,12 @@ class Storage {
     async save() {
         return await this.store.save();
     }
+    async keys() {
+        return await this.store.keys();
+    }
+    async values() {
+        return await this.store.values();
+    }
 }
 
 export default new Storage();

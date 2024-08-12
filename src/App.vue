@@ -9,7 +9,7 @@
 <script>
 import AppTitleBar from "@/components/titlebar/AppTitleBar.vue";
 import FooterBar from "@/components/footerbar/FooterBar.vue";
-import initAppWindow from "@/components/titlebar/index.js";
+// import initAppWindow from "@/components/titlebar/index.js";
 
 export default {
   name: "App",
@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      appWindow: null,
+      // appWindow: null,
       routerIndex: 0,
       appTitle: "cozy reader",
     };
@@ -38,7 +38,6 @@ export default {
     created() { },
     mounted() {
       // console.log("App mounted");
-      this.appWindow = initAppWindow();
     },
     handleContentChange() {
       console.log("content change");
