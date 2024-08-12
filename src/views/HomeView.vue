@@ -1,14 +1,14 @@
 <!-- HomeView.vue -->
 <template>
-  <div class="flex flex-col min-h-screen">
-    <AppHeader @upload-books="uploadBooks" @cycle-theme="cycleTheme"></AppHeader>
-    <div class="drop flex-grow h-full w-full " @dragover.prevent @drop="uploadBooks">
+  <div class="flex flex-col min-h-screen pt-8">
+    <!-- <AppHeader @upload-books="uploadBooks" @cycle-theme="cycleTheme"></AppHeader> -->
+    <div class="drop flex-grow w-full " @dragover.prevent @drop="uploadBooks">
      
       <div class="content w-full px-4  sm:px-6">
 
         <div v-if="books.length === 0" @click="triggerUpload" class="pt-6">
-          <p class="text-xl font-semibold mb-2">Your library is empty.</p>
-          <p class="mb-3">Drop a DRM-free Epub here or click 'Add books' to get started.</p>
+          <p class="text-xl font-semibold pb-2">Your library is empty.</p>
+          <p class="pb-3">Drop a DRM-free Epub here or click 'Add books' to get started.</p>
                 
         </div>
         

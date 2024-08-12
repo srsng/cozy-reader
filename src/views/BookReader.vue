@@ -476,14 +476,16 @@ export default {
 
     openSidebar() {
       document
-        .getElementById("toc-sidebar")
-        .classList.remove("translate-x-full");
+      .getElementById("toc-sidebar")
+      .classList.remove("translate-x-full");
       document.getElementById("overlay").classList.remove("hidden");
       document.body.classList.add("overflow-hidden");
+      console.log("openSidebar");
     },
 
     closeSidebar() {
       // Use the third-party library to close the sidebar
+      console.log("closeSidebar");
       if (window.HSOverlay) {
         window.HSOverlay.close(document.querySelector("#hs-overlay-right"));
       } else {
@@ -494,7 +496,6 @@ export default {
     },
 
     goHome() {
-      // window.removeEventListener('resize', this.handleResize);
       this.$router.push({ path: "/" });
     },
 

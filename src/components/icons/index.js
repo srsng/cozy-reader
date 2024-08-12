@@ -3,3 +3,7 @@ export { default as IconWindowMax } from "@/components/icons/IconWindowMax.vue";
 export { default as IconWindowClose } from "@/components/icons/IconWindowClose.vue";
 export { default as IconThemeChange } from "@/components/icons/IconThemeChange.vue";
 export { default as IconAddBook } from "@/components/icons/IconAddBook.vue";
+export { default as IconContents } from "@/components/icons/IconContents.vue";
+export { default as IconLeftArrow } from "@/components/icons/IconLeftArrow.vue";
+export { default as IconRightArrow } from "@/components/icons/IconRightArrow.vue";
+export { default as IconHome } from "@/components/icons/IconHome.vue";

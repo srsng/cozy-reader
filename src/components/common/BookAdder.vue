@@ -14,7 +14,7 @@ export default {
     name: "BookAdder",
     methods: {
         handleFileChange(event) {
-            this.$emit("upload-books", event);
+            this.$emit("file-change", event);
         },
     },
 };

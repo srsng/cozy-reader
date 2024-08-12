@@ -1,22 +1,25 @@
 <template>
   <div
     data-tauri-drag-region
-    class="titlebar z-[6000] flex justify-between items-center fixed top-0 left-0 right-0 bg-teal-600 h-8 select-none"
+    class="titlebar header z-[6000] flex justify-between items-center fixed top-0 left-0 right-0 h-8 select-none"
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
-      <div class="titlebar-button" @click="cycleTheme">
-        <IconThemeChange title="chagen theme" />
+      <div id="titlebar-home" class="titlebar-button" @click="goHome">
+        <IconHome title="Home" />
       </div>
-      <div @click="triggerUpload" class="upload-button titlebar-button">
-        <BookAdder @upload-books="handleFileChange" />
+      <div id="titlebar-changeTheme" class="titlebar-button" @click="cycleTheme">
+        <IconThemeChange title="change Theme" />
+      </div>
+      <div id="titlebar-addBooks" @click="triggerUpload" class="upload-button titlebar-button">
+        <BookAdder @file-change="triggerUpload" />
         <IconAddBook title="add books" />
       </div>
     </div>
 
     <!-- 中间部分 -->
     <div class="center-section flex items-center">
-      <p>title</p>
+      <p>{{ appTitle }}</p>
     </div>
 
     <!-- 右侧部分 -->
@@ -43,6 +46,7 @@ import {
   IconWindowClose,
   IconThemeChange,
   IconAddBook,
+  IconHome,
 } from "@/components/icons";
 import BookAdder from "@/components/common/BookAdder.vue";
 
@@ -56,14 +60,24 @@ export default {
     IconThemeChange,
     IconAddBook,
     BookAdder,
+    IconHome,
+  },
+  data() {
+    return { };
+  },
+  props: {
+    appTitle: {
+      type: String,
+      default: "cozy reader",
+      required: true,
+    },
   },
   methods: {
+    goHome() {
+      this.$router.push({ path: "/" });
+    },
     triggerUpload() {
       document.getElementById("bookInput").click();
-    },
-    handleFileChange(event) {
-      // this.$emit('upload-books', event);
-      console.log("handleFileChange not ok now");
     },
     cycleTheme,
   },

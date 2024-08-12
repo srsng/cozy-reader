@@ -1,7 +1,9 @@
 <template>
-  <AppTitleBar />
-  <router-view class="my-8" />
-  <FooterBar />
+  <div>
+    <AppTitleBar :appTitle="this.appTitle"/>
+    <router-view />
+    <FooterBar />
+  </div>
 </template>
 
 <script>
@@ -18,16 +20,26 @@ export default {
   data() {
     return {
       appWindow: null,
+      routerIndex: 0,
+      appTitle: "cozy reader",
     };
   },
+  watch: {
+    $route(to) {
+      if (to.name === "Home") {
+        this.appTitle = "cozy reader";
+      } else if (to.name === "BookReader") {
+        const bookTitle = document.getElementById("book-title");
+        this.appTitle = bookTitle ? bookTitle.innerText : "cozy reader";
+      }
+    },
+  },
   methods: {},
-  created() {
-    
-  },
-  mounted() {
-    // console.log("App mounted");
-    this.appWindow = initAppWindow();
-  },
+    created() { },
+    mounted() {
+      // console.log("App mounted");
+      this.appWindow = initAppWindow();
+    },
 };
 </script>
 

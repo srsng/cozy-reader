@@ -1,38 +1,105 @@
 <template>
-    <div
-      class="footerbar z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 bg-teal-600 h-8 select-none"
-    >
-      <!-- 左侧部分 -->
-      <div class="left-section flex items-center">
-        <p> left </p>
-        <div class="titlebar-button" @click="cycleTheme">
-            <IconThemeChange title="chagen theme"/>
+  <div
+    class="footerbar z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none"
+  >
+    <!-- 左侧部分 -->
+    <div class="left-section flex items-center">
+      <!------主页致谢---阅读页目录按钮--------->
+      <div
+        v-if="curRouteNameIs('BookReader')"
+        class="footerbar-button"
+        id="titlebar-contents"
+      >
+        <button class="toc bg-no-repeat" data-hs-overlay="#hs-overlay-right">
+          <IconContents title="toggle Contents" />
+        </button>
+      </div>
+      <div v-else class="footerbar-content">
+        <p>
+          <a href="#">Github not published now.</a>
+          | Made in China.
+        </p>
+      </div>
+      <!---------------------------------------->
+    </div>
+
+    <!-- 中间部分 -->
+    <div class="center-section flex items-center">
+      <!---------主页：空----阅读页：章节标题与切换按钮------->
+      <div
+        v-if="curRouteNameIs('BookReader')"
+        class="flex justify-between items-center"
+      >
+        <div id="footerbar-prev" class="footerbar-button" @click="goPrev">
+          <IconLeftArrow title="previous" />
+        </div>
+        <div class="footerbar-content">
+          <p>{{ 111 }}</p>
+        </div>
+        <div id="footerbar-next" class="footerbar-button" @click="goNext">
+          <IconRightArrow title="next" />
         </div>
       </div>
-  
-      <!-- 中间部分 -->
-      <div class="center-section flex items-center">
-        <p>footer bar</p>
+      <div v-else class="footerbar-content"></div>
+      <!---------------------------------------->
+    </div>
+
+    <!-- 右侧部分 -->
+    <div class="right-section flex items-center">
+      <!---------主页：信息----阅读页：暂空------->
+      <div v-if="curRouteNameIs('BookReader')" class="footerbar-content">
+        <!-- 暂空 -->
       </div>
-  
-      <!-- 右侧部分 -->
-      <div class="right-section flex items-center"> 
-        <p>right</p>
+      <div v-else class="footerbar-content">
+        <p>
+          Based on
+          <a
+            href="https://github.com/MattKevan/minimal-reader/"
+            target="_blank"
+            class="underline"
+            >Minimal-Reader</a
+          >
+          by
+          <a href="https://www.kevan.tv" target="_blank" class="underline"
+            >Matt Kevan</a
+          >.
+        </p>
       </div>
     </div>
-  </template>
-  
-  <script>
-import IconThemeChange from "@/components/icons/IconThemeChange.vue";
+  </div>
+</template>
+
+<script>
+import {
+  IconContents,
+  IconLeftArrow,
+  IconRightArrow,
+} from "@/components/icons";
+// import { goNext, goPrev } from "@/views/BookReader.vue";
+
 export default {
-    name: "FooterBar",
-    components: {
-        IconThemeChange
+  name: "FooterBar",
+  components: {
+    IconContents,
+    IconLeftArrow,
+    IconRightArrow,
+  },
+  methods: {
+    toggleContents() {
+      // 开关目录显示
+      // 如果当前路由是HomeView，则什么都不做
+      if (this.$route.name === "HomeView") {
+        return;
+      }
+      // todo: toggle contents
     },
-    methods: {
+    curRouteNameIs(name) {
+      return this.$route.name === name;
     },
+    // goNext() {},
+    // goPrev,
+  },
 };
 </script>
-  
+
 <style></style>
-  

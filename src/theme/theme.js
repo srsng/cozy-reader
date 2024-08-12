@@ -11,7 +11,7 @@ const themesMap = {
   },
 
   ".theme-gray": {
-    "--header-color": "#111928",
+    "--header-color": "#374151",
     "--background-color": "#4b5563",
     "--text-color": "#e5e7eb",
   },
