@@ -7,14 +7,20 @@
       <!------主页致谢---阅读页目录按钮--------->
       <div
         v-if="curRouteNameIs('BookReader')"
-        class="footerbar-button toc" data-hs-overlay="#hs-overlay-right"
+        class="footerbar-button toc"
+        data-hs-overlay="#hs-overlay-right"
         id="titlebar-contents"
       >
-          <IconContents title="toggle Contents" />
+        <IconContents title="toggle Contents" />
       </div>
       <div v-else class="footerbar-content">
         <p>
-          <a href="#">Github not published now.</a>
+          <a
+            href="https://github.com/srsng/cozy-reader"
+            target="_blank"
+            class="underline"
+            >Github</a
+          >
           | Made in China.
         </p>
       </div>
@@ -28,19 +34,27 @@
         v-if="curRouteNameIs('BookReader')"
         class="flex justify-between items-center"
       >
-        <div id="footerbar-to-top" class="footerbar-button" @click="scrollToTop">
+        <div
+          id="footerbar-to-top"
+          class="footerbar-button"
+          @click="scrollToTop"
+        >
           <IconToTop title="go to top" />
         </div>
         <div id="footerbar-prev" class="footerbar-button" @click="goPrev">
           <IconLeftArrow title="previous" />
         </div>
         <div id="chapter-title" class="footerbar-content">
-          <p>{{  }}</p>
+          <p>{{}}</p>
         </div>
         <div id="footerbar-next" class="footerbar-button" @click="goNext">
           <IconRightArrow title="next" />
         </div>
-        <div id="footerbar-to-bottom" class="footerbar-button" @click="scrollToBottom">
+        <div
+          id="footerbar-to-bottom"
+          class="footerbar-button"
+          @click="scrollToBottom"
+        >
           <IconToBottom title="go to bottom" />
         </div>
       </div>
@@ -113,13 +127,13 @@ export default {
     scrollToTop() {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth' // 平滑滚动
+        behavior: "smooth", // 平滑滚动
       });
     },
     scrollToBottom() {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
-        behavior: 'smooth' // 平滑滚动
+        behavior: "smooth", // 平滑滚动
       });
     },
   },
