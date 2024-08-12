@@ -48,10 +48,28 @@
     background-color: var(--background-color);
   }
 
+  /* .titlebar-button img {
+    color: var(--text-color);
+  } */
+
   div svg,  
   AppHeader a,
   AppHeader button {
     color: var(--text-color);
+  }
+
+  .titlebar-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .titlebar-button:hover {
+    background: #5bbec3;
   }
 
   .delete-icon {
@@ -61,8 +79,8 @@
     background-color: #fff;
     background-image: url('assets/img/bin.svg');
     color: transparent;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border: none;
     cursor: pointer;
   }

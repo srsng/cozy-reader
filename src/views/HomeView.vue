@@ -25,9 +25,9 @@
         </div>
       </div>
     </div>
-    <AppFooter class="mt-auto" />
+    <!-- <AppFooter class="mt-auto" /> -->
 
-    <AlertToast v-if="showAlert" :message="alertMessage" @close="showAlert = false" />
+    <AlertToast v-show="showAlert" :message="alertMessage" @close="showAlert = false" />
   </div>
 </template>
 
