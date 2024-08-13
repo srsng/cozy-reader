@@ -19,7 +19,9 @@
 
     <!-- 中间部分 -->
     <div id="app-title" class="center-section flex items-center">
-      <p>{{ appTitle }}</p>
+      <div class="flex justify-between items-center">
+        <p>{{ appTitle }}</p>
+      </div>
     </div>
 
     <!-- 右侧部分 -->
@@ -79,7 +81,7 @@ export default {
       this.$router.push({ name: "Home" });
     },
     triggerUpload() {
-      if (this.$router.name === "Home") {
+      if (this.$route.name === "Home") {
         document.getElementById("book-adder").click();
       }
     },
