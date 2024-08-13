@@ -17,6 +17,7 @@
         >
           <BookThumbnail
             v-for="(book, index) in books"
+            class="select-none"
             :key="index"
             :book="book"
             @open-book="openBook"

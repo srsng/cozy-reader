@@ -1,114 +1,112 @@
 <template>
-  <header class="sticky top-0 z-[3000] w-full backdrop-blur-md text-sm pt-8">
-    <nav
-      class="flex items-center justify-between px-6 py-1"
-      aria-label="Global"
-    >
-      <div class="flex items-center select-none space-x-4">
-          <!-- 主页按钮 -->
-          
-          <!-- 退出程序按钮 -->
-
-      </div>
-      <!-- 标题 -->
-      <div class="flex-grow text-center">
-        <div id="book-title" class="font-bold text-lg" @click="$emit('content-change')"></div>
-      </div>
-    </nav>
-  </header>
-
-  <div
-    id="viewer"
-    class="scrolled max-w-4xl ml-auto mr-auto mb-20"
-    :class="{ hidden: isResizing }"
-  ></div>
-
-  <div
-    @click="goPrev"
-    id="go-prev"
-    class="select-none fill-current text-transparent fixed top-0 left-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_left_12px]"
-  >
-    Prev
-  </div>
-
-  <div
-    @click="goNext"
-    id="go-next"
-    class="select-none fill-current text-transparent fixed top-0 right-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_right_12px]"
-  >
-    Next
-  </div>
-
-  <div
-    id="hs-overlay-right"
-    class="contents-header py-8 hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 end-0 transition-all duration-300 transform h-full max-w-xl w-full z-[4800] border-s border-[--header-color]"
-    tabindex="-1"
-  >
-    <div class="flex justify-between items-center py-3 px-4 border-b">
-      <h3 class="font-bold">Contents</h3>
-      <button
-        type="button"
-        class="flex justify-center items-center size-7 text-sm font-semibold rounded-full border border-transparent"
-        data-hs-overlay="#hs-overlay-right"
+  <div ref="scrollContainer" class="scroll-container">
+    <div class="sticky top-0 z-[3000] w-full backdrop-blur-md text-sm pt-8">
+      <nav
+        class="flex items-center justify-between px-6 py-1"
+        aria-label="Global"
       >
-        <span class="sr-only">Close modal</span>
-        <svg
-          class="flex-shrink-0 size-8 sn:size-6"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
-        </svg>
-      </button>
+        <!-- 被删除了的按钮部分 -->
+        <div class="flex items-center select-none space-x-4"> </div>
+        <!-- 标题 -->
+        <div class="flex-grow text-center">
+          <div id="book-title" class="font-bold text-lg" @click="$emit('content-change')"></div>
+        </div>
+      </nav>
     </div>
 
-    <div class="contents-body overflow-y-auto h-full p-4 py-6">
-      <ul id="toc" class="space-y-2">
-        <button @click="conslelogToc">click for dev</button>
-        <li v-for="(chapter, index) in toc" :key="index">
-          <a
-            href="#"
-            @click.prevent="displayChapter(chapter.href, true)"
-            class="text-blue-500 hover:text-blue-700"
+    <div
+      id="viewer"
+      class="scrolled max-w-4xl ml-auto mr-auto mb-20"
+      :class="{ hidden: isResizing }"
+    ></div>
+
+    <div
+      @click="goPrev"
+      id="go-prev"
+      class="select-none fill-current text-transparent fixed top-0 left-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_left_12px]"
+    >
+      Prev
+    </div>
+
+    <div
+      @click="goNext"
+      id="go-next"
+      class="select-none fill-current text-transparent fixed top-0 right-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_right_12px]"
+    >
+      Next
+    </div>
+
+    <div
+      id="hs-overlay-right"
+      class="contents-header py-8 hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 end-0 transition-all duration-300 transform h-full max-w-xl w-full z-[4800] border-s border-[--header-color]"
+      tabindex="-1"
+    >
+      <div class="flex justify-between items-center py-3 px-4 border-b">
+        <h3 class="font-bold">Contents</h3>
+        <button
+          type="button"
+          class="flex justify-center items-center size-7 text-sm font-semibold rounded-full border border-transparent"
+          data-hs-overlay="#hs-overlay-right"
+        >
+          <span class="sr-only">Close modal</span>
+          <svg
+            class="flex-shrink-0 size-8 sn:size-6"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            {{ chapter.label }}
-          </a>
-          <div
-            class="px-4"
-            v-for="sub_chapter in chapter.subitems"
-            :key="sub_chapter.id"
-          >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="contents-body overflow-y-auto h-full p-4 py-6">
+        <ul id="toc" class="space-y-2">
+          <button @click="conslelogToc">click for dev</button>
+          <li v-for="(chapter, index) in toc" :key="index">
             <a
               href="#"
-              @click.prevent="displayChapter(sub_chapter.href, true)"
+              @click.prevent="displayChapter(chapter.href, true)"
               class="text-blue-500 hover:text-blue-700"
             >
-              {{ sub_chapter.label }}
+              {{ chapter.label }}
             </a>
             <div
-              class="px-8"
-              v-for="sub_sub_chapter in sub_chapter.subitems"
-              :key="sub_sub_chapter.id"
+              class="px-4"
+              v-for="sub_chapter in chapter.subitems"
+              :key="sub_chapter.id"
             >
               <a
                 href="#"
-                @click.prevent="displayChapter(sub_sub_chapter.href, true)"
+                @click.prevent="displayChapter(sub_chapter.href, true)"
                 class="text-blue-500 hover:text-blue-700"
               >
-                {{ sub_sub_chapter.label }}
+                {{ sub_chapter.label }}
               </a>
+              <div
+                class="px-8"
+                v-for="sub_sub_chapter in sub_chapter.subitems"
+                :key="sub_sub_chapter.id"
+              >
+                <a
+                  href="#"
+                  @click.prevent="displayChapter(sub_sub_chapter.href, true)"
+                  class="text-blue-500 hover:text-blue-700"
+                >
+                  {{ sub_sub_chapter.label }}
+                </a>
+              </div>
             </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -139,9 +137,35 @@ export default {
       toc: [],
       resizeTimeout: null,
       isResizing: false,
+      scrollTimer: null,
+      bottomTimer: null,
     };
   },
   methods: {
+    handleScroll(event) {
+      console.log("scroll");
+      if (this.scrollTimer) {
+        clearTimeout(this.scrollTimer);
+      }
+
+      this.scrollTimer = setTimeout(() => {
+        const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+        console.log("bottom", bottom);
+        if (bottom) {
+          if (!this.bottomTimer) {
+            this.bottomTimer = setTimeout(() => {
+              this.goNext();
+              this.bottomTimer = null; // 重置定时器
+            }, 2000); // 2秒的延迟时间
+          }
+        } else {
+          if (this.bottomTimer) {
+            clearTimeout(this.bottomTimer);
+            this.bottomTimer = null;
+          }
+        }
+      }, 100); // 100ms 的延迟时间，可以根据需要调整
+    },
     getChapterTitle() {
       // 获取当前章节的 CFI
       const cfi = this.rendition.currentLocation().start.cfi;
@@ -496,6 +520,7 @@ export default {
     window.addEventListener("keydown", this.handleKeydown);
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("beforeunload", this.saveCurrentLocation);
+    this.$refs.scrollContainer.addEventListener('scroll', this.handleScroll);
 
     if (!this.fileName) {
       const savedFileName = localStorage.getItem("currentBook");
@@ -517,6 +542,14 @@ export default {
     window.removeEventListener("keydown", this.handleKeydown);
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("beforeunload", this.saveCurrentLocation);
+
+    this.$refs.scrollContainer.removeEventListener('scroll', this.handleScroll);
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer);
+    }
+    if (this.bottomTimer) {
+      clearTimeout(this.bottomTimer);
+    }
   },
 };
 </script>

@@ -14,7 +14,8 @@ import "preline/preline"
 //   devtools.connect('http://localhost', 8098)
 // }
 const app = createApp(App);
-app.use(router)
+app
     .use(store)
+    .use(router)
     .mount('#app');
 initAppWindow();
