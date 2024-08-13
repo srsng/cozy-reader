@@ -4,14 +4,11 @@
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
-      <!------主页致谢---阅读页目录按钮--------->
+      <!------主页致谢---阅读页: 空--------->
       <div
         v-if="curRouteNameIs('BookReader')"
-        class="footerbar-button toc"
-        data-hs-overlay="#hs-overlay-right"
-        id="titlebar-contents"
       >
-        <IconContents title="toggle Contents" />
+        <!-- 空 -->
       </div>
       <div v-else class="footerbar-content">
         <p>
@@ -66,9 +63,12 @@
 
     <!-- 右侧部分 -->
     <div class="right-section flex items-center">
-      <!---------主页：信息----阅读页：暂空------->
-      <div v-if="curRouteNameIs('BookReader')" class="footerbar-content">
-        <!-- 暂空 -->
+      <!---------主页：信息----阅读页：目录按钮------->
+      <div v-if="curRouteNameIs('BookReader')" 
+        class="footerbar-button toc"
+        data-hs-overlay="#hs-overlay-right"
+        id="titlebar-contents">
+        <IconContents title="toggle Contents" />
       </div>
       <div v-else class="footerbar-content">
         <p>

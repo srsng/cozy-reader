@@ -12,7 +12,7 @@
         <IconThemeChange title="change Theme" />
       </div>
       <div id="titlebar-addBooks" @click="triggerUpload" class="upload-button titlebar-button">
-        <BookAdder @file-change="triggerUpload" />
+        <BookAdder @change="handleFileChange"/>
         <IconAddBook title="add books" />
       </div>
     </div>
@@ -49,6 +49,7 @@ import {
   IconHome,
 } from "@/components/icons";
 import BookAdder from "@/components/common/BookAdder.vue";
+import { mapMutations } from 'vuex';
 
 export default {
   name: "AppTitleBar",
@@ -73,12 +74,18 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['setUploadBooksStatus']),
     goHome() {
       this.$router.push({ name: "Home" });
     },
     triggerUpload() {
-      alert("this button is not ok now...\n try the right one");
-      // document.getElementById("bookInput").click();
+      if (this.$router.name === "Home") {
+        document.getElementById("book-adder").click();
+      }
+    },
+    handleFileChange(event) {
+      // this.$emit("upload-books", event);
+      this.setUploadBooksStatus({ uploading: true, solving: false, event: event, });
     },
     cycleTheme,
   },

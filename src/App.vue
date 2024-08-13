@@ -34,14 +34,15 @@ export default {
       }
     },
   },
+  created() { },
+  mounted() {
+    // console.log("App mounted");
+  },
   methods: {
-    created() { },
-    mounted() {
-      // console.log("App mounted");
-    },
     handleContentChange() {
       console.log("content change");
-    }
+    },
+
   }
 };
 </script>

@@ -62,6 +62,9 @@ importers:
       vue-router:
         specifier: ^4.4.3
         version: 4.4.3(vue@3.4.26(typescript@5.5.4))
+      vuex:
+        specifier: ^4.0.2
+        version: 4.0.2(vue@3.4.26(typescript@5.5.4))
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.14
@@ -2327,6 +2330,11 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  vuex@4.0.2:
+    resolution: {integrity: sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q==}
+    peerDependencies:
+      vue: ^3.0.2
 
   webpack-sources@3.2.3:
     resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}
@@ -4726,6 +4734,11 @@ snapshots:
       '@vue/shared': 3.4.26
     optionalDependencies:
       typescript: 5.5.4
+
+  vuex@4.0.2(vue@3.4.26(typescript@5.5.4)):
+    dependencies:
+      '@vue/devtools-api': 6.6.3
+      vue: 3.4.26(typescript@5.5.4)
 
   webpack-sources@3.2.3: {}
 

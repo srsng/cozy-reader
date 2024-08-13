@@ -3,6 +3,7 @@ import './style.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/'
+import store from './store/'
 import initAppWindow from "@/components/titlebar/index.js";
 import "preline/preline"
 // import { devtools } from '@vue/devtools'
@@ -13,8 +14,7 @@ import "preline/preline"
 //   devtools.connect('http://localhost', 8098)
 // }
 const app = createApp(App);
-
 app.use(router)
-    // .use(v_store)
+    .use(store)
     .mount('#app');
 initAppWindow();

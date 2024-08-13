@@ -1,7 +1,6 @@
 <template>
     <input
         type="file"
-        @change="handleFileChange"
         id="book-adder"
         multiple
         style="display: none"
@@ -12,11 +11,6 @@
 
 export default {
     name: "BookAdder",
-    methods: {
-        handleFileChange(event) {
-            this.$emit("file-change", event);
-        },
-    },
 };
 
 </script>

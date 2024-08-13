@@ -1,7 +1,7 @@
 <!-- HomeView.vue -->
 <template>
   <div class="flex flex-col min-h-screen pt-8">
-    <AppHeader @upload-books="uploadBooks" @cycle-theme="cycleTheme"></AppHeader>
+    <!-- <AppHeader @upload-books="uploadBooks" @cycle-theme="cycleTheme"></AppHeader> -->
     <div class="drop flex-grow w-full" @dragover.prevent @drop="uploadBooks">
       <div class="content w-full px-4 sm:px-6">
         <div v-if="books.length === 0" @click="triggerUpload" class="pt-6">
@@ -23,7 +23,7 @@
             @delete-book="deleteBook"
           />
         </div>
-        <div class="invisible size-1" id="home-book-adder" @click="uploadBooks"></div>
+        <!-- <div class="invisible size-1" id="home-book-adder" @click="uploadBooks"></div> -->
       </div>
     </div>
 
@@ -44,6 +44,7 @@ import AlertToast from "@/components/common/AlertToast.vue";
 import localforage from "localforage";
 import AppHeader from "@/components/common/Header.vue";
 import { initTheme, cycleTheme } from "@/theme/theme.js";
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: "HomeView",
@@ -86,9 +87,23 @@ export default {
   mounted() {
     initTheme();
   },
+  computed: {
+    ...mapState(['uploadBooksStatus']),
+  },
+  watch: {
+    'uploadBooksStatus.uploading'(newVal) {
+      if (newVal && !this.uploadBooksStatus.solving) {
+        this.uploadBooksStatus.solving = true;
+        this.uploadBooks(this.uploadBooksStatus.event).then(() => {
+          this.setUploadBooksStatus({ uploading: false, solving: false, event: null });
+        });
+      }
+    }
+  },
   methods: {
     cycleTheme,
     initTheme,
+    ...mapMutations(['setUploadBooksStatus']),
     handleFileChange(event) {
       this.$emit("upload-books", event);
     },
@@ -108,7 +123,7 @@ export default {
           const bookData = await new Response(file).arrayBuffer();
           const book = ePub(bookData);
           await book.loaded.metadata;
-          console.log("Home.book: ", book);
+          // console.log("Home.book: ", book);
           const metadata = await book.loaded.metadata;
           const title = metadata.title || "Untitled";
 
