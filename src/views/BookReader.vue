@@ -397,6 +397,8 @@ export default {
         blockquote * {
           display: inline;
         }
+        table *[bgcolor] { background-color: var(--background-color);
+          filter: brightness(0.8);}
         [bgcolor], body { background: transparent;}
       ` + getThemesStr()
       );

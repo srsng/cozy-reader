@@ -26,12 +26,12 @@
         <div class="invisible size-1" id="home-book-adder" @click="uploadBooks"></div>
       </div>
     </div>
-    <!-- <AppFooter class="mt-auto" /> -->
 
     <AlertToast
       v-show="showAlert"
       :message="alertMessage"
       @close="showAlert = false"
+      class="pt-8"
     />
   </div>
 </template>
@@ -41,19 +41,12 @@ import ePub from "epubjs";
 import AppFooter from "@/components/common/Footer.vue";
 import BookThumbnail from "@/components/common/BookThumbnail.vue";
 import AlertToast from "@/components/common/AlertToast.vue";
-// import { invoke } from '@tauri-apps/api/tauri';
-// import { reactive }  from "vue"
-// import { Store } from '@tauri-apps/plugin-store'
 import localforage from "localforage";
-// import { mapGetters } from 'vuex'
 import AppHeader from "@/components/common/Header.vue";
 import { initTheme, cycleTheme } from "@/theme/theme.js";
 
 export default {
   name: "HomeView",
-  // computed: {
-  //   ...mapGetters(['getTauriStoreByKey', 'getTauriStoreKeys'])
-  // },
   components: {
     AppHeader,
     AppFooter,
