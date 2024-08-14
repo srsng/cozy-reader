@@ -1,6 +1,6 @@
 <template>
   <div ref="scrollContainer" class="scroll-container">
-    <div class="sticky top-0 z-[3000] w-full backdrop-blur-md text-sm pt-8">
+    <header class="sticky top-0 z-[3000] w-full backdrop-blur-md text-sm pt-8">
       <nav
         class="flex items-center justify-between px-6 py-1"
         aria-label="Global"
@@ -12,7 +12,7 @@
           <div id="book-title" class="font-bold text-lg" @click="$emit('content-change')"></div>
         </div>
       </nav>
-    </div>
+    </header>
 
     <div
       id="viewer"
