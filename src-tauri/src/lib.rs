@@ -11,12 +11,11 @@ pub mod handler {
 // use tauri::api::shell;
 // use tauri::{CustomMenuItem, Manager, Menu, Submenu};
 
-use handler::{file::send_epub2, funcs::exit_app};
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let ctx = tauri::generate_context!();
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
         // .plugin(tauri_plugin_fs::init())
         // .plugin(tauri_plugin_dialog::init())
         // .plugin(tauri_plugin_clipboard_manager::init())
@@ -26,7 +25,7 @@ pub fn run() {
         // .plugin(tauri_plugin_notification::init())
         // .plugin(tauri_plugin_process::init())
         // .plugin(tauri_plugin_http::init())
-        .invoke_handler(tauri::generate_handler![exit_app])
+        .invoke_handler(tauri::generate_handler![])
         // .menu(
         //     tauri::Menu::os_default("Tauri Vue Template").add_submenu(Submenu::new(
         //         "Help",

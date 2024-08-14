@@ -4,8 +4,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/'
 import Store from './store/'
-import initAppWindow from "@/components/titlebar/index.js";
-import "preline/preline"
+import initAppWindow from "@/components/titlebar/";
+// import "preline/preline"
 // import { devtools } from '@vue/devtools'
 // import initAppWindow from './components/titlebar/index'
 
