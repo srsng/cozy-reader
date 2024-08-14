@@ -1,6 +1,5 @@
 const themes = ['theme-light', 'theme-gray', 'theme-dark'];
 
-
 // 主题Map
 // 内部值不带分号;
 const themesMap = {

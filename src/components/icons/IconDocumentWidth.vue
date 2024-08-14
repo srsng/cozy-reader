@@ -1,0 +1,10 @@
+<script>
+export default {
+	name: 'IconDocumentWidth',
+};
+</script>
+<template>
+	<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+		<path fill="currentColor" d="M2 20V4h20v16zm2-2h4V6H4zm12 0h4V6h-4z" />
+	</svg>
+</template>

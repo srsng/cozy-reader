@@ -5,8 +5,9 @@
         class="flex items-center justify-between px-6 py-1"
         aria-label="Global"
       >
-        <!-- 被删除了的按钮部分 -->
-        <div class="flex items-center select-none space-x-4"> </div>
+        <div class="flex items-center select-none space-x-4"> 
+          <!-- 被删除了的按钮部分 -->
+        </div>
         <!-- 标题 -->
         <div class="flex-grow text-center">
           <div id="book-title" class="font-bold text-lg" @click="$emit('content-change')"></div>
@@ -16,8 +17,9 @@
 
     <div
       id="viewer"
-      class="scrolled max-w-4xl ml-auto mr-auto mb-20"
-      :class="{ hidden: isResizing }"
+      class="scrolled ml-auto mr-auto mb-20"
+      :class="{ hidden: isResizing}"
+      :style="{ 'max-width': viewerWidth + '%' }"
     ></div>
 
     <div
@@ -119,11 +121,16 @@ import {
   getCurrentTheme,
   initTheme,
 } from "@/theme/theme";
-
+import { mapState } from 'vuex';
 
 export default {
   name: "BookReader",
   components: { },
+  computed: {
+    ...mapState({
+      viewerWidth: state => state.viewerWidth
+    })
+  },
   props: {
     fileName: {
       type: String,
@@ -139,6 +146,7 @@ export default {
       isResizing: false,
       scrollTimer: null,
       bottomTimer: null,
+      // viewerWidth: null
     };
   },
   methods: {
@@ -453,7 +461,7 @@ export default {
       if (this.rendition) {
         const currentLocation = this.rendition.currentLocation();
         if (currentLocation && currentLocation.start) {
-          localStorage.setItem(
+          localforage.setItem(
             `epub-location-${this.fileName}`,
             currentLocation.start.cfi
           );
@@ -500,6 +508,10 @@ export default {
         return;
       }
     },
+    initViewerWidth() {
+      // this.viewerWidth = this.$store.state.viewerWidth;
+    },
+    
   },
 
   watch: {
@@ -511,11 +523,16 @@ export default {
       },
       immediate: true,
     },
+    viewerWidth(newWidth) {
+      localStorage.setItem("viewerWidth", newWidth);
+    }
+
   },
 
   mounted() {
     // init theme
     initTheme();
+    // this.initViewerWidth();
 
     window.addEventListener("keydown", this.handleKeydown);
     window.addEventListener("resize", this.handleResize);

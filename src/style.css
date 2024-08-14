@@ -105,6 +105,15 @@
     background: #5bbec3;
   }
 
+  .popup {
+    height: 24px;
+    border-radius: 4px;
+    position: fixed;
+    transform: translateX(-50%);
+    background-color: var(--header-color);
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+  }
+
   .delete-icon {
     background-size: 18px;
     background-repeat: no-repeat;

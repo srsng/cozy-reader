@@ -8,7 +8,18 @@
       <div
         v-if="curRouteNameIs('BookReader')"
       >
-        <!-- 空 -->
+        <div id="footerbar-change-doc-width" class="footerbar-button" @click="toggleChangeDocWidthPopup">
+          <IconDocumentWidth title="change doc width" />
+          <div v-show="showChageDocPopup" class="popup flex items-center bottom-7 left-12">
+            <div class="popup-button footerbar-button" id="increase-doc-width" @click.stop="increaseDocWidth">
+              <IconPlus title="increase doc width" />
+            </div>
+            <div class="popup-button footerbar-content" id="text-of-doc-width">{{ viewerWidth }}%</div>
+            <div class="popup-button footerbar-button" id="decrease-doc-width" @click.stop="decreaseDocWidth">
+              <IconWindowMin title="decrease doc width" />
+            </div>
+          </div>
+        </div>
       </div>
       <div v-else class="footerbar-content">
         <p>
@@ -96,8 +107,13 @@ import {
   IconRightArrow,
   IconToTop,
   IconToBottom,
+  IconDocumentWidth,
+  IconPlus,
+  IconWindowMin,
 } from "@/components/icons";
 // import { goNext, goPrev } from "@/views/BookReader.vue";
+import { mapState } from 'vuex';
+
 
 export default {
   name: "FooterBar",
@@ -107,6 +123,19 @@ export default {
     IconRightArrow,
     IconToTop,
     IconToBottom,
+    IconDocumentWidth,
+    IconPlus,
+    IconWindowMin,
+  },
+  data() {
+    return {
+      showChageDocPopup: false,
+    };
+  },
+  computed: {
+    ...mapState({
+      viewerWidth: state => state.viewerWidth
+    })
   },
   methods: {
     curRouteNameIs(name) {
@@ -135,6 +164,15 @@ export default {
         top: document.documentElement.scrollHeight,
         behavior: "smooth", // 平滑滚动
       });
+    },
+    toggleChangeDocWidthPopup() {
+      this.showChageDocPopup = !this.showChageDocPopup;
+    },
+    increaseDocWidth() {
+      this.$store.commit("increaseViewerWidth");
+    },
+    decreaseDocWidth() {
+      this.$store.commit("decreaseViewerWidth");
     },
   },
 };
