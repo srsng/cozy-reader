@@ -24,7 +24,8 @@
     "preline": "^2.3.0",
     "vue": "^3.4.26",
     "vue-router": "^4.4.3",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "@tauri-apps/cli": "next"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.14",
