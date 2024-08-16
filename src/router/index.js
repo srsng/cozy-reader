@@ -42,6 +42,7 @@ const router = createRouter({
 //   }
 // });
 
+// something wrong?
 router.afterEach((to, from, failure) => {
   if (!failure) {
     setTimeout(() => {

@@ -11,3 +11,5 @@ export { default as IconToTop } from "@/components/icons/IconToTop.vue";
 export { default as IconToBottom } from "@/components/icons/IconToBottom.vue";
 export { default as IconDocumentWidth } from "@/components/icons/IconDocumentWidth.vue";
 export { default as IconPlus } from "@/components/icons/IconPlus.vue";
+export { default as IconFresh } from "@/components/icons/IconFresh.vue";
+export { default as IconCycle } from "@/components/icons/IconCycle.vue";

@@ -1,20 +1,24 @@
 <template>
   <div
     data-tauri-drag-region
-    class="titlebar header z-[6000] flex justify-between items-center fixed top-0 left-0 right-0 h-8 select-none"
+    class="titlebar header z-[6000] flex justify-between items-center fixed top-0 left-0 right-0 h-8 selecter-none"
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
       <div id="titlebar-home" class="titlebar-button" @click="goHome">
         <IconHome title="Home" />
       </div>
-      <div id="titlebar-changeTheme" class="titlebar-button" @click="cycleTheme">
+      <div id="titlebar-changeTheme" class="titlebar-button" @click="toggleThemeSelecterPopup">
         <IconThemeChange title="change Theme" />
+        <PopupThemeSelecter v-if="showThemeSelecterPopup" class="top-9 left-36"/>
       </div>
       <div id="titlebar-addBooks" @click="triggerUpload" class="upload-button titlebar-button">
         <BookAdder @change="handleFileChange"/>
         <IconAddBook title="add books" />
       </div>
+      <div id="titlebar-fresh" class="titlebar-button" @click="freshPage">
+        <IconFresh title="fresh" />
+        </div>
     </div>
 
     <!-- 中间部分 -->
@@ -40,7 +44,6 @@
 </template>
 
 <script>
-import ExitButton from "@/components/common/ExitButton.vue";
 import { cycleTheme } from "@/theme/theme.js";
 import {
   IconWindowMin,
@@ -49,14 +52,15 @@ import {
   IconThemeChange,
   IconAddBook,
   IconHome,
+  IconFresh,
 } from "@/components/icons";
 import BookAdder from "@/components/common/BookAdder.vue";
+import PopupThemeSelecter from "@/components/popups/PopupThemeSelecter.vue";
 import { mapMutations } from 'vuex';
 
 export default {
   name: "AppTitleBar",
   components: {
-    ExitButton,
     IconWindowMin,
     IconWindowMax,
     IconWindowClose,
@@ -64,9 +68,13 @@ export default {
     IconAddBook,
     BookAdder,
     IconHome,
+    IconFresh,
+    PopupThemeSelecter,
   },
   data() {
-    return { };
+    return {
+      showThemeSelecterPopup: false,
+    };
   },
   props: {
     appTitle: {
@@ -89,7 +97,14 @@ export default {
       // this.$emit("upload-books", event);
       this.setUploadBooksStatus({ uploading: true, solving: false, event: event, });
     },
+    freshPage() {
+      this.$router.go(0);
+    },
     cycleTheme,
+    toggleThemeSelecterPopup() {
+      console.log("toggleThemeSelecterPopup");
+      this.showThemeSelecterPopup = !this.showThemeSelecterPopup;
+    },
   },
 };
 </script>
