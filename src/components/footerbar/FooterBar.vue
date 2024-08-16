@@ -4,7 +4,7 @@
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
-      <!------主页致谢---阅读页: 空--------->
+      <!------主页: 致谢---阅读页: 空--------->
       <div
         v-if="curRouteNameIs('BookReader')"
       >
@@ -29,7 +29,7 @@
 
     <!-- 中间部分 -->
     <div class="center-section flex items-center">
-      <!---------主页：空----阅读页：章节标题与切换按钮------->
+      <!---------主页：随机提示----阅读页：章节标题与切换按钮------->
       <div
         v-if="curRouteNameIs('BookReader')"
         class="flex justify-between items-center"
@@ -46,7 +46,7 @@
         </div>
         <div id="chapter-title" class="footerbar-content">
           <!-- <p>{{ curBookChapter }}</p> -->
-          <!-- <p>{{  }}</p> -->
+          <p>{{  }}</p>
         </div>
         <div id="footerbar-next" class="footerbar-button" @click="goNext">
           <IconRightArrow title="next" />
@@ -60,7 +60,7 @@
         </div>
       </div>
       <div v-else class="footerbar-content">
-        <!-- 空 -->
+        <p> {{ "// tips: " + randomTips() + " //" }}</p>
       </div>
       <!---------------------------------------->
     </div>
@@ -158,6 +158,29 @@ export default {
     },
     toggleChangeDocWidthPopup() {
       this.showChageDocPopup = !this.showChageDocPopup;
+    },
+    randomTips() {
+      const zh_cn = [
+        "在主页可以直接拖入文件导入",
+        // 有关阅读页面快捷键
+        "阅读页面最左右两侧的区域可以点击翻页",
+        "阅读页面可以使用方向键翻页",
+        "阅读页面可以使用Home键跳转到章节开头",
+        "阅读页面可以使用End键跳转到章节结尾",
+        "阅读页面按下Esc键回到主页",
+        "使用PageUp/PageDown键可以轻松阅读",
+        // 有关阅读页面功能提示
+        "书籍目录在阅读页面右下角打开",
+        "阅读页面左下角的按钮可以调整阅读显示宽度",
+        "标题栏第四个按钮可以刷新页面",
+        "阅读页面宽度每次调整幅度为屏幕宽度的1/10",
+        "阅读页面宽度最小为屏幕宽度的10%",
+        "每次调整完阅读页面宽度后，需要刷新页面重新渲染",
+      ];
+      // const en_us = [];
+      const tips = zh_cn;
+      const tip = tips[Math.floor(Math.random() * tips.length)];
+      return tip;
     },
   },
 };
