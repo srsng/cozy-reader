@@ -33,7 +33,11 @@ export default createStore({
             state.curBookTitle = bookTitle;
         },
         setCurBookChapter(state, bookChapter) {
-            state.curBookChapter = bookChapter;
+            if (state.curBookChapter === bookChapter) {
+                state.curBookChapter = null;
+            } else {
+                state.curBookChapter = bookChapter;
+            }
         },
       },
 });

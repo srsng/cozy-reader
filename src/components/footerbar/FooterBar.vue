@@ -45,7 +45,8 @@
           <IconLeftArrow title="previous" />
         </div>
         <div id="chapter-title" class="footerbar-content">
-          <p>{{}}</p>
+          <!-- <p>{{ curBookChapter }}</p> -->
+          <!-- <p>{{  }}</p> -->
         </div>
         <div id="footerbar-next" class="footerbar-button" @click="goNext">
           <IconRightArrow title="next" />
@@ -70,7 +71,7 @@
       <div v-if="curRouteNameIs('BookReader')" 
         class="footerbar-button toc"
         data-hs-overlay="#hs-overlay-right"
-        id="titlebar-contents">
+        id="footerbar-contents">
         <IconContents title="toggle Contents" />
       </div>
       <div v-else class="footerbar-content">
@@ -116,6 +117,11 @@ export default {
     IconToBottom,
     IconDocumentWidth,
     PopupChangeDocWidth
+  },
+  computed: {
+    ...mapState({
+      curBookChapter: state => state.curBookChapter,
+    }),
   },
   data() {
     return {

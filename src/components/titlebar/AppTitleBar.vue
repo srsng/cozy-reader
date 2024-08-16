@@ -22,7 +22,7 @@
     </div>
 
     <!-- 中间部分 -->
-    <div id="app-title" class="center-section mx-2 flex-1 flex items-center justify-center">
+    <div id="app-title" class="center-section mx-2 flex-1 flex items-center justify-center select-none">
       <div class="flex-1 text-center truncate">
         <!-- title maybe too long to let right buttons show in right case -->
         <p>{{ appTitle }}</p>

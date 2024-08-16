@@ -37,7 +37,7 @@
         >
           <span class="sr-only">Close modal</span>
           <svg
-            class="flex-shrink-0 size-8 sn:size-6"
+            class="flex-shrink-0 size-8 sm:size-6"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -161,27 +161,35 @@ export default {
       }, 100); // 100ms 的延迟时间，可以根据需要调整
     },
     getChapterTitle() {
-      // 获取当前章节的 CFI
-      const cfi = this.rendition.currentLocation().start.cfi;
-      // 获取当前章节的信息
-      const currentChapter = this.book.spine.get(cfi);
-      // 对于当前章节，获取第一个h标签
-      const firstHeading = currentChapter.document.querySelector("h1, h2, h3, h4");
-      if (firstHeading) {
-        const title1 = firstHeading.title;
-        const title2 = firstHeading.textContent;
-        // 如果title1、title2有一个为空，则取另一个；如果两个都非空，则取长度较长的那个
-        if (title1 && title2) {
-          return title1.length > title2.length ? title1 : title2;
+      try {
+        // 获取当前章节的 CFI
+        const cfi = this.rendition.currentLocation().start.cfi;
+        // 获取当前章节的信息
+        const currentChapter = this.book.spine.get(cfi);
+        // 对于当前章节，获取第一个h标签
+        const firstHeading = currentChapter.document.querySelector("h1, h2, h3, h4, p b");
+        // console.log("firstHeading", firstHeading);
+        if (firstHeading) {
+          const title1 = firstHeading.title;
+          const title2 = firstHeading.textContent;
+          // 如果title1、title2有一个为空，则取另一个；如果两个都非空，则取长度较长的那个
+          if (title1 && title2) {
+            return title1.length > title2.length ? title1 : title2;
+          }
+        return title1 || title2;
         }
-      return title1 || title2;
+      } catch {
+        return null;
       }
     },
     setChapterTitle() {
-      const cTitle = document.getElementById("chapter-title")
-      const title = this.getChapterTitle();
-      console.log("title", title);
-      if (cTitle) cTitle.textContent = title;
+      const chapterTitle = this.getChapterTitle();
+      this.$store.commit("setCurBookChapter", chapterTitle);
+
+      // console.log("chapterTitle", chapterTitle);
+      const eleChapterTitle = document.getElementById("chapter-title");
+      // console.log(eleChapterTitle);
+      if(eleChapterTitle) { eleChapterTitle.textContent = chapterTitle; }
     },
     conslelogToc() {
       console.log("book", this.book);
@@ -425,12 +433,12 @@ export default {
 
     goNext(event) {
       event.preventDefault();
-      this.rendition.next();
+      this.rendition.next().then(this.setChapterTitle);
     },
 
     goPrev(event) {
       event.preventDefault();
-      this.rendition.prev();
+      this.rendition.prev().then(this.setChapterTitle);
     },
 
     async loadTOC() {
@@ -544,8 +552,9 @@ export default {
       }
     } else {
       localStorage.setItem("currentBook", this.fileName);
-      this.loadBook();
+      this.loadBook().then(this.setChapterTitle);
     }
+    
   },
 
   beforeUnmount() {
