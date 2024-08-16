@@ -42,6 +42,7 @@
   
   div.contents-header, AppHeader, header, .header {
     background-color: var(--header-color);
+    color: var(--text-color);
   }
 
   div.contents-body {

@@ -1,12 +1,13 @@
 <template>
   <div
     class="popup flex fixed overflow-y-auto flex-col w-48 h-96 select-none rounded-lg border-solid border-2"
+    @click.stop
   >
     <div class="flex w-full">
       <div id="cycleTheme" class="titlebar-button">
         <IconCycle @click.stop="cycleTheme" />
       </div>
-      <div @click.stop>Try Next Theme...</div>
+      <div class="items-center" >👈Try Next Theme</div>
     </div>
     <div class="w-full popup-sub border-solid border-t-2"></div>
     <div v-for="(theme, index) in themes" :key="index" class="w-full">
@@ -14,12 +15,12 @@
         :class="theme"
         class="popup-sub w-42 mx-2 mt-1 rounded-lg border-solid border-2"
       >
-        <header class="w-full h-6 rounded-t-lg" :class="theme">
-          <p>{{ "theme " + (index + 1) }}</p>
+        <header class="w-full h-6 " :class="theme">
+          {{ "theme " + (index + 1) }}
         </header>
         <div
           :class="theme"
-          class="contents-body w-full h-8 flex rounded-b-lg"
+          class="contents-body w-full h-8 text-center rounded-b-lg"
           @click.stop="setTheme(theme)"
         >
           {{ theme }}
