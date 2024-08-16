@@ -2,8 +2,6 @@ import {createStore} from 'vuex';
 // import {Store} from 'tauri/api/store';
 // import { stat } from 'fs';
 
-import localforage from 'localforage';
-
 export default createStore({
     state: {
         uploadBooksStatus:{
@@ -12,6 +10,8 @@ export default createStore({
             event: null,
         },
         viewerWidth: localStorage.getItem('viewerWidth') ? parseInt(localStorage.getItem('viewerWidth')) : 60,
+        curBookTitle: null,
+        curBookChapter: null,
     },
     mutations: {
         setUploadBooksStatus(state, newState) {
@@ -28,6 +28,12 @@ export default createStore({
             if (state.viewerWidth > 10) {
                 state.viewerWidth -= 10;
             }
+        },
+        setCurBookTitle(state, bookTitle) {
+            state.curBookTitle = bookTitle;
+        },
+        setCurBookChapter(state, bookChapter) {
+            state.curBookChapter = bookChapter;
         },
       },
 });

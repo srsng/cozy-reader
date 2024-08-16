@@ -1,7 +1,7 @@
 <template>
   <div>
-    <AppTitleBar :appTitle="appTitle"/>
-    <router-view @content-change="handleContentChange"/>
+    <AppTitleBar/>
+    <router-view/>
     <FooterBar />
   </div>
 </template>
@@ -17,33 +17,7 @@ export default {
     AppTitleBar,
     FooterBar,
   },
-  data() {
-    return {
-      // appWindow: null,
-      routerIndex: 0,
-      appTitle: "cozy reader",
-    };
-  },
-  watch: {
-    $route(to) {
-      if (to.name === "Home") {
-        this.appTitle = "cozy reader";
-      } else if (to.name === "BookReader") {
-        const bookTitle = document.getElementById("book-title");
-        this.appTitle = bookTitle ? bookTitle.textContent : "cozy reader";
-      }
-    },
-  },
-  created() { },
-  mounted() {
-    // console.log("App mounted");
-  },
-  methods: {
-    handleContentChange() {
-      console.log("content change");
-    },
 
-  }
 };
 </script>
 

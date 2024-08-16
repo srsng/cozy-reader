@@ -1,20 +1,5 @@
 <template>
   <div ref="scrollContainer" class="scroll-container">
-    <header class="sticky top-0 z-[3000] w-full backdrop-blur-md text-sm pt-8">
-      <nav
-        class="flex items-center justify-between px-6 py-1"
-        aria-label="Global"
-      >
-        <div class="flex items-center select-none space-x-4"> 
-          <!-- 被删除了的按钮部分 -->
-        </div>
-        <!-- 标题 -->
-        <div class="flex-grow text-center">
-          <div id="book-title" class="font-bold text-lg" @click="$emit('content-change')"></div>
-        </div>
-      </nav>
-    </header>
-
     <div
       id="viewer"
       class="scrolled ml-auto mr-auto mb-20"
@@ -128,7 +113,8 @@ export default {
   components: { },
   computed: {
     ...mapState({
-      viewerWidth: state => state.viewerWidth
+      viewerWidth: state => state.viewerWidth,
+      curBookTitle: state => state.curBookTitle,
     })
   },
   props: {
@@ -225,8 +211,9 @@ export default {
           const metadata = await this.book.loaded.metadata;
           const fullTitle = metadata.title;
           const truncatedTitle = fullTitle.split(":")[0].trim();
-          const bookTitle = document.getElementById("book-title");
-          if(bookTitle) { bookTitle.textContent = truncatedTitle; }
+          // const bookTitle = document.getElementById("book-title");
+          this.$store.commit("setCurBookTitle", truncatedTitle);
+          // if(bookTitle) { bookTitle.textContent = truncatedTitle; }
         } else {
           console.error("Book not found in local storage or invalid book data");
           this.$router.push({ name: "Home" });
@@ -244,6 +231,12 @@ export default {
         this.goNext(event);
       } else if (event.key === "Escape") {
         this.goHome();
+      } else if (event.key === 36) {
+        // "Home"
+        document.getElementById("footerbar-to-top").click();
+      } else if (event.key === 35) {
+        // "End"
+        document.getElementById("footerbar-to-bottom").click();
       }
     },
 

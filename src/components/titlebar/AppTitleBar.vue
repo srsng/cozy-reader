@@ -22,8 +22,9 @@
     </div>
 
     <!-- 中间部分 -->
-    <div id="app-title" class="center-section flex items-center">
-      <div class="flex justify-between items-center">
+    <div id="app-title" class="center-section mx-2 flex-1 flex items-center justify-center">
+      <div class="flex-1 text-center truncate">
+        <!-- title maybe too long to let right buttons show in right case -->
         <p>{{ appTitle }}</p>
       </div>
     </div>
@@ -56,7 +57,7 @@ import {
 } from "@/components/icons";
 import BookAdder from "@/components/common/BookAdder.vue";
 import PopupThemeSelecter from "@/components/popups/PopupThemeSelecter.vue";
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: "AppTitleBar",
@@ -73,14 +74,30 @@ export default {
   },
   data() {
     return {
+      appTitle: "cozy reader",
       showThemeSelecterPopup: false,
     };
   },
-  props: {
-    appTitle: {
-      type: String,
-      default: "Cozy Reader",
-      required: true,
+  computed: {
+    ...mapState({
+      curBookTitle: state => state.curBookTitle,
+    })
+  },
+  // props: {
+  //   appTitle: {
+  //     type: String,
+  //     default: "Cozy Reader",
+  //     required: true,
+  //   },
+  // },
+  watch: {
+    $route(to) {
+      if (to.name === "Home") {
+        this.appTitle = "cozy reader";
+      }
+    },
+    curBookTitle(bookTitle) {
+      this.appTitle = bookTitle;
     },
   },
   methods: {
