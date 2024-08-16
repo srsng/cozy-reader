@@ -19,7 +19,7 @@
             href="https://github.com/srsng/cozy-reader"
             target="_blank"
             class="underline"
-            >Github</a
+            >Cozy-reader(Github)</a
           >
           | Made in China.
         </p>
