@@ -10,7 +10,7 @@
     <div
       @click="goPrev"
       id="go-prev"
-      class="select-none fill-current text-transparent fixed top-0 left-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_left_12px]"
+      class="select-none fill-current text-transparent fixed top-0 left-0 h-screen w-1/6 bg-transparent flex flex-col hover:cursor-pointer"
     >
       Prev
     </div>
@@ -18,7 +18,7 @@
     <div
       @click="goNext"
       id="go-next"
-      class="select-none fill-current text-transparent fixed top-0 right-0 h-screen w-12 lg:w-20 bg-transparent flex flex-col hover:cursor-pointer bg-no-repeat bg-[center_right_12px]"
+      class="select-none fill-current text-transparent fixed top-0 right-0 h-screen w-1/6 bg-transparent flex flex-col hover:cursor-pointer"
     >
       Next
     </div>
