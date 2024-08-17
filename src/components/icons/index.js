@@ -13,3 +13,4 @@ export { default as IconDocumentWidth } from "@/components/icons/IconDocumentWid
 export { default as IconPlus } from "@/components/icons/IconPlus.vue";
 export { default as IconRefresh } from "@/components/icons/IconRefresh.vue";
 export { default as IconCycle } from "@/components/icons/IconCycle.vue";
+export { default as IconYes } from "@/components/icons/IconYes.vue";

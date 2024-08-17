@@ -15,14 +15,13 @@
         :class="theme"
         class="popup-sub w-42 mx-2 mt-1 rounded-lg border-solid border-2"
       >
-        <header class="w-full h-6 " :class="theme">
+        <header class="w-full h-6 truncate" :class="theme">
           {{ "theme " + (index + 1) }}
+          <div class="w-max h-fit titlebar-button rounded-full bg-[--background-color]" @click.stop="setTheme(theme)">
+            <IconYes/>
+          </div>
         </header>
-        <div
-          :class="theme"
-          class="contents-body w-full h-8 text-center rounded-b-lg"
-          @click.stop="setTheme(theme)"
-        >
+        <div :class="theme" class="contents-body w-full h-8 text-center rounded-b-lg">
           {{ theme }}
         </div>
       </div>
@@ -32,12 +31,13 @@
 
 <script>
 import { themes, setTheme, cycleTheme } from "@/theme/theme.js";
-import { IconCycle } from "@/components/icons";
+import { IconCycle, IconYes } from "@/components/icons";
 
 export default {
   name: "PopupThemeSelecter",
   components: {
     IconCycle,
+    IconYes,
   },
   data() {
     return {
