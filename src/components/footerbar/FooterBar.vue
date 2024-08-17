@@ -1,6 +1,6 @@
 <template>
   <div
-    class="footerbar z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none"
+    class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none"
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
@@ -71,6 +71,7 @@
       <div v-if="curRouteNameIs('BookReader')" 
         class="footerbar-button toc"
         data-hs-overlay="#hs-overlay-right"
+        aria-controls="hs-overlay-right"
         id="footerbar-contents">
         <IconContents title="toggle Contents" />
       </div>
@@ -176,6 +177,7 @@ export default {
         "阅读页面宽度每次调整幅度为屏幕宽度的1/10",
         "阅读页面宽度最小为屏幕宽度的10%",
         "每次调整完阅读页面宽度后，需要刷新页面重新渲染",
+        "出现弹窗后，再次点击按钮才会关闭弹窗",
       ];
       // const en_us = [];
       const tips = zh_cn;

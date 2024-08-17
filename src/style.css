@@ -14,8 +14,9 @@
     --text-color: #000000;
   } */
 
-  .theme-light {
+  /* .theme-light {
     --header-color: #006fc9;
+    --header-text-color: #e5e7eb;
     --background-color: #f2f2f2;
     --text-color: #323130;
   }
@@ -30,7 +31,7 @@
     --header-color: #333333;
     --background-color: #282828;
     --text-color: #e5e7eb;
-  }
+  } */
 
   body {
     @apply bg-[var(--background-color)] text-[var(--text-color)];
@@ -40,9 +41,10 @@
     display: none; 
   }
   
-  div.contents-header, AppHeader, header, .header {
+  AppHeader, header, .header, .footer {
     background-color: var(--header-color);
-    color: var(--text-color);
+    /* color: var(--text-color); */
+    color: var(--header-text-color);
   }
 
   div.contents-body {
@@ -50,10 +52,8 @@
     color: var(--text-color);
   }
 
-  div svg,  
-  AppHeader a,
-  AppHeader button {
-    color: var(--text-color);
+  div svg {
+    color: inherit;
   }
 
   .popup, .popup-sub {
@@ -92,7 +92,6 @@
   }
 
   .footerbar {
-    background-color: var(--header-color);
     filter: brightness(0.95);
     /* background-color: var(--background-color); */
     /* border-top: var(--header-color) 2px solid; */

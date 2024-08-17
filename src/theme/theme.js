@@ -1,29 +1,17 @@
-const themes = ['theme-light', 'theme-gray', 'theme-dark'];
+// 启用的主题
+const themes = [
+  "theme-light-blue",
+  "theme-gray-blue",
+  "theme-dark-gray",
+  "theme-light-coral",
+];
 
 // 主题Map
 // 内部值不带分号;
-const themesMap = {
-  ".theme-light": {
-    "--header-color": "#006fc9",
-    "--background-color": "#f2f2f2",
-    "--text-color": "#323130",
-  },
-
-  ".theme-gray": {
-    "--header-color": "#374151",
-    "--background-color": "#4b5563",
-    "--text-color": "#e5e7eb",
-  },
-
-  ".theme-dark": {
-    "--header-color": "#333333",
-    "--background-color": "#282828",
-    "--text-color": "#e5e7eb",
-  },
-}
+import themesMap from "./theme.json";
 
 function getCurrentTheme() {
-  const savedTheme = localStorage.getItem('currTheme');
+  const savedTheme = localStorage.getItem("currTheme");
   if (savedTheme && themes.includes(savedTheme)) {
     return savedTheme;
   }
@@ -35,12 +23,13 @@ function setTheme(theme) {
   if (themes.includes(theme)) {
     document.body.classList.remove(...themes);
     document.body.classList.add(theme);
-    localStorage.setItem('currTheme', theme);
+    localStorage.setItem("currTheme", theme);
 
-    const iframe = document.querySelector('#viewer iframe')
+    const iframe = document.querySelector("#viewer iframe");
     if (iframe) {
       // console.log('iframe yes', iframe);
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
       iframeDocument.body.classList.remove(...themes);
       iframeDocument.body.classList.add(theme);
     }
@@ -65,10 +54,14 @@ function initTheme() {
   if (!document.body.classList.contains(...themes)) {
     resetCurrentTheme();
   }
+  console.log("initTheme");
+  const style = document.createElement("style");
+  style.textContent = getThemesStr();
+  document.head.appendChild(style);
 }
 
 function getThemesStr() {
-  let styles = '';
+  let styles = "";
 
   for (const [theme, properties] of Object.entries(themesMap)) {
     styles += `${theme} {\n`;
@@ -81,7 +74,13 @@ function getThemesStr() {
   return styles;
 }
 
-export {  
-  themes, getCurrentTheme, setTheme, cycleTheme, resetCurrentTheme, initTheme, 
-  themesMap, getThemesStr 
+export {
+  themes,
+  getCurrentTheme,
+  setTheme,
+  cycleTheme,
+  resetCurrentTheme,
+  initTheme,
+  themesMap,
+  getThemesStr,
 };

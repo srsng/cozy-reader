@@ -10,7 +10,7 @@
     <div
       @click="goPrev"
       id="go-prev"
-      class="select-none fill-current text-transparent fixed top-0 left-0 h-screen w-1/6 bg-transparent flex flex-col hover:cursor-pointer"
+      class="select-none text-transparent fixed top-0 left-0 h-[95vh] w-1/6 bg-transparent flex flex-col hover:cursor-pointer"
     >
       Prev
     </div>
@@ -18,17 +18,17 @@
     <div
       @click="goNext"
       id="go-next"
-      class="select-none fill-current text-transparent fixed top-0 right-0 h-screen w-1/6 bg-transparent flex flex-col hover:cursor-pointer"
+      class="select-none text-transparent fixed top-0 right-0 h-[95vh] w-1/6 bg-transparent flex flex-col hover:cursor-pointer"
     >
       Next
     </div>
 
     <div
       id="hs-overlay-right"
-      class="contents-header py-8 hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 end-0 transition-all duration-300 transform h-full max-w-xl w-full z-[4800] border-s border-[--header-color]"
+      class="contents-container header py-8 hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 end-0 transition-all duration-300 transform h-full max-w-xl w-full z-[4800] border-s border-[--header-color]"
       tabindex="-1"
     >
-      <div class="flex justify-between items-center py-3 px-4 border-b">
+      <div class="contents-header flex justify-between items-center py-3 px-4 border-b">
         <h3 class="font-bold">Contents</h3>
         <button
           type="button"
