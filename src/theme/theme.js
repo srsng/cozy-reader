@@ -54,7 +54,7 @@ function initTheme() {
   if (!document.body.classList.contains(...themes)) {
     resetCurrentTheme();
   }
-  console.log("initTheme");
+  // console.log("initTheme");
   const style = document.createElement("style");
   style.textContent = getThemesStr();
   document.head.appendChild(style);

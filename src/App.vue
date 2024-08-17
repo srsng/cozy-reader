@@ -9,7 +9,6 @@
 <script>
 import AppTitleBar from "@/components/titlebar/AppTitleBar.vue";
 import FooterBar from "@/components/footerbar/FooterBar.vue";
-// import initAppWindow from "@/components/titlebar/index.js";
 
 export default {
   name: "App",

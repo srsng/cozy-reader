@@ -1,25 +1,23 @@
 <template>
   <div
-    class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none"
+    class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none truncate"
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
       <!------主页: 致谢---阅读页: 空--------->
-      <div
-        v-if="curRouteNameIs('BookReader')"
-      >
+      <div v-if="curRouteNameIs('BookReader')">
         <div id="footerbar-change-doc-width" class="footerbar-button" @click="toggleChangeDocWidthPopup">
           <IconDocumentWidth title="change doc width" />
           <PopupChangeDocWidth v-show="showChageDocPopup" class="bottom-7 left-12"/>
         </div>
       </div>
-      <div v-else class="footerbar-content">
+      <div v-else class="footerbar-content truncate">
         <p>
           <a
             href="https://github.com/srsng/cozy-reader"
             target="_blank"
             class="underline"
-            >Cozy-reader(Github)</a
+            >Cozy-Reader(Github)</a
           >
           | Made in China.
         </p>
@@ -28,39 +26,35 @@
     </div>
 
     <!-- 中间部分 -->
-    <div class="center-section flex items-center">
+    <div class="center-section flex justify-center items-center overflow-hidden truncate border-x-2 border-[--background-color]">
       <!---------主页：随机提示----阅读页：章节标题与切换按钮------->
+      <!-- 阅读页 -->
       <div
         v-if="curRouteNameIs('BookReader')"
         class="flex justify-between items-center"
       >
-        <div
-          id="footerbar-to-top"
-          class="footerbar-button"
-          @click="scrollToTop"
-        >
+        <div id="footerbar-to-top" class="footerbar-button" @click="scrollToTop">
           <IconToTop title="go to top" />
         </div>
         <div id="footerbar-prev" class="footerbar-button" @click="goPrev">
           <IconLeftArrow title="previous" />
         </div>
-        <div id="chapter-title" class="footerbar-content">
+        <div id="chapter-title" class="footerbar-content center-content truncate">
           <!-- <p>{{ curBookChapter }}</p> -->
           <p>{{  }}</p>
         </div>
         <div id="footerbar-next" class="footerbar-button" @click="goNext">
           <IconRightArrow title="next" />
         </div>
-        <div
-          id="footerbar-to-bottom"
-          class="footerbar-button"
-          @click="scrollToBottom"
-        >
+        <div id="footerbar-to-bottom" class="footerbar-button" @click="scrollToBottom">
           <IconToBottom title="go to bottom" />
         </div>
       </div>
-      <div v-else class="footerbar-content">
-        <p> {{ "// tips: " + randomTips() + " //" }}</p>
+      <!-- 主页 -->
+      <div v-else class="footerbar-content flex items-center truncate">
+        <div id="footerbar-home-random-tips">
+          <p> {{ "// tips: " + randomTips() + " //" }}</p>
+        </div>
       </div>
       <!---------------------------------------->
     </div>
@@ -69,13 +63,13 @@
     <div class="right-section flex items-center">
       <!---------主页：信息----阅读页：目录按钮------->
       <div v-if="curRouteNameIs('BookReader')" 
-        class="footerbar-button toc"
+        class="footerbar-button toc flex items-center"
         data-hs-overlay="#hs-overlay-right"
         aria-controls="hs-overlay-right"
         id="footerbar-contents">
         <IconContents title="toggle Contents" />
       </div>
-      <div v-else class="footerbar-content">
+      <div v-else class="footerbar-content flex items-center">
         <p>
           Based on
           <a
@@ -188,4 +182,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.footerbar .center-section {
+  flex: 1;
+  overflow: hidden;
+}
+/* 
+.footerbar .center-section .footerbar-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
+</style>
