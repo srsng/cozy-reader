@@ -32,7 +32,9 @@
 
     <!-- 右侧部分 -->
     <div class="right-section flex items-center">
-      <!-- absolute right-0 -->
+      <div id="titlebar-drag-move" class="titlebar-button" data-tauri-drag-region>
+        <IconDragMove title="drag to move" data-tauri-drag-region/>
+      </div>
       <div id="titlebar-minimize" class="titlebar-button">
         <IconWindowMin title="minmize" />
       </div>
@@ -56,6 +58,7 @@ import {
   IconAddBook,
   IconHome,
   IconRefresh,
+  IconDragMove,
 } from "@/components/icons";
 import BookAdder from "@/components/common/BookAdder.vue";
 import PopupThemeSelecter from "@/components/popups/PopupThemeSelecter.vue";
@@ -69,10 +72,11 @@ export default {
     IconWindowClose,
     IconThemeChange,
     IconAddBook,
-    BookAdder,
     IconHome,
     IconRefresh,
+    IconDragMove,
     PopupThemeSelecter,
+    BookAdder,
   },
   data() {
     return {

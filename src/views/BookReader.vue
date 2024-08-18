@@ -25,12 +25,12 @@
 
     <div
       id="hs-overlay-right"
-      class="contents-container header py-8 hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 end-0 transition-all duration-300 transform h-full max-w-xl w-full z-[4800] border-s border-[--header-color]"
+      class="contents-container py-8 hidden fixed top-0 end-0 h-full max-w-xl w-fit z-[4800] border-l-2 border-[--header-color]"
       tabindex="-1"
     >
-      <div class="contents-header flex justify-between items-center py-3 px-4 border-b">
+      <div class="contents-header header flex justify-between items-center py-3 px-4 border-b">
         <h3 class="font-bold">Contents</h3>
-        <button
+        <!-- <button
           type="button"
           class="flex justify-center items-center size-7 text-sm font-semibold rounded-full border border-transparent"
           data-hs-overlay="#hs-overlay-right"
@@ -51,7 +51,7 @@
             <path d="M18 6 6 18"></path>
             <path d="m6 6 12 12"></path>
           </svg>
-        </button>
+        </button> -->
       </div>
 
       <div class="contents-body overflow-y-auto h-full p-4 py-6">
@@ -107,6 +107,7 @@ import {
   initTheme,
 } from "@/theme/theme";
 import { mapState } from 'vuex';
+import { HSOverlay } from 'preline';
 
 export default {
   name: "BookReader",
@@ -512,6 +513,27 @@ export default {
     initViewerWidth() {
       // this.viewerWidth = this.$store.state.viewerWidth;
     },
+
+    // initContentsBtn() {
+    //   const contentsBtn = document.querySelector('#footerbar-contents');
+    //   // 为目录按钮绑定事件
+    //   contentsBtn.addEventListener('click', () => {
+    //     // 如果contents-container包含类slide-left，则移除，否则加入
+    //     const contents = document.querySelector('#hs-overlay-right');
+    //     if (contents.classList.contains('slide-left')) {
+    //       contents.classList.remove('slide-left');
+    //     } else {
+    //       contents.classList.add('slide-left');
+    //     }
+    //   });
+
+    //   // const modal = new HSOverlay(document.querySelector('#hs-overlay-right'));
+    //   // console.log(modal);
+    //   // const el = HSOverlay.getInstance('#hs-overlay-right');
+    //   // openBtn.addEventListener('click', () => {
+    //   //   el.on('open', (instance) => {});
+    //   // });
+    // }
     
   },
 
@@ -554,7 +576,8 @@ export default {
       localStorage.setItem("currentBook", this.fileName);
       this.loadBook().then(this.setChapterTitle);
     }
-    
+
+    // this.initContentsBtn();
   },
 
   beforeUnmount() {
@@ -575,4 +598,30 @@ export default {
 
 <style scoped>
 /* Tailwind classes are used instead of custom styles */
+.slide-left {
+	-webkit-animation: slide-left 0.5s cubic-bezier(0.0250, 0.0460, 0.450, 0.940) both;
+	        animation: slide-left 0.5s cubic-bezier(0.0250, 0.0460, 0.450, 0.940) both;
+}
+
+ @-webkit-keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-100px);
+            transform: translateX(-100px);
+  }
+}
+@keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-100px);
+            transform: translateX(-100px);
+  }
+}
+
 </style>

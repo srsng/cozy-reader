@@ -173,6 +173,7 @@ export default {
         "阅读页面宽度最小为屏幕宽度的10%",
         "每次调整完阅读页面宽度后，需要刷新页面重新渲染",
         "出现弹窗后，再次点击按钮才会关闭弹窗",
+        "有时书籍标题太长没法移动窗口，试试右上角第一个按钮",
       ];
       // const en_us = [];
       const tips = zh_cn;
@@ -184,14 +185,8 @@ export default {
 </script>
 
 <style>
-.footerbar .center-section {
+/* .footerbar .center-section {
   flex: 1;
   overflow: hidden;
-}
-/* 
-.footerbar .center-section .footerbar-content {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 } */
 </style>

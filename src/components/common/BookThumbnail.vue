@@ -8,8 +8,8 @@
     <div class="hover:bg-black/20 transition duration-200 ">
       <div class="default-cover w-full aspect-[3/4.5] rounded-r-lg flex flex-col overflow-hidden bg-gradient-to-b from-transparent to-black/20">
         <div class=" p-4">
-        <h2 class="font-semibold text-xl tracking-snug leading-snug text-white">{{ truncatedTitle }}</h2>
-        <p v-if="book.author && book.author !== 'Unknown Author'" class="text-xl tracking-snug leading-snug font-semibold text-black">{{ book.author }}</p>
+        <h2 class="font-semibold text-xl md:text-md tracking-snug leading-snug text-white">{{ truncatedTitle }}</h2>
+        <p v-if="book.author && book.author !== 'Unknown Author'" class="text-xl md:text-md tracking-snug leading-snug font-semibold text-black">{{ book.author }}</p>
       </div>
       </div>
       <button
