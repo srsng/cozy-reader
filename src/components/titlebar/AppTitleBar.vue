@@ -23,8 +23,8 @@
     </div>
 
     <!-- 中间部分 -->
-    <div class="center-section flex-grow flex justify-center items-center overflow-hidden">
-      <div  id="app-title"  class="center-content truncate">
+    <div data-tauri-drag-region class="center-section flex-grow flex justify-center items-center overflow-hidden">
+      <div id="app-title"  class="center-content truncate">
         <!-- title maybe too long to let right buttons show in right case -->
         <p>{{ appTitle }}</p>
       </div>
