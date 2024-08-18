@@ -1,6 +1,7 @@
 <template>
   <div
     class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none truncate"
+    @contextmenu.prevent
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">

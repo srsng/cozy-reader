@@ -2,6 +2,7 @@
   <div
     data-tauri-drag-region
     class="titlebar header z-[6000] flex justify-between items-center fixed top-0 left-0 right-0 h-8 select-none"
+    @contextmenu.prevent
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
