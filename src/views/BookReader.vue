@@ -371,12 +371,6 @@ export default {
         .prose ul, .prose ol { margin-top: 1em; margin-bottom: 1em; padding-left: 1.5em; }
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}
-        .prose img { 
-          margin-top: 1em; margin-bottom: 1em; 
-          width: 80%;
-          height: 100%;
-          margin-left:auto;
-          margin-right:auto;}
 
         blockquote {
           border-left: 10px solid var(--text-color);
@@ -484,12 +478,12 @@ export default {
       .classList.remove("translate-x-full");
       document.getElementById("overlay").classList.remove("hidden");
       document.body.classList.add("overflow-hidden");
-      console.log("openSidebar");
+      // console.log("openSidebar");
     },
 
     closeSidebar() {
       // Use the third-party library to close the sidebar
-      console.log("closeSidebar");
+      // console.log("closeSidebar");
       if (window.HSOverlay) {
         window.HSOverlay.close(document.querySelector("#hs-overlay-right"));
       } else {
@@ -510,31 +504,6 @@ export default {
         return;
       }
     },
-    initViewerWidth() {
-      // this.viewerWidth = this.$store.state.viewerWidth;
-    },
-
-    // initContentsBtn() {
-    //   const contentsBtn = document.querySelector('#footerbar-contents');
-    //   // 为目录按钮绑定事件
-    //   contentsBtn.addEventListener('click', () => {
-    //     // 如果contents-container包含类slide-left，则移除，否则加入
-    //     const contents = document.querySelector('#hs-overlay-right');
-    //     if (contents.classList.contains('slide-left')) {
-    //       contents.classList.remove('slide-left');
-    //     } else {
-    //       contents.classList.add('slide-left');
-    //     }
-    //   });
-
-    //   // const modal = new HSOverlay(document.querySelector('#hs-overlay-right'));
-    //   // console.log(modal);
-    //   // const el = HSOverlay.getInstance('#hs-overlay-right');
-    //   // openBtn.addEventListener('click', () => {
-    //   //   el.on('open', (instance) => {});
-    //   // });
-    // }
-    
   },
 
   watch: {
@@ -577,7 +546,6 @@ export default {
       this.loadBook().then(this.setChapterTitle);
     }
 
-    // this.initContentsBtn();
   },
 
   beforeUnmount() {
@@ -596,32 +564,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Tailwind classes are used instead of custom styles */
-.slide-left {
-	-webkit-animation: slide-left 0.5s cubic-bezier(0.0250, 0.0460, 0.450, 0.940) both;
-	        animation: slide-left 0.5s cubic-bezier(0.0250, 0.0460, 0.450, 0.940) both;
-}
-
- @-webkit-keyframes slide-left {
-  0% {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-  }
-  100% {
-    -webkit-transform: translateX(-100px);
-            transform: translateX(-100px);
-  }
-}
-@keyframes slide-left {
-  0% {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-  }
-  100% {
-    -webkit-transform: translateX(-100px);
-            transform: translateX(-100px);
-  }
-}
-
-</style>
+<style scoped> </style>

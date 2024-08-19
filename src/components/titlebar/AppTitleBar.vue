@@ -125,7 +125,7 @@ export default {
     },
     cycleTheme,
     toggleThemeSelecterPopup() {
-      console.log("toggleThemeSelecterPopup");
+      // console.log("toggleThemeSelecterPopup");
       this.showThemeSelecterPopup = !this.showThemeSelecterPopup;
     },
   },

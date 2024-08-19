@@ -1,6 +1,6 @@
 <!-- HomeView.vue -->
 <template>
-  <div class="flex flex-col min-h-screen pt-8">
+  <div class="flex flex-col min-h-screen pt-8 bg-transparent">
     <!-- <AppHeader @upload-books="uploadBooks" @cycle-theme="cycleTheme"></AppHeader> -->
     <div class="drop flex-grow w-full" @dragover.prevent @drop="uploadBooks">
       <div class="content w-full px-4 sm:px-6">

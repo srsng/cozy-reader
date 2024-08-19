@@ -1,9 +1,9 @@
 // 启用的主题
 const themes = [
   "theme-light-blue",
+  "theme-light-coral",
   "theme-gray-blue",
   "theme-dark-gray",
-  "theme-light-coral",
 ];
 
 // 主题Map
