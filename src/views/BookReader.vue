@@ -1,8 +1,8 @@
 <template>
-  <div ref="scrollContainer" class="scroll-container">
+  <div>
     <div
       id="viewer"
-      class="scrolled ml-auto mr-auto mb-20"
+      class="scrolled ml-auto mr-auto my-20"
       :class="{ hidden: isResizing}"
       :style="{ 'max-width': viewerWidth + '%' }"
     ></div>
@@ -131,35 +131,30 @@ export default {
       toc: [],
       resizeTimeout: null,
       isResizing: false,
-      scrollTimer: null,
-      bottomTimer: null,
-      // viewerWidth: null
+      atBottom: false,
+      scrollTimeout: null,
     };
   },
   methods: {
-    handleScroll(event) {
-      console.log("scroll");
-      if (this.scrollTimer) {
-        clearTimeout(this.scrollTimer);
+    handleScroll() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const atBottom = scrollTop + windowHeight === scrollHeight;
+      if (atBottom) {
+        // this.atBottom = true;
+        clearTimeout(this.scrollTimeout);
+        this.scrollTimeout = setTimeout(() => {
+          this.atBottom = true;
+        }, 2000);
       }
-
-      this.scrollTimer = setTimeout(() => {
-        const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-        console.log("bottom", bottom);
-        if (bottom) {
-          if (!this.bottomTimer) {
-            this.bottomTimer = setTimeout(() => {
-              this.goNext();
-              this.bottomTimer = null; // 重置定时器
-            }, 2000); // 2秒的延迟时间
-          }
-        } else {
-          if (this.bottomTimer) {
-            clearTimeout(this.bottomTimer);
-            this.bottomTimer = null;
-          }
-        }
-      }, 100); // 100ms 的延迟时间，可以根据需要调整
+    },
+    handleWheel(event) {
+      if (this.atBottom && event.deltaY > 0) {
+        this.goNext();
+        this.atBottom = false;
+        clearTimeout(this.scrollTimeout);
+      }
     },
     getChapterTitle() {
       try {
@@ -427,12 +422,12 @@ export default {
     },
 
     goNext(event) {
-      event.preventDefault();
+      if( event ) {event.preventDefault();}
       this.rendition.next().then(this.setChapterTitle);
     },
 
     goPrev(event) {
-      event.preventDefault();
+      if( event ) {event.preventDefault();}
       this.rendition.prev().then(this.setChapterTitle);
     },
 
@@ -529,7 +524,8 @@ export default {
     window.addEventListener("keydown", this.handleKeydown);
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("beforeunload", this.saveCurrentLocation);
-    this.$refs.scrollContainer.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('wheel', this.handleWheel);
 
     if (!this.fileName) {
       const savedFileName = localStorage.getItem("currentBook");
@@ -553,13 +549,9 @@ export default {
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("beforeunload", this.saveCurrentLocation);
 
-    this.$refs.scrollContainer.removeEventListener('scroll', this.handleScroll);
-    if (this.scrollTimer) {
-      clearTimeout(this.scrollTimer);
-    }
-    if (this.bottomTimer) {
-      clearTimeout(this.bottomTimer);
-    }
+    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('wheel', this.handleWheel);
+    clearTimeout(this.scrollTimeout);
   },
 };
 </script>

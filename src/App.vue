@@ -1,7 +1,7 @@
 <template>
   <div>
-    <AppTitleBar/>
-    <router-view/>
+    <AppTitleBar />
+      <router-view />
     <FooterBar />
   </div>
 </template>
@@ -16,7 +16,6 @@ export default {
     AppTitleBar,
     FooterBar,
   },
-
 };
 </script>
 
