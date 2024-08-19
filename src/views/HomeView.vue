@@ -1,13 +1,15 @@
 <!-- HomeView.vue -->
 <template>
   <div class="flex flex-col min-h-screen pt-8 bg-transparent">
-    <!-- <AppHeader @upload-books="uploadBooks" @cycle-theme="cycleTheme"></AppHeader> -->
     <div class="drop flex-grow w-full" @dragover.prevent @drop="uploadBooks">
       <div class="content w-full px-4 sm:px-6">
         <div v-if="books.length === 0" @click="triggerUpload" class="pt-6">
           <p class="text-xl font-semibold pb-2">Your library is empty.</p>
           <p class="pb-3">
-            Drop a DRM-free Epub here or click 'Add books' to get started.
+            Use the third button in the toolbar to add epub books to your library.
+          </p>
+          <p class="pb-3">
+            You can also drag and drop files here to add them to your library.
           </p>
         </div>
 
