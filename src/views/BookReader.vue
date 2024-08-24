@@ -54,9 +54,9 @@
         </button> -->
       </div>
 
-      <div class="contents-body overflow-y-auto h-full p-4 py-6">
+      <div class="contents-body overflow-y-auto h-full p-4 pt-6 pb-16">
         <ul id="toc" class="space-y-2">
-          <button @click="conslelogToc">click for dev</button>
+          <!-- <button @click="conslelogToc">click for dev</button> -->
           <li v-for="(chapter, index) in toc" :key="index">
             <a
               href="#"
