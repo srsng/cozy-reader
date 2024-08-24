@@ -1,11 +1,12 @@
 <template>
   <div
-    class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none truncate"
+    class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none overflow-visible text-ellipsis whitespace-nowrap"
     @contextmenu.prevent
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
-      <!------主页: 致谢---阅读页: 空--------->
+      <!------主页: 致谢---阅读页: 调整页宽--------->
+      <!------阅读页: 调整页宽按钮与弹窗--------->
       <div v-if="curRouteNameIs('BookReader')">
         <div id="footerbar-change-doc-width" class="footerbar-button" @click="toggleChangeDocWidthPopup">
           <IconDocumentWidth title="change doc width" />
@@ -187,9 +188,4 @@ export default {
 };
 </script>
 
-<style>
-/* .footerbar .center-section {
-  flex: 1;
-  overflow: hidden;
-} */
-</style>
+<style> </style>

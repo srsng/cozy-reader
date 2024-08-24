@@ -1,5 +1,7 @@
 <template>
-  <div class="popup flex items-center border-solid border-2">
+  <div 
+  class="popup flex items-center border-solid border-2 select-none"
+  >
     <div
       class="popup-button footerbar-button"
       id="increase-doc-width"

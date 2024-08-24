@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="z-0">
     <div
       id="viewer"
       class="scrolled ml-auto mr-auto my-20"
