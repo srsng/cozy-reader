@@ -1,14 +1,7 @@
-// 启用的主题
-const themes = [
-  "theme-light-blue",
-  "theme-light-coral",
-  "theme-gray-blue",
-  "theme-dark-gray",
-];
-
 // 主题Map
 // 内部值不带分号;
 import themesMap from "./theme.json";
+const themes = Object.keys(themesMap);
 
 function getCurrentTheme() {
   const savedTheme = localStorage.getItem("currTheme");
@@ -27,7 +20,6 @@ function setTheme(theme) {
 
     const iframe = document.querySelector("#viewer iframe");
     if (iframe) {
-      // console.log('iframe yes', iframe);
       const iframeDocument =
         iframe.contentDocument || iframe.contentWindow.document;
       iframeDocument.body.classList.remove(...themes);
@@ -64,8 +56,8 @@ function getThemesStr() {
   let styles = "";
 
   for (const [theme, properties] of Object.entries(themesMap)) {
-    styles += `${theme} {\n`;
-    for (const [property, value] of Object.entries(properties)) {
+    styles += `.${theme} {\n`;
+    for (const [property, value] of Object.entries(properties.css)) {
       styles += `  ${property}: ${value};\n`;
     }
     styles += `}\n\n`;

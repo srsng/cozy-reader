@@ -15,3 +15,6 @@ export { default as IconRefresh } from "@/components/icons/IconRefresh.vue";
 export { default as IconCycle } from "@/components/icons/IconCycle.vue";
 export { default as IconYes } from "@/components/icons/IconYes.vue";
 export { default as IconDragMove } from "@/components/icons/IconDragMove.vue";
+export { default as IconSun } from "@/components/icons/IconSun.vue";
+export { default as IconMoon } from "@/components/icons/IconMoon.vue";
+export { default as IconSunMoon } from "@/components/icons/IconSunMoon.vue";
