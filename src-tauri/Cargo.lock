@@ -427,7 +427,7 @@ dependencies = [
 
 [[package]]
 name = "cozy-reader"
-version = "0.1.4"
+version = "0.1.0"
 dependencies = [
  "epub",
  "serde",

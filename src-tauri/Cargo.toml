@@ -1,6 +1,6 @@
 [package]
 name = "cozy-reader"
-version = "0.1.4"
+version = "0.1.0"
 description = "A simple but nice epub reader"
 authors = ["srsng"]
 license = "MIT"
