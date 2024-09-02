@@ -1,0 +1,40 @@
+{
+  "theme-light-blue": {
+    "name": "Blue | 蓝",
+    "type": "light",
+    "css": {
+      "--header-color": "#006fc9",
+      "--header-text-color": "#e5e7eb",
+      "--background-color": "#f2f2f2",
+      "--text-color": "#323130"
+    }
+  },
+  "theme-gray-blue": {
+    "name": "Gray-Blue | 灰蓝",
+    "type": "both",
+    "css": {
+      "--header-color": "#374151",
+      "--background-color": "#4b5563",
+      "--text-color": "#e5e7eb"
+    }
+  },
+  "theme-dark-gray": {
+    "name": "Gray | 暗灰",
+    "type": "dark",
+    "css": {
+      "--header-color": "#333333",
+      "--background-color": "#282828",
+      "--text-color": "#e5e7eb"
+    }
+  },
+  "theme-light-coral": {
+    "name": "Coral | 珊瑚红",
+    "type": "light",
+    "css": {
+      "--header-color": "#f08080",
+      "--header-text-color": "#e5e7eb",
+      "--background-color": "#f2f2f2",
+      "--text-color": "#323130"
+    }
+  }
+}

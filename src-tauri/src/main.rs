@@ -4,6 +4,7 @@
 )]
 
 mod handler;
+mod setup;
 mod theme;
 
 // #[tauri::command]

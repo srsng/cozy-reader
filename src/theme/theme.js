@@ -1,7 +1,8 @@
 import { Store } from '@tauri-apps/plugin-store';
 
-const store = new Store('store.bin');
+const store = new Store('theme_store.bin');
 
+import tempThemesMap from "./theme.json";
 // 主题Map
 // 内部值不带分号;
 // import themesMap from "./theme.json";
@@ -87,14 +88,31 @@ function addTheme(themeIdentifier, properties) {
   //   }
   // }
   // console.log("addTheme", theme, properties);
+  
   themesMap[themeIdentifier] = properties;
   store.set('app-theme', themesMap);
   store.save();
+  
+  document.querySelector("#titlebar-fresh").click();
 }
 
 function deleteTheme(themeIdentifier) {
   delete themesMap[themeIdentifier];
   store.set('app-theme', themesMap);
+  store.save();
+
+  if (Object.keys(themesMap).length === 0) {
+    resetThemeStore();
+    alert("主题配置文件为空，已经重置主题配置文件。");
+  }
+  document.querySelector("#titlebar-fresh").click();
+  
+}
+
+function resetThemeStore() {
+  console.log("resetThemeStore", tempThemesMap);
+  // 保存到store
+  store.set('app-theme', tempThemesMap);
   store.save();
 }
 

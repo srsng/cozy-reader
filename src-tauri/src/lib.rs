@@ -3,13 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-use std::path::PathBuf;
-
-use serde::de;
-use serde_json::json;
-use tauri::{Manager, Wry};
-use tauri_plugin_store::{with_store, StoreCollection};
-
 pub mod handler {
     pub mod file;
     pub mod funcs;
@@ -17,6 +10,7 @@ pub mod handler {
 pub mod theme {
     pub mod theme;
 }
+pub mod setup;
 
 // use tauri::api::shell;
 // use tauri::{CustomMenuItem, Manager, Menu, Submenu};
@@ -65,39 +59,7 @@ pub fn run() {
         //     }
         //     Ok(())
         // })
-        .setup(|app| {
-            let stores = app.app_handle().state::<StoreCollection<Wry>>();
-            let path = PathBuf::from("store.bin");
-
-            let _ = with_store(app.app_handle().clone(), stores, path, |store| {
-                if !store.has("app-theme") {
-                    let default_theme = theme::theme::default_theme();
-                    store.insert("app-theme".to_string(), default_theme)?;
-                    store.save()?;
-                } else {
-                    // 通过序列化检查主题的值是否有效，如果无效则重置为默认值。
-                    if let Err(_e) = serde_json::to_string(store.get("app-theme").unwrap()) {
-                        let default_theme = theme::theme::default_theme();
-                        store.insert("app-theme".to_string(), default_theme)?;
-                        store.save()?;
-                    }
-                }
-                // store.insert("some-key".to_string(), json!({ "value": 5 }))?;
-
-                // 从 Store 中获取一个值。
-                // let value = store.get("some-key").expect("Failed to get value from store");
-                // println!("{}", value); // {"value":5}
-                Ok(())
-            });
-
-            Ok(())
-        })
+        .setup(setup::setup_app)
         .run(ctx)
         .expect("error while running tauri application");
-    // tauri::Builder::default()
-    //     .plugin(tauri_plugin_store::Builder::new().build())
-    //     .plugin(tauri_plugin_shell::init())
-    //     .invoke_handler(tauri::generate_handler![send_epub2, exit_app])
-    //     .run(tauri::generate_context!())
-    //     .expect("error while running tauri application");
 }
