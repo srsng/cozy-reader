@@ -53,7 +53,7 @@
       </div>
     </div>
     <div>
-      <div class="ml-2">新建一个属于你的主题</div>
+      <div class="ml-2 text-[--text-color]">创建一个属于你的主题</div>
       <!-- <div class="w-full popup-sub border-solid border-t-2 my-2"></div> -->
       <PopupAddTheme v-show="showThemeAdderPopup" class="top-36 left-64 text-[--text-color]"/>
     </div>

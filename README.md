@@ -9,7 +9,7 @@
 - 完全本地
 - 滚动化阅读，让阅读连续
 - Windows、MacOS、Ubuntu多平台支持
-- 支持多种明、暗主题，未来将支持自定义主题
+- 支持多种明、暗主题，支持自定义主题
 
 ## 限制
 
@@ -22,6 +22,7 @@
 - 少数ePub电子书制作不完全规范，章节显示会有问题。
 - 部分操作结束后可能需要使用左上第4个按钮刷新重新加载
 
+## 截图（v0.1.5）
 ![Screenshot](./public/screenshot.png)
 ![Screenshot2](./public/screenshot2.png)  
 
