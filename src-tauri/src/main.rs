@@ -4,6 +4,7 @@
 )]
 
 mod handler;
+mod theme;
 
 // #[tauri::command]
 // fn backend_add(number: i32) -> i32 {

@@ -1,6 +1,11 @@
+import { Store } from '@tauri-apps/plugin-store';
+
+const store = new Store('store.bin');
+
 // 主题Map
 // 内部值不带分号;
-import themesMap from "./theme.json";
+// import themesMap from "./theme.json";
+const themesMap = await store.get('app-theme');
 const themes = Object.keys(themesMap);
 
 function getCurrentTheme() {
@@ -66,11 +71,40 @@ function getThemesStr() {
   return styles;
 }
 
+function addTheme(themeIdentifier, properties) {
+  // themeIdentifier为一个有格式的字符串: theme-dark/light/both-anyColorName
+  // e.g.  "theme-light-blue"
+  // properties 主题内容
+  // e.g.
+  // {
+  //   "name": "Blue | 蓝",
+  //   "type": "light",
+  //   "css": {
+  //     "--header-color": "#006fc9",
+  //     "--header-text-color": "#e5e7eb",
+  //     "--background-color": "#f2f2f2",
+  //     "--text-color": "#323130"
+  //   }
+  // }
+  // console.log("addTheme", theme, properties);
+  themesMap[themeIdentifier] = properties;
+  store.set('app-theme', themesMap);
+  store.save();
+}
+
+function deleteTheme(themeIdentifier) {
+  delete themesMap[themeIdentifier];
+  store.set('app-theme', themesMap);
+  store.save();
+}
+
 export {
   themes,
   getCurrentTheme,
   setTheme,
   cycleTheme,
+  addTheme,
+  deleteTheme,
   resetCurrentTheme,
   initTheme,
   themesMap,

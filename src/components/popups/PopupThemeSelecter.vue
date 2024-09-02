@@ -1,14 +1,16 @@
 <template>
   <div
-    class="popup flex overflow-y-auto flex-col w-48 h-96 select-none rounded-lg border-solid border-2"
+    class="popup flex overflow-y-auto overflow-x-hidden flex-col w-64 h-96 select-none rounded-lg border-solid border-2"
     @click.stop
   >
-    <div class="header flex w-full">
-      <div id="cycleTheme" class="titlebar-button">
-        <IconCycle @click.stop="cycleTheme" />
+    <header class="w-full flex items-center justify-between">
+      <div class="pl-2">主题</div>
+      <div>
+        <div id="cycleTheme" class="titlebar-button">
+          <IconCycle @click.stop="cycleTheme" />
+        </div>
       </div>
-      <span class="items-center">Cycle to Next theme</span>
-    </div>
+    </header>
     <div class="w-full popup-sub border-solid border-t-2"></div>
     <div v-for="(theme, index) in themes" :key="index" class="w-full">
       <div
@@ -19,17 +21,17 @@
           class="w-full h-6 truncate flex items-center justify-between"
           :class="theme"
         >
-          <div class="flex items-center">
+          <div class="flex items-center pl-1">
             <IconMoon v-if="themesMap[theme].type === 'dark'" />
             <IconSun v-else-if="themesMap[theme].type === 'light'" />
             <IconSunMoon v-else />
             <span class="ml-2">{{ "theme " + (index + 1) }}</span>
+            <div class="w-max h-fit titlebar-button rounded-full bg-[--background-color] ml-1">
+              <IconYes class="text-[--text-color]" @click.stop="setTheme(theme)"/>
+            </div>
           </div>
-          <div
-            class="w-max h-fit titlebar-button rounded-full bg-[--background-color]"
-            @click.stop="setTheme(theme)"
-          >
-            <IconYes class="text-[--text-color]" />
+          <div class="w-max h-fit titlebar-button rounded-full bg-[--background-color]">
+            <IconWindowClose class="text-[--text-color]" @click.stop="deleteTheme(theme)"/>
           </div>
         </header>
         <div
@@ -40,37 +42,58 @@
         </div>
       </div>
     </div>
+    <div class="w-full popup-sub border-solid border-t-2 mt-2"></div>
+    <div class="w-full flex items-center justify-between pl-2 header">
+      添加主题 | Add Theme
+      <div id="addTheme" class="titlebar-button">
+        <IconPlus @click.stop="toggleThemeAdderPopup"/>
+      </div>
+    </div>
+    <div class="w-full popup-sub border-solid border-t-2 mb-2"></div>
+    <PopupAddTheme v-show="showThemeAdderPopup" class="top-36 left-64 text-[--text-color]"/>
   </div>
 </template>
 
 <script>
-import { themes, themesMap, setTheme, cycleTheme } from "@/theme/theme.js";
+import { themes, themesMap, setTheme, cycleTheme, addTheme, deleteTheme } from "@/theme/theme.js";
 import {
   IconCycle,
   IconYes,
+  IconPlus,
   IconSun,
   IconMoon,
   IconSunMoon,
+  IconWindowClose,
 } from "@/components/icons";
+import PopupAddTheme from "@/components/popups/PopupAddTheme.vue";
 
 export default {
   name: "PopupThemeSelecter",
   components: {
     IconCycle,
     IconYes,
+    IconPlus,
     IconSun,
     IconMoon,
     IconSunMoon,
+    IconWindowClose,
+    PopupAddTheme,
   },
   data() {
     return {
       themes: themes,
       themesMap: themesMap,
+      showThemeAdderPopup: false,
     };
   },
   methods: {
     setTheme,
     cycleTheme,
+    addTheme,
+    deleteTheme,
+    toggleThemeAdderPopup() {
+      this.showThemeAdderPopup = !this.showThemeAdderPopup;
+    },
   },
 };
 </script>

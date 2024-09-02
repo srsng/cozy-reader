@@ -117,7 +117,6 @@ export default {
       }
     },
     handleFileChange(event) {
-      // this.$emit("upload-books", event);
       this.setUploadBooksStatus({ uploading: true, solving: false, event: event, });
     },
     refreshPage() {
@@ -125,7 +124,6 @@ export default {
     },
     cycleTheme,
     toggleThemeSelecterPopup() {
-      // console.log("toggleThemeSelecterPopup");
       this.showThemeSelecterPopup = !this.showThemeSelecterPopup;
     },
   },
