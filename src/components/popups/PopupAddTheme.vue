@@ -19,37 +19,37 @@
       <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
       
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="header-color-input">Header Color:</label>
+        <label for="header-color-input" class="ml-1">Header Color:</label>
         <input type="color" id="header-color-input" name="header-color-input" />
       </div>
       <br />
 
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="background-color-input">Background Color:</label><br>
+        <label for="background-color-input" class="ml-1">Background Color:</label><br>
         <input type="color" id="background-color-input" name="background-color-input" />
       </div>
       <br />
       
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="header-text-color-input">Header Text Color:</label><br>
+        <label for="header-text-color-input" class="ml-1">Header Text Color:</label><br>
         <input type="color" id="header-text-color-input" name="header-text-color-input" />
       </div>
       <div>
-        <input type="checkbox" id="header-text-color-checkbox" @change="toggleHeaderTextColor">
+        <input type="checkbox" id="header-text-color-checkbox" class="ml-1" @change="toggleHeaderTextColor">
         需要HeaderTextColor
       </div>
       <br>
 
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="other-text-color-input">Other Text Color:</label><br>
+        <label for="other-text-color-input" class="ml-1">Other Text Color:</label><br>
         <input type="color" id="other-text-color-input" name="other-text-color-input" />
       </div>
 
       <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-      <div class="w-full flex items-center justify-between mb-4">
-        <div @click.stop="saveTheme" class="titlebar-button ml-8 w-fit p-2 rounded-md">保存主题</div>
-        <div @click.stop="cancel" class="titlebar-button mr-8 w-fit p-2 rounded-md">取消</div>
+      <div class="w-full flex items-center justify-between mb-2">
+        <div @click.stop="saveTheme" class="titlebar-button ml-4 w-fit p-2 rounded-md">保存主题</div>
+        <div @click.stop="cancel" class="titlebar-button mr-4 w-fit p-2 rounded-md">取消添加</div>
       </div>
     </form>
   </div>

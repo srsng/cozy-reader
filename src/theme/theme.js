@@ -9,6 +9,10 @@ import tempThemesMap from "./theme.json";
 const themesMap = await store.get('app-theme');
 const themes = Object.keys(themesMap);
 
+function refreshPage() {
+  document.querySelector("#titlebar-fresh").click();
+}
+
 function getCurrentTheme() {
   const savedTheme = localStorage.getItem("currTheme");
   if (savedTheme && themes.includes(savedTheme)) {
@@ -88,12 +92,12 @@ function addTheme(themeIdentifier, properties) {
   //   }
   // }
   // console.log("addTheme", theme, properties);
-  
+
   themesMap[themeIdentifier] = properties;
   store.set('app-theme', themesMap);
   store.save();
   
-  document.querySelector("#titlebar-fresh").click();
+  refreshPage()
 }
 
 function deleteTheme(themeIdentifier) {
@@ -105,7 +109,7 @@ function deleteTheme(themeIdentifier) {
     resetThemeStore();
     alert("主题配置文件为空，已经重置主题配置文件。");
   }
-  document.querySelector("#titlebar-fresh").click();
+  refreshPage()
   
 }
 
@@ -114,6 +118,75 @@ function resetThemeStore() {
   // 保存到store
   store.set('app-theme', tempThemesMap);
   store.save();
+}
+
+async function exportThemes() {
+  try {
+    if (!themesMap) {
+      throw new Error('No themes found in the store');
+    }
+
+    // 将主题 Map 转换为 JSON 字符串
+    const themesStr = JSON.stringify(themesMap, null, 2);
+    // 复制到用户的粘贴板上
+    await navigator.clipboard.writeText(themesStr);
+    alert('Themes have been copied to clipboard.\n主题数据已经复制到了你的剪贴板。');
+  } catch (error) {
+    console.error('Failed to export themes:', error.message);
+    alert(`导出主题失败: ${error.message}`);
+  }
+}
+
+function importThemes(themesStr) {
+  try {
+    // 尝试解析 JSON 字符串
+    const themesObj = JSON.parse(themesStr);
+
+    // 验证主题对象是否包含必要的字段
+    if (!themesObj || typeof themesObj !== 'object') {
+      throw new Error('Invalid theme object\n无效的主题');
+    }
+
+    // 遍历每个主题，检查其结构
+    for (const themeKey in themesObj) {
+      const theme = themesObj[themeKey];
+
+      // 检查主题是否包含必要的字段
+      if (!theme.name || typeof theme.name !== 'string') {
+        throw new Error(`Missing or invalid name for theme: ${themeKey}\n主题缺少名称或名称无效: ${themeKey}`);
+      }
+
+      if (!theme.type || (theme.type !== 'light' && theme.type !== 'dark' && theme.type !== 'both')) {
+        throw new Error(`Missing or invalid type for theme: ${themeKey}\n主题缺少类型或类型无效: ${themeKey}`);
+      }
+
+      if (!theme.css || typeof theme.css !== 'object') {
+        throw new Error(`Missing or invalid css for theme: ${themeKey}\n主题缺少CSS或CSS无效: ${themeKey}`);
+      }
+
+      const requiredCssFields = ['--header-color', '--background-color', '--text-color'];
+      for (const field of requiredCssFields) {
+        if (!theme.css.hasOwnProperty(field)) {
+          throw new Error(`Missing required CSS field: ${field} for theme: ${themeKey}\n主题缺少必要的CSS字段: ${field}`);
+        }
+      }
+
+      // 可选字段检查
+      //   if (theme.css['--header-text-color'] && typeof theme.css['--header-text-color'] !== 'string') {
+      //     throw new Error(`Invalid header-text-color for theme: ${themeKey}\n主题的header-text-color无效: ${themeKey}`);
+      //   }
+    }
+
+    // 保存主题到 store
+    store.set('app-theme', themesObj);
+    store.save();
+
+    // 刷新界面
+    document.querySelector("#titlebar-fresh").click();
+  } catch (error) {
+    console.error('Failed to import themes:', error.message);
+    alert(`导入主题失败: ${error.message}`);
+  }
 }
 
 export {
@@ -127,4 +200,6 @@ export {
   initTheme,
   themesMap,
   getThemesStr,
+  importThemes,
+  exportThemes,
 };

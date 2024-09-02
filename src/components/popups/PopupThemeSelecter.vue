@@ -9,6 +9,9 @@
         <div id="cycleTheme" class="titlebar-button">
           <IconCycle @click.stop="cycleTheme" />
         </div>
+        <div id="exportThemes" class="titlebar-button">
+          <IconExport @click.stop="exportThemes" />
+        </div>
       </div>
     </header>
     <div class="w-full popup-sub border-solid border-t-2"></div>
@@ -44,18 +47,34 @@
     </div>
     <div class="w-full popup-sub border-solid border-t-2 mt-2"></div>
     <div class="w-full flex items-center justify-between pl-2 header">
-      添加主题 | Add Theme
+      新建主题 | New Theme
       <div id="addTheme" class="titlebar-button">
         <IconPlus @click.stop="toggleThemeAdderPopup"/>
       </div>
     </div>
+    <div>
+      <div class="ml-2">新建一个属于你的主题</div>
+      <!-- <div class="w-full popup-sub border-solid border-t-2 my-2"></div> -->
+      <PopupAddTheme v-show="showThemeAdderPopup" class="top-36 left-64 text-[--text-color]"/>
+    </div>
+
     <div class="w-full popup-sub border-solid border-t-2 mb-2"></div>
-    <PopupAddTheme v-show="showThemeAdderPopup" class="top-36 left-64 text-[--text-color]"/>
+    
+    <div class="w-full flex items-center justify-between pl-2 header">
+      导入主题 | Import Themes
+      <div id="importThemes" class="titlebar-button">
+        <IconImport @click.stop="importThemes" />
+      </div>
+    </div>
+    <textarea id="import-teme-paste-area" class="min-h-8 w-full mx-1" @paste="handlePaste" placeholder=" 粘贴文本，自动导入."></textarea>
+
+    <div class="w-full popup-sub border-solid border-t-2"></div>
+    
   </div>
 </template>
 
 <script>
-import { themes, themesMap, setTheme, cycleTheme, addTheme, deleteTheme } from "@/theme/theme.js";
+import { themes, themesMap, setTheme, cycleTheme, addTheme, deleteTheme, importThemes, exportThemes } from "@/theme/theme.js";
 import {
   IconCycle,
   IconYes,
@@ -64,6 +83,8 @@ import {
   IconMoon,
   IconSunMoon,
   IconWindowClose,
+  IconImport,
+  IconExport,
 } from "@/components/icons";
 import PopupAddTheme from "@/components/popups/PopupAddTheme.vue";
 
@@ -77,6 +98,8 @@ export default {
     IconMoon,
     IconSunMoon,
     IconWindowClose,
+    IconImport,
+    IconExport,
     PopupAddTheme,
   },
   data() {
@@ -91,8 +114,18 @@ export default {
     cycleTheme,
     addTheme,
     deleteTheme,
+    importThemes,
+    exportThemes,
     toggleThemeAdderPopup() {
       this.showThemeAdderPopup = !this.showThemeAdderPopup;
+    },
+    handlePaste(event) {
+      // 获取粘贴的文本
+      const pastedText = event.clipboardData.getData('text');
+      console.log('Pasted text:', pastedText); // 调试输出
+
+      // 调用 importThemes 函数
+      importThemes(pastedText);
     },
   },
 };
