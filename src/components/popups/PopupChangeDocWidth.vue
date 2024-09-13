@@ -1,6 +1,6 @@
 <template>
   <div 
-  class="popup flex items-center border-solid border-2 select-none"
+  class="popup flex items-center border-solid border-2 select-none h-fit text-[--text-color]"
   >
     <div
       class="popup-button footerbar-button"
