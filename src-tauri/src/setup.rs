@@ -1,9 +1,6 @@
-use std::{error::Error, path::PathBuf};
+use std::error::Error;
 use tauri::App;
-
-use serde_json::json;
-use tauri::{Manager, Wry};
-use tauri_plugin_store::{with_store, StoreCollection};
+use tauri::Manager;
 
 pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(debug_assertions)]

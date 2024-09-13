@@ -3,11 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-pub mod handler {
-    pub mod file;
-    pub mod funcs;
-}
-
 pub mod setup;
 
 // use tauri::api::shell;
