@@ -8,7 +8,7 @@ use tauri_plugin_store::{with_store, StoreCollection};
 use crate::theme::theme::default_theme;
 
 pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
-    setup_theme_store(app)?;
+    // setup_theme_store(app)?;
     Ok(())
 }
 
@@ -33,7 +33,7 @@ pub fn setup_theme_store(app: &mut App) -> Result<(), Box<dyn Error>> {
             }
         }
 
-        // 需要重置为默认值的情况：不存在该键. 值为空{}或者该键的值无法序列化，
+        // 需要重置为默认值的情况：不存在该键. 值为空{}或者该键的值无法序列化
         if !store.has("app-theme")
             || *store.get("app-theme").unwrap() == json!({})
             || serde_json::to_string(store.get("app-theme").unwrap()).is_err()
@@ -45,11 +45,6 @@ pub fn setup_theme_store(app: &mut App) -> Result<(), Box<dyn Error>> {
             store.insert("app-theme".to_string(), default_theme)?;
             store.save()?;
         }
-        // store.insert("some-key".to_string(), json!({ "value": 5 }))?;
-
-        // 从 Store 中获取一个值。
-        // let value = store.get("some-key").expect("Failed to get value from store");
-        // println!("{}", value); // {"value":5}
         Ok(())
     });
 

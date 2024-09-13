@@ -5,9 +5,19 @@ const store = new Store("theme_store.bin");
 import tempThemesMap from "./theme.json";
 // 主题Map
 // 内部值不带分号;
-// import themesMap from "./theme.json";
-const themesMap = await store.get("app-theme");
+const themesMap = await initThemeStore();
 const themes = Object.keys(themesMap);
+
+async function initThemeStore() {
+  const themesMap = await store.get("app-theme");
+
+  // 需要重置为默认值的情况：不存在该键, 值为空{}或者该键的值无法序列化
+  if (!themesMap || typeof themesMap !== "object") {
+    resetThemeStore();
+    return tempThemesMap;
+  }
+  return themesMap;
+}
 
 function refreshPage() {
   document.querySelector("#titlebar-fresh").click();
