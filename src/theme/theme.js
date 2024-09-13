@@ -239,6 +239,7 @@ function importThemes(themesStr) {
             themeKey += "-a";
           }
           themesMapCopy[themeKey] = theme;
+          addedThemes.push(themeKey + ": " + theme.name);
         }
       } else {
         // 主题标识符不存在
