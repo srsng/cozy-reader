@@ -26,7 +26,8 @@
 ![Screenshot](./public/screenshot.png)
 ![Screenshot2](./public/screenshot2.png)  
 
-
+## 反馈  
+欢迎提交issue反馈bug或提交新feature建议  
 
 ## 声明
 
