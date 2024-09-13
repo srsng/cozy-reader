@@ -5,7 +5,6 @@
 
 mod handler;
 mod setup;
-mod theme;
 
 fn main() {
     cozy_reader_lib::run()

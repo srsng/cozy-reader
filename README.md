@@ -27,7 +27,8 @@
 ![Screenshot2](./public/screenshot2.png)  
 
 ## 反馈  
-欢迎提交issue反馈bug或提交新feature建议  
+- 欢迎提交issue反馈bug或提交新feature建议  
+- 欢迎在issue中提交主题分享，请以 “\[主题分享\] 你的主题、描述等” 作为标题  
 
 ## 声明
 

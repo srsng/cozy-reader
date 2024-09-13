@@ -108,6 +108,7 @@ import {
 } from "@/theme/theme";
 import { mapState } from 'vuex';
 import { HSOverlay } from 'preline';
+import { Store } from "@tauri-apps/plugin-store";
 
 export default {
   name: "BookReader",
@@ -147,6 +148,8 @@ export default {
         this.scrollTimeout = setTimeout(() => {
           this.atBottom = true;
         }, 2000);
+      } else {
+        this.atBottom = false;
       }
     },
     handleWheel(event) {
@@ -195,7 +198,6 @@ export default {
     async loadBook() {
       try {
         const bookItem = await localforage.getItem(this.fileName);
-        // const bookItem = await Store.getItem(this.fileName);
         if (bookItem && bookItem.data) {
           this.book = ePub(bookItem.data);
 
@@ -472,7 +474,7 @@ export default {
       .getElementById("toc-sidebar")
       .classList.remove("translate-x-full");
       document.getElementById("overlay").classList.remove("hidden");
-      document.body.classList.add("overflow-hidden");
+      // document.body.classList.add("overflow-hidden");
       // console.log("openSidebar");
     },
 

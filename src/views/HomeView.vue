@@ -161,9 +161,6 @@ export default {
             data: bookData,
             info: bookInfo,
           });
-          // await invoke('plugin:store|set', { key: file.name, value: { data: bookData, info: bookInfo } });
-          // todo: store.set
-          // this.store.set(file.name, { data: bookData, info: bookInfo });
           this.books.push(bookInfo);
 
           console.log(`Successfully added ${file.name} to the library.`);
@@ -200,9 +197,6 @@ export default {
     },
     async deleteBook(fileName) {
       await localforage.removeItem(fileName);
-      // await invoke('plugin:store|remove', { key: fileName });
-      // todo: store.remove
-      // await this.store.delete(fileName);
     },
     showAlertMessage(message) {
       this.alertMessage = message;
@@ -211,15 +205,9 @@ export default {
   },
   async created() {
     const keys = await localforage.keys();
-    // const keys = await invoke('plugin:store|keys');
-    // todo: store.keys
-    // const keys = await this.store.keys();
     for (const key of keys) {
       try {
         const bookItem = await localforage.getItem(key);
-        // const bookItem = await invoke('plugin:store|get', { key });
-        // todo: store.get
-        // const bookItem = await this.store.get(key);
         if (bookItem && bookItem.info) {
           this.books.push(bookItem.info);
         }

@@ -1,8 +1,8 @@
 import { Store } from "@tauri-apps/plugin-store";
 
 const store = new Store("theme_store.bin");
-
-import tempThemesMap from "./theme.json";
+// 默认主题Map
+import defaultThemesMap from "./theme.json";
 // 主题Map
 // 内部值不带分号;
 const themesMap = await initThemeStore();
@@ -14,7 +14,7 @@ async function initThemeStore() {
   // 需要重置为默认值的情况：不存在该键, 值为空{}或者该键的值无法序列化
   if (!themesMap || typeof themesMap !== "object") {
     resetThemeStore();
-    return tempThemesMap;
+    return defaultThemesMap;
   }
   return themesMap;
 }
@@ -123,9 +123,9 @@ function deleteTheme(themeIdentifier) {
 }
 
 function resetThemeStore() {
-  console.log("resetThemeStore", tempThemesMap);
+  console.log("resetThemeStore", defaultThemesMap);
   // 保存到store
-  store.set("app-theme", tempThemesMap);
+  store.set("app-theme", defaultThemesMap);
   store.save();
 }
 
@@ -274,6 +274,7 @@ function importThemes(themesStr) {
   }
 }
 
+// 比较的是一层Map，一般只比较主题的css属性值
 function isSameTheme(theme1, theme2) {
   // 比较键的数量
   if (Object.keys(theme1).length !== Object.keys(theme2).length) {

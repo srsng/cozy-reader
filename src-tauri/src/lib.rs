@@ -7,9 +7,7 @@ pub mod handler {
     pub mod file;
     pub mod funcs;
 }
-pub mod theme {
-    pub mod theme;
-}
+
 pub mod setup;
 
 // use tauri::api::shell;

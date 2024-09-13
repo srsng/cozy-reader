@@ -60,12 +60,6 @@ import { addTheme, themesMap } from "@/theme/theme.js";
 export default {
   data() {
     return {
-      // themeName: "",
-      // themeType: "",
-      // headerColor: "",
-      // backgroundColor: "",
-      // headerTextColor: "",
-      // otherTextColor: "",
       isHeaderTextColorEnabled: false,
     };
   },

@@ -5,8 +5,6 @@ use serde_json::json;
 use tauri::{Manager, Wry};
 use tauri_plugin_store::{with_store, StoreCollection};
 
-use crate::theme::theme::default_theme;
-
 pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(debug_assertions)]
     {
