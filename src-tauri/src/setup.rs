@@ -1,5 +1,7 @@
 use std::error::Error;
 use tauri::App;
+
+#[warn(unused_imports)]
 use tauri::Manager;
 
 pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
@@ -11,6 +13,7 @@ pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+#[cfg(debug_assertions)]
 fn open_devtools(app: &mut App) -> Result<(), Box<dyn Error>> {
     let main_window = app.get_webview_window("main").unwrap();
     main_window.open_devtools();
