@@ -380,7 +380,7 @@ export default {
         }
         blockquote {
           border-left: 10px solid var(--text-color);
-          max-width: 90%;
+          margin: 1.5em 10px;
           padding: 0.5em 10px;
           quotes: "\\201C""\\201D""\\2018""\\2019";
         }
