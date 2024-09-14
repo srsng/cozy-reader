@@ -1,7 +1,6 @@
 use std::error::Error;
 use tauri::App;
 
-#[warn(unused_imports)]
 use tauri::Manager;
 
 pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
