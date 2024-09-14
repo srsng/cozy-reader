@@ -368,6 +368,16 @@ export default {
         .prose ul, .prose ol { margin-top: 1em; margin-bottom: 1em; padding-left: 1.5em; }
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}
+        p > img:only-child,
+        div > img:only-child {
+          margin-top: 1em;
+          margin-bottom: 1em;
+          max-width: 90%;
+          height: auto;
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        }
 
         blockquote {
           border-left: 10px solid var(--text-color);
