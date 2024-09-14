@@ -498,7 +498,6 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
- "tauri-plugin-store",
 ]
 
 [[package]]
@@ -3208,38 +3207,6 @@ dependencies = [
  "syn 2.0.74",
  "tauri-codegen",
  "tauri-utils",
-]
-
-[[package]]
-name = "tauri-plugin"
-version = "2.0.0-rc.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7dded420c86183f592d0fe925ef9447f41e26fa79f0bdfef8d3f17bfbcdbfb7"
-dependencies = [
- "anyhow",
- "glob",
- "plist",
- "schemars",
- "serde",
- "serde_json",
- "tauri-utils",
- "toml 0.8.2",
- "walkdir",
-]
-
-[[package]]
-name = "tauri-plugin-store"
-version = "2.0.0-rc.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9a728d696695856a5c1478e1701fbeb74c7ffaa7d6455de8154e33abd8b649db"
-dependencies = [
- "dunce",
- "log",
- "serde",
- "serde_json",
- "tauri",
- "tauri-plugin",
- "thiserror",
 ]
 
 [[package]]

@@ -1,6 +1,6 @@
-import { Store } from "@tauri-apps/plugin-store";
-
-const store = new Store("theme_store.bin");
+// import { Store } from "@tauri-apps/plugin-store";
+// const store = new Store("theme_store.bin");
+import localforage from "localforage";
 // 默认主题Map
 import defaultThemesMap from "./theme.json";
 // 主题Map
@@ -9,7 +9,8 @@ const themesMap = await initThemeStore();
 const themes = Object.keys(themesMap);
 
 async function initThemeStore() {
-  const themesMap = await store.get("app-theme");
+  // const themesMap = await store.get("app-theme");
+  const themesMap = await localforage.getItem("app-theme");
 
   // 需要重置为默认值的情况：不存在该键, 值为空{}或者该键的值无法序列化
   if (!themesMap || typeof themesMap !== "object") {
@@ -104,16 +105,18 @@ function addTheme(themeIdentifier, properties) {
   // console.log("addTheme", theme, properties);
 
   themesMap[themeIdentifier] = properties;
-  store.set("app-theme", themesMap);
-  store.save();
+  // store.set("app-theme", themesMap);
+  // store.save();
+  localforage.setItem("app-theme", themesMap);
 
   refreshPage();
 }
 
 function deleteTheme(themeIdentifier) {
   delete themesMap[themeIdentifier];
-  store.set("app-theme", themesMap);
-  store.save();
+  // store.set("app-theme", themesMap);
+  // store.save();
+  localforage.setItem("app-theme", themesMap);
 
   if (Object.keys(themesMap).length === 0) {
     resetThemeStore();
@@ -125,8 +128,9 @@ function deleteTheme(themeIdentifier) {
 function resetThemeStore() {
   console.log("resetThemeStore", defaultThemesMap);
   // 保存到store
-  store.set("app-theme", defaultThemesMap);
-  store.save();
+  // store.set("app-theme", defaultThemesMap);
+  // store.save();
+  localforage.setItem("app-theme", defaultThemesMap);
 }
 
 async function exportThemes() {
@@ -249,8 +253,9 @@ function importThemes(themesStr) {
     }
 
     // 保存主题到 store
-    store.set("app-theme", themesMapCopy);
-    store.save();
+    // store.set("app-theme", themesMapCopy);
+    // store.save();
+    localforage.setItem("app-theme", themesMapCopy);
 
     refreshPage();
 
