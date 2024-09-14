@@ -11,9 +11,6 @@ importers:
       '@tauri-apps/api':
         specifier: 2.0.0-rc.0
         version: 2.0.0-rc.0
-      '@tauri-apps/plugin-store':
-        specifier: 2.0.0-rc.1
-        version: 2.0.0-rc.1
       '@vue/devtools-api':
         specifier: ^6.6.3
         version: 6.6.3
@@ -472,9 +469,6 @@ packages:
     resolution: {integrity: sha512-v454Qs3REHc3Za59U+/eSmBsdmF+3NE5+76+lFDaitVqN4ZglDHENDaMARYKGJVZuxiSkzyqG0SeG7lLQjVkPA==}
     engines: {node: '>= 18.18', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
 
-  '@tauri-apps/api@2.0.0-rc.4':
-    resolution: {integrity: sha512-UNiIhhKG08j4ooss2oEEVexffmWkgkYlC2M3GcX3VPtNsqFgVNL8Mcw/4Y7rO9M9S+ffAMnLOF5ypzyuyb8tyg==}
-
   '@tauri-apps/cli-darwin-arm64@2.0.0-rc.3':
     resolution: {integrity: sha512-szYCSr/ChbCF+S6Wnr15TYpI2cZR07d+AQOiFGuScP0preM8Pbsk/sb0hfLwqzepjVFFNVWQba9sG7FEW2Y2XA==}
     engines: {node: '>= 10'}
@@ -543,9 +537,6 @@ packages:
     resolution: {integrity: sha512-iNF95pieBmverl1EmQyqh+fhcIClS544fN5Ex5lAbYLTiHZ/gm3lOfVBhF6NPaKd/sfLuy7K1tfDXlHztBfANw==}
     engines: {node: '>= 10'}
     hasBin: true
-
-  '@tauri-apps/plugin-store@2.0.0-rc.1':
-    resolution: {integrity: sha512-rW71Tkr7OifxoL8NkWgPy5Os4Gn3oJTbv/j/nJ03HDuYsq+F4+8kU8o4epRFJnr6VKmgB/2CtiacSC3dnSSRnA==}
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
@@ -2612,8 +2603,6 @@ snapshots:
 
   '@tauri-apps/api@2.0.0-rc.0': {}
 
-  '@tauri-apps/api@2.0.0-rc.4': {}
-
   '@tauri-apps/cli-darwin-arm64@2.0.0-rc.3':
     optional: true
 
@@ -2656,10 +2645,6 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.0.0-rc.3
       '@tauri-apps/cli-win32-ia32-msvc': 2.0.0-rc.3
       '@tauri-apps/cli-win32-x64-msvc': 2.0.0-rc.3
-
-  '@tauri-apps/plugin-store@2.0.0-rc.1':
-    dependencies:
-      '@tauri-apps/api': 2.0.0-rc.4
 
   '@types/estree@1.0.5': {}
 
