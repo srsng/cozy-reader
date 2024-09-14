@@ -292,7 +292,8 @@ export default {
         this.removeExtraBrTags(doc);
         // 修改blockquote与table内部的字体大小
         this.modifyBlockquoteAndTable(doc);
-
+        // 当img标签是其父p或div元素的唯一子元素，且父元素不包含文本时，设置其样式
+        this.modifyIndependentImg(doc);
         // Add Tailwind-like typography classes to body
         doc.body.classList.add("prose", "mx-auto", "px-4", getCurrentTheme());
 
@@ -368,8 +369,7 @@ export default {
         .prose ul, .prose ol { margin-top: 1em; margin-bottom: 1em; padding-left: 1.5em; }
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}
-        p > img:only-child,
-        div > img:only-child {
+        p[independentImg] {
           margin-top: 1em;
           margin-bottom: 1em;
           max-width: 90%;
@@ -378,10 +378,9 @@ export default {
           margin-left: auto;
           margin-right: auto;
         }
-
         blockquote {
           border-left: 10px solid var(--text-color);
-          margin: 1.5em 10px;
+          max-width: 90%;
           padding: 0.5em 10px;
           quotes: "\\201C""\\201D""\\2018""\\2019";
         }
@@ -431,6 +430,32 @@ export default {
           count = 0;
         }
       }
+    },
+
+    modifyIndependentImg(doc) {
+      const imgs = doc.getElementsByTagName("img");
+      for (let i = 0; i < imgs.length; i++) {
+        const img = imgs[i];
+        const parent = img.parentNode;
+        // 对于所有img标签的父标签，如果是p标签或div标签，且p或div标签只包含img标签且不包含文本，则为img设置属性indepndentImg
+        if (parent && (parent.nodeName === "P" || parent.nodeName === "DIV")) {
+          const children = parent.childNodes;
+          console.log("children",i, children);
+          if (children.length === 1 && children[0].nodeName === "IMG") {
+            parent.setAttribute("independentImg", "");
+          } 
+          // 或者，父标签内存在且只存在一段文本, 文本与img标签顺序不定
+          else if (children.length === 2) {
+            if (children[0].nodeName === "IMG" && children[1].nodeName === "#text") {
+              parent.setAttribute("independentImg", "");
+            } else if (children[0].nodeName === "#text" && children[1].nodeName === "IMG") {
+              parent.setAttribute("independentImg", "");
+            }
+            
+          }
+        }
+      }
+      
     },
 
     goNext(event) {
