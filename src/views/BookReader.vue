@@ -108,7 +108,7 @@ import {
 } from "@/theme/theme";
 import { mapState } from 'vuex';
 import { HSOverlay } from 'preline';
-import { Store } from "@tauri-apps/plugin-store";
+// import { Store } from "@tauri-apps/plugin-store";
 
 export default {
   name: "BookReader",
