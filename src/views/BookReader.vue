@@ -347,7 +347,7 @@ export default {
         `
         @import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap');
         .prose { 
-          font-family: 'Gentium Book Plus', sans-serif; 
+          font-family: Verdana, Georgia, Arial, sans-serif, 'Gentium Book Plus'; 
           font-size: 20px;
           line-height: 180%;
           color: var(--text-color);
