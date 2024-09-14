@@ -1,10 +1,10 @@
-name: 'test'
+name: 'release-ubuntu-24.04'
 
 on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*'
+      - 'For Ubuntu-24.04 v*'
 
 jobs:
   publish-tauri:
