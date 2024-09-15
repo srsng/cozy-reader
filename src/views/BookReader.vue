@@ -369,12 +369,15 @@ export default {
         .prose li p { margin: 0;}
         p[independentImg] {
           margin-top: 1em;
-          margin-bottom: 1em;
-          max-width: 90%;
-          height: auto;
+          margin-bottom: 1em;          
           display: block;
+          text-align: center;
+        }
+        p[independentImg] img {
           margin-left: auto;
           margin-right: auto;
+          max-width: 100%;
+          height: auto;
         }
         blockquote {
           border-left: 10px solid var(--text-color);

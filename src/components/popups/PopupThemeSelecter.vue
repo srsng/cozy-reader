@@ -6,10 +6,10 @@
     <header class="w-full flex items-center justify-between">
       <div class="pl-2">主题 | Themes</div>
       <div>
-        <div id="cycleTheme" class="titlebar-button round-btn-style mr-1">
+        <div id="cycleTheme" class="titlebar-button">
           <IconCycle @click.stop="cycleTheme" />
         </div>
-        <div id="exportThemes" class="titlebar-button round-btn-style mr-1">
+        <div id="exportThemes" class="titlebar-button mr-1">
           <IconExport @click.stop="exportThemes" />
         </div>
       </div>

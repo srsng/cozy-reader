@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center select-none h-fit contents-body round-btn-style"
+    class="flex items-center select-none h-fit contents-body"
   >
     <div
       class="popup-button footerbar-button rounded-l-md"
