@@ -1,8 +1,8 @@
 <template>
-  <div class="z-0">
+  <div id="book-reader" class="z-0">
     <div
       id="viewer"
-      class="scrolled ml-auto mr-auto my-20"
+      class="ml-auto mr-auto py-10"
       :class="{ hidden: isResizing}"
       :style="{ 'max-width': readerSettings.viewerWidth + '%' }"
     ></div>
@@ -30,28 +30,6 @@
     >
       <div class="contents-header header flex justify-between items-center py-3 px-4 border-b">
         <h3 class="font-bold">Contents</h3>
-        <!-- <button
-          type="button"
-          class="flex justify-center items-center size-7 text-sm font-semibold rounded-full border border-transparent"
-          data-hs-overlay="#hs-overlay-right"
-        >
-          <span class="sr-only">Close modal</span>
-          <svg
-            class="flex-shrink-0 size-8 sm:size-6"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
-        </button> -->
       </div>
 
       <div class="contents-body overflow-y-auto h-full p-4 pt-6 pb-16">
@@ -274,10 +252,11 @@ export default {
           }
         });
 
-        // Inject minimal Tailwind styles
+        // Inject CSS
         let style = doc.createElement("style");
         style.textContent = this.getMinimalTailwindStyles();
         head.appendChild(style);
+        this.initReaderSettingCSS(doc);
 
         // Remove empty paragraphs
         var paras = doc.getElementsByTagName("p");
@@ -367,12 +346,14 @@ export default {
         .prose ul, .prose ol { margin-top: 1em; margin-bottom: 1em; padding-left: 1.5em; }
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}
+        div[independentImg],
         p[independentImg] {
           margin-top: 1em;
           margin-bottom: 1em;          
           display: block;
           text-align: center;
         }
+        div[independentImg] img,
         p[independentImg] img {
           margin-left: auto;
           margin-right: auto;
@@ -403,16 +384,18 @@ export default {
         }
         table *[bgcolor] { background-color: var(--background-color); filter: brightness(0.8);}
         [bgcolor], body { background: transparent;}
-      ` + getThemesStr() + this.getReaderSettingCSSStr()
+      ` + getThemesStr()
       );
     },
 
     getReaderSettingCSSStr() {
       // .prose { font-family: ${this.readerSettings.fontFamily}; }
+      const imgMaxHeight = window.innerHeight * 0.9;
       return `
         .prose { font-size: ${this.readerSettings.fontSize}px; 
           line-height: ${this.readerSettings.lineHeight}%; }
         .prose p { text-indent: ${this.readerSettings.firstLineIndent ? 2 : 0}em; }
+        img { max-height: ${this.readerSettings.zoomLongPic ? imgMaxHeight+'px' : 'auto'}; }
       `;
     },
 
@@ -446,10 +429,22 @@ export default {
       const imgs = doc.getElementsByTagName("img");
       for (let i = 0; i < imgs.length; i++) {
         const img = imgs[i];
+        // console.log("img", i , img);
         const parent = img.parentNode;
         // 对于所有img标签的父标签，如果是p标签或div标签，且p或div标签只包含img标签且不包含文本，则为img设置属性indepndentImg
-        if (parent && (parent.nodeName === "P" || parent.nodeName === "DIV")) {
+        if (parent && (parent.nodeName === "DIV" || parent.nodeName === "P")) {
           const children = parent.childNodes;
+          // 清除parent内部子节点前后空文本节点
+          for (let j = parent.childNodes.length - 1; j >= 0; j--) {
+            if (parent.childNodes[j].nodeName === "#text" && parent.childNodes[j].textContent.trim() === "") {
+              parent.removeChild(parent.childNodes[j]);
+            } else { break; }
+          }
+          for (let j = 0; j < parent.childNodes.length; j++) {
+            if (parent.childNodes[j].nodeName === "#text" && parent.childNodes[j].textContent.trim() === "") {
+              parent.removeChild(parent.childNodes[j]);
+            } else { break; }
+          }
           if (children.length === 1 && children[0].nodeName === "IMG") {
             parent.setAttribute("independentImg", "");
           } 
@@ -460,7 +455,10 @@ export default {
             } else if (children[0].nodeName === "#text" && children[1].nodeName === "IMG") {
               parent.setAttribute("independentImg", "");
             }
-            
+          }
+          else if (children.length === 3 && children[0].nodeName === "#text" && 
+                  children[1].nodeName === "IMG" && children[2].nodeName === "#text") {
+            parent.setAttribute("independentImg", "");            
           }
         }
       }
@@ -545,6 +543,40 @@ export default {
         return;
       }
     },
+
+    toggleScrollbarVisibility(visable) {
+      console.log("toggleScrollbarVisibility", visable)
+      const root = document.documentElement;
+      if (visable) {
+        root.style.setProperty('--scrollbar-visable', 'block');
+      } else {
+        root.style.setProperty('--scrollbar-visable', 'none');
+      }
+    },
+
+    initReaderSettingCSS(iframeDoc) {
+      const head = iframeDoc.querySelector("head");
+      const style = iframeDoc.createElement("style");
+      style.id = "reader-setting-css";
+      style.textContent = this.getReaderSettingCSSStr();
+      head.appendChild(style);
+      // this.initScrollbarVisibility(readerSettings.scrollBarVisable)
+    },
+
+    refreshReaderSettingCSS() {
+      // 当阅读器设置变化时，获取iframe元素中的document对象，
+      // 修改head中的style #reader-setting-css 标签内容为this.getMinimalTailwindStyles()的返回值
+      const iframe = document.querySelector("#viewer iframe");      
+      if (iframe) {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const style = iframeDoc.getElementById("reader-setting-css");
+        if (style) {
+          style.textContent = this.getReaderSettingCSSStr();
+        } else {
+          this.initReaderSettingCSS(iframeDoc);
+        }
+      }
+    }
   },
 
   watch: {
@@ -558,17 +590,8 @@ export default {
     },
     readerSettings: {
       handler(newVal) {
-        // 当阅读器设置变化时，获取iframe元素中的document对象，
-        // 修改head中的style标签内容为this.getMinimalTailwindStyles()的返回值
-        const iframe = document.querySelector("#viewer iframe");
-        if (iframe) {
-          const doc = iframe.contentDocument;
-          if (doc) {
-            const head = doc.querySelector("head");
-            const style = head.querySelector("style");
-            style.textContent = this.getMinimalTailwindStyles();
-          }
-        }
+        this.toggleScrollbarVisibility(newVal.scrollBarVisable);
+        this.refreshReaderSettingCSS();        
       },
       immediate: true,
       deep: true,

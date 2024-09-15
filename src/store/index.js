@@ -18,6 +18,8 @@ export default createStore({
             fontSize: 20,
             lineHeight: 180,
             firstLineIndent: false,
+            zoomLongPic: false,
+            scrollBarVisable: false,
         }
     },
     mutations: {
@@ -27,7 +29,7 @@ export default createStore({
           state.uploadBooksStatus.event = newState.event;
         },
         increaseViewerWidth(state) {
-            if (state.readerSettings.viewerWidth < 101) {
+            if (state.readerSettings.viewerWidth < 100) {
              state.readerSettings.viewerWidth += 10;
             }
             localStorage.setItem("readerSettings", JSON.stringify(state.readerSettings));
@@ -103,6 +105,8 @@ export default createStore({
                     fontSize: 20,
                     lineHeight: 180,
                     firstLineIndent: false,
+                    zoomLongPic: false,
+                    scrollBarVisable: false,
                     ...readerSettings
                 };
                 commit('setReaderSettings', settings);

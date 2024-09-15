@@ -72,12 +72,34 @@
     </div>
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="flex items-center mx-2 mb-2 contents-body">
+    <div class="flex items-center mx-2 contents-body">
       <span class="">first line indent:</span>
       <subPopupSwitchToggle
         class="ml-2"
         :value="readerSettings.firstLineIndent"
         @touch-swtich="touchIndentSwitch"
+      />
+    </div>
+
+    <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
+
+    <div class="flex items-center mx-2 contents-body">
+      <span class="">zoom long pic:</span>
+      <subPopupSwitchToggle
+        class="ml-2"
+        :value="readerSettings.zoomLongPic"
+        @touch-swtich="touchZoomLongPicSwitch"
+      />
+    </div>
+
+    <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
+
+    <div class="flex items-center mx-2 mb-2 contents-body">
+      <span class="">scroll bar visable:</span>
+      <subPopupSwitchToggle
+        class="ml-2"
+        :value="readerSettings.scrollBarVisable"
+        @touch-swtich="touchScrollBarVisableSwitch"
       />
     </div>
   </div>
@@ -109,6 +131,24 @@ export default {
       this.$store.commit("setReaderSettings", {
         firstLineIndent: value,
       });
+    },
+    touchZoomLongPicSwitch(value) {
+      console.log('touchZoomLongPicSwitch', value);
+      this.$store.commit("setReaderSettings", {
+        zoomLongPic: value,
+      });
+    },
+    touchScrollBarVisableSwitch(value) {
+      // console.log('touchScrollBarVisableSwitch', value);
+      this.$store.commit("setReaderSettings", {
+        scrollBarVisable: value,
+      });
+      // const root = document.documentElement;
+      // if (value) {
+      //   root.style.setProperty('--scrollbar-display', 'block');
+      // } else {
+      //   root.style.setProperty('--scrollbar-display', 'none');
+      // }
     },
     handdleFontSizeChange({ type }) {
       // console.log("handdlefontSizeChange", type)

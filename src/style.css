@@ -18,10 +18,25 @@
     @apply bg-[var(--background-color)] text-[var(--text-color)];
   }
 
-  body::-webkit-scrollbar {
-    display: none; 
+  :root {
+    --scrollbar-visable: none;
   }
-  
+
+  body::-webkit-scrollbar {
+    display: var(--scrollbar-visable);
+  }
+  *::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+    height: 0px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--header-color);
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
   AppHeader, header, .header, .footer {
     background-color: var(--header-color);
     color: var(--header-text-color);
