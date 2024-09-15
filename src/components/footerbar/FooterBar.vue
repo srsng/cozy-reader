@@ -5,14 +5,14 @@
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
-      <!------主页: 致谢---阅读页: 调整页宽--------->
       <!------阅读页: 调整页宽按钮与弹窗--------->
       <div v-if="curRouteNameIs('BookReader')">
-        <div id="footerbar-change-doc-width" class="footerbar-button" @click="toggleChangeDocWidthPopup">
-          <IconDocumentWidth title="change doc width" />
-          <PopupChangeDocWidth v-show="showChageDocPopup" class="bottom-7 left-12"/>
+        <div id="footerbar-reader-setter" class="footerbar-button" @click="toggleReaderSetterPopup">
+          <IconDocumentWidth title="reader setter" />
+          <PopupReaderControler v-show="showReaderSetterPopup" class="bottom-10 left-36"/>
         </div>
       </div>
+      <!------主页: 致谢---阅读页: 调整页宽--------->
       <div v-else class="footerbar-content truncate">
         <p>
           <a
@@ -99,8 +99,7 @@ import {
   IconToBottom,
   IconDocumentWidth,
 } from "@/components/icons";
-// import { goNext, goPrev } from "@/views/BookReader.vue";
-import PopupChangeDocWidth from "@/components/popups/PopupChangeDocWidth.vue";
+import PopupReaderControler from "@/components/popups/PopupReaderControler.vue";
 import { mapState } from 'vuex';
 
 
@@ -113,7 +112,7 @@ export default {
     IconToTop,
     IconToBottom,
     IconDocumentWidth,
-    PopupChangeDocWidth
+    PopupReaderControler,
   },
   computed: {
     ...mapState({
@@ -122,7 +121,7 @@ export default {
   },
   data() {
     return {
-      showChageDocPopup: false,
+      showReaderSetterPopup: false,
     };
   },
   methods: {
@@ -153,8 +152,8 @@ export default {
         behavior: "smooth", // 平滑滚动
       });
     },
-    toggleChangeDocWidthPopup() {
-      this.showChageDocPopup = !this.showChageDocPopup;
+    toggleReaderSetterPopup() {
+      this.showReaderSetterPopup = !this.showReaderSetterPopup;
     },
     randomTips() {
       const zh_cn = [

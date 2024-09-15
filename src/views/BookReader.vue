@@ -4,7 +4,7 @@
       id="viewer"
       class="scrolled ml-auto mr-auto my-20"
       :class="{ hidden: isResizing}"
-      :style="{ 'max-width': viewerWidth + '%' }"
+      :style="{ 'max-width': readerSettings.viewerWidth + '%' }"
     ></div>
 
     <div
@@ -115,7 +115,7 @@ export default {
   components: { },
   computed: {
     ...mapState({
-      viewerWidth: state => state.viewerWidth,
+      readerSettings: state => state.readerSettings,
       curBookTitle: state => state.curBookTitle,
     })
   },
@@ -348,8 +348,6 @@ export default {
         @import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap');
         .prose { 
           font-family: Verdana, Georgia, Arial, sans-serif, 'Gentium Book Plus'; 
-          font-size: 20px;
-          line-height: 180%;
           color: var(--text-color);
         }
         .prose p { margin-bottom: 1em; }
@@ -402,8 +400,17 @@ export default {
         }
         table *[bgcolor] { background-color: var(--background-color); filter: brightness(0.8);}
         [bgcolor], body { background: transparent;}
-      ` + getThemesStr()
+      ` + getThemesStr() + this.getReaderSettingCSSStr()
       );
+    },
+
+    getReaderSettingCSSStr() {
+      // .prose { font-family: ${this.readerSettings.fontFamily}; }
+      return `
+        .prose { font-size: ${this.readerSettings.fontSize}px; 
+          line-height: ${this.readerSettings.lineHeight}%; }
+        .prose p { text-indent: ${this.readerSettings.firstLineIndent ? 2 : 0}em; }
+      `;
     },
 
     modifyBlockquoteAndTable(doc) {
@@ -440,7 +447,6 @@ export default {
         // 对于所有img标签的父标签，如果是p标签或div标签，且p或div标签只包含img标签且不包含文本，则为img设置属性indepndentImg
         if (parent && (parent.nodeName === "P" || parent.nodeName === "DIV")) {
           const children = parent.childNodes;
-          console.log("children",i, children);
           if (children.length === 1 && children[0].nodeName === "IMG") {
             parent.setAttribute("independentImg", "");
           } 
@@ -547,10 +553,23 @@ export default {
       },
       immediate: true,
     },
-    viewerWidth(newWidth) {
-      localStorage.setItem("viewerWidth", newWidth);
-    }
-
+    readerSettings: {
+      handler(newVal) {
+        // 当阅读器设置变化时，获取iframe元素中的document对象，
+        // 修改head中的style标签内容为this.getMinimalTailwindStyles()的返回值
+        const iframe = document.querySelector("#viewer iframe");
+        if (iframe) {
+          const doc = iframe.contentDocument;
+          if (doc) {
+            const head = doc.querySelector("head");
+            const style = head.querySelector("style");
+            style.textContent = this.getMinimalTailwindStyles();
+          }
+        }
+      },
+      immediate: true,
+      deep: true,
+    },
   },
 
   mounted() {

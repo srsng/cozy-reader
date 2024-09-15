@@ -17,6 +17,9 @@ const store =  Store;
 const app = createApp(App);
 app
     .use(store)
-    .use(router)
+    .use(router);
+
+store.dispatch('loadStore'); 
+app
     .mount('#app');
 initAppWindow();
