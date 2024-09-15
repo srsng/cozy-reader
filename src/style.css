@@ -24,7 +24,6 @@
   
   AppHeader, header, .header, .footer {
     background-color: var(--header-color);
-    /* color: var(--text-color); */
     color: var(--header-text-color);
   }
 
@@ -42,28 +41,21 @@
     border-color: var(--header-color);
   }
 
+  .at-center {
+    @apply inline-flex items-center justify-center;
+  }
+
   .titlebar-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 32px;
-    height: 32px;
+    @apply round-btn-style at-center size-8;
   }
 
   .footerbar-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 24px;
-    height: 24px;
+    @apply round-btn-style at-center size-6;
+
   }
 
   .footerbar-content {
-    margin-left: 8px;
-    margin-right: 8px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+    @apply at-center mx-2;
   }
 
   .footerbar {

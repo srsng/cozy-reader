@@ -8,8 +8,8 @@
       <!------阅读页: 调整页宽按钮与弹窗--------->
       <div v-if="curRouteNameIs('BookReader')">
         <div id="footerbar-reader-setter" class="footerbar-button" @click="toggleReaderSetterPopup">
-          <IconDocumentWidth title="reader setter" />
-          <PopupReaderControler v-show="showReaderSetterPopup" class="bottom-10 left-36"/>
+          <IconSetting class="size-4" title="settings" />
+          <PopupReaderSettingControler v-show="showReaderSetterPopup" class="bottom-10 left-36"/>
         </div>
       </div>
       <!------主页: 致谢---阅读页: 调整页宽--------->
@@ -97,9 +97,9 @@ import {
   IconRightArrow,
   IconToTop,
   IconToBottom,
-  IconDocumentWidth,
+  IconSetting,
 } from "@/components/icons";
-import PopupReaderControler from "@/components/popups/PopupReaderControler.vue";
+import PopupReaderSettingControler from "@/components/popups/PopupReaderSettingControler.vue";
 import { mapState } from 'vuex';
 
 
@@ -111,8 +111,8 @@ export default {
     IconRightArrow,
     IconToTop,
     IconToBottom,
-    IconDocumentWidth,
-    PopupReaderControler,
+    IconSetting,
+    PopupReaderSettingControler,
   },
   computed: {
     ...mapState({
@@ -168,15 +168,15 @@ export default {
         "阅读时想要快速翻页？试试方向键",
         // 有关阅读页面功能提示
         "书籍目录在阅读页面右下角打开",
-        "阅读页面左下角的按钮可以调整阅读显示宽度",
-        "标题栏第四个按钮可以刷新页面",
+        "阅读页面左下角的按钮有一些设置项",
+        "标题栏左数第四个按钮可以刷新页面",
         "阅读页面宽度每次调整幅度为屏幕宽度的1/10",
         "阅读页面宽度最小为屏幕宽度的10%",
         "每次调整完阅读页面宽度后，需要刷新页面重新渲染",
         "出现弹窗后，再次点击按钮才会关闭弹窗",
-        "有时书籍标题太长没法移动窗口，试试右上角第一个按钮",
+        "有时书籍标题太长没法移动窗口，试试右上角左数第一个按钮",
         "在阅读页面左右部分区域可以点击翻页",
-        "当你已经到达页底2s时，且鼠标光标在点击翻页区，再向下滚动也可以翻页",
+        "当你已经到达页底2s时，且鼠标在点击翻页区，再向下滚动也可以翻页",
       ];
       // const en_us = [];
       const tips = zh_cn;

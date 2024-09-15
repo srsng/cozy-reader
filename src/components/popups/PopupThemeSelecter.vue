@@ -4,12 +4,12 @@
     @click.stop
   >
     <header class="w-full flex items-center justify-between">
-      <div class="pl-2">主题</div>
+      <div class="pl-2">主题 | Themes</div>
       <div>
-        <div id="cycleTheme" class="titlebar-button">
+        <div id="cycleTheme" class="titlebar-button round-btn-style mr-1">
           <IconCycle @click.stop="cycleTheme" />
         </div>
-        <div id="exportThemes" class="titlebar-button">
+        <div id="exportThemes" class="titlebar-button round-btn-style mr-1">
           <IconExport @click.stop="exportThemes" />
         </div>
       </div>
@@ -48,7 +48,7 @@
     <div class="w-full popup-sub border-solid border-t-2 mt-2"></div>
     <div class="w-full flex items-center justify-between pl-2 header">
       新建主题 | New Theme
-      <div id="addTheme" class="titlebar-button">
+      <div id="addTheme" class="titlebar-button round-btn-style mr-1">
         <IconPlus @click.stop="toggleThemeAdderPopup"/>
       </div>
     </div>
@@ -61,8 +61,8 @@
     <div class="w-full popup-sub border-solid border-t-2 mb-2"></div>
     
     <div class="w-full flex items-center justify-between pl-2 header">
-      导入主题 | Import Themes
-      <div id="importThemes" class="titlebar-button">
+      导入 | Import
+      <div id="importThemes" class="titlebar-button round-btn-style mr-1">
         <IconImport @click.stop="importThemes" />
       </div>
     </div>
