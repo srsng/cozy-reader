@@ -81,6 +81,7 @@
     <div v-show="showAnnotationPopup" class="fixed right-[4%] top-[4%]">
       <PopupAnnotation 
       @apply-annotation="handdleApplyAnnotation"
+      @click.self="showAnnotationPopup = false"
       />
     </div>
 
@@ -99,6 +100,7 @@ import { mapState } from 'vuex';
 import { HSOverlay } from 'preline';
 // import { Store } from "@tauri-apps/plugin-store";
 import PopupAnnotation from "@/components/popups/PopupAnnotation.vue";
+import { show } from "@tauri-apps/api/app";
 
 export default {
   name: "BookReader",
@@ -126,6 +128,7 @@ export default {
       atBottom: false,
       scrollTimeout: null,
       annotations: [],
+      // annotationsMap: new Map(),
       curCfiRange: null,
       selectedText: "",
       annotationManager: null,
@@ -148,10 +151,10 @@ export default {
         this.applyUnderline(cfiRange, color);
       } else if (type === "highlight") {
         this.applyHighlight(cfiRange, color);
-      } else if (type === "mark") {
-        this.applyMark(cfiRange, color);
+      // } else if (type === "mark") {
+      //   this.applyMark(cfiRange, color);
       } else if (type === "remove") {
-        this.removeAnnotation(cfiRange);
+        this.applyRemove(cfiRange);
       }
     },
 
@@ -161,25 +164,28 @@ export default {
       let g = parseInt(color.substring(2, 4), 16);
       let b = parseInt(color.substring(4, 6), 16);
       const styles = {"fill": `rgba(${r}, ${g}, ${b}, 0.5)`};
-      this.annotationsManager.highlight(cfiRange, {}, ()=>{}, "", styles);
+      this.annotationsManager.highlight(cfiRange, {}, (e)=>{this.handleClickAnnotation(e)}, "", styles);
     },
     applyUnderline(cfiRange, color) {
       const styles = {
-        // "rect": {
-        //   "display": "none",
-        // },
-
         "stroke": color,
         "stroke-width": "2px",
-
       }
-      this.annotationsManager.underline(cfiRange, {}, (e)=>{console.log(e.target)}, "", styles);
+      this.annotationsManager.underline(cfiRange, {}, (e)=>{console.log(e)}, "", styles);
     },
-    applyMark(cfiRange, color) {// todo
-      
+    applyMark(cfiRange, color) {
+      this.annotationsManager.mark(cfiRange, {}, ()=>{});
     },
     applyRemove(cfiRange) {
-      this.annotationsManager.remove(cfiRange);
+      // console.log("applyRemove", cfiRange);
+      const types = ["highlight", "underline"];
+      types.forEach(type => {
+        this.annotationsManager.remove(cfiRange, type);
+      });
+      if (this.annotations) {
+        this.annotations = this.annotations.filter(annotation => annotation.cfiRange !== cfiRange);
+        this.saveAnnotation();
+      }
     },
     loadAnnotation() {
       console.log("loadAnnotation");
@@ -200,6 +206,9 @@ export default {
       // console.log("saveAnnotation: ", this.annotations);
       const key = `annotations-${this.fileName}`;
       localStorage.setItem(key, JSON.stringify(this.annotations));
+    },
+    handleClickAnnotation(e) {
+      console.log("handleClickAnnotation");
     },
     handleScroll() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -689,17 +698,18 @@ export default {
           this.initReaderSettingCSS(iframeDoc);
         }
       }
-    }
+    },
+    bindIframeClick() {
+      const iframe = document.querySelector("#viewer iframe");
+      if (iframe) {
+        iframe.contentWindow.document.addEventListener("click", (e) => {
+          this.showAnnotationPopup = false;
+        });
+      }
+    },
   },
 
   watch: {
-    // annotations: {
-    //   handler(newVal) {
-    //     // this.saveAnnotation();
-    //     console.log("annotations change", newVal);
-    //   },
-    //   deep: true,
-    // },
     fileName: {
       handler(newVal, oldVal) {
         if (newVal !== oldVal) {
@@ -729,7 +739,7 @@ export default {
     window.addEventListener("beforeunload", this.saveCurrentLocation);
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('wheel', this.handleWheel);
-
+    
     if (!this.fileName) {
       const savedFileName = localStorage.getItem("currentBook");
       if (savedFileName) {
@@ -745,6 +755,7 @@ export default {
       this.loadBook().then(()=> {
           this.setChapterTitle();
           this.restoreAnnotation();
+          // this.bindIframeClick();
         });
     }
   },

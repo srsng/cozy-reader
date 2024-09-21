@@ -1,9 +1,9 @@
 <template>
-  <div class="header popup flex flex-col overflow-y-auto overflow-x-hidden w-fit h-fit max-w-128 select-none border-solid border-2">
+  <div class="header popup flex flex-col overflow-y-auto overflow-x-hidden w-fit max-w-[156px] h-fit select-none border-solid border-2">
     <div clas="flex flex-row w-fit h-fit">
 
       <div class="items-center contents-body" title="underline">
-        <div class="footerbar-button w-fit p-2 round-btn-style"
+        <div class="footerbar-button w-fit mt-2 mx-2 p-2 round-btn-style"
           @click="handdleUnderline"
         >
             underline
@@ -11,22 +11,23 @@
       </div>
 
       <div class="items-center contents-body" title="highlight">
-        <div class="footerbar-button w-fit p-2 round-btn-style"
+        <div class="footerbar-button w-fit mt-2 mx-2 p-2 round-btn-style"
           @click="handdleHighlight"
           :class="'bg-['+annotationColors[selectedColorIndex] + ']'">
           highlight
         </div>
       </div>
 
-      <div class="items-center contents-body" title="mark">
+      <!-- <div class="items-center contents-body" title="mark">
         <div class="footerbar-button w-fit p-2 round-btn-style"
           @click="handdleMark"
         >
           ABC-mark
         </div>
-      </div>
+      </div> -->
+
       <div class="items-center contents-body" title="remove">
-        <div class="footerbar-button w-fit p-2 round-btn-style"
+        <div class="footerbar-button w-fit mt-2 mx-2 p-2 round-btn-style"
           @click="handdleRemove"
         >
           remove
@@ -36,7 +37,7 @@
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="color-picker flex flex-wrap">
+    <div class="color-picker flex flex-wrap justify-center">
       <div
         v-for="(color, index) in annotationColors"
         :title="color"
@@ -50,15 +51,15 @@
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div>
-      <input type="color" id="annotationColorInput"/>
+    <div class="flex justify-center">
+      <input type="color" class="size-6" id="annotationColorInput"/>
       <button @click="addColor" class="titlebar-button ml-2 w-fit p-2 round-btn-style">添加</button>
     </div>
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div>
-      <button @click="delSelectedColor" class="titlebar-button w-fit p-2 round-btn-style"> 删除选中 </button>
+    <div class="flex justify-center">
+      <button @click="delSelectedColor" class="titlebar-button w-fit p-2 mb-2 round-btn-style"> 删除颜色 </button>
     </div>
 
   </div>
@@ -95,7 +96,7 @@ export default {
     handdleMark() {
       this.emitApplyAnnotation("mark");
     },
-    handleRemove() {
+    handdleRemove() {
       this.emitApplyAnnotation("remove");
     },
     selectColor(index) {
