@@ -63,14 +63,19 @@
 
     <!-- 右侧部分 -->
     <div class="right-section flex items-center">
-      <!---------主页：信息----阅读页：目录按钮------->
-      <div v-if="curRouteNameIs('BookReader')" 
-        class="footerbar-button toc flex items-center"
-        data-hs-overlay="#hs-overlay-right"
-        aria-controls="hs-overlay-right"
-        id="footerbar-contents">
-        <IconContents title="toggle Contents" />
-      </div>
+      <!---------阅读页：目录按钮--------->
+      <div v-if="curRouteNameIs('BookReader')" class="flex items-center">
+        <!-- <div>
+          <IconNote class="footerbar-button"/>
+        </div> -->
+        <div class="toc"
+            data-hs-overlay="#hs-overlay-right"
+            aria-controls="hs-overlay-right"
+            id="footerbar-contents">
+          <IconContents class="footerbar-button" title="toggle Contents" />
+        </div>
+      </div> 
+      <!---------主页：信息--------------->
       <div v-else class="footerbar-content flex items-center">
         <p>
           Based on
@@ -98,10 +103,11 @@ import {
   IconToTop,
   IconToBottom,
   IconSetting,
+  IconNote,
 } from "@/components/icons";
 import PopupReaderSettingControler from "@/components/popups/PopupReaderSettingControler.vue";
 import { mapState } from 'vuex';
-
+import localforage from 'localforage';
 
 export default {
   name: "FooterBar",
@@ -112,6 +118,7 @@ export default {
     IconToTop,
     IconToBottom,
     IconSetting,
+    IconNote,
     PopupReaderSettingControler,
   },
   computed: {

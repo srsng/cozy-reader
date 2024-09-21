@@ -1,5 +1,9 @@
 <template>
   <div id="book-reader" class="z-0">
+    <div v-show="!renderDone" class="flex items-center justify-center h-screen">
+        <div class="text-2xl">Loading...</div>      
+      <!-- <button class="size-8 bg-red-700 ml-[50%] mt-20" @click="bindMouseUpEvent"></button> -->
+    </div>
     <div
       id="viewer"
       class="ml-auto mr-auto py-10"
@@ -73,6 +77,13 @@
         </ul>
       </div>
     </div>
+
+    <div v-show="showAnnotationPopup" class="fixed right-[4%] top-[4%]">
+      <PopupAnnotation 
+      @apply-annotation="handdleApplyAnnotation"
+      />
+    </div>
+
   </div>
 </template>
 
@@ -87,10 +98,11 @@ import {
 import { mapState } from 'vuex';
 import { HSOverlay } from 'preline';
 // import { Store } from "@tauri-apps/plugin-store";
+import PopupAnnotation from "@/components/popups/PopupAnnotation.vue";
 
 export default {
   name: "BookReader",
-  components: { },
+  components: { PopupAnnotation },
   computed: {
     ...mapState({
       readerSettings: state => state.readerSettings,
@@ -105,6 +117,7 @@ export default {
   },
   data() {
     return {
+      renderDone: false,
       book: null,
       rendition: null,
       toc: [],
@@ -112,9 +125,82 @@ export default {
       isResizing: false,
       atBottom: false,
       scrollTimeout: null,
+      annotations: [],
+      curCfiRange: null,
+      selectedText: "",
+      annotationManager: null,
+      showAnnotationPopup: false,
     };
   },
   methods: {
+    handdleApplyAnnotation({type, color}) {
+      const cfiRange = this.curCfiRange;
+      const text = this.selectedText;
+      if (type !== "remove") {
+        this.annotations.push({type, color, cfiRange, text, timestamp: Date.now(), note: ""});
+        this.saveAnnotation();
+      }
+      this.applyAnnotation({type, color, cfiRange});
+    },
+    applyAnnotation({type, color, cfiRange}) {     
+      // console.log("applyAnnotation", type, color, cfiRange);
+      if (type === "underline") {
+        this.applyUnderline(cfiRange, color);
+      } else if (type === "highlight") {
+        this.applyHighlight(cfiRange, color);
+      } else if (type === "mark") {
+        this.applyMark(cfiRange, color);
+      } else if (type === "remove") {
+        this.removeAnnotation(cfiRange);
+      }
+    },
+
+    applyHighlight(cfiRange, color) {
+      color = color.replace('#', '');
+      let r = parseInt(color.substring(0, 2), 16);
+      let g = parseInt(color.substring(2, 4), 16);
+      let b = parseInt(color.substring(4, 6), 16);
+      const styles = {"fill": `rgba(${r}, ${g}, ${b}, 0.5)`};
+      this.annotationsManager.highlight(cfiRange, {}, ()=>{}, "", styles);
+    },
+    applyUnderline(cfiRange, color) {
+      const styles = {
+        // "rect": {
+        //   "display": "none",
+        // },
+
+        "stroke": color,
+        "stroke-width": "2px",
+
+      }
+      this.annotationsManager.underline(cfiRange, {}, (e)=>{console.log(e.target)}, "", styles);
+    },
+    applyMark(cfiRange, color) {// todo
+      
+    },
+    applyRemove(cfiRange) {
+      this.annotationsManager.remove(cfiRange);
+    },
+    loadAnnotation() {
+      console.log("loadAnnotation");
+      const key = `annotations-${this.fileName}`;
+      const annotations = localStorage.getItem(key);
+      // console.log("annotations", annotations);
+      if (annotations) {
+          this.annotations = JSON.parse(annotations);
+      }
+
+    },
+    restoreAnnotation() {
+      this.annotations.forEach(annotation => {
+        this.applyAnnotation(annotation);
+      });
+    },
+    saveAnnotation() {
+      // console.log("saveAnnotation: ", this.annotations);
+      const key = `annotations-${this.fileName}`;
+      localStorage.setItem(key, JSON.stringify(this.annotations));
+    },
     handleScroll() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       const windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -136,6 +222,11 @@ export default {
         this.atBottom = false;
         clearTimeout(this.scrollTimeout);
       }
+    },
+    getFormattedTime(timestamp) {
+      const now = new Date(timestamp);
+      const formattedTime = now.toLocaleString(); 
+      return formattedTime;
     },
     getChapterTitle() {
       try {
@@ -166,7 +257,10 @@ export default {
       // console.log("chapterTitle", chapterTitle);
       const eleChapterTitle = document.getElementById("chapter-title");
       // console.log(eleChapterTitle);
-      if(eleChapterTitle) { eleChapterTitle.textContent = chapterTitle; }
+      if(eleChapterTitle) { eleChapterTitle.textContent = chapterTitle;
+        return true;
+       }
+      return false;
     },
     conslelogToc() {
       console.log("book", this.book);
@@ -187,6 +281,7 @@ export default {
             enableSwipe: false,
           });
           
+          this.annotationsManager = this.rendition.annotations;
           this.defineHooks();
           await this.loadTOC();
           await this.displayBook();
@@ -288,6 +383,25 @@ export default {
           location.start.cfi
         );
       });
+
+      this.rendition.on("attached", () => {
+          this.renderDone = true;
+      });
+
+      // 目前对部分书有bug
+      this.rendition.on("selected", (cfiRange, contents) => {
+        this.curCfiRange = cfiRange;
+        // console.log("cfiRange: ", cfiRange);
+        // console.log("contents: ", contents);
+        this.book.getRange(cfiRange).then(range => {
+          if (range && range.toString()) {
+            this.selectedText = range.toString();
+            // console.log("range", range)
+            // console.log("selected text:", range.toString());
+            this.showAnnotationPopup = true;
+          }
+        })
+      })
     },
     convertAllCapsHeadings(doc) {
       const headings = doc.querySelectorAll("h1, h2, h3, h4, h5, h6");
@@ -503,7 +617,6 @@ export default {
         }
       }
     },
-
     displayChapter(href) {
       if (this.rendition) {
         this.closeSidebar();
@@ -545,7 +658,7 @@ export default {
     },
 
     toggleScrollbarVisibility(visable) {
-      console.log("toggleScrollbarVisibility", visable)
+      // console.log("toggleScrollbarVisibility", visable)
       const root = document.documentElement;
       if (visable) {
         root.style.setProperty('--scrollbar-visable', 'block');
@@ -580,6 +693,13 @@ export default {
   },
 
   watch: {
+    // annotations: {
+    //   handler(newVal) {
+    //     // this.saveAnnotation();
+    //     console.log("annotations change", newVal);
+    //   },
+    //   deep: true,
+    // },
     fileName: {
       handler(newVal, oldVal) {
         if (newVal !== oldVal) {
@@ -601,6 +721,7 @@ export default {
   mounted() {
     // init theme
     initTheme();
+    this.loadAnnotation();
     // this.initViewerWidth();
 
     window.addEventListener("keydown", this.handleKeydown);
@@ -621,12 +742,15 @@ export default {
       }
     } else {
       localStorage.setItem("currentBook", this.fileName);
-      this.loadBook().then(this.setChapterTitle);
+      this.loadBook().then(()=> {
+          this.setChapterTitle();
+          this.restoreAnnotation();
+        });
     }
-
   },
 
   beforeUnmount() {
+    this.saveAnnotation();
     window.removeEventListener("keydown", this.handleKeydown);
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("beforeunload", this.saveCurrentLocation);

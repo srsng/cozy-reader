@@ -45,9 +45,9 @@
         <input type="color" id="other-text-color-input" name="other-text-color-input" />
       </div>
 
-      <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
+      <!-- <div class="w-full popup-sub border-solid border-t-2 my-2"></div> -->
 
-      <div class="w-full flex items-center justify-between mb-2">
+      <div class="w-full flex items-center justify-between my-2">
         <div @click.stop="saveTheme" class="titlebar-button ml-4 w-fit p-2 round-btn-style">保存主题</div>
         <div @click.stop="cancel" class="titlebar-button mr-4 w-fit p-2 round-btn-style">取消添加</div>
       </div>

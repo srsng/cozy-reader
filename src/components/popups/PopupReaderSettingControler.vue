@@ -133,7 +133,7 @@ export default {
       });
     },
     touchZoomLongPicSwitch(value) {
-      console.log('touchZoomLongPicSwitch', value);
+      // console.log('touchZoomLongPicSwitch', value);
       this.$store.commit("setReaderSettings", {
         zoomLongPic: value,
       });

@@ -21,3 +21,4 @@ export { default as IconSunMoon } from "@/components/icons/IconSunMoon.vue";
 export { default as IconImport } from "@/components/icons/IconImport.vue";
 export { default as IconExport } from "@/components/icons/IconExport.vue";
 export { default as IconSetting } from "@/components/icons/IconSetting.vue";
+export { default as IconNote } from "@/components/icons/IconNote.vue";
