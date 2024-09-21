@@ -199,7 +199,11 @@ export default {
     },
     restoreAnnotation() {
       this.annotations.forEach(annotation => {
+      try {
         this.applyAnnotation(annotation);
+      } catch (error) {
+        alter("Error restoring annotation:" + annotation);
+      }
       });
     },
     saveAnnotation() {
