@@ -114,7 +114,10 @@ import { show } from "@tauri-apps/api/app";
 
 export default {
   name: "BookReader",
-  components: { PopupAnnotation, PopupNotepad },
+  components: { 
+    PopupAnnotation, 
+    // PopupNotepad 
+  },
   computed: {
     ...mapState({
       readerSettings: state => state.readerSettings,

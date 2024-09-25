@@ -2,26 +2,26 @@
   <div class="header popup flex flex-col overflow-y-auto overflow-x-hidden w-fit max-w-[156px] h-fit select-none border-solid border-2">
     <div clas="flex flex-col w-fit h-fit">
 
-      <div class="items-center contents-body flex flex-row" title="underline">
+      <div class="items-center contents-body flex flex-row" title="add underline">
         <div class="footerbar-button w-fit mt-2 mx-2 px-2 round-btn-style"
           @click="handdleUnderline"
         >
             underline
         </div>
-        <div class="footerbar-button w-fit h-fit mt-2 mr-2 round-btn-style"
+        <div class="footerbar-button w-fit h-fit mt-2 mr-2 round-btn-style" title="del underline"
           @click="handdleRemoveAnnotation('underline')"
         >
           <IconWindowClose/>
         </div>
       </div>
 
-      <div class="items-center contents-body flex flex-row" title="highlight">
+      <div class="items-center contents-body flex flex-row" title="add highlight">
         <div class="footerbar-button w-fit mt-2 mx-2 p-2 round-btn-style"
           @click="handdleHighlight">
           <!-- :style="{'background-color': annotationColors[selectedColorIndex]}" -->
           highlight
         </div>
-        <div class="footerbar-button w-fit h-fit mt-2 mr-2 round-btn-style"
+        <div class="footerbar-button w-fit h-fit mt-2 mr-2 round-btn-style" title="del highlight"
           @click="handdleRemoveAnnotation('highlight')"
         >
           <IconWindowClose/>
