@@ -1,20 +1,30 @@
 <template>
   <div class="header popup flex flex-col overflow-y-auto overflow-x-hidden w-fit max-w-[156px] h-fit select-none border-solid border-2">
-    <div clas="flex flex-row w-fit h-fit">
+    <div clas="flex flex-col w-fit h-fit">
 
-      <div class="items-center contents-body" title="underline">
-        <div class="footerbar-button w-fit mt-2 mx-2 p-2 round-btn-style"
+      <div class="items-center contents-body flex flex-row" title="underline">
+        <div class="footerbar-button w-fit mt-2 mx-2 px-2 round-btn-style"
           @click="handdleUnderline"
         >
             underline
         </div>
+        <div class="footerbar-button w-fit h-fit mt-2 mr-2 round-btn-style"
+          @click="handdleRemoveAnnotation('underline')"
+        >
+          <IconWindowClose/>
+        </div>
       </div>
 
-      <div class="items-center contents-body" title="highlight">
+      <div class="items-center contents-body flex flex-row" title="highlight">
         <div class="footerbar-button w-fit mt-2 mx-2 p-2 round-btn-style"
-          @click="handdleHighlight"
-          :class="'bg-['+annotationColors[selectedColorIndex] + ']'">
+          @click="handdleHighlight">
+          <!-- :style="{'background-color': annotationColors[selectedColorIndex]}" -->
           highlight
+        </div>
+        <div class="footerbar-button w-fit h-fit mt-2 mr-2 round-btn-style"
+          @click="handdleRemoveAnnotation('highlight')"
+        >
+          <IconWindowClose/>
         </div>
       </div>
 
@@ -26,13 +36,13 @@
         </div>
       </div> -->
 
-      <div class="items-center contents-body" title="remove">
+      <!-- <div class="items-center contents-body" title="remove">
         <div class="footerbar-button w-fit mt-2 mx-2 p-2 round-btn-style"
-          @click="handdleRemove"
+          @click="handdleRemoveAnnotation"
         >
           remove
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
@@ -67,11 +77,13 @@
 
 <script>
 import { IconNote } from "@/components/icons";
+import IconWindowClose from "../icons/IconWindowClose.vue";
 
 export default {
   name: "PopupAnnotation",
   components: {
     IconNote,
+    IconWindowClose,
   },
   data() {
     return {
@@ -96,8 +108,11 @@ export default {
     handdleMark() {
       this.emitApplyAnnotation("mark");
     },
-    handdleRemove() {
-      this.emitApplyAnnotation("remove");
+    handdleRemoveAnnotation(type) {
+      this.$emit('remove-annotation', {type: type});
+    },
+    saveColors(){
+      localStorage.setItem("annotation-colors", JSON.stringify(this.annotationColors));
     },
     selectColor(index) {
       this.selectedColorIndex = index;
@@ -110,7 +125,7 @@ export default {
         alert("color already exists: \n    " + color);
       } else {
         this.annotationColors.push(color);
-        localStorage.setItem("annotation-colors", JSON.stringify(this.annotationColors));
+        this.saveColors();
       }
     },
     delSelectedColor() {
@@ -119,15 +134,16 @@ export default {
       if (this.selectedColorIndex >= this.annotationColors.length) {
         this.selectedColorIndex = this.annotationColors.length - 1;
       } 
+      this.saveColors();
     },
     initAnnotationColor() {
-      const colors = localStorage.getItem("annotation-colors");
-      if (colors) {
+      const colorsStr = localStorage.getItem("annotation-colors");
+      if (colorsStr && colorsStr.length != 2) {
         // console.log("initAnnotationColor, get colors from local storage");
-        this.annotationColors = JSON.parse(colors);
+        this.annotationColors = JSON.parse(colorsStr);
       } else {
         this.annotationColors = [
-          "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#000000", "#FFFFFF",
+          "#FFFF00", "#FF0000", "#00FF00", "#0000FF", "#00FFFF", "#FF00FF", "#000000", "#FFFFFF",
         ];
         localStorage.setItem("annotation-colors", JSON.stringify(this.annotationColors));
       }

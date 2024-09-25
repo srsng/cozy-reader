@@ -30,6 +30,9 @@
     width: 8px;
     height: 0px;
   }
+  *::-webkit-scrollbar:hover {
+    width: 16px;
+  }
   *::-webkit-scrollbar-thumb {
     background-color: var(--header-color);
   }

@@ -78,11 +78,20 @@
       </div>
     </div>
 
-    <div v-show="showAnnotationPopup" class="fixed right-[4%] top-[4%]">
+    <div v-show="showAnnotationPopup" class="fixed flex flex-col right-[4%] top-[4%]">
       <PopupAnnotation 
-      @apply-annotation="handdleApplyAnnotation"
-      @click.self="showAnnotationPopup = false"
+        @apply-annotation="handdleApplyAnnotation"
+        @remove-annotation="handdleRemoveAnnotation"
+        @click.self="showAnnotationPopup = false"
       />
+
+      <!-- <div v-if="selectedAnnotation">
+        <PopupNotepad
+          :timestamp="selectedAnnotation.timestamp"
+          :annotationText="selectedAnnotation.text"
+          :note="selectedAnnotation.note"
+        />
+      </div> -->
     </div>
 
   </div>
@@ -100,11 +109,12 @@ import { mapState } from 'vuex';
 import { HSOverlay } from 'preline';
 // import { Store } from "@tauri-apps/plugin-store";
 import PopupAnnotation from "@/components/popups/PopupAnnotation.vue";
+import PopupNotepad from "@/components/popups/PopupNotepad.vue";
 import { show } from "@tauri-apps/api/app";
 
 export default {
   name: "BookReader",
-  components: { PopupAnnotation },
+  components: { PopupAnnotation, PopupNotepad },
   computed: {
     ...mapState({
       readerSettings: state => state.readerSettings,
@@ -133,19 +143,30 @@ export default {
       selectedText: "",
       annotationManager: null,
       showAnnotationPopup: false,
+      // selectedAnnotation: null,
     };
   },
   methods: {
+    handdleRemoveAnnotation({type}) {
+      const cfiRange = this.curCfiRange;
+      console.log("handdleRemoveAnnotation", cfiRange, type);
+      
+      if (this.annotations) {
+        this.annotationsManager.remove(cfiRange, type);
+        this.annotations = this.annotations.filter(annotation => !(annotation.type === type && annotation.cfiRange === cfiRange));
+        this.saveAnnotation();
+      }
+    },
     handdleApplyAnnotation({type, color}) {
       const cfiRange = this.curCfiRange;
       const text = this.selectedText;
-      if (type !== "remove") {
+      if (cfiRange) {
         this.annotations.push({type, color, cfiRange, text, timestamp: Date.now(), note: ""});
         this.saveAnnotation();
+        this.applyAnnotation({type, color, cfiRange});
       }
-      this.applyAnnotation({type, color, cfiRange});
     },
-    applyAnnotation({type, color, cfiRange}) {     
+    applyAnnotation({type, color, cfiRange}) {
       // console.log("applyAnnotation", type, color, cfiRange);
       if (type === "underline") {
         this.applyUnderline(cfiRange, color);
@@ -153,39 +174,32 @@ export default {
         this.applyHighlight(cfiRange, color);
       // } else if (type === "mark") {
       //   this.applyMark(cfiRange, color);
-      } else if (type === "remove") {
-        this.applyRemove(cfiRange);
       }
     },
 
     applyHighlight(cfiRange, color) {
-      color = color.replace('#', '');
-      let r = parseInt(color.substring(0, 2), 16);
-      let g = parseInt(color.substring(2, 4), 16);
-      let b = parseInt(color.substring(4, 6), 16);
-      const styles = {"fill": `rgba(${r}, ${g}, ${b}, 0.5)`};
+      // color = color.replace('#', '');
+      // let r = parseInt(color.substring(0, 2), 16);
+      // let g = parseInt(color.substring(2, 4), 16);
+      // let b = parseInt(color.substring(4, 6), 16);
+      const styles = {
+        fill: color,
+        // "fill": `rgba(${r}, ${g}, ${b}, 0.5)`,
+        // "mix-blend-mode": "hard-light"
+        // "fill-opacity": 0.3,
+      };
       this.annotationsManager.highlight(cfiRange, {}, (e)=>{this.handleClickAnnotation(e)}, "", styles);
     },
     applyUnderline(cfiRange, color) {
       const styles = {
         "stroke": color,
-        "stroke-width": "2px",
+        "stroke-width": "0",
+        "stroke-opacity": 0.8,
       }
-      this.annotationsManager.underline(cfiRange, {}, (e)=>{console.log(e)}, "", styles);
+      this.annotationsManager.underline(cfiRange, {}, (e)=>{this.handleClickAnnotation(e)}, "", styles);
     },
     applyMark(cfiRange, color) {
       this.annotationsManager.mark(cfiRange, {}, ()=>{});
-    },
-    applyRemove(cfiRange) {
-      // console.log("applyRemove", cfiRange);
-      const types = ["highlight", "underline"];
-      types.forEach(type => {
-        this.annotationsManager.remove(cfiRange, type);
-      });
-      if (this.annotations) {
-        this.annotations = this.annotations.filter(annotation => annotation.cfiRange !== cfiRange);
-        this.saveAnnotation();
-      }
     },
     loadAnnotation() {
       console.log("loadAnnotation");
@@ -202,7 +216,8 @@ export default {
       try {
         this.applyAnnotation(annotation);
       } catch (error) {
-        alter("Error restoring annotation:" + annotation);
+        // alert("Error restoring annotation:" + annotation);
+        console.log("Error restoring annotation:", annotation);
       }
       });
     },
@@ -212,7 +227,12 @@ export default {
       localStorage.setItem(key, JSON.stringify(this.annotations));
     },
     handleClickAnnotation(e) {
-      console.log("handleClickAnnotation");
+      console.log("handleClickAnnotation", e);
+      // const annotation = this.annotations.find(ann => ann.cfiRange === e.target.getAttribute("data-epubcfi"));
+      // if (annotation) {
+      //   this.selectedAnnotation = annotation;
+      //   console.log("selectedAnnotation", this.selectedAnnotation);
+      // }
     },
     handleScroll() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -776,5 +796,9 @@ export default {
   },
 };
 </script>
+
+<style> 
+g line {stroke: inherit !important; stroke-width: 3 !important;}
+</style>
 
 <style scoped> </style>
