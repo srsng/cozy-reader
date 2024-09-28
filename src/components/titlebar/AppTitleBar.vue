@@ -11,7 +11,7 @@
       </div>
       <div id="titlebar-changeTheme" class="titlebar-button" @click="toggleThemeSelecterPopup">
         <IconThemeChange title="change Theme" />
-        <PopupThemeSelecter v-show="showThemeSelecterPopup" class="top-9 left-36"/>
+        <PopupThemeSelecter v-show="showThemeSelecterPopup" class="top-10 left-2"/>
       </div>
       <div id="titlebar-addBooks" @click="triggerUpload" class="upload-button titlebar-button">
         <BookAdder @change="handleFileChange"/>

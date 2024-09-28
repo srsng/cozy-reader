@@ -90,7 +90,6 @@
     height: 24px;
     border-radius: 4px;
     position: fixed;
-    transform: translateX(-50%);
   }
 
   .round-btn-style {

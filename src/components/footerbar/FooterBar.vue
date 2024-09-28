@@ -9,7 +9,7 @@
       <div v-if="curRouteNameIs('BookReader')">
         <div id="footerbar-reader-setter" class="footerbar-button" @click="toggleReaderSetterPopup">
           <IconSetting class="size-4" title="settings" />
-          <PopupReaderSettingControler v-show="showReaderSetterPopup" class="bottom-10 left-36"/>
+          <PopupReaderSettingControler v-show="showReaderSetterPopup" class="bottom-8 left-2"/>
         </div>
       </div>
       <!------主页: 致谢---阅读页: 调整页宽--------->
