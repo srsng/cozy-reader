@@ -42,7 +42,7 @@
 
    1. pnpm
    2. rust
-   3. [tauri]([Tauri 是什么？ | Tauri](https://v2.tauri.app/zh-cn/start/))
+   3. [tauri](https://v2.tauri.app/zh-cn/start/)
 
 3. 安装必要依赖
 
