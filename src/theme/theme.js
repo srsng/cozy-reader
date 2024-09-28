@@ -1,6 +1,7 @@
 // import { Store } from "@tauri-apps/plugin-store";
 // const store = new Store("theme_store.bin");
 import localforage from "localforage";
+// import { saveAppWindowState } from ".";
 // 默认主题Map
 import defaultThemesMap from "./theme.json";
 // 主题Map
@@ -21,6 +22,7 @@ async function initThemeStore() {
 }
 
 function refreshPage() {
+  saveAppWindowState();
   document.querySelector("#titlebar-fresh").click();
 }
 

@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { Window } from "@tauri-apps/api/window";
 import { cycleTheme } from "@/theme/theme.js";
 import {
   IconWindowMin,
@@ -127,6 +128,19 @@ export default {
       this.showThemeSelecterPopup = !this.showThemeSelecterPopup;
     },
   },
+  mounted() {
+    // 绑定最小化、最大化、关闭按钮功能
+    const appWindow = new Window("main");
+    document
+      .getElementById("titlebar-minimize")
+      ?.addEventListener("click", () => appWindow.minimize());
+    document
+      .getElementById("titlebar-maximize")
+      ?.addEventListener("click", () => appWindow.toggleMaximize());
+    document
+      .getElementById("titlebar-close")
+      ?.addEventListener("click", () => appWindow.close());
+  }
 };
 </script>
 

@@ -4,7 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/'
 import Store from './store/'
-import initAppWindow from "@/components/titlebar/";
+import { initAppWindow } from "@/components/titlebar/";
 
 const store =  Store;
 const app = createApp(App);
