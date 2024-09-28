@@ -25,9 +25,39 @@
 ![Screenshot](./public/screenshot.png)
 ![Screenshot2](./public/screenshot2.png)  
 
-## 反馈  
+## 反馈
+
 - 欢迎提交issue反馈bug或提交新feature建议  
 - 欢迎在issue中提交主题分享，请以 “\[主题分享\] 你的主题、描述等” 作为标题  
+
+## 如何修改
+
+1. 克隆仓库
+
+   ```cmd
+   git clone https://github.com/srsng/cozy-reader
+   ```
+
+2. 安装相关前置
+
+   1. pnpm
+   2. rust
+   3. [tauri]([Tauri 是什么？ | Tauri](https://v2.tauri.app/zh-cn/start/))
+
+3. 安装必要依赖
+
+   ```cmd
+   pnpm install
+   ```
+
+4. 测试/构建
+
+   ```cmd
+   cargo tauri dev
+   cargo tauri build
+   ```
+
+   （根据安装选项不同会有所差异）
 
 ## 声明
 
