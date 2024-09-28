@@ -64,6 +64,7 @@ import {
 import BookAdder from "@/components/common/BookAdder.vue";
 import PopupThemeSelecter from "@/components/popups/PopupThemeSelecter.vue";
 import { mapMutations, mapState } from 'vuex';
+import { saveAppWindowState } from "@/components/titlebar/";
 
 export default {
   name: "AppTitleBar",
@@ -121,6 +122,7 @@ export default {
       this.setUploadBooksStatus({ uploading: true, solving: false, event: event, });
     },
     refreshPage() {
+      saveAppWindowState();
       this.$router.go(0);
     },
     cycleTheme,

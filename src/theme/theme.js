@@ -1,7 +1,5 @@
-// import { Store } from "@tauri-apps/plugin-store";
-// const store = new Store("theme_store.bin");
 import localforage from "localforage";
-// import { saveAppWindowState } from ".";
+
 // 默认主题Map
 import defaultThemesMap from "./theme.json";
 // 主题Map
@@ -10,7 +8,6 @@ const themesMap = await initThemeStore();
 const themes = Object.keys(themesMap);
 
 async function initThemeStore() {
-  // const themesMap = await store.get("app-theme");
   const themesMap = await localforage.getItem("app-theme");
 
   // 需要重置为默认值的情况：不存在该键, 值为空{}或者该键的值无法序列化
@@ -22,7 +19,6 @@ async function initThemeStore() {
 }
 
 function refreshPage() {
-  saveAppWindowState();
   document.querySelector("#titlebar-fresh").click();
 }
 
@@ -107,8 +103,6 @@ function addTheme(themeIdentifier, properties) {
   // console.log("addTheme", theme, properties);
 
   themesMap[themeIdentifier] = properties;
-  // store.set("app-theme", themesMap);
-  // store.save();
   localforage.setItem("app-theme", themesMap);
 
   refreshPage();
@@ -116,8 +110,7 @@ function addTheme(themeIdentifier, properties) {
 
 function deleteTheme(themeIdentifier) {
   delete themesMap[themeIdentifier];
-  // store.set("app-theme", themesMap);
-  // store.save();
+
   localforage.setItem("app-theme", themesMap);
 
   if (Object.keys(themesMap).length === 0) {
@@ -130,8 +123,6 @@ function deleteTheme(themeIdentifier) {
 function resetThemeStore() {
   console.log("resetThemeStore", defaultThemesMap);
   // 保存到store
-  // store.set("app-theme", defaultThemesMap);
-  // store.save();
   localforage.setItem("app-theme", defaultThemesMap);
 }
 
@@ -254,9 +245,6 @@ function importThemes(themesStr) {
       }
     }
 
-    // 保存主题到 store
-    // store.set("app-theme", themesMapCopy);
-    // store.save();
     localforage.setItem("app-theme", themesMapCopy);
 
     refreshPage();
