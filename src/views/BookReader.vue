@@ -78,7 +78,7 @@
       </div>
     </div>
 
-    <div v-show="showAnnotationPopup" class="fixed flex flex-col right-[4%] top-[4%]">
+    <div v-show="showAnnotationPopup" class="fixed flex flex-col right-20 top-10">
       <PopupAnnotation 
         @apply-annotation="handdleApplyAnnotation"
         @remove-annotation="handdleRemoveAnnotation"
