@@ -61,15 +61,15 @@
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center contents-body">
       <input type="color" class="size-6" id="annotationColorInput"/>
-      <button @click="addColor" class="titlebar-button ml-2 w-fit p-2 round-btn-style">添加</button>
+      <button @click="addColor" class="titlebar-button ml-2 w-fit p-2">添加</button>
     </div>
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="flex justify-center">
-      <button @click="delSelectedColor" class="titlebar-button w-fit p-2 mb-2 round-btn-style"> 删除颜色 </button>
+    <div class="flex justify-center contents-body">
+      <button @click="delSelectedColor" class="titlebar-button w-fit p-2 mb-2"> 删除颜色 </button>
     </div>
 
   </div>

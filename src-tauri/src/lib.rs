@@ -12,6 +12,7 @@ pub mod setup;
 pub fn run() {
     let ctx = tauri::generate_context!();
     tauri::Builder::default()
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         // .plugin(tauri_plugin_store::Builder::new().build())
         // .plugin(tauri_plugin_updater::Builder::new().build())
         // .plugin(tauri_plugin_fs::init())

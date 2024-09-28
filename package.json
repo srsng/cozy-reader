@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "2.0.0-rc.0",
+    "@tauri-apps/plugin-window-state": "2.0.0-rc.1",
     "@vue/devtools-api": "^6.6.4",
     "core-js": "^3.38.1",
     "epubjs": "^0.3.93",

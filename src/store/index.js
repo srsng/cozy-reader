@@ -1,6 +1,4 @@
 import {createStore} from 'vuex';
-// import {Store} from 'tauri/api/store';
-// import { stat } from 'fs';
 
 export default createStore({
     state: {
@@ -9,7 +7,6 @@ export default createStore({
             solving: false,
             event: null,
         },
-        // viewerWidth: localStorage.getItem('viewerWidth') ? parseInt(localStorage.getItem('viewerWidth')) : 60,
         curBookTitle: null,
         curBookChapter: null,
         readerSettings: {
