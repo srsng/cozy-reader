@@ -491,8 +491,8 @@ export default {
         .prose h3 { font-size: 1.25em; line-height: 120%;}
         .prose h4 { font-size: 1.2em; line-height: 120%;}
         .prose strong {font-weight: 700; }
-        .prose a { color: #6eaadc; text-decoration: none; }
-        a:hover { text-decoration: underline; cursor: pointer; }
+        .prose a { color: #6eaadc !important; text-decoration: none; }
+        a:hover { cursor: pointer !important; }
         .prose ul, .prose ol { margin-top: 1em; margin-bottom: 1em; padding-left: 1.5em; }
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}
