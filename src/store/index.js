@@ -65,13 +65,17 @@ export default createStore({
             }
         },
         decreaseLineHeight(state) {
-            if (state.readerSettings.lineHeight > 30){              
+            if (state.readerSettings.lineHeight > 0){              
                 state.readerSettings.lineHeight -= 10;
                 localStorage.setItem("readerSettings", JSON.stringify(state.readerSettings));
             }
         },
         resetLineHeight(state) {
             state.readerSettings.lineHeight = 180;
+            localStorage.setItem("readerSettings", JSON.stringify(state.readerSettings));
+        },
+        setLineHeightZero(state) {
+            state.readerSettings.lineHeight = 0;
             localStorage.setItem("readerSettings", JSON.stringify(state.readerSettings));
         },
         setCurBookTitle(state, bookTitle) {

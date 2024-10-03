@@ -6,8 +6,8 @@
   >
     <!-- 左侧部分 -->
     <div class="left-section flex items-center">
-      <div id="titlebar-home" class="titlebar-button" @click="goHome">
-        <IconHome title="Home" />
+      <div id="titlebar-home" title="go home" class="titlebar-button" @click="goHome">
+        <IconHome/>
       </div>
       <div id="titlebar-changeTheme" title="change Theme" class="titlebar-button" @click="toggleThemeSelecterPopup">
         <IconThemeChange />

@@ -7,13 +7,13 @@
       <div class="pl-2 text-lg">设置</div>
       <div>
         <span class="pr-2"> 刷新页面:</span>
-        <div class="titlebar-button round-btn-style" @click="refreshPage">
+        <div class="titlebar-button round-btn-style" @click="refreshPage" title="部分操作结束后可能需要">
           <IconRefresh class="size-4" title="refresh" />
         </div>
       </div>
     </header>
 
-    <div class="flex items-center mx-2 mt-2 contents-body">
+    <div class="flex items-center mx-2 mt-2 contents-body" title="显示页宽">
       <span class="">reader width:</span>
       <subPopupSettingChanger
         :value="readerSettings.viewerWidth"
@@ -21,11 +21,8 @@
         @value-change="handdleViewerWidthChange"
         class="ml-2"
       />
-      <div class="footerbar-button ml-2 round-btn-style">
-        <IconRefresh
-          class="size-4"
-          @click="this.$store.commit('resetViewerWidth')"
-        />
+      <div class="footerbar-button ml-2 round-btn-style" title="reset" @click="this.$store.commit('resetViewerWidth')">
+        <IconRefresh class="size-4"/>
       </div>
     </div>
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
@@ -36,7 +33,7 @@
         </div>
         <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
          -->
-    <div class="flex items-center mx-2 contents-body">
+    <div class="flex items-center mx-2 contents-body" title="字体大小">
       <span class="">font size:</span>
       <subPopupSettingChanger
         :value="readerSettings.fontSize"
@@ -45,16 +42,13 @@
         class="ml-2"
       />
 
-      <div class="footerbar-button ml-2 round-btn-style">
-        <IconRefresh
-          class="size-4"
-          @click="this.$store.commit('resetFontSize')"
-        />
+      <div class="footerbar-button ml-2 round-btn-style" title="reset" @click="this.$store.commit('resetFontSize')">
+        <IconRefresh class="size-4" />
       </div>
     </div>
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="flex items-center mx-2 contents-body">
+    <div class="flex items-center mx-2 contents-body" title="行高">
       <span class="">line height:</span>
       <subPopupSettingChanger
         :value="readerSettings.lineHeight"
@@ -62,17 +56,16 @@
         @value-change="handdleLineHeightChange"
         class="ml-2"
       />
-
-      <div class="footerbar-button ml-2 round-btn-style">
-        <IconRefresh
-          class="size-4"
-          @click="this.$store.commit('resetLineHeight')"
-        />
+      <div class="footerbar-button w-fit px-[2px] ml-2 round-btn-style" title="set to 0" @click="this.$store.commit('setLineHeightZero')">
+        <IconToBottom class="size-4" />0
+      </div>
+      <div class="footerbar-button ml-2 round-btn-style" @click="this.$store.commit('resetLineHeight')" title="reset">
+        <IconRefresh class="size-4" />
       </div>
     </div>
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="flex items-center mx-2 contents-body">
+    <div class="flex items-center mx-2 contents-body" title="首行缩进2字符">
       <span class="">first line indent:</span>
       <subPopupSwitchToggle
         class="ml-2"
@@ -83,7 +76,7 @@
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="flex items-center mx-2 contents-body">
+    <div class="flex items-center mx-2 contents-body" title="缩放长图">
       <span class="">zoom long pic:</span>
       <subPopupSwitchToggle
         class="ml-2"
@@ -94,7 +87,7 @@
 
     <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
 
-    <div class="flex items-center mx-2 mb-2 contents-body">
+    <div class="flex items-center mx-2 mb-2 contents-body" title="开关滚动条">
       <span class="">scroll bar visable:</span>
       <subPopupSwitchToggle
         class="ml-2"
@@ -108,7 +101,7 @@
 <script>
 import subPopupSwitchToggle from "./subPopups/subPopupSwitchToggle.vue";
 import subPopupSettingChanger from "./subPopups/subPopupSettingChanger.vue";
-import { IconRefresh } from "@/components/icons";
+import { IconRefresh, IconToBottom } from "@/components/icons";
 
 import { mapState } from "vuex";
 
@@ -116,6 +109,7 @@ export default {
   name: "PopupReaderSettingControler",
   components: {
     IconRefresh,
+    IconToBottom,
     subPopupSwitchToggle,
     subPopupSettingChanger,
   },
@@ -143,12 +137,6 @@ export default {
       this.$store.commit("setReaderSettings", {
         scrollBarVisable: value,
       });
-      // const root = document.documentElement;
-      // if (value) {
-      //   root.style.setProperty('--scrollbar-display', 'block');
-      // } else {
-      //   root.style.setProperty('--scrollbar-display', 'none');
-      // }
     },
     handdleFontSizeChange({ type }) {
       // console.log("handdlefontSizeChange", type)

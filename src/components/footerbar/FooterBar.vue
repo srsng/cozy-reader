@@ -105,7 +105,7 @@
           class="toc"
           data-hs-overlay="#hs-overlay-right"
           aria-controls="hs-overlay-right"
-          title="toggle Contents"
+          title="Contents"
           id="footerbar-contents"
         >
           <IconContents class="footerbar-button" />
