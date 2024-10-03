@@ -7,9 +7,17 @@
     <div class="left-section flex items-center">
       <!------阅读页: 调整页宽按钮与弹窗--------->
       <div v-if="curRouteNameIs('BookReader')">
-        <div id="footerbar-reader-setter" class="footerbar-button" @click="toggleReaderSetterPopup">
-          <IconSetting class="size-4" title="settings" />
-          <PopupReaderSettingControler v-show="showReaderSetterPopup" class="bottom-8 left-2"/>
+        <div
+          id="footerbar-reader-setter"
+          title="settings"
+          class="footerbar-button"
+          @click="toggleReaderSetterPopup"
+        >
+          <IconSetting class="size-4" />
+          <PopupReaderSettingControler
+            v-show="showReaderSetterPopup"
+            class="bottom-8 left-2"
+          />
         </div>
       </div>
       <!------主页: 致谢---阅读页: 调整页宽--------->
@@ -28,34 +36,59 @@
     </div>
 
     <!-- 中间部分 -->
-    <div class="center-section flex justify-center items-center overflow-hidden truncate border-x-2 border-[--background-color]">
+    <div
+      class="center-section flex justify-center items-center overflow-hidden truncate border-x-2 border-[--background-color]"
+    >
       <!---------主页：随机提示----阅读页：章节标题与切换按钮------->
       <!-- 阅读页 -->
       <div
         v-if="curRouteNameIs('BookReader')"
         class="flex justify-between items-center"
       >
-        <div id="footerbar-to-top" class="footerbar-button" @click="scrollToTop">
-          <IconToTop title="go to top" />
+        <div
+          id="footerbar-to-top"
+          title="go to top"
+          class="footerbar-button"
+          @click="scrollToTop"
+        >
+          <IconToTop />
         </div>
-        <div id="footerbar-prev" class="footerbar-button" @click="goPrev">
-          <IconLeftArrow title="previous" />
+        <div
+          id="footerbar-prev"
+          title="previous"
+          class="footerbar-button"
+          @click="goPrev"
+        >
+          <IconLeftArrow />
         </div>
-        <div id="chapter-title" class="footerbar-content center-content truncate">
+        <div
+          id="chapter-title"
+          class="footerbar-content center-content truncate"
+        >
           <!-- <p>{{ curBookChapter }}</p> -->
-          <p>{{  }}</p>
+          <p>{{}}</p>
         </div>
-        <div id="footerbar-next" class="footerbar-button" @click="goNext">
-          <IconRightArrow title="next" />
+        <div
+          id="footerbar-next"
+          title="next"
+          class="footerbar-button"
+          @click="goNext"
+        >
+          <IconRightArrow />
         </div>
-        <div id="footerbar-to-bottom" class="footerbar-button" @click="scrollToBottom">
-          <IconToBottom title="go to bottom" />
+        <div
+          id="footerbar-to-bottom"
+          title="go to bottom"
+          class="footerbar-button"
+          @click="scrollToBottom"
+        >
+          <IconToBottom />
         </div>
       </div>
       <!-- 主页 -->
       <div v-else class="footerbar-content flex items-center truncate">
         <div id="footerbar-home-random-tips">
-          <p> {{ "// tips: " + randomTips() + " //" }}</p>
+          <p>{{ "// tips: " + randomTips() + " //" }}</p>
         </div>
       </div>
       <!---------------------------------------->
@@ -68,13 +101,16 @@
         <!-- <div>
           <IconNote class="footerbar-button"/>
         </div> -->
-        <div class="toc"
-            data-hs-overlay="#hs-overlay-right"
-            aria-controls="hs-overlay-right"
-            id="footerbar-contents">
-          <IconContents class="footerbar-button" title="toggle Contents" />
+        <div
+          class="toc"
+          data-hs-overlay="#hs-overlay-right"
+          aria-controls="hs-overlay-right"
+          title="toggle Contents"
+          id="footerbar-contents"
+        >
+          <IconContents class="footerbar-button" />
         </div>
-      </div> 
+      </div>
       <!---------主页：信息--------------->
       <div v-else class="footerbar-content flex items-center">
         <p>
@@ -106,8 +142,8 @@ import {
   IconNote,
 } from "@/components/icons";
 import PopupReaderSettingControler from "@/components/popups/PopupReaderSettingControler.vue";
-import { mapState } from 'vuex';
-import localforage from 'localforage';
+import { mapState } from "vuex";
+import localforage from "localforage";
 
 export default {
   name: "FooterBar",
@@ -123,7 +159,7 @@ export default {
   },
   computed: {
     ...mapState({
-      curBookChapter: state => state.curBookChapter,
+      curBookChapter: (state) => state.curBookChapter,
     }),
   },
   data() {
@@ -194,4 +230,4 @@ export default {
 };
 </script>
 
-<style> </style>
+<style></style>

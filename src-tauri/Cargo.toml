@@ -3,6 +3,7 @@ name = "cozy-reader"
 version = "0.1.0"
 description = "A simple but nice epub reader"
 authors = ["srsng"]
+emails = ["srsnng@hotmail.com"]
 license = "MIT"
 edition = "2021"
 
@@ -18,15 +19,6 @@ serde_json = "1.0.116"
 serde = { version = "1.0.200", features = ["derive"] }
 tauri = { version = "2.0.0-rc", features = [] }
 tauri-plugin-window-state = "2.0.0-rc"
-# tauri-plugin-http = "2.0.0-rc"
-# tauri-plugin-process = "2.0.0-rc"
-# tauri-plugin-notification = "2.0.0-rc"
-# tauri-plugin-shell = "2.0.0-rc"
-# tauri-plugin-os = "2.0.0-rc"
-# tauri-plugin-clipboard-manager = "2.1.0-beta.7"
-# tauri-plugin-dialog = "2.0.0-rc"
-# tauri-plugin-fs = "2.0.0-rc"
-# tauri-plugin-store = "2.0.0-rc"
 epub = "2.1.2"
 
 [features]
@@ -36,10 +28,6 @@ default = [ "custom-protocol" ]
 # this feature is used used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
 custom-protocol = [ "tauri/custom-protocol" ]
-
-[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
-# tauri-plugin-global-shortcut = "2.0.0-rc"
-# tauri-plugin-updater = "2.0.0-rc.0"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

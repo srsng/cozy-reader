@@ -9,16 +9,16 @@
       <div id="titlebar-home" class="titlebar-button" @click="goHome">
         <IconHome title="Home" />
       </div>
-      <div id="titlebar-changeTheme" class="titlebar-button" @click="toggleThemeSelecterPopup">
-        <IconThemeChange title="change Theme" />
+      <div id="titlebar-changeTheme" title="change Theme" class="titlebar-button" @click="toggleThemeSelecterPopup">
+        <IconThemeChange />
         <PopupThemeSelecter v-show="showThemeSelecterPopup" class="top-10 left-2"/>
       </div>
-      <div id="titlebar-addBooks" @click="triggerUpload" class="upload-button titlebar-button">
+      <div id="titlebar-addBooks" title="add books" @click="triggerUpload" class="upload-button titlebar-button">
         <BookAdder @change="handleFileChange"/>
-        <IconAddBook title="add books" />
+        <IconAddBook  />
       </div>
-      <div id="titlebar-fresh" class="titlebar-button" @click="refreshPage">
-        <IconRefresh title="refresh" />
+      <div id="titlebar-fresh" title="refresh" class="titlebar-button" @click="refreshPage">
+        <IconRefresh  />
       </div>
     </div>
 
@@ -32,17 +32,17 @@
 
     <!-- 右侧部分 -->
     <div class="right-section flex items-center">
-      <div id="titlebar-drag-move" class="titlebar-button" data-tauri-drag-region>
-        <IconDragMove title="drag to move" data-tauri-drag-region/>
+      <div id="titlebar-drag-move" title="drag to move" class="titlebar-button" data-tauri-drag-region>
+        <IconDragMove data-tauri-drag-region/>
       </div>
-      <div id="titlebar-minimize" class="titlebar-button">
-        <IconWindowMin title="minmize" />
+      <div id="titlebar-minimize" title="minmize" class="titlebar-button">
+        <IconWindowMin />
       </div>
-      <div id="titlebar-maximize" class="titlebar-button">
-        <IconWindowMax title="maximize" />
+      <div id="titlebar-maximize" title="maximize"  class="titlebar-button">
+        <IconWindowMax/>
       </div>
-      <div id="titlebar-close" class="titlebar-button">
-        <IconWindowClose title="close" />
+      <div id="titlebar-close" title="close"  class="titlebar-button">
+        <IconWindowClose/>
       </div>
     </div>
   </div>
