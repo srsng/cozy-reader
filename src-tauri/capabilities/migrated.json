@@ -13,6 +13,7 @@
     "core:window:allow-minimize",
     "core:window:allow-toggle-maximize",
     "core:window:allow-close",
+    "core:window:allow-set-always-on-top",
     "window-state:allow-restore-state",
     "window-state:allow-save-window-state"
   ]

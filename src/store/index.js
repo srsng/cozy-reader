@@ -17,7 +17,8 @@ export default createStore({
             firstLineIndent: false,
             zoomLongPic: false,
             scrollBarVisable: false,
-        }
+        },
+        alwaysOnTop: false,
     },
     mutations: {
         setUploadBooksStatus(state, newState) {
@@ -91,6 +92,9 @@ export default createStore({
         setReaderSettings(state, someSettings) {
             state.readerSettings = {...state.readerSettings, ...someSettings};
             localStorage.setItem('readerSettings', JSON.stringify(state.readerSettings));
+        },
+        switchAlwaysOnTop(state) {
+            state.alwaysOnTop = !state.alwaysOnTop;
         }
       },
     actions: {

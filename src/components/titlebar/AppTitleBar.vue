@@ -5,7 +5,7 @@
     @contextmenu.prevent
   >
     <!-- 左侧部分 -->
-    <div class="left-section flex items-center">
+    <div class="left-section flex items-center ml-0.5">
       <div id="titlebar-home" title="go home" class="titlebar-button" @click="goHome">
         <IconHome/>
       </div>
@@ -31,7 +31,11 @@
     </div>
 
     <!-- 右侧部分 -->
-    <div class="right-section flex items-center">
+    <div class="right-section flex items-center mr-0.5">
+      <div id="titlebar-always-on-top" title="always on top" class="titlebar-button" 
+        @click="switchAlwaysOnTop">
+        <IconPin :class="{ 'rotate-45': alwaysOnTop }"/>
+      </div>
       <div id="titlebar-drag-move" title="drag to move" class="titlebar-button" data-tauri-drag-region>
         <IconDragMove data-tauri-drag-region/>
       </div>
@@ -50,6 +54,7 @@
 
 <script>
 import { Window } from "@tauri-apps/api/window";
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { cycleTheme } from "@/theme/theme.js";
 import {
   IconWindowMin,
@@ -58,6 +63,7 @@ import {
   IconThemeChange,
   IconAddBook,
   IconHome,
+  IconPin,
   IconRefresh,
   IconDragMove,
 } from "@/components/icons";
@@ -77,6 +83,7 @@ export default {
     IconHome,
     IconRefresh,
     IconDragMove,
+    IconPin,
     PopupThemeSelecter,
     BookAdder,
   },
@@ -89,6 +96,7 @@ export default {
   computed: {
     ...mapState({
       curBookTitle: state => state.curBookTitle,
+      alwaysOnTop: state => state.alwaysOnTop,
     })
   },
   // props: {
@@ -107,9 +115,13 @@ export default {
     curBookTitle(bookTitle) {
       this.appTitle = bookTitle;
     },
+    async alwaysOnTop(val) {
+      console.log("switch alwaysOnTop", val);
+      await getCurrentWindow().setAlwaysOnTop(val);
+    }
   },
   methods: {
-    ...mapMutations(['setUploadBooksStatus']),
+    ...mapMutations(['setUploadBooksStatus', 'switchAlwaysOnTop']),
     goHome() {
       this.$router.push({ name: "Home" });
     },
@@ -146,4 +158,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.rotate-45 {
+  transform: rotate(-45deg);
+}
+</style>

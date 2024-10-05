@@ -7,7 +7,7 @@ pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
     {
         open_devtools(app)?;
     }
-
+    // always_on_top(app)?;
     Ok(())
 }
 
@@ -15,6 +15,12 @@ pub fn setup_app(app: &mut App) -> Result<(), Box<dyn Error>> {
 fn open_devtools(app: &mut App) -> Result<(), Box<dyn Error>> {
     let main_window = app.get_webview_window("main").unwrap();
     main_window.open_devtools();
+    Ok(())
+}
+
+fn always_on_top(app: &mut App) -> Result<(), Box<dyn Error>> {
+    let main_window = app.get_webview_window("main").unwrap();
+    main_window.set_always_on_top(true);
     Ok(())
 }
 

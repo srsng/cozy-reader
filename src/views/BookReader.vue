@@ -107,7 +107,6 @@ import {
 } from "@/theme/theme";
 import { mapState } from 'vuex';
 import { HSOverlay } from 'preline';
-// import { Store } from "@tauri-apps/plugin-store";
 import PopupAnnotation from "@/components/popups/PopupAnnotation.vue";
 import PopupNotepad from "@/components/popups/PopupNotepad.vue";
 import { show } from "@tauri-apps/api/app";

@@ -22,3 +22,4 @@ export { default as IconImport } from "@/components/icons/IconImport.vue";
 export { default as IconExport } from "@/components/icons/IconExport.vue";
 export { default as IconSetting } from "@/components/icons/IconSetting.vue";
 export { default as IconNote } from "@/components/icons/IconNote.vue";
+export { default as IconPin } from "@/components/icons/IconPin.vue";
