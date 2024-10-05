@@ -1,8 +1,7 @@
 <template>
   <div id="book-reader" class="z-0">
-    <div v-show="!renderDone" class="flex items-center justify-center h-screen">
+    <div v-show="!renderDone" class="flex items-center justify-center h-screen overflow-y-hidden">
         <div class="text-2xl">Loading...</div>      
-      <!-- <button class="size-8 bg-red-700 ml-[50%] mt-20" @click="bindMouseUpEvent"></button> -->
     </div>
     <div
       id="viewer"
@@ -78,7 +77,8 @@
       </div>
     </div>
 
-    <div v-show="showAnnotationPopup" class="fixed flex flex-col right-36 top-10">
+    <div v-show="showAnnotationPopup" 
+      class="fixed flex flex-col right-2 top-10 transform -translate-x-full">
       <PopupAnnotation 
         @apply-annotation="handdleApplyAnnotation"
         @remove-annotation="handdleRemoveAnnotation"
@@ -504,12 +504,8 @@ export default {
           text-align: center;
         }
         div[independentImg] img,
-        p[independentImg] img {
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 100%;
-          height: auto;
-        }
+        p[independentImg] img { margin-left: auto; margin-right: auto; }
+        img { max-width: 100%; height: auto; }
         blockquote {
           border-left: 10px solid var(--text-color);
           filter: brightness(2);
@@ -533,7 +529,9 @@ export default {
         }
         blockquote * {
           display: inline;
+          white-space: normal;
         }
+        tt { word-wrap: break-word !important; }
         table *[bgcolor] { background-color: var(--background-color); filter: brightness(0.8);}
         [bgcolor], body { background: transparent;}
       ` + getThemesStr()
