@@ -3,35 +3,35 @@
     <form id="add-theme-form">
       <div class="w-full flex items-center justify-start gap-2 my-2">
         <label for="theme-name-input">主题名: </label>
-        <input type="text" id="theme-name-input" name="theme-name-input" placeholder="Blue | 蓝" class="w-40"/>
+        <input type="text" id="theme-name-input" name="theme-name-input" title="theme name" placeholder="Blue | 蓝" class="w-40"/>
       </div>
       <div class="w-fit flex items-center justify-between">
         <!-- <div>theme-</div> -->
-        <select id="theme-type" name="theme-type">
+        <select id="theme-type" name="theme-type" title="theme type">
           <option value="light">Light</option>
           <option value="dark">Dark</option>
           <option value="both">Both</option>
         </select>
         <div>-</div>
-        <input type="text" id="theme-color-name-input" placeholder="标识名:blue,只允许字母" class="w-fit max-w-42"/>
+        <input type="text" id="theme-color-name-input" placeholder="identifier(pure letters)" class="w-fit max-w-42" title="标识名，可以随意取，仅用于区分主题"/>
       </div>
 
       <div class="w-full popup-sub border-solid border-t-2 my-2"></div>
       
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="header-color-input" class="ml-1">Header Color:</label>
+        <label for="header-color-input" class="ml-1" title="页眉页脚颜色">Header Color:</label>
         <input type="color" id="header-color-input" name="header-color-input" />
       </div>
       <br />
 
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="background-color-input" class="ml-1">Background Color:</label><br>
+        <label for="background-color-input" class="ml-1" title="背景颜色">Background Color:</label><br>
         <input type="color" id="background-color-input" name="background-color-input" />
       </div>
       <br />
       
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="header-text-color-input" class="ml-1">Header Text Color:</label><br>
+        <label for="header-text-color-input" class="ml-1" title="页眉页脚的文字颜色">Header Text Color:</label><br>
         <input type="color" id="header-text-color-input" name="header-text-color-input" />
       </div>
       <div>
@@ -41,15 +41,15 @@
       <br>
 
       <div class="w-full flex items-center justify-start gap-2">
-        <label for="other-text-color-input" class="ml-1">Other Text Color:</label><br>
+        <label for="other-text-color-input" class="ml-1" title="不在页眉页脚的文字的颜色">Other Text Color:</label><br>
         <input type="color" id="other-text-color-input" name="other-text-color-input" />
       </div>
 
       <!-- <div class="w-full popup-sub border-solid border-t-2 my-2"></div> -->
 
       <div class="w-full flex items-center justify-between my-2">
-        <div @click.stop="saveTheme" class="titlebar-button ml-4 w-fit p-2 round-btn-style">保存主题</div>
-        <div @click.stop="cancel" class="titlebar-button mr-4 w-fit p-2 round-btn-style">取消添加</div>
+        <div @click.stop="saveTheme" class="titlebar-button ml-4 w-fit p-2 round-btn-style" title="save">保存主题</div>
+        <div @click.stop="cancel" class="titlebar-button mr-4 w-fit p-2 round-btn-style" title="cancel">取消添加</div>
       </div>
     </form>
   </div>
@@ -69,18 +69,18 @@ export default {
       const themeName = document.getElementById("theme-name-input").value;
       // 如果themeName为空，提示用户输入
       if (themeName === "") {
-        alert("请填写预填“Blue | 蓝”的输入框");
+        alert("请填写theme name(预填 “Blue | 蓝” 的输入框)");
         return;
       }
       const themeColorName = document.getElementById("theme-color-name-input").value;
       // 如果为空，提示用户输入
       if (themeColorName === "") {
-        alert("请填写预填“blue”的输入框");
+        alert("请填写theme identifier (预填 “blue” 的输入框)");
         return;
       }
       // 如果不是字母，提示用户
       if (!/^[a-zA-Z]+$/.test(themeColorName)) {
-        alert("表示名只允许英文字母(a-z, A-Z)");
+        alert("theme identifier只允许英文字母(a-z, A-Z)");
         return;
       }
       // 如果已经存在该主题，提示用户

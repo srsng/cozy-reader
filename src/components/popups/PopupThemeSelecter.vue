@@ -6,10 +6,10 @@
     <header class="w-full flex items-center justify-between">
       <div class="pl-2">主题 | Themes</div>
       <div>
-        <div id="cycleTheme" class="titlebar-button">
+        <div id="cycleTheme" class="titlebar-button" title="cycle to the next theme">
           <IconCycle @click.stop="cycleTheme" />
         </div>
-        <div id="exportThemes" class="titlebar-button mr-1">
+        <div id="exportThemes" class="titlebar-button mr-1" title="export themes to clipboard">
           <IconExport @click.stop="exportThemes" />
         </div>
       </div>
@@ -24,32 +24,33 @@
           class="w-full h-6 truncate flex items-center justify-between"
           :class="theme"
         >
-          <div class="flex items-center pl-1">
-            <IconMoon v-if="themesMap[theme].type === 'dark'" />
-            <IconSun v-else-if="themesMap[theme].type === 'light'" />
-            <IconSunMoon v-else />
-            <span class="ml-2">{{ "theme " + (index + 1) }}</span>
-            <div class="w-max h-fit titlebar-button rounded-full bg-[--background-color] ml-1">
+          <div class="flex items-center pl-1" title="theme type">
+            <IconMoon v-if="themesMap[theme].type === 'dark'" title="dark theme"/>
+            <IconSun v-else-if="themesMap[theme].type === 'light'" title="light theme"/>
+            <IconSunMoon v-else  title="universal theme"/>
+            <span class="ml-2" title="theme index">{{ "theme " + (index + 1) }}</span>
+            <div class="w-max h-fit titlebar-button rounded-full bg-[--background-color] ml-1" title="select this theme">
               <IconYes class="text-[--text-color]" @click.stop="setTheme(theme)"/>
             </div>
           </div>
-          <div class="w-max h-fit titlebar-button rounded-full bg-[--background-color]">
+          <div class="w-max h-fit titlebar-button rounded-full bg-[--background-color]" title="delete this theme">
             <IconWindowClose class="text-[--text-color]" @click.stop="deleteTheme(theme)"/>
           </div>
         </header>
         <div
           :class="theme"
           class="contents-body w-full h-8 text-center rounded-b-lg"
+          title="theme name"
         >
           {{ themesMap[theme].name }}
         </div>
       </div>
     </div>
     <div class="w-full popup-sub border-solid border-t-2 mt-2"></div>
-    <div class="w-full flex items-center justify-between pl-2 header">
+    <div class="w-full flex items-center justify-between pl-2 header" title="">
       新建主题 | New Theme
       <div id="addTheme" class="titlebar-button round-btn-style mr-1">
-        <IconPlus @click.stop="toggleThemeAdderPopup"/>
+        <IconPlus @click.stop="toggleThemeAdderPopup" title="create a new theme"/>
       </div>
     </div>
     <div>
@@ -60,13 +61,13 @@
 
     <div class="w-full popup-sub border-solid border-t-2 mb-2"></div>
     
-    <div class="w-full flex items-center justify-between pl-2 header">
+    <div class="w-full flex items-center justify-between pl-2 header" title="">
       导入 | Import
-      <div id="importThemes" class="titlebar-button round-btn-style mr-1">
+      <div id="importThemes" class="titlebar-button round-btn-style mr-1" title="import themes by texts">
         <IconImport @click.stop="importThemes" />
       </div>
     </div>
-    <textarea id="import-teme-paste-area" class="min-h-8 w-full mx-1" @paste="handlePaste" placeholder=" 粘贴文本，自动导入."></textarea>
+    <textarea id="import-teme-paste-area" class="min-h-8 w-full mx-1" @paste="handlePaste" placeholder=" 粘贴文本，自动导入." title=""></textarea>
 
     <div class="w-full popup-sub border-solid border-t-2"></div>
     
