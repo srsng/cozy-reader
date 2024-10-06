@@ -495,6 +495,7 @@ export default {
         .prose ul, .prose ol { margin-top: 1em; margin-bottom: 1em; padding-left: 1.5em; }
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}
+        body * {max-width: 100% !important; height: auto;}
         div[independentImg],
         p[independentImg] {
           margin-top: 1em;
@@ -504,7 +505,6 @@ export default {
         }
         div[independentImg] img,
         p[independentImg] img { margin-left: auto; margin-right: auto; }
-        img { max-width: 100%; height: auto; }
         blockquote {
           border-left: 10px solid var(--text-color);
           filter: brightness(2);
@@ -530,7 +530,9 @@ export default {
           display: inline;
           white-space: normal;
         }
-        tt { word-wrap: break-word !important; }
+        ol *, li *, code, pre, tt { 
+          white-space: pre-wrap !important;
+        }
         table *[bgcolor] { background-color: var(--background-color); filter: brightness(0.8);}
         [bgcolor], body { background: transparent;}
       ` + getThemesStr()
