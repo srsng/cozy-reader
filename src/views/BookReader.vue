@@ -502,7 +502,9 @@ export default {
           text-align: center;
         }
         div[independentImg] img,
-        p[independentImg] img { margin-left: auto; margin-right: auto; }
+        p[independentImg] img,
+        div[independentImg] image,
+        p[independentImg] image { margin-left: auto; margin-right: auto; }
         blockquote {
           border-left: 10px solid var(--text-color);
           filter: brightness(2);
@@ -544,7 +546,7 @@ export default {
         .prose { font-size: ${this.readerSettings.fontSize}px; 
           line-height: ${this.readerSettings.lineHeight}%; }
         .prose p { text-indent: ${this.readerSettings.firstLineIndent ? 2 : 0}em; }
-        img { max-height: ${this.readerSettings.zoomLongPic ? imgMaxHeight+'px' : 'auto'}; }
+        img, svg, image { max-height: ${this.readerSettings.zoomLongPic ? imgMaxHeight+'px' : 'auto'}; }
       `;
     },
 
