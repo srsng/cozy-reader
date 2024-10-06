@@ -497,9 +497,7 @@ export default {
         .prose li p { margin: 0;}
         body * {max-width: 100% !important; height: auto;}
         div[independentImg],
-        p[independentImg] {
-          margin-top: 1em;
-          margin-bottom: 1em;          
+        p[independentImg] {    
           display: block;
           text-align: center;
         }
