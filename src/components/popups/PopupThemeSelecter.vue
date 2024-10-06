@@ -1,7 +1,8 @@
 <template>
   <div
-    class="popup flex overflow-y-auto overflow-x-hidden flex-col w-64 h-96 select-none rounded-lg border-solid border-2"
+    class="popup flex overflow-y-auto overflow-x-hidden flex-col w-64 max-w-[90vw] h-96 max-h-[80vh] select-none rounded-lg border-solid border-2"
     @click.stop
+    title=""
   >
     <header class="w-full flex items-center justify-between">
       <div class="pl-2">主题 | Themes</div>

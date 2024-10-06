@@ -1,7 +1,8 @@
 <template>
   <div
+    title=""
     @click.stop
-    class="header popup flex flex-col overflow-y-auto overflow-x-hidden w-64 h-fit max-h-72 select-none border-solid border-2"
+    class="header popup flex flex-col overflow-y-auto overflow-x-hidden w-64 h-fit max-w-[90vw] max-h-[80vh] select-none border-solid border-2"
   >
     <header class="w-full h-fit flex items-center justify-between">
       <div class="pl-2 text-lg">设置</div>
