@@ -254,7 +254,6 @@ export default {
     handleWheel(event) {
       if (this.atBottom && event.deltaY > 0) {
         this.goNext();
-        this.atBottom = false;
         clearTimeout(this.scrollTimeout);
       }
     },
@@ -403,9 +402,10 @@ export default {
         this.modifyBlockquoteAndTable(doc);
         // 当img标签是其父p或div元素的唯一子元素，且父元素不包含文本时，设置其样式
         this.modifyIndependentImg(doc);
+        // 对于tt标签、code标签中，连续出现4个及以上的&nbsp;，对半移除
+        this.removeExtraNbsp(doc);
         // Add Tailwind-like typography classes to body
         doc.body.classList.add("prose", "mx-auto", "px-4", getCurrentTheme());
-
         // Apply dark mode styles
         // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         //   doc.body.classList.add('dark');
@@ -616,14 +616,41 @@ export default {
       
     },
 
+    removeExtraNbsp(doc) {
+      // 对于tt标签、code标签中，连续出现4个及以上的&nbsp;，对半移除
+      const tts = doc.getElementsByTagName("tt");
+      for (let i = 0; i < tts.length; i++) {
+        const tt = tts[i];
+        const text = tt.textContent;
+        console.log("tt", text);
+        const newText = text.replace(/&nbsp;/g, (match, offset, string) => {
+          return offset % 2 === 0 ? "" : "&nbsp;";
+        });
+        tt.textContent = newText;
+      }
+      const codes = doc.getElementsByTagName("code");
+      for (let i = 0; i < codes.length; i++) {
+        const code = codes[i];
+        const text = code.textContent;
+        const newText = text.replace(/&nbsp;/g, (match, offset, string) => {
+          return offset % 2 === 0 ? "" : "&nbsp;";
+        });
+        code.textContent = newText;
+      }
+
+    },
+
     goNext(event) {
       if( event ) {event.preventDefault();}
       this.rendition.next().then(this.setChapterTitle);
+      this.atBottom = false;
     },
-
+    
     goPrev(event) {
       if( event ) {event.preventDefault();}
       this.rendition.prev().then(this.setChapterTitle);
+      // 虽然在底部，但防止直接翻页
+      this.atBottom = false;
     },
 
     async loadTOC() {
