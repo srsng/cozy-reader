@@ -1,6 +1,6 @@
 <template>
   <div id="book-reader" class="z-0">
-    <div v-show="!renderDone" class="flex items-center justify-center h-screen overflow-y-hidden">
+    <div v-show="!renderDone" class="flex items-center justify-center h-screen overflow-y-hidden px-0">
         <div class="text-2xl">Loading...</div>      
     </div>
     <div
@@ -31,7 +31,7 @@
       class="contents-container py-8 hidden fixed top-0 end-0 h-full max-w-xl w-fit z-[4800] border-l-2 border-[--header-color]"
       tabindex="-1"
     >
-      <div class="contents-header header flex justify-between items-center py-3 px-4 border-b">
+      <div class="contents-header header flex justify-between items-center py-3 pl-4 border-b">
         <h3 class="font-bold">Contents</h3>
       </div>
 
@@ -47,7 +47,7 @@
               {{ chapter.label }}
             </a>
             <div
-              class="px-4"
+              class="pl-4"
               v-for="sub_chapter in chapter.subitems"
               :key="sub_chapter.id"
             >
@@ -59,7 +59,7 @@
                 {{ sub_chapter.label }}
               </a>
               <div
-                class="px-8"
+                class="pl-8"
                 v-for="sub_sub_chapter in sub_chapter.subitems"
                 :key="sub_sub_chapter.id"
               >
@@ -403,9 +403,9 @@ export default {
         // 当img标签是其父p或div元素的唯一子元素，且父元素不包含文本时，设置其样式
         this.modifyIndependentImg(doc);
         // 对于tt标签、code标签中，连续出现4个及以上的&nbsp;，对半移除
-        this.removeExtraNbsp(doc);
+        // this.removeExtraNbsp(doc);
         // Add Tailwind-like typography classes to body
-        doc.body.classList.add("prose", "mx-auto", "px-4", getCurrentTheme());
+        doc.body.classList.add("prose", "mx-auto", getCurrentTheme());
         // Apply dark mode styles
         // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         //   doc.body.classList.add('dark');
@@ -496,6 +496,7 @@ export default {
         .prose li { margin-bottom: 0.25em; }
         .prose li p { margin: 0;}
         body * {max-width: 100% !important; height: auto;}
+        body {padding: 0px 0px !important;}
         div[independentImg],
         p[independentImg] {    
           display: block;
@@ -617,25 +618,20 @@ export default {
     },
 
     removeExtraNbsp(doc) {
-      // 对于tt标签、code标签中，连续出现4个及以上的&nbsp;，对半移除
+      // 对于tt标签、code标签中，将nbsp替换为半角空格
       const tts = doc.getElementsByTagName("tt");
       for (let i = 0; i < tts.length; i++) {
         const tt = tts[i];
-        const text = tt.textContent;
-        console.log("tt", text);
-        const newText = text.replace(/&nbsp;/g, (match, offset, string) => {
-          return offset % 2 === 0 ? "" : "&nbsp;";
-        });
-        tt.textContent = newText;
+        // const text = tt.textContent;
+        tt.textContent = tt.textContent.replace(/ /g, '\u00a0');
       }
       const codes = doc.getElementsByTagName("code");
       for (let i = 0; i < codes.length; i++) {
         const code = codes[i];
         const text = code.textContent;
-        const newText = text.replace(/&nbsp;/g, (match, offset, string) => {
-          return offset % 2 === 0 ? "" : "&nbsp;";
-        });
-        code.textContent = newText;
+        if (text.includes("&nbsp;")) {
+          code.textContent = text.replace(/&nbsp;/gi, " ");
+        }
       }
 
     },
@@ -832,4 +828,8 @@ export default {
 g line {stroke: inherit !important; stroke-width: 3 !important;}
 </style>
 
-<style scoped> </style>
+<style scoped> 
+#viewer * {
+  padding: 0% !important;
+}
+</style>
