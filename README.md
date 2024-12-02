@@ -7,7 +7,7 @@
 - 页面干净，计算机资源占用低
 - 阅读进度记忆
 - 完全本地
-- 滚动化阅读，让阅读连续
+- 滚动化阅读，支持漫画模式
 - 跨平台
 - 支持多种明、暗主题，支持自定义主题
 
@@ -42,7 +42,7 @@
 
    1. pnpm
    2. rust
-   3. [tauri](https://v2.tauri.app/zh-cn/start/)
+   3. [tauri v2](https://v2.tauri.app/zh-cn/start/)
 
 3. 安装必要依赖
 
@@ -57,7 +57,7 @@
    cargo tauri build
    ```
 
-   （根据安装选项不同会有所差异）
+   （根据tauri配置选项不同会有所差异，详见tauri官方文档）
 
 ## 声明
 
