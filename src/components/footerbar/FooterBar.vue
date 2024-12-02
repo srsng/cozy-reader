@@ -1,6 +1,6 @@
 <template>
   <div
-    class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none overflow-visible text-ellipsis whitespace-nowrap"
+    class="footerbar footer z-[6000] flex justify-between items-center fixed bottom-0 left-0 right-0 h-6 select-none overflow-visible text-ellipsis whitespace-nowrap no-print"
     @contextmenu.prevent
   >
     <!-- 左侧部分 -->

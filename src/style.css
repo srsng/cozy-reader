@@ -4,16 +4,6 @@
 
 @layer components {
 
-  /* body {
-    @apply bg-white   dark:bg-gray-600
-           text-black dark:text-gray-200;
-  } */
-  /* :root {
-    --header-color: #333333;
-    --background-color: #fbfbfb;
-    --text-color: #000000;
-  } */
-
   body {
     @apply bg-[var(--background-color)] text-[var(--text-color)];
   }
@@ -25,22 +15,29 @@
   body::-webkit-scrollbar {
     display: var(--scrollbar-visable);
   }
+
   *::-webkit-scrollbar {
     display: block;
     width: 8px;
     height: 0px;
   }
+
   *::-webkit-scrollbar:hover {
     width: 16px;
   }
+
   *::-webkit-scrollbar-thumb {
     background-color: var(--header-color);
   }
+
   *::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  AppHeader, header, .header, .footer {
+  AppHeader,
+  header,
+  .header,
+  .footer {
     background-color: var(--header-color);
     color: var(--header-text-color);
   }
@@ -54,7 +51,8 @@
     color: inherit;
   }
 
-  .popup, .popup-sub {
+  .popup,
+  .popup-sub {
     background-color: var(--background-color);
     border-color: var(--header-color);
   }
@@ -64,12 +62,11 @@
   }
 
   .titlebar-button {
-    @apply round-btn-style at-center size-8;
+    @apply round-btn-style at-center size-7;
   }
 
   .footerbar-button {
-    @apply round-btn-style at-center size-6;
-
+    @apply round-btn-style at-center size-5;
   }
 
   .footerbar-content {
@@ -93,7 +90,13 @@
   }
 
   .round-btn-style {
-    @apply rounded-md border-solid border-2 border-[--header-color];
+    @apply rounded-md;
+  }
+
+  @media print {
+    .no-print {
+      display: none !important;
+    }
   }
 
   .delete-icon {

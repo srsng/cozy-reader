@@ -20,7 +20,7 @@ fn open_devtools(app: &mut App) -> Result<(), Box<dyn Error>> {
 
 fn always_on_top(app: &mut App) -> Result<(), Box<dyn Error>> {
     let main_window = app.get_webview_window("main").unwrap();
-    main_window.set_always_on_top(true);
+    let _ = main_window.set_always_on_top(true);
     Ok(())
 }
 

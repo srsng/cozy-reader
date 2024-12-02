@@ -1,6 +1,6 @@
 {
   "productName": "cozy-reader",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "identifier": "com.CozyReader.dev",
   "build": {
     "beforeBuildCommand": "pnpm vite:build",

@@ -1,7 +1,7 @@
 <template>
   <div
     data-tauri-drag-region
-    class="titlebar header z-[6000] flex justify-between items-center fixed top-0 left-0 right-0 h-8 select-none"
+    class="titlebar header z-[6000] flex justify-between items-center fixed top-0 left-0 right-0 h-8 select-none no-print"
     @contextmenu.prevent
   >
     <!-- 左侧部分 -->
