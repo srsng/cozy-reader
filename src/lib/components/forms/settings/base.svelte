@@ -11,18 +11,12 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	import { setLocale } from '$lib/paraglide/runtime';
-	import { langCode2Name, type AppLanguageCode } from '$lib/settings/Base';
-	import { ButtonList } from '$lib/components/ui/button-list';
+	import LanguageDropDown from './language.svelte';
+	import { m } from '$lib/paraglide/messages';
+	import { Badge } from '$lib/components/ui/badge';
+	import { langCode2Name } from '$lib/settings/Base';
 
 	const currentSettings = inject(USER_SETTINGS);
-
-	// 选择语言
-	function handleLanguageChange(langCode: AppLanguageCode) {
-		console.log('langCode', langCode);
-		$currentSettings.base.langCode = langCode;
-		setLocale(langCode);
-	}
 </script>
 
 <Card>
@@ -64,15 +58,14 @@
 
 <Card>
 	<CardHeader>
-		<CardTitle>语言设置</CardTitle>
+		<CardTitle>
+			{m['settings.languageSetting']()}
+			<Badge>{langCode2Name[$currentSettings.base.langCode]}</Badge>
+		</CardTitle>
 		<CardDescription>选择应用程序的显示语言</CardDescription>
 	</CardHeader>
 	<CardContent>
-		<ButtonList
-			Map2Str={langCode2Name}
-			selected={$currentSettings.theme.mode}
-			onclick={handleLanguageChange}
-		></ButtonList>
+		<LanguageDropDown />
 	</CardContent>
 </Card>
 

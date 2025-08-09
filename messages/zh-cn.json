@@ -1,5 +1,12 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"hello_world": "Hello, {name} from zh-cn!",
-	"abc": "123, {name}"
+	"settings": {
+		"$": "设置",
+		"base": "基础设置",
+		"theme": "主题设置",
+		"reader": "阅读器设置",
+		"language": "语言",
+		"languageSetting": "语言设置"
+	}
 }
