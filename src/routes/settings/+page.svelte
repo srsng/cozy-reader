@@ -2,17 +2,16 @@
 	import { onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import { resetMode, setMode } from 'mode-watcher';
-	// import Switch from "$lib/components/Switch.svelte";
-	// import Slider from "$lib/components/Slider.svelte";
-	// import RadioGroup from "$lib/components/RadioGroup.svelte";
 	import { DEFAULT_SETTINGS, SETTINGS, type Settings } from '$lib/settings';
 	import { getContextStoreBySymbol } from '$lib/utils/context';
-	// import ThemePanel from "$lib/components/theme/themePanel.svelte";
-	// import ThemeDrawer from "$lib/components/theme/themeDrawer.svelte";
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import type { AppThemeMode } from '$lib/settings/Theme';
+	import type { AppThemeMode, AppThemeType } from '$lib/settings/Theme';
 	import { Separator } from '$lib/components/ui/separator';
+	import { Slider } from '$lib/components/ui/slider';
+	import { Label } from '$lib/components/ui/label';
+	import { applyTheme, applyFourColorsHue } from '$lib/theme/themeUtils';
+	import ThemePreview from '$lib/components/theme/ThemePreview.svelte';
 
 	let saveBtnText = $state('保存设置');
 	let saveBtnActivate = $state(true);
@@ -28,14 +27,25 @@
 		};
 	});
 
+	$effect(() => {
+		// 如果是 four_colors 主题，应用色相值
+		if ($currentSettings.theme.type === 'four_colors') {
+			applyFourColorsHue($currentSettings.theme.data.four_colors.hue);
+		}
+	});
+
+	// 单独监听色相值的变化，实现实时预览
+	$effect(() => {
+		if ($currentSettings.theme.type === 'four_colors') {
+			applyFourColorsHue($currentSettings.theme.data.four_colors.hue);
+		}
+	});
+
 	function handleSave() {
 		saveBtnText = '保存中...';
 		saveBtnActivate = false;
-		// AppManager.updateConfig(void 0, localSettings);
 		currentSettings.update((s) => ({ ...s, ...localSettings }));
 		saveBtnText = '已保存！';
-
-		console.log(localSettings.theme.mode);
 
 		if (timer) clearTimeout(timer);
 		timer = setTimeout(() => {
@@ -43,24 +53,18 @@
 			saveBtnActivate = true;
 		}, 2000);
 	}
-	// import { goto } from '$app/navigation';
-
-	// goto('/settings/base', { replaceState: true });
 </script>
 
 <div class="mx-auto w-full max-w-[85%] space-y-6 p-6">
 	<div class="space-y-2">
 		<h2 class="text-2xl font-bold">设置</h2>
-		<p class="text-gray-500">管理应用程序的设置选项</p>
+		<p class="text-muted-foreground">管理应用程序的设置选项</p>
 	</div>
-	<!-- <div class="w-full">
-    <ThemePanel></ThemePanel>
-  </div> -->
 
 	<section>
 		<div>
 			<DropdownMenu.Root>
-				<DropdownMenu.Trigger>主题 - {$currentSettings.theme.mode}</DropdownMenu.Trigger>
+				<DropdownMenu.Trigger>主题模式 - {$currentSettings.theme.mode}</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
 					<DropdownMenu.RadioGroup bind:value={$currentSettings.theme.mode}>
 						<DropdownMenu.RadioItem value={'light' as AppThemeMode} onclick={() => setMode('light')}
@@ -76,6 +80,43 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
+		<div>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>主题类型 - {$currentSettings.theme.type}</DropdownMenu.Trigger>
+				<DropdownMenu.Content>
+					<DropdownMenu.RadioGroup bind:value={$currentSettings.theme.type}>
+						<DropdownMenu.RadioItem
+							value={'standard' as AppThemeType}
+							onclick={() => applyTheme('standard')}>Standard</DropdownMenu.RadioItem
+						>
+						<DropdownMenu.RadioItem
+							value={'four_colors' as AppThemeType}
+							onclick={() => applyTheme('four_colors')}>Four colors</DropdownMenu.RadioItem
+						>
+					</DropdownMenu.RadioGroup>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		</div>
+
+		{#if $currentSettings.theme.type === 'four_colors'}
+			<div class="space-y-2">
+				<Label>色相值: {$currentSettings.theme.data.four_colors.hue}</Label>
+				<Slider
+					type="single"
+					disabled={$currentSettings.theme.type !== 'four_colors'}
+					bind:value={$currentSettings.theme.data.four_colors.hue}
+					min={0}
+					max={360}
+					step={1}
+				/>
+			</div>
+		{/if}
+	</section>
+
+	<!-- 主题预览 -->
+	<section class="space-y-4">
+		<h3 class="text-lg font-medium">主题预览</h3>
+		<ThemePreview themeType={$currentSettings.theme.type} />
 	</section>
 
 	<Separator />

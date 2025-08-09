@@ -5,6 +5,9 @@ import { DEFAULT_SETTINGS, SETTINGS_KEY, type Settings } from '$lib/settings';
 // 创建配置存储
 const configStore = new LazyStore('settings.json');
 
+// 延时保存
+let timer: ReturnType<typeof setTimeout>;
+
 function clean(value: any) {
 	return JSON.parse(JSON.stringify(value));
 }
@@ -22,7 +25,10 @@ export async function loadUserSettings(): Promise<Writable<Settings>> {
 	store.subscribe((value) => {
 		const cleanValue = clean(value);
 		configStore.set(SETTINGS_KEY, cleanValue);
-		configStore.save();
+		if (timer) clearTimeout(timer);
+		timer = setTimeout(() => {
+			configStore.save();
+		}, 1500);
 	});
 
 	return {

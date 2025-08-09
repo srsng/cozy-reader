@@ -3,8 +3,10 @@
 
 // import { getResources, initDatabase } from "$lib/database/database.js";
 // import { AppManager } from "$lib/stores/AppManager";
+import type { Settings } from '$lib/settings/index.js';
 import { loadUserSettings } from '$lib/stores/userSettings';
 import { initAppWindow } from '$lib/stores/WindowState';
+import type { Writable } from 'svelte/store';
 // import { loadFastLinks } from "$lib/stores/Links.js";
 // import { Tauri } from "$lib/backend/tauri.js";
 
@@ -13,8 +15,12 @@ export const prerender = false;
 export const ssr = false;
 export const csr = true;
 
+export type RootData = {
+	userSettings: Writable<Settings>;
+};
+
 // eslint-disable-next-line
-export async function load({ params }) {
+export async function load({ params }): Promise<RootData> {
 	try {
 		initAppWindow();
 		// await initDatabase();
