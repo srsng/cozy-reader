@@ -1,8 +1,10 @@
 <script lang="ts">
 	import '../app.css';
 	import { ModeWatcher } from 'mode-watcher';
-	import { setContext, type Snippet } from 'svelte';
-	import { SETTINGS } from '$lib/settings';
+	import { type Snippet } from 'svelte';
+	import { provide } from '$lib/utils/context';
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
+
 	import favicon from '$lib/assets/favicon.svg';
 	import type { RootData } from './+layout';
 	import { initializeTheme } from '$lib/theme/themeUtils';
@@ -12,7 +14,7 @@
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
-	setContext(SETTINGS, data.userSettings);
+	provide(USER_SETTINGS, data.userSettings);
 
 	// 只读，用于设置主题属性
 	const { userSettings } = data;

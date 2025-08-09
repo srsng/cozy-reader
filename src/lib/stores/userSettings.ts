@@ -1,6 +1,11 @@
-import { writable, get, derived, type Writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { DEFAULT_SETTINGS, SETTINGS_KEY, type Settings } from '$lib/settings';
+import { DEFAULT_SETTINGS, type UserSettings } from '$lib/settings';
+import { InjectionToken } from '$lib/utils/context';
+
+export const USER_SETTINGS_KEY_STR = 'user-settings';
+// user settings context Key
+export const USER_SETTINGS = new InjectionToken<Writable<UserSettings>>(USER_SETTINGS_KEY_STR);
 
 // 创建配置存储
 const configStore = new LazyStore('settings.json');
@@ -12,9 +17,9 @@ function clean(value: any) {
 	return JSON.parse(JSON.stringify(value));
 }
 
-export async function loadUserSettings(): Promise<Writable<Settings>> {
-	const store = writable<Settings>(DEFAULT_SETTINGS);
-	const savedConfig = await configStore.get(SETTINGS_KEY);
+export async function loadUserSettings(): Promise<Writable<UserSettings>> {
+	const store = writable<UserSettings>(DEFAULT_SETTINGS);
+	const savedConfig = await configStore.get(USER_SETTINGS_KEY_STR);
 	const cleanConfig = savedConfig ? clean(savedConfig) : null;
 
 	if (cleanConfig) {
@@ -24,11 +29,11 @@ export async function loadUserSettings(): Promise<Writable<Settings>> {
 	// 订阅，自动保存
 	store.subscribe((value) => {
 		const cleanValue = clean(value);
-		configStore.set(SETTINGS_KEY, cleanValue);
+		configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
 		if (timer) clearTimeout(timer);
 		timer = setTimeout(() => {
 			configStore.save();
-		}, 1500);
+		}, 1500); // 防抖
 	});
 
 	return {

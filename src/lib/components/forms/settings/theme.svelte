@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import { SETTINGS, type Settings } from '$lib/settings';
-	import { getContextStoreBySymbol } from '$lib/utils/context';
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import { inject } from '$lib/utils/context';
 	import { resetMode, setMode } from 'mode-watcher';
 	import {
 		AppThemeMode2Str,
@@ -22,7 +21,7 @@
 	} from '$lib/components/ui/card';
 	import { ButtonList } from '$lib/components/ui/button-list';
 
-	const currentSettings = getContextStoreBySymbol<Settings, Writable<Settings>>(SETTINGS);
+	const currentSettings = inject(USER_SETTINGS);
 
 	$effect(() => {
 		applyFourColorsHue($currentSettings.theme.data.four_colors.hue);
