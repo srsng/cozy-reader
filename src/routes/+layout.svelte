@@ -30,6 +30,6 @@
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
 
 <div class="app-layout" role="application">
-	<AppTitleBar></AppTitleBar>
+	<!-- <AppTitleBar></AppTitleBar> -->
 	{@render children?.()}
 </div>

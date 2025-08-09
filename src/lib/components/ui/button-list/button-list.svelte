@@ -13,13 +13,13 @@
 </script>
 
 <div class="flex gap-2">
-	{#each Object.keys(Map2Str) as themeType}
+	{#each Object.keys(Map2Str) as keyEle}
 		<Button
-			variant={selected === themeType ? 'default' : 'outline'}
+			variant={selected === keyEle ? 'default' : 'outline'}
 			size="sm"
-			onclick={() => onclick(themeType)}
+			onclick={() => onclick(keyEle)}
 		>
-			{Map2Str[themeType]}
+			{Map2Str[keyEle]}
 		</Button>
 	{/each}
 </div>

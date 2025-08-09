@@ -2,7 +2,7 @@
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
-	import type { AppThemeType } from '$lib/settings/Theme';
+	import { AppThemeType2Str, type AppThemeType } from '$lib/settings/Theme';
 
 	let { themeType = 'standard' as AppThemeType } = $props();
 </script>
@@ -11,7 +11,7 @@
 	<CardHeader>
 		<CardTitle class="flex items-center gap-2">
 			主题展示
-			<Badge variant="outline">{themeType}</Badge>
+			<Badge variant="outline">{AppThemeType2Str[themeType]}</Badge>
 		</CardTitle>
 	</CardHeader>
 	<CardContent class="space-y-4">
