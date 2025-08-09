@@ -4,6 +4,7 @@
 	import { type Snippet } from 'svelte';
 	import { provide } from '$lib/utils/context';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
 
 	import favicon from '$lib/assets/favicon.svg';
 	import type { RootData } from './+layout';
@@ -11,14 +12,19 @@
 	import { onMount } from 'svelte';
 
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
+	import ZoomInOutMenuAction from '$lib/components/ZoomInOutMenuAction.svelte';
 	// import { Toaster } from '$lib/components/ui/sonner';
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
-	provide(USER_SETTINGS, data.userSettings);
-
 	// 只读，用于设置主题属性
 	const { userSettings } = data;
+	provide(USER_SETTINGS, data.userSettings);
+
+	const shortcutService = new ShortcutService(data.tauri);
+	provide(SHORTCUT_SERVICE, shortcutService);
+
+	$effect(() => shortcutService.listen());
 
 	onMount(() => {
 		// 初始化主题
@@ -32,6 +38,7 @@
 
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
 <!-- <Toaster /> -->
+<ZoomInOutMenuAction />
 
 <div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
 	<AppTitleBar />

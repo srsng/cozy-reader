@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ZoomForm } from '$lib/components/forms';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { toast } from 'svelte-sonner';
@@ -26,6 +27,7 @@
 		>
 			Show Toast
 		</Button>
+		<ZoomForm />
 	</Card.Content>
 	<!-- <Card.Footer class="flex-col gap-2">
 		<Button type="submit" class="w-full">Login</Button>

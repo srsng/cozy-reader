@@ -3,8 +3,10 @@
 
 // import { getResources, initDatabase } from "$lib/database/database.js";
 // import { AppManager } from "$lib/stores/AppManager";
-import type { Settings } from '$lib/settings/index.js';
+import { Tauri } from '$lib/backend/tauri.js';
+import type { UserSettings } from '$lib/settings/index.js';
 import { loadUserSettings } from '$lib/stores/userSettings';
+
 import { initAppWindow } from '$lib/stores/WindowState';
 import type { Writable } from 'svelte/store';
 // import { loadFastLinks } from "$lib/stores/Links.js";
@@ -16,7 +18,8 @@ export const ssr = false;
 export const csr = true;
 
 export type RootData = {
-	userSettings: Writable<Settings>;
+	userSettings: Writable<UserSettings>;
+	tauri: Tauri;
 };
 
 // eslint-disable-next-line
@@ -28,7 +31,8 @@ export async function load({ params }): Promise<RootData> {
 	} catch (error) {
 		console.error('Failed to init App:', error);
 	}
-	// const tauri = new Tauri();
+
+	const tauri = new Tauri();
 
 	const userSettings = await loadUserSettings();
 	// const appData = {
@@ -70,7 +74,7 @@ export async function load({ params }): Promise<RootData> {
 	// const githubAuthenticationService = new GitHubAuthenticationService(tauri);
 
 	return {
-		// tauri,
+		tauri,
 		// appData,
 		userSettings
 		// 	commandService,

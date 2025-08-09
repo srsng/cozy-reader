@@ -2,5 +2,6 @@ import BaseSettingsForm from './settings/base.svelte';
 import ThemeSettingsForm from './settings/theme.svelte';
 import ReaderSettingsForm from './settings/reader.svelte';
 import LanguageDropDown from './settings/language.svelte';
+import ZoomForm from './settings/zoom.svelte';
 
-export { BaseSettingsForm, ThemeSettingsForm, ReaderSettingsForm, LanguageDropDown };
+export { BaseSettingsForm, ThemeSettingsForm, ReaderSettingsForm, LanguageDropDown, ZoomForm };
