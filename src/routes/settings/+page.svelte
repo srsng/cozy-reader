@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
+	import { resetMode, setMode } from 'mode-watcher';
 	// import Switch from "$lib/components/Switch.svelte";
 	// import Slider from "$lib/components/Slider.svelte";
 	// import RadioGroup from "$lib/components/RadioGroup.svelte";
@@ -9,10 +10,13 @@
 	// import ThemePanel from "$lib/components/theme/themePanel.svelte";
 	// import ThemeDrawer from "$lib/components/theme/themeDrawer.svelte";
 	import { Button } from '$lib/components/ui/button/index.js';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import type { AppThemeMode } from '$lib/settings/Theme';
+	import { Separator } from '$lib/components/ui/separator';
 
 	let saveBtnText = $state('保存设置');
 	let saveBtnActivate = $state(true);
-	let timer;
+	let timer: ReturnType<typeof setTimeout>;
 
 	const currentSettings = getContextStoreBySymbol<Settings, Writable<Settings>>(SETTINGS);
 	let localSettings = $state(DEFAULT_SETTINGS);
@@ -31,13 +35,14 @@
 		currentSettings.update((s) => ({ ...s, ...localSettings }));
 		saveBtnText = '已保存！';
 
+		console.log(localSettings.theme.mode);
+
 		if (timer) clearTimeout(timer);
 		timer = setTimeout(() => {
 			saveBtnText = '保存设置';
 			saveBtnActivate = true;
 		}, 2000);
 	}
-
 	// import { goto } from '$app/navigation';
 
 	// goto('/settings/base', { replaceState: true });
@@ -51,6 +56,29 @@
 	<!-- <div class="w-full">
     <ThemePanel></ThemePanel>
   </div> -->
+
+	<section>
+		<div>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>主题 - {$currentSettings.theme.mode}</DropdownMenu.Trigger>
+				<DropdownMenu.Content>
+					<DropdownMenu.RadioGroup bind:value={$currentSettings.theme.mode}>
+						<DropdownMenu.RadioItem value={'light' as AppThemeMode} onclick={() => setMode('light')}
+							>Light</DropdownMenu.RadioItem
+						>
+						<DropdownMenu.RadioItem value={'dark' as AppThemeMode} onclick={() => setMode('dark')}
+							>Dark</DropdownMenu.RadioItem
+						>
+						<DropdownMenu.RadioItem value={'system' as AppThemeMode} onclick={resetMode}
+							>System</DropdownMenu.RadioItem
+						>
+					</DropdownMenu.RadioGroup>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		</div>
+	</section>
+
+	<Separator />
 
 	<!-- Save Button -->
 	<div class="flex justify-end">

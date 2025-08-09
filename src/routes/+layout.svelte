@@ -1,8 +1,9 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import { ModeWatcher } from 'mode-watcher';
 	import { setContext, type Snippet } from 'svelte';
 	import { SETTINGS } from '$lib/settings';
+	import favicon from '$lib/assets/favicon.svg';
 
 	const { data, children }: { data: any; children: Snippet } = $props();
 
@@ -15,5 +16,8 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
-<div class="app-layout" role="application" data-theme={$userSettings.base.themeMode}></div>
+
+<ModeWatcher defaultMode={$userSettings.base.themeMode} />
+
+<div class="app-layout" role="application"></div>
 {@render children?.()}

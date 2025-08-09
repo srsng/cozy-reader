@@ -1,6 +1,3 @@
-export type AppThemeMode = 'light' | 'dark' | 'system';
-export type AppThemeType = 'standard' | 'four_colors';
-
 // 每一种type都单独保留data
 export type AppThemeData = {
 	[T in AppThemeType]: T extends 'standard'
@@ -18,8 +15,27 @@ interface FourColorsThemeData {
 }
 
 export const DefaultThemeData: AppThemeData = {
+	// todo
 	standard: {},
 	four_colors: { hue: 36 }
+};
+
+export type AppThemeMode = 'light' | 'dark' | 'system';
+export type AppThemeType = 'standard' | 'four_colors';
+
+export type ThemeSettings = {
+	// dark or light
+	mode: AppThemeMode;
+	// soloution type of theme
+	type: AppThemeType;
+	// data of solotution
+	data: AppThemeData;
+};
+
+export const DefaultThemeSettings: ThemeSettings = {
+	mode: 'system' as AppThemeMode,
+	type: 'standard',
+	data: DefaultThemeData
 };
 
 // todo
