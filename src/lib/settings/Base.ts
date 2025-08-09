@@ -4,19 +4,24 @@ export interface BaseSettings {
 	titlebar: boolean;
 	header: boolean;
 	footer: boolean;
-	lang: AppLanuage;
+	langCode: AppLanguageCode;
 	logLevel: LogLevel;
 	zoom: number;
 	alwaysOnTop: boolean;
 }
 
-export type AppLanuage = 'zh-cn' | 'en';
+export type AppLanguageCode = 'zh-cn' | 'en';
+
+export const langCode2Name: Record<AppLanguageCode, string> = {
+	'zh-cn': '简体中文',
+	en: 'English'
+};
 
 export const DefaultBaseSettings: BaseSettings = {
 	titlebar: true,
 	header: true,
 	footer: true,
-	lang: 'zh-cn' as AppLanuage,
+	langCode: 'zh-cn' as AppLanguageCode,
 	logLevel: LogLevel.info,
 	zoom: 1,
 	alwaysOnTop: false

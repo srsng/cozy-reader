@@ -10,7 +10,7 @@
 	--card-foreground: hsl(var(--hue), 50%, 10%);
 	--popover: hsl(var(--hue), 50%, 90%);
 	--popover-foreground: hsl(var(--hue), 50%, 10%);
-	--primary: hsl(var(--hue), 50%, 90%);
+	--primary: hsl(var(--hue), 90%, 90%);
 	--primary-foreground: hsl(var(--hue), 50%, 10%);
 	--secondary: hsl(var(--hue), 50%, 10%);
 	--secondary-foreground: hsl(var(--hue), 50%, 90%);
@@ -48,7 +48,7 @@
 	--card-foreground: hsl(var(--hue), 50%, 90%);
 	--popover: hsl(var(--hue), 50%, 10%);
 	--popover-foreground: hsl(var(--hue), 50%, 90%);
-	--primary: hsl(var(--hue), 50%, 10%);
+	--primary: hsl(var(--hue), 90%, 10%);
 	--primary-foreground: hsl(var(--hue), 50%, 90%);
 	--secondary: hsl(var(--hue), 50%, 90%);
 	--secondary-foreground: hsl(var(--hue), 50%, 10%);
