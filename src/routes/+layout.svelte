@@ -5,6 +5,7 @@
 	import { SETTINGS } from '$lib/settings';
 
 	const { data, children }: { data: any; children: Snippet } = $props();
+
 	setContext(SETTINGS, data.userSettings);
 
 	// 只读，用于设置主题属性
