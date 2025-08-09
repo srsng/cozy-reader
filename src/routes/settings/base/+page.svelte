@@ -16,6 +16,7 @@
 	} from '$lib/components/ui/card';
 	import { setLocale } from '$lib/paraglide/runtime';
 	import { langCode2Name, type AppLanguageCode } from '$lib/settings/Base';
+	import { ButtonList } from '$lib/components/ui/button-list';
 
 	const currentSettings = getContextStoreBySymbol<Settings, Writable<Settings>>(SETTINGS);
 
@@ -73,20 +74,11 @@
 			<CardDescription>选择应用程序的显示语言</CardDescription>
 		</CardHeader>
 		<CardContent>
-			<div class="flex flex-col space-y-2">
-				<Label>当前语言</Label>
-				<div class="flex gap-2">
-					{#each Object.keys(langCode2Name) as langCode}
-						<Button
-							variant={$currentSettings.base.langCode === langCode ? 'default' : 'outline'}
-							size="sm"
-							onclick={() => handleLanguageChange(langCode as AppLanguageCode)}
-						>
-							{langCode2Name[langCode as AppLanguageCode]}
-						</Button>
-					{/each}
-				</div>
-			</div>
+			<ButtonList
+				Map2Str={langCode2Name}
+				selected={$currentSettings.theme.mode}
+				onclick={handleLanguageChange}
+			></ButtonList>
 		</CardContent>
 	</Card>
 

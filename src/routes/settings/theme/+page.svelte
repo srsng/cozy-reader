@@ -3,7 +3,12 @@
 	import { SETTINGS, type Settings } from '$lib/settings';
 	import { getContextStoreBySymbol } from '$lib/utils/context';
 	import { resetMode, setMode } from 'mode-watcher';
-	import type { AppThemeMode, AppThemeType } from '$lib/settings/Theme';
+	import {
+		AppThemeMode2Str,
+		AppThemeType2Str,
+		type AppThemeMode,
+		type AppThemeType
+	} from '$lib/settings/Theme';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Label } from '$lib/components/ui/label';
 	import { applyFourColorsHue, applyTheme } from '$lib/theme/themeUtils';
@@ -16,13 +21,24 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { ButtonList } from '$lib/components/ui/button-list';
 
 	const currentSettings = getContextStoreBySymbol<Settings, Writable<Settings>>(SETTINGS);
 
 	$effect(() => {
 		applyFourColorsHue($currentSettings.theme.data.four_colors.hue);
 	});
+
+	function handleThemeType(theme: AppThemeType) {
+		$currentSettings.theme.type = theme;
+		applyTheme(theme);
+	}
+
+	function handleThemeMode(mode: AppThemeMode) {
+		$currentSettings.theme.mode = mode;
+		if (mode === 'system') resetMode();
+		else setMode(mode);
+	}
 </script>
 
 <!-- 主题设置标签页 -->
@@ -34,24 +50,11 @@
 			<CardDescription>选择应用程序的主题模式</CardDescription>
 		</CardHeader>
 		<CardContent>
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger class="w-full justify-between">
-					主题模式 - {$currentSettings.theme.mode}
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
-					<DropdownMenu.RadioGroup bind:value={$currentSettings.theme.mode}>
-						<DropdownMenu.RadioItem value={'light' as AppThemeMode} onclick={() => setMode('light')}
-							>Light</DropdownMenu.RadioItem
-						>
-						<DropdownMenu.RadioItem value={'dark' as AppThemeMode} onclick={() => setMode('dark')}
-							>Dark</DropdownMenu.RadioItem
-						>
-						<DropdownMenu.RadioItem value={'system' as AppThemeMode} onclick={resetMode}
-							>System</DropdownMenu.RadioItem
-						>
-					</DropdownMenu.RadioGroup>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
+			<ButtonList
+				Map2Str={AppThemeMode2Str}
+				selected={$currentSettings.theme.mode}
+				onclick={handleThemeMode}
+			></ButtonList>
 		</CardContent>
 	</Card>
 
@@ -61,23 +64,11 @@
 			<CardDescription>选择主题的配色方案</CardDescription>
 		</CardHeader>
 		<CardContent>
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger class="w-full justify-between">
-					主题类型 - {$currentSettings.theme.type}
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
-					<DropdownMenu.RadioGroup bind:value={$currentSettings.theme.type}>
-						<DropdownMenu.RadioItem
-							value={'standard' as AppThemeType}
-							onclick={() => applyTheme('standard')}>Standard</DropdownMenu.RadioItem
-						>
-						<DropdownMenu.RadioItem
-							value={'four_colors' as AppThemeType}
-							onclick={() => applyTheme('four_colors')}>Four colors</DropdownMenu.RadioItem
-						>
-					</DropdownMenu.RadioGroup>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
+			<ButtonList
+				Map2Str={AppThemeType2Str}
+				selected={$currentSettings.theme.type}
+				onclick={handleThemeType}
+			></ButtonList>
 		</CardContent>
 	</Card>
 
