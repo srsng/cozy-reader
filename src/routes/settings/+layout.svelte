@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import { X } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
 	import { goHome } from '$lib/utils/route.svelte';
 
+	// todo 实现goback替换gohome
 	const { children }: { children: Snippet } = $props();
 </script>
 

@@ -1,9 +1,9 @@
 <script>
 	import { Window } from '@tauri-apps/api/window';
-	import { Minus, X, RefreshCcw, Pin, Move, Maximize2, House } from 'lucide-svelte';
+	import { Minus, X, RefreshCcw, Pin, Move, Maximize2, House, Settings } from 'lucide-svelte';
 	import { saveAppWindowState } from '$lib/stores/WindowState';
 	import { onMount } from 'svelte';
-	import { goHome } from '$lib/utils/route.svelte';
+	import { goHome, goSettings } from '$lib/utils/route.svelte';
 	import { Button } from '$lib/components/ui/button';
 
 	let appTitle = 'Cozy Reader';
@@ -40,13 +40,23 @@
 	<div class="left-section ml-2 flex items-center gap-1">
 		<Button
 			id="titlebar-home"
-			title="返回首页"
+			title="前往主页"
 			variant="outline"
 			size="icon"
 			class="h-6 w-6"
 			onclick={goHome}
 		>
 			<House class="size-4" />
+		</Button>
+		<Button
+			id="titlebar-settings"
+			title="前往设置"
+			variant="outline"
+			size="icon"
+			class="h-6 w-6"
+			onclick={goSettings}
+		>
+			<Settings />
 		</Button>
 		<Button
 			id="titlebar-fresh"
@@ -120,7 +130,7 @@
 	}
 
 	.app-title {
-		@apply max-w-xs;
+		max-width: 20rem; /* max-w-xs */
 	}
 
 	.rotate-45 {
