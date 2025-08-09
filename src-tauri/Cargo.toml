@@ -27,6 +27,7 @@ tauri-plugin-store = "2"
 tauri-plugin-sql = { features = ["sqlite"], version = "^2.0.0" }
 tauri-plugin-fs = "2"
 tauri-plugin-devtools = "2.0.0"
+tauri-plugin-clipboard-manager = "2"
 
 [dev-dependencies]
 

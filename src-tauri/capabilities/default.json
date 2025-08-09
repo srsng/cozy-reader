@@ -15,14 +15,9 @@
 		"core:window:allow-minimize",
 		"core:window:allow-close",
 		"core:window:allow-start-dragging",
+		"clipboard-manager:allow-read-text",
+		"clipboard-manager:allow-write-text",
 		"fs:default",
-		{
-			"identifier": "fs:allow-read",
-			"allow": [
-				{
-					"path": "**/*"
-				}
-			]
-		}
+		"fs:allow-read"
 	]
 }
