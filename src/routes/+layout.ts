@@ -1,0 +1,92 @@
+// Tauri doesn't have a Node.js server to do proper SSR
+// so we will use adapter-static to prerender the app (SSG)
+
+// import { getResources, initDatabase } from "$lib/database/database.js";
+// import { AppManager } from "$lib/stores/AppManager";
+import { loadUserSettings } from '$lib/stores/userSettings';
+import { initAppWindow } from '$lib/stores/WindowState';
+// import { loadFastLinks } from "$lib/stores/Links.js";
+// import { Tauri } from "$lib/backend/tauri.js";
+
+// See: https://v2.tauri.app/start/frontend/sveltekit/ for more info
+export const prerender = false;
+export const ssr = false;
+export const csr = true;
+
+// eslint-disable-next-line
+export async function load({ params }) {
+	try {
+		initAppWindow();
+		// await initDatabase();
+		console.log('App initialized in +layout.ts');
+	} catch (error) {
+		console.error('Failed to init App:', error);
+	}
+	// const tauri = new Tauri();
+
+	const userSettings = await loadUserSettings();
+	// const appData = {
+	// 	resources: await getResources(),
+	// 	 fastLinks: await loadFastLinks()
+	// };
+
+	// // Awaited and will block initial render, but it is necessary in order to respect the user
+	// // settings on telemetry.
+	// const posthog = new PostHogWrapper();
+	// const appSettings = await loadAppSettings();
+	// initAnalyticsIfEnabled(appSettings, posthog);
+
+	// // TODO: Find a workaround to avoid this dynamic import
+	// // https://github.com/sveltejs/kit/issues/905
+	// const defaultPath = await (await import('@tauri-apps/api/path')).homeDir();
+
+	// const commandService = new CommandService();
+
+	// const tokenMemoryService = new TokenMemoryService();
+	// const httpClient = new HttpClient(window.fetch, PUBLIC_API_BASE_URL, tokenMemoryService.token);
+	// const updaterService = new UpdaterService(tauri, posthog);
+	// const promptService = new PromptService();
+
+	// const userService = new UserService(httpClient, tokenMemoryService, posthog);
+
+	// const projectsService = new ProjectsService(defaultPath, httpClient);
+
+	// const gitConfig = new GitConfigService(tauri);
+	// const secretsService = new RustSecretService(gitConfig);
+	// const aiService = new AIService(gitConfig, secretsService, httpClient, tokenMemoryService);
+	// const remotesService = new RemotesService();
+	// const aiPromptService = new AIPromptService();
+	// const lineManagerFactory = new LineManagerFactory();
+	// const stackingLineManagerFactory = new StackingLineManagerFactory();
+	// const fileService = new FileService(tauri);
+	// const hooksService = new HooksService(tauri);
+	// const settingsService = new SettingsService(tauri);
+	// const githubAuthenticationService = new GitHubAuthenticationService(tauri);
+
+	return {
+		// tauri,
+		// appData,
+		userSettings
+		// 	commandService,
+		// 	tokenMemoryService,
+		// 	appSettings,
+		// 	cloud: httpClient,
+		// 	projectsService,
+		// 	updaterService,
+		// 	promptService,
+		// 	userService,
+		// 	gitConfig,
+		// 	aiService,
+		// 	remotesService,
+		// 	aiPromptService,
+		// 	lineManagerFactory,
+		// 	stackingLineManagerFactory,
+		// 	secretsService,
+		// 	posthog,
+		// 	tauri,
+		// 	fileService,
+		// 	hooksService,
+		// 	settingsService,
+		// 	githubAuthenticationService
+	};
+}

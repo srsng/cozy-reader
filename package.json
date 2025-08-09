@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"@inlang/paraglide-js": "^2.0.0",
+		"@tauri-apps/api": "^2.7.0",
 		"@tauri-apps/plugin-fs": "~2.4.1",
 		"@tauri-apps/plugin-store": "~2.3.0",
 		"@tauri-apps/plugin-window-state": "~2.4.0",

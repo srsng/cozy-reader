@@ -25,7 +25,6 @@ export const DefaultBaseSettings: BaseSettings = {
 	footer: true,
 	themeMode: 'system' as AppThemeMode,
 	themeType: 'standard',
-	// todo
 	themeData: DefaultThemeData,
 	lang: 'zh-cn' as AppLanuage,
 	logLevel: LogLevel.info,
