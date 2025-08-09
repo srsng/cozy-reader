@@ -9,13 +9,18 @@
 	// import * as ContextMenu from '$lib/components/ui/context-menu';
 	import AppIcon from '../app-icon.svelte';
 	import { writeToClipBoard } from '$lib/utils/clip';
+	import { emit } from '@tauri-apps/api/event';
+	import { SHORTCUT_ENENT } from '$lib/shortcuts/shortcutService';
+
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import { inject } from '$lib/utils/context';
+
+	const currentSettings = inject(USER_SETTINGS);
 
 	let appTitle = 'Cozy Reader';
-	let alwaysOnTop = false;
 
 	function switchAlwaysOnTop() {
-		alwaysOnTop = !alwaysOnTop;
-		// TODO: 实现始终置顶功能
+		emit(SHORTCUT_ENENT, 'toggle-always-on-top');
 	}
 
 	function refreshPage() {
@@ -23,6 +28,7 @@
 		window.location.reload();
 	}
 
+	// todo 抽到事件中
 	onMount(() => {
 		// 绑定最小化、最大化、关闭按钮功能
 		const appWindow = new Window('main');
@@ -111,7 +117,9 @@
 			class="size-6"
 			onclick={switchAlwaysOnTop}
 		>
-			<Pin class="size-4 transition-transform {alwaysOnTop ? 'rotate-45' : ''}" />
+			<Pin
+				class="size-4 transition-transform {$currentSettings.base.alwaysOnTop ? 'rotate-45' : ''}"
+			/>
 		</Button>
 		<Button
 			id="titlebar-drag-move"

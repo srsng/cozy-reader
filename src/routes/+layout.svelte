@@ -12,7 +12,8 @@
 	import { onMount } from 'svelte';
 
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
-	import ZoomInOutMenuAction from '$lib/components/ZoomInOutMenuAction.svelte';
+	import ZoomInOutMenuAction from '$lib/components/action/ZoomInOutMenuAction.svelte';
+	import AlwaysOnTopAction from '$lib/components/action/AlwaysOnTopAction.svelte';
 	// import { Toaster } from '$lib/components/ui/sonner';
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
@@ -37,8 +38,8 @@
 </svelte:head>
 
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
-<!-- <Toaster /> -->
 <ZoomInOutMenuAction />
+<AlwaysOnTopAction />
 
 <div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
 	<AppTitleBar />

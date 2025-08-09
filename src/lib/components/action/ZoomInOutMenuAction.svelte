@@ -23,7 +23,6 @@
 		zoom = Math.min(Math.max(newZoom, MIN_ZOOM), MAX_ZOOM);
 		setDomZoom(zoom);
 		$userSettings.base.zoom = zoom;
-		console.log('update zoom:', zoom);
 	}
 
 	$effect(() =>
