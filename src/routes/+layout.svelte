@@ -8,6 +8,8 @@
 	import { initializeTheme } from '$lib/theme/themeUtils';
 	import { onMount } from 'svelte';
 
+	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
+
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
 	setContext(SETTINGS, data.userSettings);
@@ -27,5 +29,7 @@
 
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
 
-<div class="app-layout" role="application"></div>
-{@render children?.()}
+<div class="app-layout" role="application">
+	<AppTitleBar></AppTitleBar>
+	{@render children?.()}
+</div>
