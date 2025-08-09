@@ -3,11 +3,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import { X } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
+	import { goHome } from '$lib/utils/route.svelte';
 
 	const { children }: { children: Snippet } = $props();
-	function goHome() {
-		goto('/');
-	}
 </script>
 
 <div class="mx-auto w-full max-w-[85%] select-none space-y-6 p-6">
