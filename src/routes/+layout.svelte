@@ -11,6 +11,7 @@
 	import { onMount } from 'svelte';
 
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
+	// import { Toaster } from '$lib/components/ui/sonner';
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
@@ -30,8 +31,9 @@
 </svelte:head>
 
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
+<!-- <Toaster /> -->
 
-<div class="app-layout" role="application">
+<div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
 	<AppTitleBar />
 	<main class="content-area">
 		{@render children?.()}
@@ -39,4 +41,22 @@
 </div>
 
 <style>
+	.content-area {
+		/* 为标题栏留出空间，标题栏高度为 2rem (32px) */
+		margin-top: 2rem;
+		/* 设置内容区域高度，避免不必要的滚动 */
+		height: calc(100vh - 2rem);
+		/* 只在内容超出时才滚动 */
+		overflow-y: auto;
+		/* 确保内容区域有正确的背景色 */
+		background-color: hsl(var(--background));
+	}
+
+	.app-layout {
+		/* 确保布局占满整个视口 */
+		height: 100vh;
+		overflow: hidden;
+		/* 确保布局有正确的背景色 */
+		background-color: hsl(var(--background));
+	}
 </style>
