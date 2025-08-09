@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import { SETTINGS, type Settings } from '$lib/settings';
-	import { getContextStoreBySymbol } from '$lib/utils/context';
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import { inject } from '$lib/utils/context';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
@@ -16,7 +15,7 @@
 	import { langCode2Name, type AppLanguageCode } from '$lib/settings/Base';
 	import { ButtonList } from '$lib/components/ui/button-list';
 
-	const currentSettings = getContextStoreBySymbol<Settings, Writable<Settings>>(SETTINGS);
+	const currentSettings = inject(USER_SETTINGS);
 
 	// 选择语言
 	function handleLanguageChange(langCode: AppLanguageCode) {

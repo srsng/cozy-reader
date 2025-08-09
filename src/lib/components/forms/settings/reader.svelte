@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import { SETTINGS, type Settings } from '$lib/settings';
-	import { getContextStoreBySymbol } from '$lib/utils/context';
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import { inject } from '$lib/utils/context';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
@@ -15,7 +14,7 @@
 	} from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 
-	const currentSettings = getContextStoreBySymbol<Settings, Writable<Settings>>(SETTINGS);
+	const currentSettings = inject(USER_SETTINGS);
 
 	let fontFamily = $state($currentSettings.reader.fontFamily);
 
