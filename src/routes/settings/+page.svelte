@@ -15,13 +15,13 @@
 		<BaseSettingsForm />
 	</Tabs.Content>
 
-	<!-- 阅读器设置标签页 -->
-	<Tabs.Content value="reader" class="space-y-6">
-		<ReaderSettingsForm />
-	</Tabs.Content>
-
 	<!-- 主题设置标签页 -->
 	<Tabs.Content value="theme" class="space-y-6">
 		<ThemeSettingsForm />
+	</Tabs.Content>
+
+	<!-- 阅读器设置标签页 -->
+	<Tabs.Content value="reader" class="space-y-6">
+		<ReaderSettingsForm />
 	</Tabs.Content>
 </Tabs.Root>

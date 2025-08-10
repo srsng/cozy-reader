@@ -6,13 +6,8 @@
 		ref = $bindable(null),
 		class: className,
 		children,
-		transitionFunc = undefined,
-		transitionProps = {},
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
-		transitionFunc?: any;
-		transitionProps?: any;
-	} = $props();
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 </script>
 
 <div
@@ -23,7 +18,6 @@
 		className
 	)}
 	{...restProps}
-	transition:transitionFunc={transitionFunc ? transitionProps : undefined}
 >
 	{@render children?.()}
 </div>

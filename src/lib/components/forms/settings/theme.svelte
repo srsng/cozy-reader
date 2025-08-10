@@ -69,7 +69,7 @@
 </Card>
 
 {#if $currentSettings.theme.type === 'four_colors'}
-	<Card transitionFunc={scale} transitionProps={{ duration: 200 }}>
+	<Card>
 		<CardHeader>
 			<CardTitle>四色主题设置</CardTitle>
 			<CardDescription>调整四色主题的色相值</CardDescription>
