@@ -31,21 +31,21 @@
 				<Label>标题栏</Label>
 				<p class="text-muted-foreground text-sm">显示应用程序标题栏</p>
 			</div>
-			<Switch bind:checked={$currentSettings.base.titlebar} />
+			<Switch bind:checked={$currentSettings.layout.titlebar} />
 		</div>
 		<div class="flex items-center justify-between">
 			<div class="space-y-0.5">
 				<Label>页眉</Label>
 				<p class="text-muted-foreground text-sm">显示页面顶部导航栏</p>
 			</div>
-			<Switch bind:checked={$currentSettings.base.header} />
+			<Switch bind:checked={$currentSettings.layout.header} />
 		</div>
 		<div class="flex items-center justify-between">
 			<div class="space-y-0.5">
 				<Label>页脚</Label>
 				<p class="text-muted-foreground text-sm">显示页面底部信息栏</p>
 			</div>
-			<Switch bind:checked={$currentSettings.base.footer} />
+			<Switch bind:checked={$currentSettings.layout.footer} />
 		</div>
 		<div class="flex items-center justify-between">
 			<div class="space-y-0.5">

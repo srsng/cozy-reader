@@ -1,9 +1,6 @@
 import { LogLevel } from '$lib/types';
 
 export interface BaseSettings {
-	titlebar: boolean;
-	header: boolean;
-	footer: boolean;
 	langCode: AppLanguageCode;
 	logLevel: LogLevel;
 	zoom: number;
@@ -18,9 +15,6 @@ export const langCode2Name: Record<AppLanguageCode, string> = {
 };
 
 export const DefaultBaseSettings: BaseSettings = {
-	titlebar: true,
-	header: true,
-	footer: true,
 	langCode: 'zh-cn' as AppLanguageCode,
 	logLevel: LogLevel.info,
 	zoom: 1,
