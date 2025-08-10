@@ -1,5 +1,4 @@
 <script>
-	import { Window } from '@tauri-apps/api/window';
 	import {
 		Minus,
 		X,
@@ -12,7 +11,6 @@
 		ZoomIn
 	} from 'lucide-svelte';
 	import { saveAppWindowState } from '$lib/stores/WindowState';
-	import { onMount } from 'svelte';
 	import { goHome, goSettings } from '$lib/utils/route.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import Label from '$lib/components/ui/label/label.svelte';
@@ -25,34 +23,22 @@
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
 	import * as Popover from '../ui/popover';
-	import { ZoomForm } from '../forms';
+	import { ZoomForm, ThemeModeToggle } from '../forms';
 	import { m } from '$lib/paraglide/messages';
+	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 
 	const currentSettings = inject(USER_SETTINGS);
 
 	let appTitle = 'Cozy Reader';
 
 	function switchAlwaysOnTop() {
-		emit(SHORTCUT_ENENT, 'toggle-always-on-top');
+		emit(SHORTCUT_ENENT, 'main-window-toggle-always-on-top');
 	}
 
 	function refreshPage() {
 		saveAppWindowState();
 		window.location.reload();
 	}
-
-	// todo 抽到事件中
-	onMount(() => {
-		// 绑定最小化、最大化、关闭按钮功能
-		const appWindow = new Window('main');
-		document
-			.getElementById('titlebar-minimize')
-			?.addEventListener('click', () => appWindow.minimize());
-		document
-			.getElementById('titlebar-maximize')
-			?.addEventListener('click', () => appWindow.toggleMaximize());
-		document.getElementById('titlebar-close')?.addEventListener('click', () => appWindow.close());
-	});
 </script>
 
 <div
@@ -123,20 +109,17 @@
 		>
 			<AppIcon class="size-5 select-none" />
 		</Button>
-		<!-- <ContextMenu.Root>
-			<ContextMenu.Trigger> -->
 		<div data-tauri-drag-region class="app-title truncate px-4">
 			<Label data-tauri-drag-region class="text-foreground font-bold">{appTitle}</Label>
 		</div>
-		<!-- </ContextMenu.Trigger>
-			<ContextMenu.Content>
-				<ContextMenu.Item onclick={() => writeToClipBoard(appTitle)}>Copy</ContextMenu.Item>
-			</ContextMenu.Content>
-		</ContextMenu.Root> -->
 	</div>
 
 	<!-- 右侧部分 -->
 	<div class="right-section mr-2 flex items-center gap-1">
+		<ThemeModeToggle
+			btnProps={{ id: 'titlebar-theme-mode-toggle', title: '切换主题模式', class: 'size-6' }}
+			iconProps={{ class: 'size-4' }}
+		/>
 		<Button
 			id="titlebar-always-on-top"
 			title="始终置顶"
@@ -159,10 +142,24 @@
 		>
 			<Move class="size-4" data-tauri-drag-region />
 		</Button>
-		<Button id="titlebar-minimize" title="最小化" variant="outline" size="icon" class="size-6">
+		<Button
+			id="titlebar-minimize"
+			title="最小化"
+			variant="outline"
+			size="icon"
+			class="size-6"
+			onclick={() => emitMainWindowEvent('minimize')}
+		>
 			<Minus class="size-4" />
 		</Button>
-		<Button id="titlebar-maximize" title="最大化" variant="outline" size="icon" class="size-6">
+		<Button
+			id="titlebar-maximize"
+			title="最大化"
+			variant="outline"
+			size="icon"
+			class="size-6"
+			onclick={() => emitMainWindowEvent('maximize')}
+		>
 			<Maximize2 class="size-4" />
 		</Button>
 		<Button
@@ -171,6 +168,7 @@
 			variant="outline"
 			size="icon"
 			class="hover:bg-destructive hover:text-destructive-foreground size-6"
+			onclick={() => emitMainWindowEvent('close')}
 		>
 			<X class="size-4" />
 		</Button>

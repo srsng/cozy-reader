@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
-	import { Slider } from '$lib/components/ui/slider';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
 	import {
@@ -15,6 +14,7 @@
 	import { m } from '$lib/paraglide/messages';
 	import { Badge } from '$lib/components/ui/badge';
 	import { langCode2Name } from '$lib/settings/Base';
+	import { ZoomForm } from '$lib/components/forms';
 
 	const currentSettings = inject(USER_SETTINGS);
 </script>
@@ -75,9 +75,6 @@
 		<CardDescription>调整应用程序的整体缩放比例</CardDescription>
 	</CardHeader>
 	<CardContent class="space-y-4">
-		<div class="space-y-2">
-			<Label>缩放比例: {$currentSettings.base.zoom * 100}%</Label>
-			<Slider type="single" bind:value={$currentSettings.base.zoom} min={0.5} max={2} step={0.1} />
-		</div>
+		<ZoomForm />
 	</CardContent>
 </Card>
