@@ -14,8 +14,8 @@
 		onRemove: (buttonId: string) => void;
 	}>();
 
-	let draggedIndex: number | null = null;
-	let draggedOverIndex: number | null = null;
+	let draggedIndex: number | null = $state(null);
+	let draggedOverIndex: number | null = $state(null);
 
 	function handleDragStart(index: number) {
 		draggedIndex = index;

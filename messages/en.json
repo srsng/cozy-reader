@@ -13,6 +13,7 @@
 		"zoom-out": "zoom-out",
 		"zoom-reset": "zoom-reset",
 		"go home": "go Home",
-		"go settings": "go Settings"
+		"go settings": "go Settings",
+		"go back": "go Back"
 	}
 }

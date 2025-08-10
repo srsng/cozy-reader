@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ConfigurableBar } from './util-btn';
+	import ConfigurableBar from './ConfigurableBar.svelte';
 	import { DefaultTitleBarConfig } from '$lib/settings/Layout';
 
 	const { config = DefaultTitleBarConfig, appTitle = 'Cozy Reader2' } = $props<{

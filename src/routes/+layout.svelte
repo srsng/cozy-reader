@@ -6,7 +6,7 @@
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
 
-	import favicon from '$lib/assets/favicon.svg';
+	// import favicon from '$lib/assets/favicon.svg';
 	import type { RootData } from './+layout';
 	import { initializeTheme } from '$lib/theme/themeUtils';
 	import { onMount } from 'svelte';
@@ -14,7 +14,9 @@
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
 	import ZoomInOutMenuAction from '$lib/components/action/ZoomInOutMenuAction.svelte';
 	import WindowAction from '$lib/components/action/window-action.svelte';
-	// import { Toaster } from '$lib/components/ui/sonner';
+	import { page } from '$app/state';
+	import { updatePageHistory } from '$lib/utils/route.svelte';
+	import { ScrollArea } from '$lib/components/ui/scroll-area';
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
@@ -25,7 +27,14 @@
 	const shortcutService = new ShortcutService(data.tauri);
 	provide(SHORTCUT_SERVICE, shortcutService);
 
+	// shortcut service
 	$effect(() => shortcutService.listen());
+
+	// 监听路由
+	$effect(() => {
+		const currentPath = page.url.pathname;
+		updatePageHistory(currentPath);
+	});
 
 	onMount(() => {
 		// 初始化主题
@@ -33,9 +42,9 @@
 	});
 </script>
 
-<svelte:head>
+<!-- <svelte:head>
 	<link rel="icon" href={favicon} />
-</svelte:head>
+</svelte:head> -->
 
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
 <ZoomInOutMenuAction />
@@ -43,28 +52,9 @@
 
 <div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
 	<AppTitleBar />
-	<main class="content-area">
+	<ScrollArea class="content-area">
 		{@render children?.()}
-	</main>
+	</ScrollArea>
 </div>
 
-<style>
-	.content-area {
-		/* 为标题栏留出空间，标题栏高度为 2rem (32px) */
-		margin-top: 2rem;
-		/* 设置内容区域高度，避免不必要的滚动 */
-		height: calc(100vh - 2rem);
-		/* 只在内容超出时才滚动 */
-		overflow-y: auto;
-		/* 确保内容区域有正确的背景色 */
-		background-color: hsl(var(--background));
-	}
-
-	.app-layout {
-		/* 确保布局占满整个视口 */
-		height: 100vh;
-		overflow: hidden;
-		/* 确保布局有正确的背景色 */
-		background-color: hsl(var(--background));
-	}
-</style>
+<style></style>

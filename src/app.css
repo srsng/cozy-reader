@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@import './layout.css';
+
 /* 自定义主题 */
 @import '$lib/theme/four_colors/index.css';
 @import '$lib/theme/standard/index.css';

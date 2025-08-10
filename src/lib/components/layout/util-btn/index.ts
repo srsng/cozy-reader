@@ -1,16 +1,36 @@
-export { default as HomeButton } from './HomeButton.svelte';
-export { default as SettingsButton } from './SettingsButton.svelte';
-export { default as RefreshButton } from './RefreshButton.svelte';
-export { default as ZoomButton } from './ZoomButton.svelte';
-export { default as AppIconButton } from './AppIconButton.svelte';
-export { default as AppTitleButton } from './AppTitleButton.svelte';
-export { default as ThemeToggleButton } from './ThemeToggleButton.svelte';
-export { default as AlwaysOnTopButton } from './AlwaysOnTopButton.svelte';
-export { default as DragButton } from './DragButton.svelte';
-export { default as MinimizeButton } from './MinimizeButton.svelte';
-export { default as MaximizeButton } from './MaximizeButton.svelte';
-export { default as CloseButton } from './CloseButton.svelte';
-export { default as CustomButton } from './CustomButton.svelte';
-export { default as BarButton } from './BarButton.svelte';
-export { default as BarSection } from '../BarSection.svelte';
-export { default as ConfigurableBar } from '../ConfigurableBar.svelte';
+import type { ButtonType } from '$lib/settings/Layout';
+import type { Component } from 'svelte';
+
+import HomeButton from './HomeButton.svelte';
+import BackButton from './BackButton.svelte';
+import SettingsButton from './SettingsButton.svelte';
+import RefreshButton from './RefreshButton.svelte';
+import ZoomButton from './ZoomButton.svelte';
+import AppIconButton from './AppIconButton.svelte';
+import AppTitleButton from './AppTitleButton.svelte';
+import ThemeToggleButton from './ThemeToggleButton.svelte';
+import AlwaysOnTopButton from './AlwaysOnTopButton.svelte';
+import DragButton from './DragButton.svelte';
+import MinimizeButton from './MinimizeButton.svelte';
+import MaximizeButton from './MaximizeButton.svelte';
+import CloseButton from './CloseButton.svelte';
+import CustomButton from './CustomButton.svelte';
+
+export const UtilButton: Record<ButtonType, Component> = {
+	home: HomeButton,
+	back: BackButton,
+	'app-icon': AppIconButton,
+	'app-title': AppTitleButton,
+	settings: SettingsButton,
+	refresh: RefreshButton,
+	'always-on-top': AlwaysOnTopButton,
+	close: CloseButton,
+	minimize: MinimizeButton,
+	maximize: MaximizeButton,
+	'theme-toggle': ThemeToggleButton,
+	drag: DragButton,
+	zoom: ZoomButton,
+	custom: CustomButton
+};
+
+export default UtilButton;

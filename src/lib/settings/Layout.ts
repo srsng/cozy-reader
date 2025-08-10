@@ -15,7 +15,11 @@ export interface ButtonConfig {
 	name: string;
 	type: ButtonType;
 	enabled: boolean;
+	// 排序
 	order: number;
+	// 区别文本与icon, 默认icon
+	mode?: undefined | 'icon' | 'text';
+	// 自定义属性参数
 	customProps?: Record<string, any>;
 }
 
@@ -28,20 +32,32 @@ export interface BarConfig {
 	right: ButtonConfig[];
 }
 
-export type ButtonType =
-	| 'home'
-	| 'settings'
-	| 'refresh'
-	| 'zoom'
-	| 'app-icon'
-	| 'app-title'
-	| 'always-on-top'
-	| 'drag'
-	| 'minimize'
-	| 'maximize'
-	| 'close'
-	| 'theme-toggle'
-	| 'custom';
+// 定义 enum
+export enum ButtonTypeEnum {
+	Home = 'home',
+	Back = 'back',
+	Settings = 'settings',
+	Refresh = 'refresh',
+	Zoom = 'zoom',
+	AppIcon = 'app-icon',
+	AppTitle = 'app-title',
+	AlwaysOnTop = 'always-on-top',
+	Drag = 'drag',
+	Minimize = 'minimize',
+	Maximize = 'maximize',
+	Close = 'close',
+	ThemeToggle = 'theme-toggle',
+	Custom = 'custom'
+}
+
+// 从 enum 生成 union type
+export type ButtonType = `${ButtonTypeEnum}`;
+
+// 获取所有按钮类型的辅助函数
+export const ALL_BUTTON_TYPES = Object.values(ButtonTypeEnum);
+
+// 为了向后兼容，也可以直接使用 enum 值
+export const ButtonType = ButtonTypeEnum;
 
 const NULLBarConfig: BarConfig = {
 	left: [],
@@ -87,7 +103,8 @@ export const DefaultTitleBarConfig: BarConfig = {
 			name: 'app-title',
 			type: 'app-title',
 			enabled: true,
-			order: 1
+			order: 1,
+			mode: 'text'
 		}
 	],
 	right: [

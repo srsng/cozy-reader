@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import { X } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
-	import { goHome } from '$lib/utils/route.svelte';
+	import { UtilButton } from '$lib/components/layout/util-btn';
 
-	// todo 实现goback替换gohome
 	const { children }: { children: Snippet } = $props();
 </script>
 
@@ -15,7 +12,10 @@
 			<p class="text-muted-foreground">管理应用程序的设置选项</p>
 		</div>
 
-		<Button onclick={goHome}><X /></Button>
+		<div class="flex items-center gap-2">
+			<UtilButton.back className="size-9" size="icon" variant="default" />
+			<UtilButton.home className="size-9" size="icon" variant="outline" />
+		</div>
 	</div>
 	{@render children?.()}
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import type { ButtonConfig } from '$lib/settings/Layout';
-	import BarButton from './util-btn/BarButton.svelte';
+	import BarButton from './BarButton.svelte';
 </script>
 
 <script lang="ts">
