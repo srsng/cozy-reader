@@ -46,6 +46,7 @@
 	},
 	"dependencies": {
 		"@inlang/paraglide-js": "^2.0.0",
+		"@sveltejs/adapter-static": "^3.0.9",
 		"@tauri-apps/api": "^2.7.0",
 		"@tauri-apps/plugin-clipboard-manager": "~2.3.0",
 		"@tauri-apps/plugin-dialog": "~2.3.2",
