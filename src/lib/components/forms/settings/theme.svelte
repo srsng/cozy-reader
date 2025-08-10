@@ -20,6 +20,7 @@
 		CardTitle
 	} from '$lib/components/ui/card';
 	import { ButtonList } from '$lib/components/ui/button-list';
+	import { scale } from 'svelte/transition';
 
 	const currentSettings = inject(USER_SETTINGS);
 
@@ -68,7 +69,7 @@
 </Card>
 
 {#if $currentSettings.theme.type === 'four_colors'}
-	<Card>
+	<Card transitionFunc={scale} transitionProps={{ duration: 200 }}>
 		<CardHeader>
 			<CardTitle>四色主题设置</CardTitle>
 			<CardDescription>调整四色主题的色相值</CardDescription>

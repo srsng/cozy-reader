@@ -15,6 +15,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { langCode2Name } from '$lib/settings/Base';
 	import { ZoomForm } from '$lib/components/forms';
+	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 
 	const currentSettings = inject(USER_SETTINGS);
 </script>
@@ -51,7 +52,10 @@
 				<Label>始终置顶</Label>
 				<p class="text-muted-foreground text-sm">窗口始终保持在最前面</p>
 			</div>
-			<Switch bind:checked={$currentSettings.base.alwaysOnTop} />
+			<Switch
+				checked={$currentSettings.base.alwaysOnTop}
+				onCheckedChange={() => emitMainWindowEvent('toggle-always-on-top')}
+			/>
 		</div>
 	</CardContent>
 </Card>
