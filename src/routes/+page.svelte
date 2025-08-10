@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { ZoomForm } from '$lib/components/forms';
+	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import { toast } from 'svelte-sonner';
 </script>
 
 <Card.Root class="w-85% max-w-sm">
@@ -14,19 +13,7 @@
 		</Card.Action>
 	</Card.Header>
 	<Card.Content>
-		<Button
-			variant="outline"
-			onclick={() =>
-				toast.success('Event has been created', {
-					description: 'Sunday, December 03, 2023 at 9:00 AM',
-					action: {
-						label: 'Undo',
-						onClick: () => console.info('Undo')
-					}
-				})}
-		>
-			Show Toast
-		</Button>
+		<Button variant="outline" onclick={() => goto('/demo/buttons')}>go</Button>
 	</Card.Content>
 	<!-- <Card.Footer class="flex-col gap-2">
 		<Button type="submit" class="w-full">Login</Button>
