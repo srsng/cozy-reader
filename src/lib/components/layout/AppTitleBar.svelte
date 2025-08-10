@@ -1,6 +1,16 @@
 <script>
 	import { Window } from '@tauri-apps/api/window';
-	import { Minus, X, RefreshCcw, Pin, Move, Maximize2, House, Settings } from 'lucide-svelte';
+	import {
+		Minus,
+		X,
+		RefreshCcw,
+		Pin,
+		Move,
+		Maximize2,
+		House,
+		Settings,
+		ZoomIn
+	} from 'lucide-svelte';
 	import { saveAppWindowState } from '$lib/stores/WindowState';
 	import { onMount } from 'svelte';
 	import { goHome, goSettings } from '$lib/utils/route.svelte';
@@ -14,6 +24,9 @@
 
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
+	import * as Popover from '../ui/popover';
+	import { ZoomForm } from '../forms';
+	import { m } from '$lib/paraglide/messages';
 
 	const currentSettings = inject(USER_SETTINGS);
 
@@ -51,7 +64,7 @@
 	<div class="left-section ml-2 flex items-center gap-1">
 		<Button
 			id="titlebar-home"
-			title="前往主页"
+			title={m['settings.go home']()}
 			variant="outline"
 			size="icon"
 			class="size-6"
@@ -61,7 +74,7 @@
 		</Button>
 		<Button
 			id="titlebar-settings"
-			title="前往设置"
+			title={m['settings.go settings']()}
 			variant="outline"
 			size="icon"
 			class="size-6"
@@ -79,6 +92,21 @@
 		>
 			<RefreshCcw class="size-4" />
 		</Button>
+
+		<Popover.Root>
+			<Popover.Trigger>
+				<Button
+					id="titlebar-zoom-action"
+					title={m['settings.zoom']()}
+					variant="outline"
+					size="icon"
+					class="size-6"
+				>
+					<ZoomIn class="size-4" />
+				</Button></Popover.Trigger
+			>
+			<Popover.Content class="w-fit"><ZoomForm /></Popover.Content>
+		</Popover.Root>
 	</div>
 
 	<!-- 中间部分 - 标题 -->

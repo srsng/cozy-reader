@@ -18,7 +18,6 @@
 	$effect(() =>
 		mergeUnlisten(
 			shortcutService.on('toggle-always-on-top', () => {
-				console.log('toggle aot');
 				$userSettings.base.alwaysOnTop = !$userSettings.base.alwaysOnTop;
 				setAOT($userSettings.base.alwaysOnTop);
 			})

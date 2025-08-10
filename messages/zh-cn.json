@@ -7,6 +7,12 @@
 		"theme": "主题设置",
 		"reader": "阅读器设置",
 		"language": "语言",
-		"languageSetting": "语言设置"
+		"languageSetting": "语言设置",
+		"zoom": "缩放",
+		"zoom-in": "放大",
+		"zoom-out": "缩小",
+		"zoom-reset": "重置缩放",
+		"go home": "前往主页",
+		"go settings": "前往设置"
 	}
 }

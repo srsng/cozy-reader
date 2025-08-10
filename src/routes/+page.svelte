@@ -27,7 +27,6 @@
 		>
 			Show Toast
 		</Button>
-		<ZoomForm />
 	</Card.Content>
 	<!-- <Card.Footer class="flex-col gap-2">
 		<Button type="submit" class="w-full">Login</Button>

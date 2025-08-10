@@ -7,6 +7,12 @@
 		"theme": "Theme",
 		"reader": "Reader",
 		"language": "Language",
-		"languageSetting": "Language Settings"
+		"languageSetting": "Language Settings",
+		"zoom": "zoom",
+		"zoom-in": "zoom-in",
+		"zoom-out": "zoom-out",
+		"zoom-reset": "zoom-reset",
+		"go home": "go Home",
+		"go settings": "go Settings"
 	}
 }
