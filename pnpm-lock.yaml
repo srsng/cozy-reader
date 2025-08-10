@@ -32,6 +32,9 @@ importers:
       lucide-svelte:
         specifier: ^0.539.0
         version: 0.539.0(svelte@5.38.0)
+      svelte-dnd-action:
+        specifier: ^0.9.64
+        version: 0.9.64(svelte@5.38.0)
     devDependencies:
       '@internationalized/date':
         specifier: ^3.8.2
@@ -1390,6 +1393,11 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
 
+  svelte-dnd-action@0.9.64:
+    resolution: {integrity: sha512-kbbnOTuVc+VINheraVyEQ7K11jXdQii6JNTGpsyIuwUqmda030eT3rPpqckD8UVh1DuyYH3xqyJDTWb8S610Jg==}
+    peerDependencies:
+      svelte: '>=3.23.0 || ^5.0.0-next.0'
+
   svelte-sonner@1.0.5:
     resolution: {integrity: sha512-9dpGPFqKb/QWudYqGnEz93vuY+NgCEvyNvxoCLMVGw6sDN/3oVeKV1xiEirW2E1N3vJEyj5imSBNOGltQHA7mg==}
     peerDependencies:
@@ -2724,6 +2732,10 @@ snapshots:
       typescript: 5.9.2
     transitivePeerDependencies:
       - picomatch
+
+  svelte-dnd-action@0.9.64(svelte@5.38.0):
+    dependencies:
+      svelte: 5.38.0
 
   svelte-sonner@1.0.5(svelte@5.38.0):
     dependencies:

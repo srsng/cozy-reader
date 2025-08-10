@@ -13,7 +13,7 @@
 		</Card.Action>
 	</Card.Header>
 	<Card.Content>
-		<Button variant="outline" onclick={() => goto('/demo/buttons')}>go</Button>
+		<Button variant="outline" onclick={() => goto('/settings/bar-config')}>go</Button>
 	</Card.Content>
 	<!-- <Card.Footer class="flex-col gap-2">
 		<Button type="submit" class="w-full">Login</Button>

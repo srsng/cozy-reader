@@ -52,7 +52,8 @@
 		"@tauri-apps/plugin-log": "~2.6.0",
 		"@tauri-apps/plugin-store": "~2.3.0",
 		"@tauri-apps/plugin-window-state": "~2.4.0",
-		"lucide-svelte": "^0.539.0"
+		"lucide-svelte": "^0.539.0",
+		"svelte-dnd-action": "^0.9.64"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [

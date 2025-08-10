@@ -12,7 +12,7 @@ export interface LayoutConfigs {
 }
 
 export interface ButtonConfig {
-	id: string;
+	name: string;
 	type: ButtonType;
 	enabled: boolean;
 	order: number;
@@ -40,7 +40,8 @@ export type ButtonType =
 	| 'minimize'
 	| 'maximize'
 	| 'close'
-	| 'theme-toggle';
+	| 'theme-toggle'
+	| 'custom';
 
 const NULLBarConfig: BarConfig = {
 	left: [],
@@ -51,25 +52,25 @@ const NULLBarConfig: BarConfig = {
 export const DefaultTitleBarConfig: BarConfig = {
 	left: [
 		{
-			id: 'home',
+			name: 'home',
 			type: 'home',
 			enabled: true,
 			order: 0
 		},
 		{
-			id: 'settings',
+			name: 'settings',
 			type: 'settings',
 			enabled: true,
 			order: 1
 		},
 		{
-			id: 'refresh',
+			name: 'refresh',
 			type: 'refresh',
 			enabled: true,
 			order: 2
 		},
 		{
-			id: 'zoom',
+			name: 'zoom',
 			type: 'zoom',
 			enabled: true,
 			order: 3
@@ -77,13 +78,13 @@ export const DefaultTitleBarConfig: BarConfig = {
 	],
 	center: [
 		{
-			id: 'app-icon',
+			name: 'app-icon',
 			type: 'app-icon',
 			enabled: true,
 			order: 0
 		},
 		{
-			id: 'app-title',
+			name: 'app-title',
 			type: 'app-title',
 			enabled: true,
 			order: 1
@@ -91,40 +92,43 @@ export const DefaultTitleBarConfig: BarConfig = {
 	],
 	right: [
 		{
-			id: 'theme-toggle',
+			name: 'theme-toggle',
 			type: 'theme-toggle',
 			enabled: true,
 			order: 0
 		},
 		{
-			id: 'always-on-top',
+			name: 'always-on-top',
 			type: 'always-on-top',
 			enabled: true,
 			order: 1
 		},
 		{
-			id: 'drag',
+			name: 'drag',
 			type: 'drag',
 			enabled: true,
 			order: 2
 		},
 		{
-			id: 'minimize',
+			name: 'minimize',
 			type: 'minimize',
 			enabled: true,
 			order: 3
 		},
 		{
-			id: 'maximize',
+			name: 'maximize',
 			type: 'maximize',
 			enabled: true,
 			order: 4
 		},
 		{
-			id: 'close',
+			name: 'close',
 			type: 'close',
 			enabled: true,
-			order: 5
+			order: 5,
+			customProps: {
+				className: 'hover:bg-destructive hover:text-destructive-foreground'
+			}
 		}
 	]
 };
