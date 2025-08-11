@@ -79,6 +79,6 @@
 		<CardDescription>调整应用程序的整体缩放比例</CardDescription>
 	</CardHeader>
 	<CardContent class="space-y-4">
-		<ZoomForm />
+		<ZoomForm label />
 	</CardContent>
 </Card>

@@ -13,6 +13,7 @@
 		"zoom-out": "缩小",
 		"zoom-reset": "重置缩放",
 		"go home": "前往主页",
-		"go settings": "前往设置"
+		"go settings": "前往设置",
+		"zoom-current": "当前缩放比例"
 	}
 }

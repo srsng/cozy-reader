@@ -20,7 +20,7 @@
 		CardTitle
 	} from '$lib/components/ui/card';
 	import { ButtonList } from '$lib/components/ui/button-list';
-	import { scale } from 'svelte/transition';
+	import { Input } from '$lib/components/ui/input';
 
 	const currentSettings = inject(USER_SETTINGS);
 
@@ -68,14 +68,14 @@
 	</CardContent>
 </Card>
 
-{#if $currentSettings.theme.type === 'four_colors'}
-	<Card>
-		<CardHeader>
-			<CardTitle>四色主题设置</CardTitle>
-			<CardDescription>调整四色主题的色相值</CardDescription>
-		</CardHeader>
-		<CardContent class="space-y-4">
-			<div class="space-y-2">
+<Card>
+	<CardHeader>
+		<CardTitle>主题配置</CardTitle>
+		<!-- <CardDescription>配置主题 调整四色主题的色相值</CardDescription> -->
+	</CardHeader>
+	<CardContent class="space-y-4">
+		<div class="space-y-2">
+			{#if $currentSettings.theme.type === 'four_colors'}
 				<Label>色相值: {$currentSettings.theme.data.four_colors.hue}</Label>
 				<Slider
 					type="single"
@@ -84,10 +84,19 @@
 					max={360}
 					step={1}
 				/>
-			</div>
-		</CardContent>
-	</Card>
-{/if}
+				<Input
+					bind:value={$currentSettings.theme.data.four_colors.hue}
+					type="number"
+					placeholder="Hue"
+				/>
+			{:else if $currentSettings.theme.type === 'standard'}
+				<Label>当前主题无配置项</Label>
+			{:else}
+				<Label>当前主题无配置项: {$currentSettings.theme}</Label>
+			{/if}
+		</div>
+	</CardContent>
+</Card>
 
 <!-- 主题预览 -->
 <ThemePreview themeType={$currentSettings.theme.type} />
