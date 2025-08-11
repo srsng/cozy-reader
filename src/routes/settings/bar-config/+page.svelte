@@ -261,7 +261,6 @@
 				<CardContent>
 					<div class="bg-background rounded-lg border">
 						<ConfigurableBar
-							appTitle="Cozy Reader"
 							config={currentPreviewConfig}
 							btnDsiabled
 							className="flex w-full items-center justify-between p-2"

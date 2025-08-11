@@ -4,6 +4,7 @@
 // import { getResources, initDatabase } from "$lib/database/database.js";
 // import { AppManager } from "$lib/stores/AppManager";
 import { Tauri } from '$lib/backend/tauri.js';
+
 import type { UserSettings } from '$lib/settings/index.js';
 import { loadUserSettings } from '$lib/stores/userSettings';
 
@@ -33,7 +34,6 @@ export async function load({ params }): Promise<RootData> {
 	}
 
 	const tauri = new Tauri();
-
 	const userSettings = await loadUserSettings();
 	// const appData = {
 	// 	resources: await getResources(),

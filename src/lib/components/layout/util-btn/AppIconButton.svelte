@@ -2,17 +2,20 @@
 	import { Button } from '$lib/components/ui/button';
 	import { writeToClipBoard } from '$lib/utils/clip';
 	import AppIcon from '$lib/components/app-icon.svelte';
+	import { inject } from '$lib/utils/context';
+	import { APP_STATE } from '$lib/stores/appState';
 </script>
 
 <script lang="ts">
+	const appState = inject(APP_STATE);
 	const {
 		name = 'app-icon-button',
-		title = 'Cozy Reader',
+		title = $appState.appTitle,
 		variant = 'outline' as const,
 		size = 'icon' as const,
 		className = 'size-6',
 		iconClass = 'size-5',
-		appTitle = 'Cozy Reader',
+		appTitle = $appState.appTitle,
 		...others
 	} = $props<{
 		name?: string;
