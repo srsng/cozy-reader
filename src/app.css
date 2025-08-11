@@ -4,8 +4,7 @@
 @import './layout.css';
 
 /* 自定义主题 */
-@import '$lib/theme/four_colors/index.css';
-@import '$lib/theme/standard/index.css';
+@import '$lib/theme/index.css';
 
 @custom-variant dark (&:is(.dark *));
 

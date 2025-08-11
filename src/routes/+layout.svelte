@@ -44,7 +44,7 @@
 	const { userSettings } = data;
 	onMount(() => {
 		// 初始化主题
-		initializeTheme($userSettings.theme.type, $userSettings.theme.data.four_colors.hue);
+		initializeTheme($userSettings.theme.type, $userSettings.theme.data);
 	});
 </script>
 
@@ -55,6 +55,11 @@
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
 <ZoomInOutMenuAction />
 <WindowAction />
+
+<!-- <svelte:body
+	style:--data_theme_4colors_hue={$userSettings.theme.data.four_colors.hue}
+	style:--data_theme_std_name={$userSettings.theme.data.standard.name}
+/> -->
 
 <div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
 	<AppTitleBar />

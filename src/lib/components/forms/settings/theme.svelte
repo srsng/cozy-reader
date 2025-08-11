@@ -3,8 +3,10 @@
 	import { inject } from '$lib/utils/context';
 	import { resetMode, setMode } from 'mode-watcher';
 	import {
+		ALL_Std_TD_NAMES,
 		AppThemeMode2Str,
 		AppThemeType2Str,
+		Std_TD_NAMES_2_Str,
 		type AppThemeMode,
 		type AppThemeType
 	} from '$lib/settings/Theme';
@@ -21,6 +23,8 @@
 	} from '$lib/components/ui/card';
 	import { ButtonList } from '$lib/components/ui/button-list';
 	import { Input } from '$lib/components/ui/input';
+	import { Button } from '$lib/components/ui/button';
+	import { updateName } from '$lib/theme/standard';
 
 	const currentSettings = inject(USER_SETTINGS);
 
@@ -74,8 +78,8 @@
 		<!-- <CardDescription>配置主题 调整四色主题的色相值</CardDescription> -->
 	</CardHeader>
 	<CardContent class="space-y-4">
-		<div class="space-y-2">
-			{#if $currentSettings.theme.type === 'four_colors'}
+		{#if $currentSettings.theme.type === 'four_colors'}
+			<div class="space-y-2">
 				<Label>色相值: {$currentSettings.theme.data.four_colors.hue}</Label>
 				<Slider
 					type="single"
@@ -89,12 +93,28 @@
 					type="number"
 					placeholder="Hue"
 				/>
-			{:else if $currentSettings.theme.type === 'standard'}
-				<Label>当前主题无配置项</Label>
-			{:else}
+			</div>
+		{:else if $currentSettings.theme.type === 'standard'}
+			<!-- <Label>当前主题无配置项</Label> -->
+			{#each ALL_Std_TD_NAMES as std_theme_name}
+				<div class="flex gap-2 space-y-2">
+					<Button
+						variant={$currentSettings.theme.data.standard.name === std_theme_name
+							? 'default'
+							: 'outline'}
+						onclick={() => {
+							updateName(std_theme_name);
+							$currentSettings.theme.data.standard.name = std_theme_name;
+						}}
+						>{std_theme_name}
+					</Button>
+				</div>
+			{/each}
+		{:else}
+			<div>
 				<Label>当前主题无配置项: {$currentSettings.theme}</Label>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</CardContent>
 </Card>
 

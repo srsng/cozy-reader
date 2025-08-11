@@ -7,16 +7,32 @@ export type AppThemeData = {
 			: never;
 };
 
+enum StdTDNameEnum {
+	black = 'black',
+	orange = 'orange',
+	violet = 'violet'
+}
+
+// 从 enum 生成 union type
+export type StdTDName = `${StdTDNameEnum}`;
+export const ALL_Std_TD_NAMES = Object.values(StdTDNameEnum);
 // todo
-interface StandardThemeData {}
+let temp: any = {};
+for (let name in ALL_Std_TD_NAMES) {
+	temp[name] = name;
+}
+export const Std_TD_NAMES_2_Str: Record<StdTDName, string> = temp;
+
+interface StandardThemeData {
+	name: StdTDName;
+}
 
 interface FourColorsThemeData {
 	hue: number;
 }
 
 export const DefaultThemeData: AppThemeData = {
-	// todo
-	standard: {},
+	standard: { name: 'black' },
 	four_colors: { hue: 36 }
 };
 

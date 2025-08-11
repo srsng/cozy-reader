@@ -6,7 +6,7 @@ export function updateHue(_hue: string | number) {
 	// hueSlider.value = hue;
 	// hueValueInput.value = hue;
 	// MAIN;
-	document.documentElement.style.setProperty('--hue', _hue.toString());
+	document.documentElement.style.setProperty('--data_theme_4colors_hue', _hue.toString());
 	// const hue: number = Number(_hue);
 	// let ahue = hue + 60;
 	// let a2hue = hue + 300;
