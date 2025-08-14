@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import { RefreshCcw } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { saveAppWindowState } from '$lib/stores/WindowState';
+	import { refreshWindow } from '$lib/components/action/window-action.svelte';
 </script>
 
 <script lang="ts">
@@ -23,11 +23,6 @@
 		iconClass?: string;
 		onClick?: (() => void) | undefined;
 	}>();
-
-	function refreshPage() {
-		saveAppWindowState();
-		window.location.reload();
-	}
 </script>
 
 <Button
@@ -36,7 +31,7 @@
 	{variant}
 	{size}
 	class={className}
-	onclick={onClick || refreshPage}
+	onclick={onClick || refreshWindow}
 	{...others}
 >
 	<RefreshCcw class={iconClass} />

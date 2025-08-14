@@ -2,7 +2,7 @@
 	import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Label } from '$lib/components/ui/label';
-	import { SHORTCUT_ENENT } from '$lib/shortcuts/shortcutService';
+	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { emit } from '@tauri-apps/api/event';
 	import { m } from '$lib/paraglide/messages';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
@@ -20,7 +20,7 @@
 	<Button
 		size="icon"
 		title={m['settings.zoom-out']()}
-		onclick={() => emit(SHORTCUT_ENENT, 'zoom-out')}
+		onclick={() => emit(SHORTCUT_EVENT, 'zoom-out')}
 	>
 		<ZoomOut />
 	</Button>
@@ -34,7 +34,7 @@
 	<Button
 		size="icon"
 		title={m['settings.zoom-in']()}
-		onclick={() => emit(SHORTCUT_ENENT, 'zoom-in')}
+		onclick={() => emit(SHORTCUT_EVENT, 'zoom-in')}
 	>
 		<ZoomIn />
 	</Button>
@@ -42,7 +42,7 @@
 	<Button
 		size="icon"
 		title={m['settings.zoom-reset']()}
-		onclick={() => emit(SHORTCUT_ENENT, 'zoom-reset')}
+		onclick={() => emit(SHORTCUT_EVENT, 'zoom-reset')}
 	>
 		<RotateCcw />
 	</Button>

@@ -5,7 +5,8 @@ import type { Tauri } from '$lib/backend/tauri';
 // import { emit, listen as tListen } from '@tauri-apps/api/event';
 
 export const SHORTCUT_SERVICE = new InjectionToken<ShortcutService>('ShortcutService');
-export const SHORTCUT_ENENT = '//shortcut//';
+export const SHORTCUT_EVENT = '//shortcut//';
+
 /**
  * Service class for listening to shortcut events from the back end.
  */
@@ -14,7 +15,7 @@ export class ShortcutService {
 	constructor(private tauri: Tauri) {}
 
 	listen() {
-		return this.tauri.listen<string>(SHORTCUT_ENENT, (e) => {
+		return this.tauri.listen<string>(SHORTCUT_EVENT, (e) => {
 			for (const listener of this.listeners) {
 				if (listener[0] === e.payload) {
 					listener[1]();

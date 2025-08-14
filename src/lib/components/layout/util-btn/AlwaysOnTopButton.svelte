@@ -2,7 +2,7 @@
 	import { Pin } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { emit } from '@tauri-apps/api/event';
-	import { SHORTCUT_ENENT } from '$lib/shortcuts/shortcutService';
+	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
 </script>
@@ -30,7 +30,7 @@
 	const currentSettings = inject(USER_SETTINGS);
 
 	function switchAlwaysOnTop() {
-		emit(SHORTCUT_ENENT, 'main-window-toggle-always-on-top');
+		emit(SHORTCUT_EVENT, 'main-window-toggle-always-on-top');
 	}
 </script>
 
