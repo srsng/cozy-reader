@@ -1,27 +1,24 @@
-<script lang="ts">
-	import SunIcon from '@lucide/svelte/icons/sun';
-	import MoonIcon from '@lucide/svelte/icons/moon';
-	import { Button } from '$lib/components/ui/button';
-
-	import { toggleMode } from 'mode-watcher';
+<script lang="ts" module>
 	import { cn } from '$lib/utils';
-	import { SunMediumIcon } from 'lucide-svelte';
+	import { mode, toggleMode } from 'mode-watcher';
+	import { Button } from '$lib/components/ui/button';
+	import { SunMediumIcon, MoonIcon } from 'lucide-svelte';
+	import { scale } from 'svelte/transition';
+</script>
 
+<script lang="ts">
 	const { className = {}, iconClass = {}, ...others } = $props();
 </script>
 
 <Button onclick={toggleMode} variant="outline" size="icon" class={className} {...others}>
-	<SunMediumIcon
-		class={cn(
-			iconClass,
-			'h-[1.2rem] w-[1.2rem] rotate-0 scale-100 !transition-all dark:-rotate-90 dark:scale-0'
-		)}
-	/>
-	<MoonIcon
-		class={cn(
-			iconClass,
-			'absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 !transition-all dark:rotate-0 dark:scale-100'
-		)}
-	/>
+	{#if mode.current === 'dark'}
+		<div in:scale>
+			<SunMediumIcon class={cn(iconClass, 'route-0 dark:route-90 size-5')} />
+		</div>
+	{:else}
+		<div in:scale>
+			<MoonIcon class={cn(iconClass, 'route-0 dark:-route-90 size-5')} />
+		</div>
+	{/if}
 	<span class="sr-only">Toggle theme</span>
 </Button>
