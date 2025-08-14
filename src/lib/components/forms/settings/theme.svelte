@@ -6,6 +6,7 @@
 		ALL_Std_TD_NAMES,
 		AppThemeMode2Str,
 		AppThemeType2Str,
+		PonyNameEnum,
 		Std_TD_NAMES_2_Str,
 		type AppThemeMode,
 		type AppThemeType
@@ -110,6 +111,18 @@
 					</Button>
 				</div>
 			{/each}
+		{:else if $currentSettings.theme.type === 'pony'}
+			<div>
+				{#each Object.keys(PonyNameEnum) as name}
+					<Button
+						variant={$currentSettings.theme.data?.pony?.name === name ? 'default' : 'outline'}
+						size="sm"
+						onclick={() => console.log('try to set theme Pony', name)}
+					>
+						{name}
+					</Button>
+				{/each}
+			</div>
 		{:else}
 			<div>
 				<Label>当前主题无配置项: {$currentSettings.theme}</Label>

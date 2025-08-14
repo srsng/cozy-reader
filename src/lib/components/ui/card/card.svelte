@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type WithElementRef } from '$lib/utils.js';
+	import { scale } from 'svelte/transition';
 
 	let {
 		ref = $bindable(null),
@@ -11,6 +12,7 @@
 </script>
 
 <div
+	in:scale
 	bind:this={ref}
 	data-slot="card"
 	class={cn(

@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/utils.js";
-	import type { HTMLAttributes } from "svelte/elements";
+	import { cn, type WithElementRef } from '$lib/utils.js';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { slide } from 'svelte/transition';
 
 	let {
 		ref = $bindable(null),
@@ -11,9 +12,10 @@
 </script>
 
 <div
+	in:slide
 	bind:this={ref}
 	data-slot="card-footer"
-	class={cn("[.border-t]:pt-6 flex items-center px-6", className)}
+	class={cn('[.border-t]:pt-6 flex items-center px-6', className)}
 	{...restProps}
 >
 	{@render children?.()}
