@@ -57,6 +57,13 @@
 				onCheckedChange={() => emitMainWindowEvent('toggle-always-on-top')}
 			/>
 		</div>
+		<div class="flex items-center justify-between">
+			<div class="space-y-0.5">
+				<Label>缩放比例</Label>
+				<p class="text-muted-foreground text-sm">调整应用程序的整体缩放比例</p>
+			</div>
+			<ZoomForm label />
+		</div>
 	</CardContent>
 </Card>
 
@@ -70,15 +77,5 @@
 	</CardHeader>
 	<CardContent>
 		<LanguageDropDown />
-	</CardContent>
-</Card>
-
-<Card>
-	<CardHeader>
-		<CardTitle>缩放设置</CardTitle>
-		<CardDescription>调整应用程序的整体缩放比例</CardDescription>
-	</CardHeader>
-	<CardContent class="space-y-4">
-		<ZoomForm label />
 	</CardContent>
 </Card>

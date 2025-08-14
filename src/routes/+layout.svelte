@@ -24,6 +24,7 @@
 	// ui components
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
+	import { scale } from 'svelte/transition';
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
@@ -56,10 +57,12 @@
 <ZoomInOutMenuAction />
 <WindowAction />
 
-<!-- <svelte:body
+<svelte:body
+	transition:scale
 	style:--data_theme_4colors_hue={$userSettings.theme.data.four_colors.hue}
 	style:--data_theme_std_name={$userSettings.theme.data.standard.name}
-/> -->
+/>
+<!-- <svelte:document transition:scale /> -->
 
 <div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
 	<AppTitleBar />
