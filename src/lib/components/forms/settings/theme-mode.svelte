@@ -11,7 +11,7 @@
 </script>
 
 <Button onclick={toggleMode} variant="outline" size="icon" class={className} {...others}>
-	{#if mode.current === 'dark'}
+	{#if mode.current === 'light'}
 		<div in:scale>
 			<SunMediumIcon class={cn(iconClass, 'route-0 dark:route-90 size-5')} />
 		</div>

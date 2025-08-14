@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
 	import { setLocale } from '$lib/paraglide/runtime';
@@ -6,7 +6,9 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
 	import { m } from '$lib/paraglide/messages.js';
+</script>
 
+<script lang="ts">
 	const currentSettings = inject(USER_SETTINGS);
 
 	// 选择语言
@@ -16,12 +18,12 @@
 		setLocale(langCode);
 	}
 
-	// const { btnText }: { btnText?: string } = $props();
+	const { variant = 'outline' }: { variant?: 'default' | 'outline' } = $props();
 </script>
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger>
-		<Button variant="outline">{m['settings.language']()}</Button>
+		<Button {variant}>{m['settings.language']()}</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56">
 		<DropdownMenu.Group>

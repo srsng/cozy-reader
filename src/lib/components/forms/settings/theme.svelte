@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
-	import { resetMode, setMode } from 'mode-watcher';
+	import { mode, resetMode, setMode } from 'mode-watcher';
 	import {
 		ALL_Std_TD_NAMES,
 		AppThemeMode2Str,
 		AppThemeType2Str,
 		PonyNameEnum,
-		Std_TD_NAMES_2_Str,
 		type AppThemeMode,
 		type AppThemeType
 	} from '$lib/settings/Theme';
@@ -51,10 +50,7 @@
 		<CardDescription>选择应用程序的主题模式</CardDescription>
 	</CardHeader>
 	<CardContent>
-		<ButtonList
-			Map2Str={AppThemeMode2Str}
-			selected={$currentSettings.theme.mode}
-			onclick={handleThemeMode}
+		<ButtonList Map2Str={AppThemeMode2Str} selected={mode.current} onclick={handleThemeMode}
 		></ButtonList>
 	</CardContent>
 </Card>

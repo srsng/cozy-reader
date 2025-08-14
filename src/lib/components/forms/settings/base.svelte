@@ -8,7 +8,8 @@
 		CardContent,
 		CardDescription,
 		CardHeader,
-		CardTitle
+		CardTitle,
+		CardAction
 	} from '$lib/components/ui/card';
 	import LanguageDropDown from './language.svelte';
 	import { m } from '$lib/paraglide/messages';
@@ -74,8 +75,8 @@
 			<Badge>{langCode2Name[$currentSettings.base.langCode]}</Badge>
 		</CardTitle>
 		<CardDescription>选择应用程序的显示语言</CardDescription>
+		<CardAction>
+			<LanguageDropDown variant="default" />
+		</CardAction>
 	</CardHeader>
-	<CardContent>
-		<LanguageDropDown />
-	</CardContent>
 </Card>
