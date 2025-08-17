@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { House } from 'lucide-svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { goHome } from '$lib/utils/route.svelte';
 	import { m } from '$lib/paraglide/messages';
 </script>
@@ -9,7 +9,7 @@
 	const {
 		name = 'home-button',
 		title = m['settings.go home'](),
-		variant = 'outline' as const,
+		variant = 'bar' as const,
 		size = 'icon' as const,
 		className = 'size-6',
 		iconClass = 'size-4',
@@ -18,7 +18,7 @@
 	}: {
 		name?: string;
 		title?: string;
-		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+		variant?: ButtonVariant;
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { Button } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { writeToClipBoard } from '$lib/utils/clip';
 	import AppIcon from '$lib/components/app-icon.svelte';
 	import { inject } from '$lib/utils/context';
@@ -11,7 +11,7 @@
 	const {
 		name = 'app-icon-button',
 		title = $appState.appTitle,
-		variant = 'outline' as const,
+		variant = 'bar' as const,
 		size = 'icon' as const,
 		className = 'size-6',
 		iconClass = 'size-5',
@@ -20,7 +20,7 @@
 	} = $props<{
 		name?: string;
 		title?: string;
-		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+		variant?: ButtonVariant;
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;

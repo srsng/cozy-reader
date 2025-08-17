@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { ZoomIn } from 'lucide-svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { m } from '$lib/paraglide/messages';
 	import * as Popover from '$lib/components/ui/popover';
 	import { ZoomForm } from '$lib/components/forms';
@@ -10,7 +10,7 @@
 	const {
 		name = 'zoom-button',
 		title = m['settings.zoom'](),
-		variant = 'outline' as const,
+		variant = 'bar' as const,
 		size = 'icon' as const,
 		className = 'size-6',
 		iconClass = 'size-4',
@@ -18,7 +18,7 @@
 	} = $props<{
 		name?: string;
 		title?: string;
-		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+		variant?: ButtonVariant;
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;

@@ -36,3 +36,5 @@
 <p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
 <p><a href="/demo/paraglide">国际化演示</a></p>
 <p><a href="/demo/route-demo">🚀 路由导航演示 (测试 goBack 功能)</a></p>
+<p><a href="/demo/file-input">file-input</a></p>
+<p><a href="/md_reader">reader md</a></p>

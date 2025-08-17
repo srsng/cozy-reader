@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { Pin } from 'lucide-svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { emit } from '@tauri-apps/api/event';
 	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
@@ -11,7 +11,7 @@
 	const {
 		name = 'always-on-top-button',
 		title = '始终置顶',
-		variant = 'outline' as const,
+		variant = 'bar' as const,
 		size = 'icon' as const,
 		className = 'size-6',
 		iconClass = 'size-4',
@@ -20,7 +20,7 @@
 	} = $props<{
 		name?: string;
 		title?: string;
-		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+		variant?: ButtonVariant;
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;

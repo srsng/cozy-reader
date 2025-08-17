@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { RefreshCcw } from 'lucide-svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { refreshWindow } from '$lib/components/action/window-action.svelte';
 </script>
 
@@ -8,7 +8,7 @@
 	const {
 		name = 'refresh-button',
 		title = '刷新页面',
-		variant = 'outline' as const,
+		variant = 'bar' as const,
 		size = 'icon' as const,
 		className = 'size-6',
 		iconClass = 'size-4',
@@ -17,7 +17,7 @@
 	} = $props<{
 		name?: string;
 		title?: string;
-		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+		variant?: ButtonVariant;
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;

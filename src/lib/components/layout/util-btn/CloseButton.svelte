@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { X } from 'lucide-svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 </script>
 
@@ -8,7 +8,7 @@
 	const {
 		name = 'close-button',
 		title = '关闭',
-		variant = 'outline' as const,
+		variant = 'bar' as const,
 		size = 'icon' as const,
 		className = 'size-6 hover:bg-destructive hover:text-destructive-foreground',
 		iconClass = 'size-4',
@@ -17,7 +17,7 @@
 	}: {
 		name?: string;
 		title?: string;
-		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+		variant?: ButtonVariant;
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;
