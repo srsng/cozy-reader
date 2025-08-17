@@ -13,6 +13,8 @@
 
 ### hard
 
+- [ ] reader
+- [ ] 优化主题数据编辑区高度变化动画 (Card组件)
 - [ ] 加强对window的自定义，参考Trans与old Cozy Reader
 - [ ] 优化整体的i18n方案
 - [ ] api系统

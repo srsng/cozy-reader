@@ -27,7 +27,7 @@ enum StdTDNameEnum {
 export type StdTDName = `${StdTDNameEnum}`;
 export const ALL_Std_TD_NAMES = Object.values(StdTDNameEnum);
 
-enum PonyNameEnum {
+export enum PonyNameEnum {
 	TwilightSparkle = 'ts',
 	Fluttershy = 'fs',
 	Applejack = 'aj',

@@ -8,6 +8,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* markdown-reader text typography */
+.markdown-reader p {
+	@apply leading-7 [&:not(:first-child)]:mt-6;
+}
+
 @theme inline {
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);

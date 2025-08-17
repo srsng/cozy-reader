@@ -83,7 +83,7 @@
 		</Button>
 	</div>
 
-	<!-- todo 调整布局 太长导致scroll-->
+	<!-- todo 调整布局 未知原因导致主layout也出现了scroll-->
 	<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 		<!-- 配置面板 -->
 		<ScrollArea class="h-[70%] w-full rounded-md border">

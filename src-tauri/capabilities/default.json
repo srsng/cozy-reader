@@ -19,6 +19,13 @@
 		"clipboard-manager:allow-read-text",
 		"clipboard-manager:allow-write-text",
 		"fs:default",
-		"fs:allow-read"
+		{
+			"identifier": "fs:allow-read",
+			"allow": [
+				{
+					"path": "*/*"
+				}
+			]
+		}
 	]
 }
