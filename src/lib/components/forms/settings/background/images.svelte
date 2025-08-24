@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	import { inject } from '$lib/utils/context';
+	import { confirm } from '@tauri-apps/plugin-dialog';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { createBackgroundImage, type BackgroundImage } from '$lib/settings/background';
 	import { Button } from '$lib/components/ui/button';
@@ -43,8 +44,14 @@
 	}
 
 	// 删除背景图片
-	function removeImage(imageId: string) {
-		if (confirm('确定要删除这张背景图片吗？')) {
+	async function removeImage(imageId: string) {
+		if (
+			await confirm('确定要删除这张背景图片吗？', {
+				title: '警告',
+				okLabel: '删除',
+				cancelLabel: '取消'
+			})
+		) {
 			$currentSettings.background.images = $currentSettings.background.images.filter(
 				(img) => img.id !== imageId
 			);
