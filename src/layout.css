@@ -1,4 +1,14 @@
 @layer utilities {
+	/* app布局 */
+	.app-layout {
+		/* 确保布局占满整个视口 */
+		height: 100vh !important;
+		overflow: hidden;
+		/* 确保布局有正确的背景色 */
+		background-color: hsl(var(--background));
+	}
+
+	/* app布局-内容区域 */
 	.content-area {
 		/* 为标题栏留出空间，标题栏高度为 2rem (32px) */
 		margin-top: 2rem;
@@ -6,15 +16,71 @@
 		height: calc(100vh - 2rem) !important;
 		/* 只在内容超出时才滚动 */
 		overflow-y: auto;
-		/* 确保内容区域有正确的背景色 */
+		/* 基础背景色 */
+		background-color: hsl(var(--background));
+		/* 设置相对定位以便背景层定位 */
+		position: relative;
+	}
+
+	/* 前景/上层遮罩层 - 应用到整个应用容器 */
+	.app-layout::before {
+		content: '';
+		position: fixed;
+		top: 2rem;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+		pointer-events: none;
+		background-color: var(--settings-bg-top-overlay-color, transparent);
+		opacity: var(--settings-bg-top-overlay-opacity, 0);
+		filter: var(--settings-bg-top-overlay-filters, none);
+		display: var(--settings-bg-top-overlay-enabled, none);
+	}
+
+	/* 背景图片层 - 独立于内容，避免滤镜影响前景 */
+	.content-area::before {
+		content: '';
+		position: fixed;
+		/* 扩展背景区域以避免模糊滤镜产生白边 */
+		top: calc(2rem - 20px);
+		left: -20px;
+		right: -20px;
+		bottom: -20px;
+		z-index: -20;
+		/* 背景样式支持 */
+		background-image: var(--settings-bg-image, none);
+		background-size: var(--settings-bg-size, cover);
+		background-position: var(--settings-bg-position, center);
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-blend-mode: var(--settings-bg-blend-mode, normal);
+		filter: var(--settings-bg-filters, none);
+		opacity: var(--settings-bg-opacity, 0);
+		transform: scale(var(--settings-bg-scale, 1)) rotate(var(--settings-bg-rotation, 0deg))
+			translate(var(--settings-bg-offset-x, 0px), var(--settings-bg-offset-y, 0px));
+		transition:
+			opacity var(--settings-bg-animation-duration, 300ms) ease-in-out,
+			filter var(--settings-bg-animation-duration, 300ms) ease-in-out,
+			transform var(--settings-bg-animation-duration, 300ms) ease-in-out;
+		pointer-events: none;
+		/* 确保背景色与主题一致，避免白边 */
 		background-color: hsl(var(--background));
 	}
 
-	.app-layout {
-		/* 确保布局占满整个视口 */
-		height: 100vh !important;
-		overflow: hidden;
-		/* 确保布局有正确的背景色 */
-		background-color: hsl(var(--background));
+	/* 背景遮罩层 - 在背景层之上，内容之下 */
+	.content-area::after {
+		content: '';
+		position: fixed;
+		top: 2rem;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -10;
+		background-color: var(--settings-bg-background-overlay-color, transparent);
+		opacity: var(--settings-bg-background-overlay-opacity, 0);
+		filter: var(--settings-bg-background-overlay-filters, none);
+		pointer-events: none;
+		display: var(--settings-bg-background-overlay-enabled, none);
 	}
 }

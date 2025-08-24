@@ -12,6 +12,12 @@
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { APP_STATE, initAppState } from '$lib/stores/appState';
 	import { page } from '$app/state';
+	// background functions
+	import {
+		generateBackgroundStyles,
+		applyBackgroundStyles,
+		removeBackgroundStyles
+	} from '$lib/components/action/background-action.svelte';
 
 	// services
 	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
@@ -43,9 +49,42 @@
 	});
 
 	const { userSettings } = data;
+
+	// 背景相关状态
+	// svelte-ignore non_reactive_update
+	let contentAreaElement: HTMLDivElement | null = null;
+
+	// 获取当前激活的背景图片
+	const activeImage = $derived(
+		$userSettings.background.images.find((img) => img.id === $userSettings.background.activeImageId)
+	);
+
+	// 应用背景样式
+	function applyBackgroundToContentArea() {
+		if (!contentAreaElement) return;
+
+		if (activeImage) {
+			const styles = generateBackgroundStyles(activeImage, $userSettings.background.global);
+			applyBackgroundStyles(contentAreaElement, styles);
+		} else {
+			removeBackgroundStyles(contentAreaElement);
+		}
+	}
+
+	// 监听背景设置变化
+	$effect(() => {
+		// 当背景设置发生变化时重新应用样式
+		if (activeImage || $userSettings.background.activeImageId === null) {
+			applyBackgroundToContentArea();
+		}
+	});
+
 	onMount(() => {
 		// 初始化主题
 		initializeTheme($userSettings.theme.type, $userSettings.theme.data);
+
+		// 初始化背景
+		applyBackgroundToContentArea();
 	});
 </script>
 
@@ -66,7 +105,7 @@
 
 <div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
 	<AppTitleBar />
-	<ScrollArea class="content-area">
+	<ScrollArea class="content-area" bind:ref={contentAreaElement}>
 		{@render children?.()}
 	</ScrollArea>
 </div>

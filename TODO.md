@@ -9,7 +9,9 @@
 - [x] zoom添加数值显示
 - [ ] 给 zoom 注册应用全局快捷键
 - [x] 主题数据编辑区
-- [ ] 优化std主题选择器
+- [x] 优化std主题选择器
+- [ ] reader文本等可选中
+- [ ] 应用页面元数据（title、description）
 
 ### hard
 
@@ -18,6 +20,7 @@
 - [ ] 加强对window的自定义，参考Trans与old Cozy Reader
 - [ ] 优化整体的i18n方案
 - [ ] api系统
+- [ ] 全局快捷键系统
 - [ ] 事件系统 - 事件列表 管理事件
 - [x] 全局应用状态
 - [ ] 为bar添加变体封装
@@ -25,7 +28,8 @@
 - [x] 集中管理window相关修改应用
 - [ ] 主题背景图支持
 - [ ] Pony主题
-- [ ] 深色模式下按钮hover效果尤其是close window按钮不佳，destructive颜色没有
+- [x] 深色模式下按钮hover效果尤其是close window按钮不佳，destructive颜色没有
+- [ ] 尺寸/大小过渡动画
 
 ## 平台特定
 
