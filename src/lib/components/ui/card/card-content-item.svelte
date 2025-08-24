@@ -20,14 +20,19 @@
 <div
 	bind:this={ref}
 	data-slot="card-content-item"
-	class={cn('flex items-center justify-between', className)}
+	class={cn(
+		'hover:bg-muted/50 flex items-center gap-2 rounded-lg p-4 transition-colors',
+		className
+	)}
 	{...restProps}
 >
-	<div class="space-y-0.5">
+	<div class="max-w-[40%] flex-shrink-0 space-y-1">
 		<Label>{label}</Label>
 		{#if description}
 			<p class="text-muted-foreground text-sm">{description}</p>
 		{/if}
 	</div>
-	{@render children?.()}
+	<div class="ml-auto flex max-w-[60%] flex-1 items-center justify-end gap-2">
+		{@render children?.()}
+	</div>
 </div>
