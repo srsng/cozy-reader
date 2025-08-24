@@ -224,7 +224,7 @@
 			</Card.ContentItem>
 		</Card.Content>
 	{:else}
-		<Card.Content class="flex flex-col items-center justify-center py-8 text-center space-y-2">
+		<Card.Content class="flex flex-col items-center justify-center space-y-2 py-8 text-center">
 			<p class="text-muted-foreground font-medium">背景遮罩层已禁用</p>
 			<p class="text-muted-foreground text-sm">启用上方开关以使用背景遮罩层效果</p>
 		</Card.Content>
@@ -433,7 +433,7 @@
 			</Card.ContentItem>
 		</Card.Content>
 	{:else}
-		<Card.Content class="flex flex-col items-center justify-center py-8 text-center space-y-2">
+		<Card.Content class="flex flex-col items-center justify-center space-y-2 py-8 text-center">
 			<p class="text-muted-foreground font-medium">上层遮罩层已禁用</p>
 			<p class="text-muted-foreground text-sm">启用上方开关以使用上层遮罩层效果</p>
 		</Card.Content>
