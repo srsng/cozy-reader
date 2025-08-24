@@ -1,15 +1,26 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { UtilButton } from '$lib/components/layout/util-btn';
+	import { page } from '$app/state';
 
 	const { children }: { children: Snippet } = $props();
+
+	const metaData = {
+		title: '设置',
+		description: '管理应用程序的设置选项'
+	};
 </script>
 
-<div class="mx-auto w-full max-w-[85%] select-none space-y-6 p-6">
+<svelte:head>
+	<title>{metaData.title}</title>
+	<meta name="description" content={metaData.description} />
+</svelte:head>
+
+<div class="mx-auto w-full max-w-[80%] select-none space-y-6 p-6">
 	<div class="flex items-center justify-between">
 		<div class="space-y-2">
-			<h2 class="text-2xl font-bold">设置</h2>
-			<p class="text-muted-foreground">管理应用程序的设置选项</p>
+			<h2 class="text-2xl font-bold">{page.data.title ?? metaData.title}</h2>
+			<p class="text-muted-foreground">{page.data.description ?? metaData.description}</p>
 		</div>
 
 		<div class="flex items-center gap-2">
