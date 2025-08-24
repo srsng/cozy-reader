@@ -23,6 +23,19 @@
 
 <Card>
 	<CardHeader>
+		<CardTitle>
+			{m['settings.languageSetting']()}
+			<Badge>{langCode2Name[$currentSettings.base.langCode]}</Badge>
+		</CardTitle>
+		<CardDescription>选择应用程序的显示语言</CardDescription>
+		<CardAction>
+			<LanguageDropDown variant="default" />
+		</CardAction>
+	</CardHeader>
+</Card>
+
+<Card>
+	<CardHeader>
 		<CardTitle>界面设置</CardTitle>
 		<CardDescription>控制应用程序界面的显示选项</CardDescription>
 	</CardHeader>
@@ -66,17 +79,4 @@
 			<ZoomForm label />
 		</div>
 	</CardContent>
-</Card>
-
-<Card>
-	<CardHeader>
-		<CardTitle>
-			{m['settings.languageSetting']()}
-			<Badge>{langCode2Name[$currentSettings.base.langCode]}</Badge>
-		</CardTitle>
-		<CardDescription>选择应用程序的显示语言</CardDescription>
-		<CardAction>
-			<LanguageDropDown variant="default" />
-		</CardAction>
-	</CardHeader>
 </Card>
