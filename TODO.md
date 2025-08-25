@@ -4,7 +4,7 @@
 
 ### eazy
 
-- [ ] 添加goto背景图设置 util-btn， 图标`<Wallpaper />`
+- [x] 添加goto背景图设置 util-btn， 图标`<Wallpaper />`
 - [x] 恢复钩子 adapter
 - [ ] 系统标题栏似乎去不掉了
 - [x] zoom添加数值显示
@@ -16,6 +16,7 @@
 
 ### hard
 
+- [ ] 给背景图添加：internal标注字段，创建时间
 - [ ] 透明
   - [ ] 窗口透明
   - [x] 背景透明
