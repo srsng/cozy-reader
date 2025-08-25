@@ -1,8 +1,12 @@
 <script lang="ts" module>
+	import { inject } from '$lib/utils/context';
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import { onMount } from 'svelte';
 	import type {
 		BackgroundImage,
 		GlobalBackgroundConfig,
-		BackgroundFilters
+		BackgroundFilters,
+		BackgroundPosition
 	} from '$lib/settings/background';
 	import { getImageFullConfig } from '$lib/settings/background';
 	import { convertFileSrc } from '@tauri-apps/api/core';
@@ -11,19 +15,6 @@
 	export function convertToTauriUrl(filePath: string): string {
 		if (!filePath) return '';
 		return convertFileSrc(filePath);
-	}
-
-	// 验证图片文件格式
-	export function isValidImageFormat(fileName: string): boolean {
-		const validExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif'];
-		const extension = fileName.toLowerCase().substring(fileName.lastIndexOf('.'));
-		return validExtensions.includes(extension);
-	}
-
-	// 验证文件大小（字节）
-	export function isValidFileSize(fileSize: number, maxSizeMB: number = 10): boolean {
-		const maxSizeBytes = maxSizeMB * 1024 * 1024;
-		return fileSize <= maxSizeBytes;
 	}
 
 	// 生成背景样式对象
@@ -122,7 +113,7 @@
 	}
 
 	// 转换位置为 CSS 值
-	function convertPositionToCSS(position: string): string {
+	function convertPositionToCSS(position: BackgroundPosition): string {
 		switch (position) {
 			case 'top-left':
 				return 'left top';
@@ -218,37 +209,44 @@
 			}
 		});
 	}
-
-	// 防抖函数，用于优化配置变更时的性能
-	export function debounce<T extends (...args: any[]) => any>(
-		func: T,
-		wait: number
-	): (...args: Parameters<T>) => void {
-		let timeout: ReturnType<typeof setTimeout>;
-		return (...args: Parameters<T>) => {
-			clearTimeout(timeout);
-			timeout = setTimeout(() => func(...args), wait);
-		};
-	}
-
-	// 颜色工具函数
-	export function hexToRgba(hex: string, alpha: number = 1): string {
-		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-		if (!result) return `rgba(0, 0, 0, ${alpha})`;
-
-		const r = parseInt(result[1], 16);
-		const g = parseInt(result[2], 16);
-		const b = parseInt(result[3], 16);
-
-		return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-	}
-
-	// 格式化文件大小
-	export function formatFileSize(bytes: number): string {
-		if (bytes === 0) return '0 B';
-		const k = 1024;
-		const sizes = ['B', 'KB', 'MB', 'GB'];
-		const i = Math.floor(Math.log(bytes) / Math.log(k));
-		return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-	}
 </script>
+
+<script lang="ts">
+	const userSettings = $state(inject(USER_SETTINGS));
+
+	// 背景相关状态
+	// svelte-ignore non_reactive_update
+	let backgroundContainerElement: HTMLDivElement | null = null;
+
+	// 获取当前激活的背景图片
+	const activeImage = $derived(
+		$userSettings.background.images.find((img) => img.id === $userSettings.background.activeImageId)
+	);
+
+	// 应用背景样式到独立背景容器
+	function applyBackgroundToContainer() {
+		if (!backgroundContainerElement) return;
+
+		if (activeImage) {
+			const styles = generateBackgroundStyles(activeImage, $userSettings.background.global);
+			applyBackgroundStyles(backgroundContainerElement, styles);
+		} else {
+			removeBackgroundStyles(backgroundContainerElement);
+		}
+	}
+	// 监听背景设置变化
+	$effect(() => {
+		// 当背景设置发生变化时重新应用样式
+		if (activeImage || $userSettings.background.activeImageId === null) {
+			applyBackgroundToContainer();
+		}
+	});
+
+	onMount(() => {
+		// 初始化背景
+		applyBackgroundToContainer();
+	});
+</script>
+
+<!-- 独立背景容器 -->
+<div class="background-container" bind:this={backgroundContainerElement}></div>

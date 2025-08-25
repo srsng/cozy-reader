@@ -13,7 +13,7 @@
 	import { APP_STATE, initAppState } from '$lib/stores/appState';
 	import { page } from '$app/state';
 	// background functions
-	import {
+	import BackgroundAction, {
 		generateBackgroundStyles,
 		applyBackgroundStyles,
 		removeBackgroundStyles
@@ -50,41 +50,9 @@
 
 	const { userSettings } = data;
 
-	// 背景相关状态
-	// svelte-ignore non_reactive_update
-	let backgroundContainerElement: HTMLDivElement | null = null;
-
-	// 获取当前激活的背景图片
-	const activeImage = $derived(
-		$userSettings.background.images.find((img) => img.id === $userSettings.background.activeImageId)
-	);
-
-	// 应用背景样式到独立背景容器
-	function applyBackgroundToContainer() {
-		if (!backgroundContainerElement) return;
-
-		if (activeImage) {
-			const styles = generateBackgroundStyles(activeImage, $userSettings.background.global);
-			applyBackgroundStyles(backgroundContainerElement, styles);
-		} else {
-			removeBackgroundStyles(backgroundContainerElement);
-		}
-	}
-
-	// 监听背景设置变化
-	$effect(() => {
-		// 当背景设置发生变化时重新应用样式
-		if (activeImage || $userSettings.background.activeImageId === null) {
-			applyBackgroundToContainer();
-		}
-	});
-
 	onMount(() => {
 		// 初始化主题
 		initializeTheme($userSettings.theme.type, $userSettings.theme.data);
-
-		// 初始化背景
-		applyBackgroundToContainer();
 	});
 
 	const metaData = {
@@ -102,10 +70,6 @@
 	<link rel="icon" href={favicon} />
 </svelte:head> -->
 
-<ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
-<ZoomInOutMenuAction />
-<WindowAction />
-
 <svelte:head>
 	<title>{page.data.title ?? metaData.title}</title>
 	<meta name="description" content={page.data.description ?? metaData.description} />
@@ -114,8 +78,10 @@
 <svelte:body transition:scale />
 <!-- <svelte:document transition:scale /> -->
 
-<!-- 独立背景容器 -->
-<div class="background-container" bind:this={backgroundContainerElement}></div>
+<ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
+<ZoomInOutMenuAction />
+<WindowAction />
+<BackgroundAction />
 
 <div
 	class="app-layout"
