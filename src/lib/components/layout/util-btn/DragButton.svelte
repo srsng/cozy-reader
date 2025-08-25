@@ -13,6 +13,7 @@
 		size = 'icon' as const,
 		className = 'size-6',
 		iconClass = 'size-4',
+		disabled = false,
 		...others
 	}: {
 		name?: string;
@@ -21,6 +22,7 @@
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;
+		disabled?: boolean;
 	} = $props();
 
 	const appState = inject(APP_STATE);
@@ -33,8 +35,8 @@
 	{size}
 	{...others}
 	class={className}
-	data-tauri-drag-region={!$appState.fullscreen}
-	disabled={$appState.fullscreen}
+	data-tauri-drag-region={disabled ? false : !$appState.fullscreen}
+	disabled={disabled ? true : $appState.fullscreen}
 >
 	<Move class={iconClass} />
 </Button>

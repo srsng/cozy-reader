@@ -9,11 +9,13 @@
 		name = 'app-title',
 		appTitle,
 		className = 'app-title truncate px-4',
+		disabled = false,
 		...others
 	} = $props<{
 		name?: string;
 		appTitle?: string;
 		className?: string;
+		disabled?: boolean;
 	}>();
 
 	const appState = inject(APP_STATE);
@@ -21,7 +23,7 @@
 
 <div data-tauri-drag-region={!$appState.fullscreen} class={className}>
 	<Label
-		data-tauri-drag-region={!$appState.fullscreen}
+		data-tauri-drag-region={disabled ? false : !$appState.fullscreen}
 		class="text-foreground font-bold"
 		{...others}>{appTitle}</Label
 	>
