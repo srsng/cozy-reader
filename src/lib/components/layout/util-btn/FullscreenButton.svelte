@@ -1,17 +1,19 @@
 <script lang="ts" module>
-	import { Move } from 'lucide-svelte';
+	import { Maximize, Minimize } from 'lucide-svelte';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
+	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
+	import { scale } from 'svelte/transition';
 	import { APP_STATE } from '$lib/stores/appState';
 	import { inject } from '$lib/utils/context';
 </script>
 
 <script lang="ts">
 	const {
-		name = 'drag-button',
-		title = '按住以拖拽移动',
+		name = 'fullscreen-button',
+		title = '全屏',
 		variant = 'bar' as const,
 		size = 'icon' as const,
-		className = 'size-6',
+		className = 'size-6 hover:bg-destructive hover:text-destructive-foreground',
 		iconClass = 'size-4',
 		...others
 	}: {
@@ -27,14 +29,22 @@
 </script>
 
 <Button
-	id={name}
+	{name}
 	{title}
 	{variant}
 	{size}
-	{...others}
 	class={className}
-	data-tauri-drag-region={!$appState.fullscreen}
-	disabled={$appState.fullscreen}
+	{...others}
+	onclick={() => emitMainWindowEvent('fullscreen')}
 >
-	<Move class={iconClass} />
+	{#if $appState.fullscreen}
+		<div in:scale>
+			<Minimize class={iconClass} />
+		</div>
+	{:else}
+		<div in:scale>
+			<Maximize class={iconClass} />
+		</div>
+	{/if}
+	<span class="sr-only">Toggle Fullscreen</span>
 </Button>

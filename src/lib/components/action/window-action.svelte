@@ -23,13 +23,19 @@
 		window.location.reload(); // note: 不是appwindow
 	}
 
-	export type mainWindowOperator = 'minimize' | 'maximize' | 'close' | 'toggle-always-on-top';
+	export type mainWindowOperator =
+		| 'minimize'
+		| 'maximize'
+		| 'close'
+		| 'toggle-always-on-top'
+		| 'fullscreen';
 
 	const mainWOp2Event: Record<mainWindowOperator, string> = {
 		minimize: 'main-window-minimize',
 		maximize: 'main-window-maximize',
 		close: 'main-window-close',
-		'toggle-always-on-top': 'main-window-toggle-always-on-top'
+		'toggle-always-on-top': 'main-window-toggle-always-on-top',
+		fullscreen: 'main-window-fullscreen'
 	};
 
 	export function emitMainWindowEvent(event: mainWindowOperator) {
@@ -44,6 +50,7 @@
 	import { mergeUnlisten } from '$lib/utils/mergeUnlisten';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { onMount } from 'svelte';
+	import { APP_STATE } from '$lib/stores/appState';
 
 	const userSettings = inject(USER_SETTINGS);
 	const shortcutService = inject(SHORTCUT_SERVICE);
@@ -52,8 +59,21 @@
 	// import { getCurrentWindow } from '@tauri-apps/api/window';
 	const appWindow = new Window('main');
 
+	// 设置置顶
 	function setAOT(aot: boolean) {
 		appWindow.setAlwaysOnTop(aot);
+	}
+
+	const appState = inject(APP_STATE);
+	// 切换全屏
+	export function fullscreenWindow() {
+		if (document.fullscreenElement) {
+			$appState.fullscreen = false;
+			document.exitFullscreen();
+		} else {
+			$appState.fullscreen = true;
+			document.documentElement.requestFullscreen();
+		}
 	}
 
 	// 初始化窗口
@@ -87,6 +107,10 @@
 			shortcutService.on(mainWOp2Event['toggle-always-on-top'], () => {
 				$userSettings.base.alwaysOnTop = !$userSettings.base.alwaysOnTop;
 				setAOT($userSettings.base.alwaysOnTop);
+			}),
+			// main 全屏
+			shortcutService.on(mainWOp2Event.fullscreen, () => {
+				fullscreenWindow();
 			})
 		)
 	);

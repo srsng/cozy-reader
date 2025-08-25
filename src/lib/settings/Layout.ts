@@ -45,6 +45,7 @@ export enum ButtonTypeEnum {
 	Drag = 'drag',
 	Minimize = 'minimize',
 	Maximize = 'maximize',
+	Fullscreen = 'fullscreen',
 	Close = 'close',
 	ThemeToggle = 'theme-toggle',
 	Custom = 'custom'
