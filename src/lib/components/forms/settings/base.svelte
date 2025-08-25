@@ -64,7 +64,7 @@
 				variant="outline"
 				size="icon"
 				onclick={() => {
-					$currentSettings.base.uiOpacity = 1;
+					$currentSettings.base.uiOpacity = 0.96;
 				}}
 			>
 				<RotateCcw />

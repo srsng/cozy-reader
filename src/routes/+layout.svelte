@@ -52,22 +52,22 @@
 
 	// 背景相关状态
 	// svelte-ignore non_reactive_update
-	let contentAreaElement: HTMLDivElement | null = null;
+	let backgroundContainerElement: HTMLDivElement | null = null;
 
 	// 获取当前激活的背景图片
 	const activeImage = $derived(
 		$userSettings.background.images.find((img) => img.id === $userSettings.background.activeImageId)
 	);
 
-	// 应用背景样式
-	function applyBackgroundToContentArea() {
-		if (!contentAreaElement) return;
+	// 应用背景样式到独立背景容器
+	function applyBackgroundToContainer() {
+		if (!backgroundContainerElement) return;
 
 		if (activeImage) {
 			const styles = generateBackgroundStyles(activeImage, $userSettings.background.global);
-			applyBackgroundStyles(contentAreaElement, styles);
+			applyBackgroundStyles(backgroundContainerElement, styles);
 		} else {
-			removeBackgroundStyles(contentAreaElement);
+			removeBackgroundStyles(backgroundContainerElement);
 		}
 	}
 
@@ -75,7 +75,7 @@
 	$effect(() => {
 		// 当背景设置发生变化时重新应用样式
 		if (activeImage || $userSettings.background.activeImageId === null) {
-			applyBackgroundToContentArea();
+			applyBackgroundToContainer();
 		}
 	});
 
@@ -84,7 +84,7 @@
 		initializeTheme($userSettings.theme.type, $userSettings.theme.data);
 
 		// 初始化背景
-		applyBackgroundToContentArea();
+		applyBackgroundToContainer();
 	});
 
 	const metaData = {
@@ -114,14 +114,17 @@
 <svelte:body transition:scale />
 <!-- <svelte:document transition:scale /> -->
 
-<div 
-	class="app-layout" 
-	role="application" 
+<!-- 独立背景容器 -->
+<div class="background-container" bind:this={backgroundContainerElement}></div>
+
+<div
+	class="app-layout"
+	role="application"
 	oncontextmenu={(e) => e.preventDefault()}
 	style="--ui-opacity: {$userSettings.base.uiOpacity}"
 >
 	<AppTitleBar />
-	<ScrollArea class="content-area" bind:ref={contentAreaElement}>
+	<ScrollArea class="content-area">
 		{@render children?.()}
 	</ScrollArea>
 </div>

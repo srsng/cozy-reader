@@ -18,9 +18,9 @@
 
 - [ ] 透明
   - [ ] 窗口透明
-  - [ ] 背景透明
+  - [x] 背景透明
 - [ ] 修复上层overlay失效问题
-- [ ] 修复背景层overlay坏掉了的问题
+- [x] 修复背景层overlay坏掉了的问题
 - [ ] 优化背景图片设置相关代码，包括background-action组件，主layout初始化背景图，更改、响应
 - [ ] reader
 - [ ] 加强对window的自定义，参考Trans与old Cozy Reader

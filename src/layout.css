@@ -4,10 +4,10 @@
 		/* 确保布局占满整个视口 */
 		height: 100vh !important;
 		overflow: hidden;
-		/* 确保布局有正确的背景色 */
-		background-color: hsl(var(--background));
+		/* 透明背景，让独立背景容器显示 */
+		background-color: transparent;
 		/* UI整体透明度 */
-		opacity: var(--ui-opacity, 1);
+		opacity: var(--ui-opacity, 0.96);
 	}
 
 	/* app布局-内容区域 */
@@ -18,9 +18,9 @@
 		height: calc(100vh - 2rem) !important;
 		/* 只在内容超出时才滚动 */
 		overflow-y: auto;
-		/* 基础背景色 */
-		background-color: hsl(var(--background));
-		/* 设置相对定位以便背景层定位 */
+		/* 透明背景，让独立背景容器显示 */
+		background-color: transparent;
+		/* 设置相对定位 */
 		position: relative;
 	}
 
@@ -40,16 +40,27 @@
 		visibility: var(--settings-bg-top-overlay-enabled, hidden);
 	}
 
-	/* 背景图片层 - 独立于内容，避免滤镜影响前景 */
-	.content-area::before {
-		content: '';
+	/* 独立背景容器 */
+	.background-container {
 		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -100;
+		pointer-events: none;
+		background-color: hsl(var(--background));
+	}
+
+	/* 背景图片层 */
+	.background-container::before {
+		content: '';
+		position: absolute;
 		/* 扩展背景区域以避免模糊滤镜产生白边 */
-		top: calc(2rem - 20px);
+		top: -20px;
 		left: -20px;
 		right: -20px;
 		bottom: -20px;
-		z-index: -20;
 		/* 背景样式支持 */
 		background-image: var(--settings-bg-image, none);
 		background-size: var(--settings-bg-size, cover);
@@ -66,19 +77,17 @@
 			filter var(--settings-bg-animation-duration, 300ms) ease-in-out,
 			transform var(--settings-bg-animation-duration, 300ms) ease-in-out;
 		pointer-events: none;
-		/* 确保背景色与主题一致，避免白边 */
 		background-color: hsl(var(--background));
 	}
 
-	/* 背景遮罩层 - 在背景层之上，内容之下 */
-	.content-area::after {
+	/* 背景遮罩层 - 独立于UI透明度 */
+	.background-container::after {
 		content: '';
-		position: fixed;
+		position: absolute;
 		top: 2rem;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		z-index: -10;
 		background-color: var(--settings-bg-background-overlay-color, transparent);
 		opacity: var(--settings-bg-background-overlay-opacity, 0);
 		filter: var(--settings-bg-background-overlay-filters, none);
