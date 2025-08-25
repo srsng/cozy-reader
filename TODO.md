@@ -27,14 +27,14 @@
 - [ ] 加强对window的自定义，参考Trans与old Cozy Reader
 - [ ] 优化整体的i18n方案
 - [ ] api系统
-- [ ] 全局快捷键系统
+- [x] 全局快捷键系统
 - [ ] 事件系统 - 事件列表 管理事件
 - [ ] 全局toast
 - [x] 全局应用状态
 - [ ] 为bar添加变体封装
 - [ ] 集中管理theme
 - [x] 集中管理window相关修改应用
-- [ ] 主题背景图支持
+- [x] 主题背景图支持
 - [ ] Pony主题
 - [x] 深色模式下按钮hover效果尤其是close window按钮不佳，destructive颜色没有
 - [ ] 尺寸/大小过渡动画

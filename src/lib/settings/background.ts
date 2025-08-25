@@ -1,3 +1,5 @@
+export const DEFAULT_OPACITY = 0.96;
+
 // 背景显示模式/铺设方式
 export type BackgroundDisplayMode =
 	| 'cover' // 覆盖填充（最常用）
@@ -76,7 +78,7 @@ export interface ImageCustomConfig {
 	blendMode: BackgroundBlendMode; // 混合模式
 
 	// 滤镜效果
-	filters: BackgroundFilters;
+	filters?: BackgroundFilters;
 
 	// 变换设置
 	scale: number; // 缩放比例 (0.1-5.0)
@@ -90,6 +92,8 @@ export interface BackgroundImage {
 	id: string; // 唯一标识符
 	name: string; // 显示名称
 	filePath: string; // 文件路径
+	internal: boolean; // 是否为应用内置图片
+	createdAt: number; // 创建时间戳
 
 	enableConfig: boolean; // 是否启用自定义配置
 	config?: ImageCustomConfig; // 可选的自定义配置，如果不设置则使用全局配置
@@ -125,7 +129,7 @@ export const DefaultOverlayConfig: OverlayConfig = {
 // 默认全局背景配置
 export const DefaultGlobalBackgroundConfig: GlobalBackgroundConfig = {
 	opacity: 0.1,
-	displayMode: 'contain',
+	displayMode: 'cover',
 	position: 'center',
 	blendMode: 'normal',
 	filters: DefaultBackgroundFilters,
@@ -139,12 +143,12 @@ export const DefaultGlobalBackgroundConfig: GlobalBackgroundConfig = {
 export const DefaultImageCustomConfig: ImageCustomConfig = {
 	// 基础显示设置
 	opacity: 0.1,
-	displayMode: 'contain',
+	displayMode: 'cover',
 	position: 'center',
 	blendMode: 'normal',
 
-	// 滤镜效果
-	filters: { ...DefaultBackgroundFilters },
+	// 滤镜效果（可选）
+	// filters: undefined, // 默认不启用滤镜
 
 	// 变换设置
 	scale: 1.0,
@@ -157,6 +161,8 @@ export const DefaultImageCustomConfig: ImageCustomConfig = {
 export const DefaultBackgroundImage: Omit<BackgroundImage, 'id'> = {
 	name: '默认背景',
 	filePath: '',
+	internal: false,
+	createdAt: Date.now(),
 	enableConfig: false
 };
 
@@ -257,6 +263,8 @@ export function createBackgroundImage(
 		id: crypto.randomUUID(),
 		name: partialConfig.name ?? '新背景图片',
 		filePath: partialConfig.filePath ?? '',
+		internal: partialConfig.internal ?? false,
+		createdAt: partialConfig.createdAt ?? Date.now(),
 		enableConfig: partialConfig.enableConfig ?? false,
 		config: partialConfig.config
 	};
@@ -268,6 +276,8 @@ export function resetImageToDefaults(image: BackgroundImage): BackgroundImage {
 		id: image.id,
 		name: image.name,
 		filePath: image.filePath,
+		internal: image.internal,
+		createdAt: image.createdAt,
 		enableConfig: false,
 		config: undefined
 	};

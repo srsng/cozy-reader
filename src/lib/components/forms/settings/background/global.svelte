@@ -1,11 +1,18 @@
 <script lang="ts" module>
 	import { inject } from '$lib/utils/context';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import {
+		DisplayModeOptions,
+		BackgroundPositionOptions,
+		BlendModeOptions,
+		DEFAULT_OPACITY
+	} from '$lib/settings/background';
 
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Label } from '$lib/components/ui/label';
 	import { Slider } from '$lib/components/ui/slider';
+	import * as Select from '$lib/components/ui/select';
 	import { Separator } from '$lib/components/ui/separator';
 	import { RotateCcw } from 'lucide-svelte';
 </script>
@@ -38,7 +45,7 @@
 				variant="outline"
 				size="icon"
 				onclick={() => {
-					$currentSettings.background.global.opacity = 1;
+					$currentSettings.background.global.opacity = DEFAULT_OPACITY;
 				}}
 			>
 				<RotateCcw />
@@ -63,6 +70,81 @@
 				size="icon"
 				onclick={() => {
 					$currentSettings.background.global.animationDuration = 300;
+				}}
+			>
+				<RotateCcw />
+			</Button>
+		</Card.ContentItem>
+
+		<!-- 显示模式 -->
+		<Card.ContentItem label="显示模式" description="选择背景图片的显示模式">
+			<Select.Root type="single" bind:value={$currentSettings.background.global.displayMode}>
+				<Select.Trigger>
+					{DisplayModeOptions.find(
+						(option) => option.value === $currentSettings.background.global.displayMode
+					)?.label || '选择显示模式'}
+				</Select.Trigger>
+				<Select.Content>
+					{#each DisplayModeOptions as option}
+						<Select.Item value={option.value}>{option.label}</Select.Item>
+					{/each}
+				</Select.Content>
+			</Select.Root>
+			<Button
+				variant="outline"
+				size="icon"
+				onclick={() => {
+					$currentSettings.background.global.displayMode = 'cover';
+				}}
+			>
+				<RotateCcw />
+			</Button>
+		</Card.ContentItem>
+
+		<!-- 位置 -->
+		<Card.ContentItem label="位置" description="选择背景图片的显示位置">
+			<Select.Root type="single" bind:value={$currentSettings.background.global.position}>
+				<Select.Trigger>
+					{BackgroundPositionOptions.find(
+						(option) => option.value === $currentSettings.background.global.position
+					)?.label || '选择位置'}
+				</Select.Trigger>
+				<Select.Content>
+					{#each BackgroundPositionOptions as option}
+						<Select.Item value={option.value}>{option.label}</Select.Item>
+					{/each}
+				</Select.Content>
+			</Select.Root>
+			<Button
+				variant="outline"
+				size="icon"
+				onclick={() => {
+					$currentSettings.background.global.position = 'center';
+				}}
+			>
+				<RotateCcw />
+			</Button>
+		</Card.ContentItem>
+
+		<!-- 混合模式 -->
+		<Card.ContentItem label="混合模式" description="选择背景图片的混合模式">
+			<Select.Root type="single" bind:value={$currentSettings.background.global.blendMode}>
+				<Select.Trigger>
+					{BlendModeOptions.find(
+						(option) => option.value === $currentSettings.background.global.blendMode
+					)?.label || '选择混合模式'}
+				</Select.Trigger>
+				<Select.Content>
+					{#each BlendModeOptions as option}
+						<Select.Item value={option.value}>{option.label}</Select.Item>
+					{/each}
+				</Select.Content>
+			</Select.Root>
+			<Button
+				variant="outline"
+				size="icon"
+				onclick={() => {
+					$currentSettings.background.global.blendMode = 'normal';
 				}}
 			>
 				<RotateCcw />

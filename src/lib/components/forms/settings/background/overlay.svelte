@@ -9,6 +9,7 @@
 	import { RotateCcw } from 'lucide-svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
+	import { DEFAULT_OPACITY } from '$lib/settings/background';
 
 	const currentSettings = $state(inject(USER_SETTINGS));
 </script>
@@ -59,7 +60,8 @@
 				<Button
 					variant="outline"
 					size="icon"
-					onclick={() => ($currentSettings.background.global.backgroundOverlay.opacity = 0.1)}
+					onclick={() =>
+						($currentSettings.background.global.backgroundOverlay.opacity = DEFAULT_OPACITY)}
 				>
 					<RotateCcw />
 				</Button>
@@ -278,7 +280,7 @@
 				<Button
 					variant="outline"
 					size="icon"
-					onclick={() => ($currentSettings.background.global.topOverlay.opacity = 0.1)}
+					onclick={() => ($currentSettings.background.global.topOverlay.opacity = DEFAULT_OPACITY)}
 				>
 					<RotateCcw />
 				</Button>

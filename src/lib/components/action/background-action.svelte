@@ -63,7 +63,7 @@
 		const backgroundPosition = convertPositionToCSS(position);
 
 		// 生成滤镜字符串
-		const filtersString = generateFiltersString(filters);
+		const filtersString = filters ? generateFiltersString(filters) : 'none';
 		const backgroundOverlayFiltersString = generateFiltersString(
 			globalConfig.backgroundOverlay.filters
 		);

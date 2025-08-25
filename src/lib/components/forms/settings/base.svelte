@@ -22,6 +22,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { RotateCcw } from 'lucide-svelte';
 	import { Separator } from '$lib/components/ui/separator';
+	import { DEFAULT_OPACITY } from '$lib/settings/background';
 
 	const currentSettings = inject(USER_SETTINGS);
 </script>
@@ -64,7 +65,7 @@
 				variant="outline"
 				size="icon"
 				onclick={() => {
-					$currentSettings.base.uiOpacity = 0.96;
+					$currentSettings.base.uiOpacity = DEFAULT_OPACITY;
 				}}
 			>
 				<RotateCcw />

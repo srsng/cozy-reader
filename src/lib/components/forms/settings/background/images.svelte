@@ -16,13 +16,6 @@
 <script lang="ts">
 	const currentSettings = $state(inject(USER_SETTINGS));
 
-	// // 获取当前激活的背景图片索引
-	// const activeImageIndex = $derived(
-	// 	$currentSettings.background.images.findIndex(
-	// 		(img) => img.id === $currentSettings.background.activeImageId
-	// 	)
-	// );
-
 	// 选择图片文件
 	async function selectImageFile() {
 		try {
@@ -157,10 +150,11 @@
 			</div>
 		{:else}
 			<div class="space-y-2">
-				{#each $currentSettings.background.images as image (image.id)}
+				{#each $currentSettings.background.images.filter((img) => !img.internal) as image (image.id)}
 					<div
 						class="flex items-center gap-3 rounded-lg border p-3 transition-colors"
 						class:bg-accent={$currentSettings.background.activeImageId === image.id}
+						class:text-accent-foreground={$currentSettings.background.activeImageId === image.id}
 					>
 						<div class="min-w-0 flex-1">
 							{#if editingImageId === image.id}
