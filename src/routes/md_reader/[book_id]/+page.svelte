@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { invoke } from '$lib/backend/ipc.js';
 	import { Image, Heading } from '$lib/components/typography';
 	import SvelteMarkdown from 'svelte-markdown';
@@ -9,10 +9,20 @@
 	const bookid = data.book_id;
 	const path = data.books[bookid];
 	// max-w-[${$userSettings.reader.viewerWidth}%]
-	function handleParsed(event) {
+
+	/**
+	 * @param {{ detail: { tokens: any; }; }} event
+	 */
+	function handleParsed(event: { detail: { tokens: any } }) {
 		//access tokens via event.detail.tokens
 		console.log(event.detail.tokens);
 	}
+
+	// 定义渲染器类型
+	const renderers: Record<string, any> = {
+		heading: Heading,
+		image: Image
+	};
 </script>
 
 <div class="mx-auto w-full max-w-[60%] select-none space-y-6 p-6">
@@ -30,11 +40,7 @@
 		loading...
 	{:then source}
 		<div class="markdown-reader">
-			<SvelteMarkdown
-				{source}
-				renderers={{ heading: Heading, image: Image }}
-				on:parsed={handleParsed}
-			/>
+			<SvelteMarkdown {source} {renderers} on:parsed={handleParsed} />
 		</div>
 	{:catch e}
 		error to render book: {e}

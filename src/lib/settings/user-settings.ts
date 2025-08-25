@@ -1,4 +1,11 @@
-import type { BaseSettings, LayoutSettings, ReaderSettings, ThemeSettings } from '.';
+import type {
+	BackgroundSettings,
+	BaseSettings,
+	LayoutSettings,
+	ReaderSettings,
+	ThemeSettings
+} from '.';
+
 import {
 	DefaultBaseSettings,
 	DefaultLayoutSettings,
@@ -6,11 +13,14 @@ import {
 	DefaultThemeSettings
 } from '.';
 
+import { DefaultBackgroundSettings } from './background';
+
 export interface UserSettings {
 	base: BaseSettings;
 	layout: LayoutSettings;
 	theme: ThemeSettings;
 	reader: ReaderSettings;
+	background: BackgroundSettings;
 }
 
 // 默认配置
@@ -18,5 +28,6 @@ export const DEFAULT_SETTINGS: UserSettings = {
 	base: DefaultBaseSettings,
 	layout: DefaultLayoutSettings,
 	theme: DefaultThemeSettings,
-	reader: DefaultReaderSettings
+	reader: DefaultReaderSettings,
+	background: DefaultBackgroundSettings
 };

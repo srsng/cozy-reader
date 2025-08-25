@@ -1,11 +1,12 @@
 import { goto } from '$app/navigation';
 import { page } from '$app/state';
 
-export type Pages = 'home' | 'settings';
+export type Pages = 'home' | 'settings' | 'bg_settings';
 
 export const RouteMap: Record<Pages, string> = {
 	home: '/',
-	settings: '/settings/'
+	settings: '/settings/',
+	bg_settings: '/settings/background'
 };
 
 // 页面历史记录
@@ -61,6 +62,10 @@ export function goHome() {
 
 export function goSettings() {
 	goto(RouteMap.settings);
+}
+
+export function goBgSettings() {
+	goto(RouteMap.bg_settings);
 }
 
 // 获取当前页面路径

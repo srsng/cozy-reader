@@ -12,6 +12,12 @@
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { APP_STATE, initAppState } from '$lib/stores/appState';
 	import { page } from '$app/state';
+	// background functions
+	import BackgroundAction, {
+		generateBackgroundStyles,
+		applyBackgroundStyles,
+		removeBackgroundStyles
+	} from '$lib/components/action/background-action.svelte';
 
 	// services
 	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
@@ -43,28 +49,46 @@
 	});
 
 	const { userSettings } = data;
+
 	onMount(() => {
 		// 初始化主题
 		initializeTheme($userSettings.theme.type, $userSettings.theme.data);
 	});
+
+	const metaData = {
+		title: 'Cozy Reader',
+		description: 'Cozy Reader is a reader that reads books in a cozy environment.'
+	};
+
+	// todo page.data.title获取不到值
+	// $effect(() => {
+	// 	console.log('page meta title', page.data.title);
+	// });
 </script>
 
 <!-- <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head> -->
 
+<svelte:head>
+	<title>{page.data.title ?? metaData.title}</title>
+	<meta name="description" content={page.data.description ?? metaData.description} />
+</svelte:head>
+
+<svelte:body transition:scale />
+<!-- <svelte:document transition:scale /> -->
+
 <ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
 <ZoomInOutMenuAction />
 <WindowAction />
+<BackgroundAction />
 
-<svelte:body
-	transition:scale
-	style:--data_theme_4colors_hue={$userSettings.theme.data.four_colors.hue}
-	style:--data_theme_std_name={$userSettings.theme.data.standard.name}
-/>
-<!-- <svelte:document transition:scale /> -->
-
-<div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
+<div
+	class="app-layout"
+	role="application"
+	oncontextmenu={(e) => e.preventDefault()}
+	style="--ui-opacity: {$userSettings.base.uiOpacity}"
+>
 	<AppTitleBar />
 	<ScrollArea class="content-area">
 		{@render children?.()}

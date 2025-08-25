@@ -17,10 +17,4 @@
 </div>
 
 <style>
-	/* 响应式设计 */
-	@media (max-width: 640px) {
-		#titlebar {
-			height: 2rem; /* 32px - 保持移动端高度一致 */
-		}
-	}
 </style>

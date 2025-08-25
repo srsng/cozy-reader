@@ -23,17 +23,30 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
 	const cleanConfig = savedConfig ? clean(savedConfig) : null;
 
 	if (cleanConfig) {
-		store.set({ ...DEFAULT_SETTINGS, ...cleanConfig });
+		// 深度合并配置，确保背景设置正确初始化
+		const mergedConfig = {
+			...DEFAULT_SETTINGS,
+			...cleanConfig,
+			background: {
+				...DEFAULT_SETTINGS.background,
+				...cleanConfig.background,
+				global: {
+					...DEFAULT_SETTINGS.background.global,
+					...cleanConfig.background?.global
+				}
+			}
+		};
+		store.set(mergedConfig);
 	}
 
 	// 订阅，自动保存
 	store.subscribe((value) => {
-		const cleanValue = clean(value);
-		configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
 		if (timer) clearTimeout(timer);
 		timer = setTimeout(() => {
+			const cleanValue = clean(value);
+			configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
 			configStore.save();
-		}, 1500); // 防抖
+		}, 10000); // 防抖
 	});
 
 	return {

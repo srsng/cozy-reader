@@ -23,3 +23,24 @@ export function falttenDeepArray(arr: (any | any[])[]): any[] {
 		[]
 	);
 }
+
+// 颜色工具函数
+export function hexToRgba(hex: string, alpha: number = 1): string {
+	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	if (!result) return `rgba(0, 0, 0, ${alpha})`;
+
+	const r = parseInt(result[1], 16);
+	const g = parseInt(result[2], 16);
+	const b = parseInt(result[3], 16);
+
+	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// 格式化文件大小
+export function formatFileSize(bytes: number): string {
+	if (bytes === 0) return '0 B';
+	const k = 1024;
+	const sizes = ['B', 'KB', 'MB', 'GB'];
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+	return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
