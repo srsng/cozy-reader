@@ -413,7 +413,7 @@
 				</div>
 			{:else}
 				<div class="text-muted-foreground py-8 text-center">
-					<p>自定义配置已禁用</p>
+					<p>自定义独立配置已禁用</p>
 					<p class="text-sm">启用上方开关以使用自定义配置，否则将使用全局设置</p>
 				</div>
 			{/if}

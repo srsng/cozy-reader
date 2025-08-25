@@ -39,10 +39,10 @@
 				'--settings-bg-position': 'center',
 				'--settings-bg-blend-mode': 'normal',
 				'--settings-bg-filters': 'none',
-				'--settings-bg-background-overlay-enabled': 'none',
+				'--settings-bg-background-overlay-enabled': 'hidden',
 				'--settings-bg-background-overlay-color': 'transparent',
 				'--settings-bg-background-overlay-opacity': '0',
-				'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'block' : 'none',
+				'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'visible' : 'hidden',
 				'--settings-bg-top-overlay-color': globalConfig.topOverlay.color,
 				'--settings-bg-top-overlay-opacity': globalConfig.topOverlay.opacity.toString(),
 				'--settings-bg-top-overlay-filters': generateFiltersString(globalConfig.topOverlay.filters)
@@ -90,12 +90,12 @@
 			'--settings-bg-offset-x': `${offsetX}px`,
 			'--settings-bg-offset-y': `${offsetY}px`,
 			'--settings-bg-background-overlay-enabled': globalConfig.backgroundOverlay.enabled
-				? 'block'
-				: 'none',
+				? 'visible'
+				: 'hidden',
 			'--settings-bg-background-overlay-color': globalConfig.backgroundOverlay.color,
 			'--settings-bg-background-overlay-opacity': globalConfig.backgroundOverlay.opacity.toString(),
 			'--settings-bg-background-overlay-filters': backgroundOverlayFiltersString,
-			'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'block' : 'none',
+			'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'visible' : 'hidden',
 			'--settings-bg-top-overlay-color': globalConfig.topOverlay.color,
 			'--settings-bg-top-overlay-opacity': globalConfig.topOverlay.opacity.toString(),
 			'--settings-bg-top-overlay-filters': topOverlayFiltersString,

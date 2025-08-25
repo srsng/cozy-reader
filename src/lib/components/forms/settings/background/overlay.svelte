@@ -65,7 +65,7 @@
 				</Button>
 			</Card.ContentItem>
 			<!-- 亮度 -->
-			<Card.ContentItem label="亮度" description="调整亮度: 0~200%">
+			<!-- <Card.ContentItem label="亮度" description="调整亮度: 0~200%">
 				<Slider
 					type="single"
 					class="flex-1"
@@ -82,14 +82,15 @@
 				<Button
 					variant="outline"
 					size="icon"
-					onclick={() =>
-						($currentSettings.background.global.backgroundOverlay.filters.brightness = 1)}
+					onclick={() => {
+						$currentSettings.background.global.backgroundOverlay.filters.brightness = 1;
+					}}
 				>
 					<RotateCcw />
 				</Button>
-			</Card.ContentItem>
+			</Card.ContentItem> -->
 			<!-- 对比度 -->
-			<Card.ContentItem label="对比度" description="调整对比度: 0~200%">
+			<!-- <Card.ContentItem label="对比度" description="调整对比度: 0~200%">
 				<Slider
 					type="single"
 					class="flex-1"
@@ -109,9 +110,9 @@
 				>
 					<RotateCcw />
 				</Button>
-			</Card.ContentItem>
+			</Card.ContentItem> -->
 			<!-- 饱和度 -->
-			<Card.ContentItem label="饱和度" description="调整饱和度: 0~2">
+			<!-- <Card.ContentItem label="饱和度" description="调整饱和度: 0~2">
 				<Slider
 					type="single"
 					class="flex-1"
@@ -131,9 +132,9 @@
 				>
 					<RotateCcw />
 				</Button>
-			</Card.ContentItem>
+			</Card.ContentItem> -->
 			<!-- 模糊 -->
-			<Card.ContentItem label="模糊" description="调整模糊程度: 0~20px">
+			<!-- <Card.ContentItem label="模糊" description="调整模糊程度: 0~20px">
 				<Slider
 					type="single"
 					class="flex-1"
@@ -152,9 +153,9 @@
 				>
 					<RotateCcw />
 				</Button>
-			</Card.ContentItem>
+			</Card.ContentItem> -->
 			<!-- 灰度 -->
-			<Card.ContentItem label="灰度" description="调整灰度程度: 0~100%">
+			<!-- <Card.ContentItem label="灰度" description="调整灰度程度: 0~100%">
 				<Slider
 					type="single"
 					class="flex-1"
@@ -176,10 +177,10 @@
 				>
 					<RotateCcw />
 				</Button>
-			</Card.ContentItem>
+			</Card.ContentItem> -->
 
 			<!-- 色相旋转 -->
-			<Card.ContentItem label="色相旋转" description="调整色相旋转角度: 0~360°">
+			<!-- <Card.ContentItem label="色相旋转" description="调整色相旋转角度: 0~360°">
 				<Slider
 					type="single"
 					class="flex-1"
@@ -199,10 +200,10 @@
 				>
 					<RotateCcw />
 				</Button>
-			</Card.ContentItem>
+			</Card.ContentItem> -->
 
 			<!-- 反转 -->
-			<Card.ContentItem label="反转" description="调整反转程度: 0~100%">
+			<!-- <Card.ContentItem label="反转" description="调整反转程度: 0~100%">
 				<Slider
 					type="single"
 					class="flex-1"
@@ -221,7 +222,7 @@
 				>
 					<RotateCcw />
 				</Button>
-			</Card.ContentItem>
+			</Card.ContentItem> -->
 		</Card.Content>
 	{:else}
 		<Card.Content class="flex flex-col items-center justify-center space-y-2 py-8 text-center">
@@ -325,7 +326,7 @@
 				</Button>
 			</Card.ContentItem>
 			<!-- 饱和度 -->
-			<Card.ContentItem label="饱和度" description="调整饱和度: 0~2">
+			<Card.ContentItem label="饱和度" description="调整饱和度: 0~200%">
 				<Slider
 					type="single"
 					class="flex-1"

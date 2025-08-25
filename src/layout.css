@@ -37,7 +37,7 @@
 		background-color: var(--settings-bg-top-overlay-color, transparent);
 		opacity: var(--settings-bg-top-overlay-opacity, 0);
 		filter: var(--settings-bg-top-overlay-filters, none);
-		display: var(--settings-bg-top-overlay-enabled, none);
+		visibility: var(--settings-bg-top-overlay-enabled, hidden);
 	}
 
 	/* 背景图片层 - 独立于内容，避免滤镜影响前景 */
@@ -83,6 +83,6 @@
 		opacity: var(--settings-bg-background-overlay-opacity, 0);
 		filter: var(--settings-bg-background-overlay-filters, none);
 		pointer-events: none;
-		display: var(--settings-bg-background-overlay-enabled, none);
+		visibility: var(--settings-bg-background-overlay-enabled, hidden);
 	}
 }
