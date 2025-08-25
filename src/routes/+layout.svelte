@@ -22,6 +22,7 @@
 	import { ModeWatcher } from 'mode-watcher';
 	import ZoomInOutMenuAction from '$lib/components/action/ZoomInOutMenuAction.svelte';
 	import WindowAction from '$lib/components/action/window-action.svelte';
+	import HotkeysAction from '$lib/components/action/HotkeysAction.svelte';
 
 	// ui components
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
@@ -74,6 +75,7 @@
 <ZoomInOutMenuAction />
 <WindowAction />
 <BackgroundAction />
+<HotkeysAction />
 
 <div
 	class="app-layout"
