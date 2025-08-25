@@ -8,11 +8,12 @@
 - [x] 恢复钩子 adapter
 - [ ] 系统标题栏似乎去不掉了
 - [x] zoom添加数值显示
-- [ ] 给 zoom 注册应用全局快捷键
+- [x] 给 zoom 注册应用全局快捷键
 - [x] 主题数据编辑区
 - [x] 优化std主题选择器
 - [ ] reader文本等可选中
 - [ ] 应用页面元数据（title、description）
+- [ ] window-vibrancy
 
 ### hard
 

@@ -1,5 +1,18 @@
 export const DEFAULT_OPACITY = 0.96;
 
+import { mode } from 'mode-watcher';
+
+export function get_default_opacity() {
+	switch (mode.current) {
+		case 'dark':
+			return 0.1;
+		case 'light':
+			return 0.96;
+		default:
+			return 0.96;
+	}
+}
+
 // 背景显示模式/铺设方式
 export type BackgroundDisplayMode =
 	| 'cover' // 覆盖填充（最常用）

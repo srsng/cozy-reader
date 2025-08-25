@@ -9,14 +9,14 @@
 		buttons,
 		className = '',
 		btnClass = '',
-		btnDsiabled = false,
+		btnDisabled = false,
 		iconClass = 'size-4'
 	}: {
 		appTitle: string;
 		buttons: ButtonConfig[];
 		className?: string;
 		btnClass?: string;
-		btnDsiabled?: boolean;
+		btnDisabled?: boolean;
 		iconClass?: string;
 	} = $props();
 
@@ -26,6 +26,6 @@
 
 <div class={className}>
 	{#each sortedButtons as button (button.name)}
-		<BarButton config={button} className={btnClass} {appTitle} {btnDsiabled} {iconClass} />
+		<BarButton config={button} className={btnClass} {appTitle} {btnDisabled} {iconClass} />
 	{/each}
 </div>

@@ -41,7 +41,7 @@
 		className = '',
 		sectionClass = '',
 		btnClass = 'size-6',
-		btnDsiabled = false,
+		btnDisabled = false,
 		iconClass = 'size-4',
 		...others
 	}: {
@@ -49,7 +49,7 @@
 		className?: string;
 		sectionClass?: string;
 		btnClass?: string;
-		btnDsiabled?: boolean;
+		btnDisabled?: boolean;
 		iconClass?: string;
 	} = $props();
 
@@ -76,7 +76,7 @@
 		buttons={config.left}
 		className={lr_class}
 		{btnClass}
-		{btnDsiabled}
+		{btnDisabled}
 		{iconClass}
 		{...others}
 	/>
@@ -85,7 +85,7 @@
 		buttons={config.center}
 		className={md_class}
 		{btnClass}
-		{btnDsiabled}
+		{btnDisabled}
 		{iconClass}
 		{...others}
 	/>
@@ -94,7 +94,7 @@
 		buttons={config.right}
 		className={lr_class}
 		{btnClass}
-		{btnDsiabled}
+		{btnDisabled}
 		{iconClass}
 		{...others}
 	/>

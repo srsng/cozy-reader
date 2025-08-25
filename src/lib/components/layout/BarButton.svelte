@@ -10,13 +10,13 @@
 		appTitle,
 		config,
 		className = 'size-6',
-		btnDsiabled = false,
+		btnDisabled = false,
 		iconClass = 'size-4'
 	}: {
 		appTitle: string;
 		config: ButtonConfig;
 		className?: string;
-		btnDsiabled?: boolean;
+		btnDisabled?: boolean;
 		iconClass?: string;
 	} = $props();
 
@@ -25,7 +25,7 @@
 			name: config.name,
 			className: cn(config.customProps?.className, className),
 			iconClass: cn(config.customProps?.iconClass, iconClass),
-			disabled: btnDsiabled
+			disabled: btnDisabled
 		};
 
 		// console.log(_props);
@@ -35,7 +35,7 @@
 	function getTextProps() {
 		const _props: Record<string, any> = {
 			name: config.name,
-			disabled: btnDsiabled,
+			disabled: btnDisabled,
 			appTitle
 			// className: config.customProps?.className || className,
 			// iconClass: config.customProps?.iconClass || iconClass

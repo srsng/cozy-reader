@@ -16,8 +16,6 @@
 		margin-top: 2rem;
 		/* 设置内容区域高度，避免不必要的滚动 */
 		height: calc(100vh - 2rem) !important;
-		/* 只在内容超出时才滚动 */
-		overflow-y: auto;
 		/* 透明背景，让独立背景容器显示 */
 		background-color: transparent;
 		/* 设置相对定位 */

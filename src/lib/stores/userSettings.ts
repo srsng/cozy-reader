@@ -39,6 +39,8 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
 		store.set(mergedConfig);
 	}
 
+	// todo：添加立即保存
+
 	// 订阅，自动保存
 	store.subscribe((value) => {
 		if (timer) clearTimeout(timer);
