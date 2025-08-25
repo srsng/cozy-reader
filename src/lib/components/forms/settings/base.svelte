@@ -17,6 +17,10 @@
 	import { langCode2Name } from '$lib/settings/Base';
 	import { ZoomForm } from '$lib/components/forms';
 	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
+	import { Slider } from '$lib/components/ui/slider';
+	import { Button } from '$lib/components/ui/button';
+	import { RotateCcw } from 'lucide-svelte';
+	import { Separator } from '$lib/components/ui/separator';
 
 	const currentSettings = inject(USER_SETTINGS);
 </script>
@@ -40,6 +44,45 @@
 		<CardDescription>控制应用程序界面的显示选项</CardDescription>
 	</CardHeader>
 	<CardContent class="space-y-4">
+		<!-- UI透明度 -->
+		<div class="space-y-3">
+			<div class="flex items-center justify-between">
+				<div class="space-y-0.5">
+					<Label>UI透明度</Label>
+					<p class="text-muted-foreground text-sm">调整整体界面透明度: 0~100%</p>
+				</div>
+			</div>
+			<div class="flex items-center gap-4">
+				<Slider
+					type="single"
+					class="flex-1"
+					bind:value={$currentSettings.base.uiOpacity}
+					min={0.1}
+					max={1}
+					step={0.01}
+				/>
+				<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+					{Math.round($currentSettings.base.uiOpacity * 100)}%
+				</span>
+				<Button
+					variant="outline"
+					size="icon"
+					onclick={() => {
+						$currentSettings.base.uiOpacity = 1;
+					}}
+				>
+					<RotateCcw />
+				</Button>
+			</div>
+			<div class="flex items-center justify-between">
+				<div class="space-y-0.5">
+					<Label>缩放比例</Label>
+					<p class="text-muted-foreground text-sm">调整应用程序的整体缩放比例</p>
+				</div>
+				<ZoomForm label />
+			</div>
+		</div>
+		<Separator />
 		<div class="flex items-center justify-between">
 			<div class="space-y-0.5">
 				<Label>标题栏</Label>
@@ -70,13 +113,6 @@
 				checked={$currentSettings.base.alwaysOnTop}
 				onCheckedChange={() => emitMainWindowEvent('toggle-always-on-top')}
 			/>
-		</div>
-		<div class="flex items-center justify-between">
-			<div class="space-y-0.5">
-				<Label>缩放比例</Label>
-				<p class="text-muted-foreground text-sm">调整应用程序的整体缩放比例</p>
-			</div>
-			<ZoomForm label />
 		</div>
 	</CardContent>
 </Card>

@@ -114,7 +114,12 @@
 <svelte:body transition:scale />
 <!-- <svelte:document transition:scale /> -->
 
-<div class="app-layout" role="application" oncontextmenu={(e) => e.preventDefault()}>
+<div 
+	class="app-layout" 
+	role="application" 
+	oncontextmenu={(e) => e.preventDefault()}
+	style="--ui-opacity: {$userSettings.base.uiOpacity}"
+>
 	<AppTitleBar />
 	<ScrollArea class="content-area" bind:ref={contentAreaElement}>
 		{@render children?.()}

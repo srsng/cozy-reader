@@ -6,6 +6,8 @@
 		overflow: hidden;
 		/* 确保布局有正确的背景色 */
 		background-color: hsl(var(--background));
+		/* UI整体透明度 */
+		opacity: var(--ui-opacity, 1);
 	}
 
 	/* app布局-内容区域 */

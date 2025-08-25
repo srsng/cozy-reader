@@ -4,6 +4,7 @@
 
 ### eazy
 
+- [ ] 添加goto背景图设置 util-btn， 图标`<Wallpaper />`
 - [x] 恢复钩子 adapter
 - [ ] 系统标题栏似乎去不掉了
 - [x] zoom添加数值显示
@@ -15,8 +16,13 @@
 
 ### hard
 
+- [ ] 透明
+  - [ ] 窗口透明
+  - [ ] 背景透明
+- [ ] 修复上层overlay失效问题
+- [ ] 修复背景层overlay坏掉了的问题
+- [ ] 优化背景图片设置相关代码，包括background-action组件，主layout初始化背景图，更改、响应
 - [ ] reader
-- [ ] 优化主题数据编辑区高度变化动画 (Card组件)
 - [ ] 加强对window的自定义，参考Trans与old Cozy Reader
 - [ ] 优化整体的i18n方案
 - [ ] api系统
@@ -31,6 +37,7 @@
 - [ ] Pony主题
 - [x] 深色模式下按钮hover效果尤其是close window按钮不佳，destructive颜色没有
 - [ ] 尺寸/大小过渡动画
+  - [ ] 优化主题数据编辑区高度变化动画 (Card组件)
 
 ## 平台特定
 
