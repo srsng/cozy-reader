@@ -28,11 +28,11 @@
 <Button onclick={toggleMode} {name} {title} {variant} {size} class={className} {...others}>
 	{#if mode.current === 'light'}
 		<div in:scale>
-			<SunMediumIcon class={cn(iconClass, 'route-0 dark:route-90 size-5')} />
+			<SunMediumIcon class={cn(iconClass)} />
 		</div>
 	{:else}
 		<div in:scale>
-			<MoonIcon class={cn(iconClass, 'route-0 dark:-route-90 size-5')} />
+			<MoonIcon class={cn(iconClass)} />
 		</div>
 	{/if}
 	<span class="sr-only">Toggle theme</span>
