@@ -11,7 +11,7 @@
 	let zoom = $state($userSettings.base.zoom);
 
 	const MIN_ZOOM = 0.375;
-	const MAX_ZOOM = 3;
+	const MAX_ZOOM = 4;
 	const DEFAULT_ZOOM = 1;
 	const ZOOM_STEP = 0.0625;
 

@@ -13,11 +13,7 @@
 	import { APP_STATE, initAppState } from '$lib/stores/appState';
 	import { page } from '$app/state';
 	// background functions
-	import BackgroundAction, {
-		generateBackgroundStyles,
-		applyBackgroundStyles,
-		removeBackgroundStyles
-	} from '$lib/components/action/background-action.svelte';
+	import BackgroundAction from '$lib/components/action/background-action.svelte';
 
 	// services
 	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
@@ -65,10 +61,6 @@
 	// 	console.log('page meta title', page.data.title);
 	// });
 </script>
-
-<!-- <svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head> -->
 
 <svelte:head>
 	<title>{page.data.title ?? metaData.title}</title>
