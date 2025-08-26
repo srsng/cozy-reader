@@ -6,7 +6,6 @@
 	// tool funcs
 	import { provide } from '$lib/utils/context';
 	import { onMount } from 'svelte';
-	import { initializeTheme } from '$lib/theme/themeUtils';
 	import { updatePageHistory } from '$lib/utils/route.svelte';
 	// stores
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
@@ -14,6 +13,8 @@
 	import { page } from '$app/state';
 	// background functions
 	import BackgroundAction from '$lib/components/action/background-action.svelte';
+	// animation func
+	import { startWindowTiltUpAnimation, tiltUp } from '$lib/animation';
 
 	// services
 	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
@@ -28,6 +29,7 @@
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { scale } from 'svelte/transition';
+	import { elasticOut } from 'svelte/easing';
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
@@ -48,8 +50,8 @@
 	const { userSettings } = data;
 
 	onMount(() => {
-		// 初始化主题
-		initializeTheme($userSettings.theme.type, $userSettings.theme.data);
+		// 启动窗口入场动画
+		startWindowTiltUpAnimation();
 	});
 
 	const metaData = {
@@ -68,7 +70,7 @@
 	<meta name="description" content={page.data.description ?? metaData.description} />
 </svelte:head>
 
-<svelte:body transition:scale />
+<svelte:body in:tiltUp />
 <!-- <svelte:document transition:scale /> -->
 
 <ThemeAction />

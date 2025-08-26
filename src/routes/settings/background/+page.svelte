@@ -1,6 +1,7 @@
 <script lang="ts" module>
 	import { BgForms } from '$lib/components/forms';
 	import * as Tabs from '$lib/components/ui/tabs';
+	import { slide } from 'svelte/transition';
 
 	const metaData = {
 		title: '背景设置',
@@ -13,7 +14,7 @@
 	<meta name="description" content={metaData.description} />
 </svelte:head>
 
-<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" transition:slide>
 	<!-- 图片列表 -->
 	<div class="lg:col-span-1">
 		<BgForms.BgImagesForm />
