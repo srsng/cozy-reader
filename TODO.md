@@ -40,6 +40,11 @@
 - [x] 深色模式下按钮hover效果尤其是close window按钮不佳，destructive颜色没有
 - [ ] 尺寸/大小过渡动画
   - [ ] 优化主题数据编辑区高度变化动画 (Card组件)
+- [ ] review 自定义titlebar配置页及相关组件的代码
+  - src\lib\components\layout\custom\*
+  - src\lib\components\forms\bar\*
+  - src\lib\components\forms\ButtonTypeSelector.svelte
+  - src\route\settings\bar-config\+page.svelte
 
 ## 平台特定
 

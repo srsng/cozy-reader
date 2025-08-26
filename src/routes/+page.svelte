@@ -38,3 +38,4 @@
 <p><a href="/demo/route-demo">🚀 路由导航演示 (测试 goBack 功能)</a></p>
 <p><a href="/md_reader">reader md</a></p>
 <p><a href="/settings/background">bg settings</a></p>
+<p><a href="https://www.bilibili.com/">bilibili</a></p>

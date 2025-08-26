@@ -1,293 +1,127 @@
 <!-- todo -->
 <script lang="ts" module>
-	import { Button } from '$lib/components/ui/button';
 	import {
 		Card,
 		CardContent,
 		CardDescription,
 		CardHeader,
-		CardTitle
+		CardTitle,
+		CardAction
 	} from '$lib/components/ui/card';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
-	import { Badge } from '$lib/components/ui/badge';
-	import { ALL_BUTTON_TYPES, ButtonType } from '$lib/settings/Layout';
-	import type { BarConfig, ButtonConfig } from '$lib/settings/Layout';
+	import { Separator } from '$lib/components/ui/separator';
+	import * as Alert from '$lib/components/ui/alert';
+	import { ButtonType } from '$lib/settings/Layout';
+	import type { ButtonConfig } from '$lib/settings/Layout';
 	import { DefaultTitleBarConfig } from '$lib/settings/Layout';
-	import ConfigurableBar from '$lib/components/layout/ConfigurableBar.svelte';
-	import DraggableButtonList from '$lib/components/layout/DraggableButtonList.svelte';
-	import { Plus, Settings2, Trash2 } from 'lucide-svelte';
-	import { ScrollArea } from '$lib/components/ui/scroll-area';
+	import {
+		ButtonSelectorForm,
+		ConfigPreviewForm,
+		ActionButtonsForm
+	} from '$lib/components/forms/bar';
+	import { Info, Settings2 } from 'lucide-svelte';
+	import { inject } from '$lib/utils/context';
+	import { USER_SETTINGS, saveUserSettingsImmediately } from '$lib/stores/userSettings';
 </script>
 
 <script lang="ts">
-	let { titleBarConfig = DefaultTitleBarConfig, previewConfig = DefaultTitleBarConfig } = $props<{
-		titleBarConfig?: BarConfig;
-		previewConfig?: BarConfig;
-	}>();
+	// 注入用户设置store
+	const userSettings = inject(USER_SETTINGS);
 
-	// 使用响应式变量
-	let currentTitleBarConfig = $state(titleBarConfig);
-	let currentPreviewConfig = $state(titleBarConfig);
+	let activeTab = $state('titlebar');
 
 	function addButton(type: ButtonType, section: 'left' | 'center' | 'right') {
 		const newButton: ButtonConfig = {
 			name: `${type}-${Date.now()}`,
 			type,
 			enabled: true,
-			order: currentTitleBarConfig[section].length
+			order: $userSettings.layout.layoutConfigs.titlebar[section].length
 		};
 
-		currentTitleBarConfig = {
-			...currentTitleBarConfig,
-			[section]: [...currentTitleBarConfig[section], newButton]
+		$userSettings.layout.layoutConfigs.titlebar = {
+			...$userSettings.layout.layoutConfigs.titlebar,
+			[section]: [...$userSettings.layout.layoutConfigs.titlebar[section], newButton]
 		};
-
-		currentPreviewConfig = { ...currentTitleBarConfig };
 	}
 
-	function removeButton(buttonId: string, section: 'left' | 'center' | 'right') {
-		currentTitleBarConfig = {
-			...currentTitleBarConfig,
-			[section]: currentTitleBarConfig[section].filter((btn: ButtonConfig) => btn.name !== buttonId)
-		};
-
-		// 重新排序
-		currentTitleBarConfig[section].forEach((btn: ButtonConfig, index: number) => {
-			btn.order = index;
-		});
-
-		currentPreviewConfig = { ...currentTitleBarConfig };
+	function resetToDefault() {
+		$userSettings.layout.layoutConfigs.titlebar = structuredClone(DefaultTitleBarConfig);
 	}
 
-	function toggleButton(buttonId: string, section: 'left' | 'center' | 'right') {
-		currentTitleBarConfig = {
-			...currentTitleBarConfig,
-			[section]: currentTitleBarConfig[section].map((btn: ButtonConfig) =>
-				btn.name === buttonId ? { ...btn, enabled: !btn.enabled } : btn
-			)
-		};
-
-		currentPreviewConfig = { ...currentTitleBarConfig };
+	async function saveConfig() {
+		// 立即保存用户设置
+		await saveUserSettingsImmediately(userSettings);
+		console.log('配置已保存');
 	}
 </script>
 
-<div class="container mx-auto space-y-6">
-	<div class="flex items-center justify-between">
-		<div>
-			<h1 class="text-3xl font-bold">栏配置</h1>
-			<p class="text-muted-foreground">自定义标题栏、页脚栏和侧边栏的按钮布局</p>
-		</div>
-		<Button variant="outline" size="sm">
-			<Settings2 class="mr-2 h-4 w-4" />
-			重置为默认
-		</Button>
+<div class="container mx-auto space-y-6 p-6">
+	<!-- 信息提示 -->
+	<Alert.Root>
+		<Info class="h-4 w-4" />
+		<Alert.Title>栏配置说明</Alert.Title>
+		<Alert.Description>
+			使用拖拽、点击和删除操作来自定义您的工具栏布局。所有更改会自动保存。
+		</Alert.Description>
+	</Alert.Root>
+
+	<!-- 页面头部 -->
+	<div>
+		<h1 class="text-3xl font-bold tracking-tight">栏配置</h1>
+		<p class="text-muted-foreground mt-2">直接在预览中拖拽、添加和删除按钮来配置工具栏</p>
 	</div>
 
-	<!-- todo 调整布局 未知原因导致主layout也出现了scroll-->
-	<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-		<!-- 配置面板 -->
-		<ScrollArea class="h-[70%] w-full rounded-md border">
-			<div class="p-4">
-				<div class="space-y-6">
-					<Tabs value="titlebar" class="w-full">
-						<TabsList class="grid w-full grid-cols-3">
-							<TabsTrigger value="titlebar">标题栏</TabsTrigger>
-							<TabsTrigger value="footbar">页脚栏</TabsTrigger>
-							<TabsTrigger value="sidebar">侧边栏</TabsTrigger>
-						</TabsList>
+	<Separator />
 
-						<TabsContent value="titlebar" class="space-y-4">
-							<!-- 左侧区域 -->
-							<Card>
-								<CardHeader>
-									<CardTitle class="flex items-center gap-2">
-										左侧区域
-										<Button variant="outline" size="sm" onclick={() => addButton('home', 'left')}>
-											<Plus class="mr-1 h-4 w-4" />
-											添加按钮
-										</Button>
-									</CardTitle>
-									<CardDescription>管理左侧区域的按钮</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<div class="space-y-2">
-										{#each currentTitleBarConfig.left as item (item.name)}
-											<div class="bg-background flex items-center gap-2 rounded-lg border p-2">
-												<Badge variant={item.enabled ? 'default' : 'secondary'}>
-													{item.type}
-												</Badge>
-												<span class="text-muted-foreground text-sm">#{item.order}</span>
-												<div class="ml-auto flex gap-1">
-													<Button
-														variant="outline"
-														size="sm"
-														onclick={() => toggleButton(item.name, 'left')}
-													>
-														{item.enabled ? '启用' : '禁用'}
-													</Button>
-													<Button
-														variant="outline"
-														size="sm"
-														onclick={() => removeButton(item.name, 'left')}
-													>
-														<Trash2 class="h-4 w-4" />
-													</Button>
-												</div>
-											</div>
-										{/each}
-									</div>
-								</CardContent>
-							</Card>
+	<!-- 主要内容 -->
+	<Card>
+		<CardHeader>
+			<CardTitle>交互式配置</CardTitle>
+			<CardDescription>直接在预览中操作按钮配置，支持拖拽、点击切换状态和删除</CardDescription>
+			<CardAction>
+				<ButtonSelectorForm
+					onAddButton={addButton}
+					onReset={resetToDefault}
+					onSave={saveConfig}
+					section="left"
+				/>
+			</CardAction>
+		</CardHeader>
+		<Separator />
+		<CardContent>
+			<Tabs bind:value={activeTab}>
+				<TabsList class="mb-6 grid w-full grid-cols-3">
+					<TabsTrigger value="titlebar">标题栏</TabsTrigger>
+					<TabsTrigger value="footbar">页脚栏</TabsTrigger>
+					<TabsTrigger value="sidebar">侧边栏</TabsTrigger>
+				</TabsList>
 
-							<!-- 中间区域 -->
-							<Card>
-								<CardHeader>
-									<CardTitle class="flex items-center gap-2">
-										中间区域
-										<Button
-											variant="outline"
-											size="sm"
-											onclick={() => addButton('app-icon', 'center')}
-										>
-											<Plus class="mr-1 h-4 w-4" />
-											添加按钮
-										</Button>
-									</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div class="space-y-2">
-										{#each currentTitleBarConfig.center as item (item.name)}
-											<div class="bg-background flex items-center gap-2 rounded-lg border p-2">
-												<Badge variant={item.enabled ? 'default' : 'secondary'}>
-													{item.type}
-												</Badge>
-												<span class="text-muted-foreground text-sm">#{item.order}</span>
-												<div class="ml-auto flex gap-1">
-													<Button
-														variant="outline"
-														size="sm"
-														onclick={() => toggleButton(item.name, 'center')}
-													>
-														{item.enabled ? '启用' : '禁用'}
-													</Button>
-													<Button
-														variant="outline"
-														size="sm"
-														onclick={() => removeButton(item.name, 'center')}
-													>
-														<Trash2 class="h-4 w-4" />
-													</Button>
-												</div>
-											</div>
-										{/each}
-									</div>
-								</CardContent>
-							</Card>
+				<TabsContent value="titlebar">
+					<div class="space-y-6">
+						<!-- 交互式标题栏预览 -->
+						<ConfigPreviewForm bind:config={$userSettings.layout.layoutConfigs.titlebar} />
 
-							<!-- 右侧区域 -->
-							<Card>
-								<CardHeader>
-									<CardTitle class="flex items-center gap-2">
-										右侧区域
-										<Button
-											variant="outline"
-											size="sm"
-											onclick={() => addButton('theme-toggle', 'right')}
-										>
-											<Plus class="mr-1 h-4 w-4" />
-											添加按钮
-										</Button>
-									</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div class="space-y-2">
-										{#each currentTitleBarConfig.right as item (item.name)}
-											<div class="bg-background flex items-center gap-2 rounded-lg border p-2">
-												<Badge variant={item.enabled ? 'default' : 'secondary'}>
-													{item.type}
-												</Badge>
-												<span class="text-muted-foreground text-sm">#{item.order}</span>
-												<div class="ml-auto flex gap-1">
-													<Button
-														variant="outline"
-														size="sm"
-														onclick={() => toggleButton(item.name, 'right')}
-													>
-														{item.enabled ? '启用' : '禁用'}
-													</Button>
-													<Button
-														variant="outline"
-														size="sm"
-														onclick={() => removeButton(item.name, 'right')}
-													>
-														<Trash2 class="h-4 w-4" />
-													</Button>
-												</div>
-											</div>
-										{/each}
-									</div>
-								</CardContent>
-							</Card>
-						</TabsContent>
-
-						<TabsContent value="footbar" class="space-y-4">
-							<Card>
-								<CardHeader>
-									<CardTitle>页脚栏配置</CardTitle>
-									<CardDescription>页脚栏功能尚未实现</CardDescription>
-								</CardHeader>
-							</Card>
-						</TabsContent>
-
-						<TabsContent value="sidebar" class="space-y-4">
-							<Card>
-								<CardHeader>
-									<CardTitle>侧边栏配置</CardTitle>
-									<CardDescription>侧边栏功能尚未实现</CardDescription>
-								</CardHeader>
-							</Card>
-						</TabsContent>
-					</Tabs>
-				</div>
-			</div>
-		</ScrollArea>
-		<!-- 预览面板 -->
-		<div class="space-y-6">
-			<Card>
-				<CardHeader>
-					<CardTitle>实时预览</CardTitle>
-					<CardDescription>查看配置后的效果</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<div class="bg-background rounded-lg border">
-						<ConfigurableBar
-							config={currentPreviewConfig}
-							btnDsiabled
-							className="flex w-full items-center justify-between p-2"
-						/>
+						<!-- 操作说明 -->
+						<ActionButtonsForm />
 					</div>
-				</CardContent>
-			</Card>
+				</TabsContent>
 
-			<Card>
-				<CardHeader>
-					<CardTitle>可用按钮类型</CardTitle>
-					<CardDescription>点击添加按钮到指定区域</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<div class="flex flex-wrap gap-2">
-						{#each ALL_BUTTON_TYPES as type}
-							<Badge
-								variant="outline"
-								class="hover:bg-primary hover:text-primary-foreground cursor-pointer"
-								onclick={() => addButton(type, 'left')}
-							>
-								{type}
-							</Badge>
-						{/each}
+				<TabsContent value="footbar">
+					<div class="text-muted-foreground py-16 text-center">
+						<Settings2 class="mx-auto mb-4 h-12 w-12 opacity-50" />
+						<p class="text-lg font-medium">页脚栏配置即将推出</p>
+						<p class="mt-2 text-sm">敬请期待更多自定义选项</p>
 					</div>
-				</CardContent>
-			</Card>
-		</div>
-	</div>
+				</TabsContent>
+
+				<TabsContent value="sidebar">
+					<div class="text-muted-foreground py-16 text-center">
+						<Settings2 class="mx-auto mb-4 h-12 w-12 opacity-50" />
+						<p class="text-lg font-medium">侧边栏配置即将推出</p>
+						<p class="mt-2 text-sm">敬请期待更多自定义选项</p>
+					</div>
+				</TabsContent>
+			</Tabs>
+		</CardContent>
+	</Card>
 </div>
