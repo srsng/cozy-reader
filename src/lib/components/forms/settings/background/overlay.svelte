@@ -9,7 +9,8 @@
 	import { RotateCcw } from 'lucide-svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
-	import { DEFAULT_OPACITY } from '$lib/settings/background';
+	import { DEFAULT_LIGHT_OPACITY, DEFAULT_DARK_OPACITY, get_default_opacity } from '$lib/settings/background';
+	import { Label } from '$lib/components/ui/label';
 
 	const currentSettings = $state(inject(USER_SETTINGS));
 </script>
@@ -44,28 +45,58 @@
 					<RotateCcw />
 				</Button>
 			</Card.ContentItem>
-			<!-- 遮罩透明度 -->
-			<Card.ContentItem label="遮罩透明度" description="调整遮罩层透明度: 0~100%">
-				<Slider
-					type="single"
-					class="flex-1"
-					bind:value={$currentSettings.background.global.backgroundOverlay.opacity}
-					min={0}
-					max={1}
-					step={0.01}
-				/>
-				<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-					{Math.round($currentSettings.background.global.backgroundOverlay.opacity * 100)}%
-				</span>
-				<Button
-					variant="outline"
-					size="icon"
-					onclick={() =>
-						($currentSettings.background.global.backgroundOverlay.opacity = DEFAULT_OPACITY)}
-				>
-					<RotateCcw />
-				</Button>
-			</Card.ContentItem>
+			<!-- 遮罩透明度设置 -->
+			<div class="space-y-3">
+				<Label class="text-base font-medium">遮罩透明度设置</Label>
+				
+				<!-- 亮色模式遮罩透明度 -->
+				<Card.ContentItem label="亮色模式遮罩透明度" description="调整亮色主题下的遮罩层透明度: 0~100%">
+					<Slider
+						type="single"
+						class="flex-1"
+						bind:value={$currentSettings.background.global.backgroundOverlay.opacity.light}
+						min={0}
+						max={1}
+						step={0.01}
+					/>
+					<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+						{Math.round($currentSettings.background.global.backgroundOverlay.opacity.light * 100)}%
+					</span>
+					<Button
+						variant="outline"
+						size="icon"
+						onclick={() => {
+							$currentSettings.background.global.backgroundOverlay.opacity.light = DEFAULT_LIGHT_OPACITY;
+						}}
+					>
+						<RotateCcw />
+					</Button>
+				</Card.ContentItem>
+				
+				<!-- 暗色模式遮罩透明度 -->
+				<Card.ContentItem label="暗色模式遮罩透明度" description="调整暗色主题下的遮罩层透明度: 0~100%">
+					<Slider
+						type="single"
+						class="flex-1"
+						bind:value={$currentSettings.background.global.backgroundOverlay.opacity.dark}
+						min={0}
+						max={1}
+						step={0.01}
+					/>
+					<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+						{Math.round($currentSettings.background.global.backgroundOverlay.opacity.dark * 100)}%
+					</span>
+					<Button
+						variant="outline"
+						size="icon"
+						onclick={() => {
+							$currentSettings.background.global.backgroundOverlay.opacity.dark = DEFAULT_DARK_OPACITY;
+						}}
+					>
+						<RotateCcw />
+					</Button>
+				</Card.ContentItem>
+			</div>
 			<!-- 亮度 -->
 			<!-- <Card.ContentItem label="亮度" description="调整亮度: 0~200%">
 				<Slider
@@ -264,27 +295,58 @@
 					<RotateCcw />
 				</Button>
 			</Card.ContentItem>
-			<!-- 遮罩透明度 -->
-			<Card.ContentItem label="遮罩透明度" description="调整遮罩层透明度: 0~100%">
-				<Slider
-					type="single"
-					class="flex-1"
-					bind:value={$currentSettings.background.global.topOverlay.opacity}
-					min={0}
-					max={1}
-					step={0.01}
-				/>
-				<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-					{Math.round($currentSettings.background.global.topOverlay.opacity * 100)}%
-				</span>
-				<Button
-					variant="outline"
-					size="icon"
-					onclick={() => ($currentSettings.background.global.topOverlay.opacity = DEFAULT_OPACITY)}
-				>
-					<RotateCcw />
-				</Button>
-			</Card.ContentItem>
+			<!-- 上层遮罩透明度设置 -->
+			<div class="space-y-3">
+				<Label class="text-base font-medium">上层遮罩透明度设置</Label>
+				
+				<!-- 亮色模式上层遮罩透明度 -->
+				<Card.ContentItem label="亮色模式上层遮罩透明度" description="调整亮色主题下的上层遮罩层透明度: 0~100%">
+					<Slider
+						type="single"
+						class="flex-1"
+						bind:value={$currentSettings.background.global.topOverlay.opacity.light}
+						min={0}
+						max={1}
+						step={0.01}
+					/>
+					<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+						{Math.round($currentSettings.background.global.topOverlay.opacity.light * 100)}%
+					</span>
+					<Button
+						variant="outline"
+						size="icon"
+						onclick={() => {
+							$currentSettings.background.global.topOverlay.opacity.light = DEFAULT_LIGHT_OPACITY;
+						}}
+					>
+						<RotateCcw />
+					</Button>
+				</Card.ContentItem>
+				
+				<!-- 暗色模式上层遮罩透明度 -->
+				<Card.ContentItem label="暗色模式上层遮罩透明度" description="调整暗色主题下的上层遮罩层透明度: 0~100%">
+					<Slider
+						type="single"
+						class="flex-1"
+						bind:value={$currentSettings.background.global.topOverlay.opacity.dark}
+						min={0}
+						max={1}
+						step={0.01}
+					/>
+					<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+						{Math.round($currentSettings.background.global.topOverlay.opacity.dark * 100)}%
+					</span>
+					<Button
+						variant="outline"
+						size="icon"
+						onclick={() => {
+							$currentSettings.background.global.topOverlay.opacity.dark = DEFAULT_DARK_OPACITY;
+						}}
+					>
+						<RotateCcw />
+					</Button>
+				</Card.ContentItem>
+			</div>
 			<!-- 亮度 -->
 			<Card.ContentItem label="亮度" description="调整亮度: 0~200%">
 				<Slider

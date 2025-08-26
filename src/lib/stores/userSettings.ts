@@ -20,11 +20,11 @@ function clean(value: any) {
 // 立即保存用户设置
 export async function saveUserSettingsImmediately(store: Writable<UserSettings>): Promise<void> {
 	let currentValue: UserSettings;
-	const unsubscribe = store.subscribe(value => {
+	const unsubscribe = store.subscribe((value) => {
 		currentValue = value;
 	});
 	unsubscribe(); // 立即取消订阅，只获取当前值
-	
+
 	const cleanValue = clean(currentValue!);
 	await configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
 	await configStore.save();
@@ -36,7 +36,6 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
 	const cleanConfig = savedConfig ? clean(savedConfig) : null;
 
 	if (cleanConfig) {
-		// 深度合并配置，确保背景设置正确初始化
 		const mergedConfig = {
 			...DEFAULT_SETTINGS,
 			...cleanConfig,

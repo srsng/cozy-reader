@@ -1,16 +1,24 @@
 export const DEFAULT_OPACITY = 0.96;
+export const DEFAULT_DARK_OPACITY = 0.1;
+export const DEFAULT_LIGHT_OPACITY = 0.96;
 
 import { mode } from 'mode-watcher';
 
 export function get_default_opacity() {
 	switch (mode.current) {
 		case 'dark':
-			return 0.1;
+			return DEFAULT_DARK_OPACITY;
 		case 'light':
-			return 0.96;
+			return DEFAULT_LIGHT_OPACITY;
 		default:
-			return 0.96;
+			return DEFAULT_OPACITY;
 	}
+}
+
+// 主题透明度配置
+export interface ThemeOpacity {
+	light: number; // 亮色模式透明度 (0-1)
+	dark: number; // 暗色模式透明度 (0-1)
 }
 
 // 背景显示模式/铺设方式
@@ -58,14 +66,14 @@ export interface BackgroundFilters {
 export interface OverlayConfig {
 	enabled: boolean; // 是否启用遮罩层
 	color: string; // 遮罩颜色
-	opacity: number; // 遮罩透明度 (0-1)
+	opacity: ThemeOpacity; // 主题透明度配置 (0-1)
 	filters: BackgroundFilters; // 滤镜配置
 }
 
 // 全局背景配置
 export interface GlobalBackgroundConfig {
 	// 基础显示设置
-	opacity: number; // 透明度 (0-1)
+	opacity: ThemeOpacity; // 主题透明度配置
 	displayMode: BackgroundDisplayMode; // 显示模式
 	position: BackgroundPosition; // 位置
 	blendMode: BackgroundBlendMode; // 混合模式
@@ -85,7 +93,7 @@ export interface GlobalBackgroundConfig {
 // 图片自定义配置类型
 export interface ImageCustomConfig {
 	// 基础显示设置
-	opacity: number; // 透明度 (0-1)
+	opacity: ThemeOpacity; // 主题透明度配置
 	displayMode: BackgroundDisplayMode; // 显示模式
 	position: BackgroundPosition; // 位置
 	blendMode: BackgroundBlendMode; // 混合模式
@@ -131,17 +139,26 @@ export const DefaultBackgroundFilters: BackgroundFilters = {
 	invert: 0
 };
 
+// 默认主题透明度配置
+export const DefaultThemeOpacity: ThemeOpacity = {
+	light: DEFAULT_LIGHT_OPACITY,
+	dark: DEFAULT_DARK_OPACITY
+};
+
 // 默认遮罩层配置
 export const DefaultOverlayConfig: OverlayConfig = {
 	enabled: false,
 	color: '#000000',
-	opacity: 0.1,
+	opacity: {
+		light: 0.1,
+		dark: 0.3
+	},
 	filters: { ...DefaultBackgroundFilters }
 };
 
 // 默认全局背景配置
 export const DefaultGlobalBackgroundConfig: GlobalBackgroundConfig = {
-	opacity: 0.1,
+	opacity: DefaultThemeOpacity,
 	displayMode: 'cover',
 	position: 'center',
 	blendMode: 'normal',
@@ -155,7 +172,7 @@ export const DefaultGlobalBackgroundConfig: GlobalBackgroundConfig = {
 // 默认图片自定义配置
 export const DefaultImageCustomConfig: ImageCustomConfig = {
 	// 基础显示设置
-	opacity: 0.1,
+	opacity: DefaultThemeOpacity,
 	displayMode: 'cover',
 	position: 'center',
 	blendMode: 'normal',
@@ -219,30 +236,78 @@ export const BlendModeOptions = [
 	{ value: 'lighten', label: '变亮' }
 ];
 
+// 运行时图片配置（包含解析后的透明度值）
+export interface RuntimeImageConfig {
+	// 基础显示设置
+	opacity: number; // 当前主题下的透明度值 (0-1)
+	displayMode: BackgroundDisplayMode; // 显示模式
+	position: BackgroundPosition; // 位置
+	blendMode: BackgroundBlendMode; // 混合模式
+
+	// 滤镜效果
+	filters?: BackgroundFilters;
+
+	// 变换设置
+	scale: number; // 缩放比例 (0.1-5.0)
+	rotation: number; // 旋转角度 (0-360)
+	offsetX: number; // X轴偏移 (-1000 到 1000)
+	offsetY: number; // Y轴偏移 (-1000 到 1000)
+}
+
+// 工具函数：根据主题获取透明度值（支持向后兼容）
+export function getOpacityForTheme(
+	opacity: ThemeOpacity | number,
+	theme: 'light' | 'dark'
+): number {
+	// 向后兼容：如果opacity是number类型，直接返回该值
+	if (typeof opacity === 'number') {
+		return opacity;
+	}
+	// 新格式：从ThemeOpacity对象中获取对应主题的透明度
+	return opacity[theme];
+}
+
 // 工具函数：获取图片的完整配置（合并全局配置和图片自定义配置）
 export function getImageFullConfig(
 	image: BackgroundImage,
-	globalConfig: GlobalBackgroundConfig
-): ImageCustomConfig {
-	if (image.enableConfig && image.config) {
-		return image.config;
-	}
+	globalConfig: GlobalBackgroundConfig,
+	theme: 'light' | 'dark' = 'light'
+): RuntimeImageConfig {
+	const config =
+		image.enableConfig && image.config
+			? image.config
+			: {
+					// 基础显示设置
+					opacity: globalConfig.opacity,
+					displayMode: globalConfig.displayMode,
+					position: globalConfig.position,
+					blendMode: globalConfig.blendMode,
+
+					// 滤镜效果
+					filters: globalConfig.filters,
+
+					// 变换设置（使用默认值）
+					scale: 1.0,
+					rotation: 0,
+					offsetX: 0,
+					offsetY: 0
+				};
 
 	return {
 		// 基础显示设置
-		opacity: globalConfig.opacity,
-		displayMode: globalConfig.displayMode,
-		position: globalConfig.position,
-		blendMode: globalConfig.blendMode,
+		opacity: getOpacityForTheme(config.opacity, theme),
+		displayMode: config.displayMode,
+		position: config.position,
+		blendMode: config.blendMode,
 
 		// 滤镜效果
-		filters: globalConfig.filters,
+		filters: config.filters,
 
-		// 变换设置（使用默认值）
-		scale: 1.0,
-		rotation: 0,
-		offsetX: 0,
-		offsetY: 0
+		// 变换设置
+		scale: config.scale,
+		rotation: config.rotation,
+		offsetX: config.offsetX,
+		offsetY: config.offsetY
 	};
 }
 

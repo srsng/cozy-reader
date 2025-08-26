@@ -5,8 +5,11 @@
 		DisplayModeOptions,
 		BackgroundPositionOptions,
 		BlendModeOptions,
-		DEFAULT_OPACITY
+		DEFAULT_LIGHT_OPACITY,
+		DEFAULT_DARK_OPACITY,
+		DefaultThemeOpacity
 	} from '$lib/settings/background';
+	import { mode } from 'mode-watcher';
 
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -29,28 +32,57 @@
 	<Separator />
 	<Card.Content class="space-y-4">
 		<!-- 透明度 -->
-		<Card.ContentItem label="透明度" description="调整背景透明度: 0~100%">
-			<Slider
-				type="single"
-				class="flex-1"
-				bind:value={$currentSettings.background.global.opacity}
-				min={0}
-				max={1}
-				step={0.01}
-			/>
-			<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-				{Math.round($currentSettings.background.global.opacity * 100)}%
-			</span>
-			<Button
-				variant="outline"
-				size="icon"
-				onclick={() => {
-					$currentSettings.background.global.opacity = DEFAULT_OPACITY;
-				}}
-			>
-				<RotateCcw />
-			</Button>
-		</Card.ContentItem>
+		<div class="space-y-3">
+			<Label class="text-base font-medium">透明度设置</Label>
+			
+			<!-- 亮色模式透明度 -->
+			<Card.ContentItem label="亮色模式透明度" description="调整亮色主题下的背景透明度: 0~100%">
+				<Slider
+					type="single"
+					class="flex-1"
+					bind:value={$currentSettings.background.global.opacity.light}
+					min={0}
+					max={1}
+					step={0.01}
+				/>
+				<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+					{Math.round($currentSettings.background.global.opacity.light * 100)}%
+				</span>
+				<Button
+					variant="outline"
+					size="icon"
+					onclick={() => {
+						$currentSettings.background.global.opacity.light = DEFAULT_LIGHT_OPACITY;
+					}}
+				>
+					<RotateCcw />
+				</Button>
+			</Card.ContentItem>
+			
+			<!-- 暗色模式透明度 -->
+			<Card.ContentItem label="暗色模式透明度" description="调整暗色主题下的背景透明度: 0~100%">
+				<Slider
+					type="single"
+					class="flex-1"
+					bind:value={$currentSettings.background.global.opacity.dark}
+					min={0}
+					max={1}
+					step={0.01}
+				/>
+				<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+					{Math.round($currentSettings.background.global.opacity.dark * 100)}%
+				</span>
+				<Button
+					variant="outline"
+					size="icon"
+					onclick={() => {
+						$currentSettings.background.global.opacity.dark = DEFAULT_DARK_OPACITY;
+					}}
+				>
+					<RotateCcw />
+				</Button>
+			</Card.ContentItem>
+		</div>
 
 		<!-- 动画时长 -->
 		<Card.ContentItem label="切换动画时长" description="背景切换动画时长: 0~2s">

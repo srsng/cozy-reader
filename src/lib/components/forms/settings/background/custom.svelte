@@ -8,7 +8,9 @@
 		BlendModeOptions,
 		resetImageToDefaults,
 		enableImageCustomConfig,
-		DEFAULT_OPACITY
+		DEFAULT_LIGHT_OPACITY,
+		DEFAULT_DARK_OPACITY,
+		DefaultThemeOpacity
 	} from '$lib/settings/background';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -83,31 +85,62 @@
 		<Card.Content class="space-y-4">
 			{#if $currentSettings.background.images[activeImageIndex].enableConfig && $currentSettings.background.images[activeImageIndex].config}
 				<!-- 透明度 -->
-				<Card.ContentItem label="透明度" description="调整图片透明度: 0~100%">
-					<Slider
-						type="single"
-						class="flex-1"
-						bind:value={$currentSettings.background.images[activeImageIndex].config.opacity}
-						min={0}
-						max={1}
-						step={0.01}
-					/>
-					<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-						{Math.round($currentSettings.background.images[activeImageIndex].config.opacity * 100)}%
-					</span>
-					<Button
-						variant="outline"
-						size="icon"
-						onclick={() => {
-							if ($currentSettings.background.images[activeImageIndex]?.config) {
-								$currentSettings.background.images[activeImageIndex].config.opacity =
-									DEFAULT_OPACITY;
-							}
-						}}
-					>
-						<RotateCcw />
-					</Button>
-				</Card.ContentItem>
+				<!-- 透明度设置 -->
+				<div class="space-y-3">
+					<Label class="text-base font-medium">透明度设置</Label>
+					
+					<!-- 亮色模式透明度 -->
+					<Card.ContentItem label="亮色模式透明度" description="调整亮色主题下的图片透明度: 0~100%">
+						<Slider
+							type="single"
+							class="flex-1"
+							bind:value={$currentSettings.background.images[activeImageIndex].config.opacity.light}
+							min={0}
+							max={1}
+							step={0.01}
+						/>
+						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+							{Math.round($currentSettings.background.images[activeImageIndex].config.opacity.light * 100)}%
+						</span>
+						<Button
+							variant="outline"
+							size="icon"
+							onclick={() => {
+								if ($currentSettings.background.images[activeImageIndex]?.config) {
+									$currentSettings.background.images[activeImageIndex].config.opacity.light = DEFAULT_LIGHT_OPACITY;
+								}
+							}}
+						>
+							<RotateCcw />
+						</Button>
+					</Card.ContentItem>
+					
+					<!-- 暗色模式透明度 -->
+					<Card.ContentItem label="暗色模式透明度" description="调整暗色主题下的图片透明度: 0~100%">
+						<Slider
+							type="single"
+							class="flex-1"
+							bind:value={$currentSettings.background.images[activeImageIndex].config.opacity.dark}
+							min={0}
+							max={1}
+							step={0.01}
+						/>
+						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+							{Math.round($currentSettings.background.images[activeImageIndex].config.opacity.dark * 100)}%
+						</span>
+						<Button
+							variant="outline"
+							size="icon"
+							onclick={() => {
+								if ($currentSettings.background.images[activeImageIndex]?.config) {
+									$currentSettings.background.images[activeImageIndex].config.opacity.dark = DEFAULT_DARK_OPACITY;
+								}
+							}}
+						>
+							<RotateCcw />
+						</Button>
+					</Card.ContentItem>
+				</div>
 				<!-- 显示模式 -->
 				<Card.ContentItem label="显示模式" description="选择背景图片的显示模式">
 					<Select.Root

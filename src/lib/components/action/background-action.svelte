@@ -8,8 +8,9 @@
 		BackgroundFilters,
 		BackgroundPosition
 	} from '$lib/settings/background';
-	import { getImageFullConfig } from '$lib/settings/background';
+	import { getImageFullConfig, getOpacityForTheme } from '$lib/settings/background';
 	import { convertFileSrc } from '@tauri-apps/api/core';
+	import { mode } from 'mode-watcher';
 
 	// 图片 URL 转换
 	export function convertToTauriUrl(filePath: string): string {
@@ -23,6 +24,9 @@
 		globalConfig: GlobalBackgroundConfig
 	): Record<string, string> {
 		if (!image) {
+			// 获取当前主题模式
+			const currentTheme = mode.current === 'dark' ? 'dark' : 'light';
+			
 			return {
 				'--settings-bg-image': 'none',
 				'--settings-bg-opacity': '0',
@@ -35,15 +39,18 @@
 				'--settings-bg-background-overlay-opacity': '0',
 				'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'visible' : 'hidden',
 				'--settings-bg-top-overlay-color': globalConfig.topOverlay.color,
-				'--settings-bg-top-overlay-opacity': globalConfig.topOverlay.opacity.toString(),
+				'--settings-bg-top-overlay-opacity': getOpacityForTheme(globalConfig.topOverlay.opacity, currentTheme).toString(),
 				'--settings-bg-top-overlay-filters': generateFiltersString(globalConfig.topOverlay.filters)
 			};
 		}
 
 		const imageUrl = convertToTauriUrl(image.filePath);
 
-		// 使用getImageFullConfig获取完整配置
-		const config = getImageFullConfig(image, globalConfig);
+		// 获取当前主题模式
+		const currentTheme = mode.current === 'dark' ? 'dark' : 'light';
+
+		// 使用getImageFullConfig获取完整配置，传入当前主题
+		const config = getImageFullConfig(image, globalConfig, currentTheme);
 		const {
 			opacity,
 			displayMode,
@@ -84,11 +91,11 @@
 				? 'visible'
 				: 'hidden',
 			'--settings-bg-background-overlay-color': globalConfig.backgroundOverlay.color,
-			'--settings-bg-background-overlay-opacity': globalConfig.backgroundOverlay.opacity.toString(),
+			'--settings-bg-background-overlay-opacity': getOpacityForTheme(globalConfig.backgroundOverlay.opacity, currentTheme).toString(),
 			'--settings-bg-background-overlay-filters': backgroundOverlayFiltersString,
 			'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'visible' : 'hidden',
 			'--settings-bg-top-overlay-color': globalConfig.topOverlay.color,
-			'--settings-bg-top-overlay-opacity': globalConfig.topOverlay.opacity.toString(),
+			'--settings-bg-top-overlay-opacity': getOpacityForTheme(globalConfig.topOverlay.opacity, currentTheme).toString(),
 			'--settings-bg-top-overlay-filters': topOverlayFiltersString,
 			'--settings-bg-animation-duration': `${globalConfig.animationDuration}ms`
 		};
@@ -234,9 +241,12 @@
 			removeBackgroundStyles(backgroundContainerElement);
 		}
 	}
-	// 监听背景设置变化
+
+	// 监听背景设置变化和主题变化
 	$effect(() => {
-		// 当背景设置发生变化时重新应用样式
+		// 当背景设置发生变化或主题变化时重新应用样式
+		// 通过访问mode.current来建立对主题变化的响应性
+		const currentMode = mode.current;
 		if (activeImage || $userSettings.background.activeImageId === null) {
 			applyBackgroundToContainer();
 		}
