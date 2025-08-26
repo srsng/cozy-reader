@@ -2,6 +2,7 @@
 	import { X } from 'lucide-svelte';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
+	import { cn } from '$lib/utils';
 </script>
 
 <script lang="ts">
@@ -10,9 +11,8 @@
 		title = '关闭',
 		variant = 'bar' as const,
 		size = 'icon' as const,
-		className = 'size-6 hover:bg-destructive hover:text-destructive-foreground',
+		className = 'size-6',
 		iconClass = 'size-4',
-		onClick = undefined,
 		...others
 	}: {
 		name?: string;
@@ -21,7 +21,6 @@
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		className?: string;
 		iconClass?: string;
-		onClick?: (() => void) | undefined;
 	} = $props();
 </script>
 
@@ -30,9 +29,9 @@
 	{title}
 	{variant}
 	{size}
-	class={className}
+	class={cn('hover:bg-destructive hover:text-destructive-foreground', className)}
 	{...others}
-	onclick={onClick || (() => emitMainWindowEvent('close'))}
+	onclick={() => emitMainWindowEvent('close')}
 >
 	<X class={iconClass} />
 </Button>

@@ -17,6 +17,19 @@ function clean(value: any) {
 	return JSON.parse(JSON.stringify(value));
 }
 
+// 立即保存用户设置
+export async function saveUserSettingsImmediately(store: Writable<UserSettings>): Promise<void> {
+	let currentValue: UserSettings;
+	const unsubscribe = store.subscribe(value => {
+		currentValue = value;
+	});
+	unsubscribe(); // 立即取消订阅，只获取当前值
+	
+	const cleanValue = clean(currentValue!);
+	await configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
+	await configStore.save();
+}
+
 export async function loadUserSettings(): Promise<Writable<UserSettings>> {
 	const store = writable<UserSettings>(DEFAULT_SETTINGS);
 	const savedConfig = await configStore.get(USER_SETTINGS_KEY_STR);
@@ -38,8 +51,6 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
 		};
 		store.set(mergedConfig);
 	}
-
-	// todo：添加立即保存
 
 	// 订阅，自动保存
 	store.subscribe((value) => {

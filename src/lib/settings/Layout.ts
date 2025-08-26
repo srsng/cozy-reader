@@ -122,31 +122,22 @@ export const DefaultTitleBarConfig: BarConfig = {
 			order: 1
 		},
 		{
-			name: 'drag',
-			type: 'drag',
-			enabled: true,
-			order: 2
-		},
-		{
 			name: 'minimize',
 			type: 'minimize',
 			enabled: true,
-			order: 3
+			order: 2
 		},
 		{
 			name: 'maximize',
 			type: 'maximize',
 			enabled: true,
-			order: 4
+			order: 3
 		},
 		{
 			name: 'close',
 			type: 'close',
 			enabled: true,
-			order: 5,
-			customProps: {
-				className: 'hover:bg-destructive hover:text-destructive-foreground'
-			}
+			order: 4
 		}
 	]
 };
