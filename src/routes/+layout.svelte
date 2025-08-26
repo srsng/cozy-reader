@@ -19,7 +19,7 @@
 	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
 
 	// tool components
-	import { ModeWatcher } from 'mode-watcher';
+	import ThemeAction from '$lib/components/action/theme-action.svelte';
 	import ZoomInOutMenuAction from '$lib/components/action/ZoomInOutMenuAction.svelte';
 	import WindowAction from '$lib/components/action/window-action.svelte';
 	import HotkeysAction from '$lib/components/action/HotkeysAction.svelte';
@@ -71,7 +71,7 @@
 <svelte:body transition:scale />
 <!-- <svelte:document transition:scale /> -->
 
-<ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
+<ThemeAction />
 <ZoomInOutMenuAction />
 <WindowAction />
 <BackgroundAction />
@@ -81,7 +81,7 @@
 	class="app-layout"
 	role="application"
 	oncontextmenu={(e) => e.preventDefault()}
-	style="--ui-opacity: {$userSettings.base.uiOpacity}"
+	style:--ui-opacity={$userSettings.base.uiOpacity}
 >
 	<AppTitleBar />
 	<ScrollArea class="content-area">
