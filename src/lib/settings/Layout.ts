@@ -37,6 +37,7 @@ export enum ButtonTypeEnum {
 	Home = 'home',
 	Back = 'back',
 	Settings = 'settings',
+	BackgroundSettings = 'background-settings',
 	Refresh = 'refresh',
 	Zoom = 'zoom',
 	AppIcon = 'app-icon',
@@ -60,6 +61,26 @@ export const ALL_BUTTON_TYPES = Object.values(ButtonTypeEnum);
 // 为了向后兼容，也可以直接使用 enum 值
 export const ButtonType = ButtonTypeEnum;
 
+// 按钮类型的名称映射
+export const buttonTypeLabels: Record<ButtonType, string> = {
+	home: '主页',
+	back: '返回',
+	settings: '设置',
+	refresh: '刷新',
+	zoom: '缩放',
+	'app-icon': '应用图标',
+	'app-title': '应用标题',
+	'always-on-top': '置顶',
+	drag: '拖拽',
+	minimize: '最小化',
+	maximize: '最大化',
+	fullscreen: '全屏',
+	close: '关闭',
+	'theme-toggle': '主题切换',
+	custom: '自定义',
+	'background-settings': '背景设置'
+};
+
 const NULLBarConfig: BarConfig = {
 	left: [],
 	center: [],
@@ -81,16 +102,22 @@ export const DefaultTitleBarConfig: BarConfig = {
 			order: 1
 		},
 		{
+			name: 'background-settings',
+			type: 'background-settings',
+			enabled: true,
+			order: 2
+		},
+		{
 			name: 'refresh',
 			type: 'refresh',
 			enabled: true,
-			order: 2
+			order: 3
 		},
 		{
 			name: 'zoom',
 			type: 'zoom',
 			enabled: true,
-			order: 3
+			order: 4
 		}
 	],
 	center: [

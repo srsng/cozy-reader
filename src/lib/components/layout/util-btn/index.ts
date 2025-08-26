@@ -4,6 +4,7 @@ import type { Component } from 'svelte';
 import HomeButton from './HomeButton.svelte';
 import BackButton from './BackButton.svelte';
 import SettingsButton from './SettingsButton.svelte';
+import BackgroundSettingsButton from './BgSettingsButton.svelte';
 import RefreshButton from './RefreshButton.svelte';
 import ZoomButton from './ZoomButton.svelte';
 import AppIconButton from './AppIconButton.svelte';
@@ -23,6 +24,7 @@ export const UtilButton: Record<ButtonType, Component> = {
 	'app-icon': AppIconButton,
 	'app-title': AppTitleButton,
 	settings: SettingsButton,
+	'background-settings': BackgroundSettingsButton,
 	refresh: RefreshButton,
 	'always-on-top': AlwaysOnTopButton,
 	close: CloseButton,

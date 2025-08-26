@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import { Button } from '$lib/components/ui/button';
 	import * as Select from '$lib/components/ui/select';
-	import { ALL_BUTTON_TYPES, type ButtonType } from '$lib/settings/Layout';
+	import { ALL_BUTTON_TYPES, buttonTypeLabels, type ButtonType } from '$lib/settings/Layout';
 	import { Plus } from 'lucide-svelte';
 </script>
 
@@ -24,25 +24,6 @@
 			selectedType = undefined; // 重置选择
 		}
 	}
-
-	// 按钮类型的中文映射
-	const buttonTypeLabels: Record<ButtonType, string> = {
-		home: '主页',
-		back: '返回',
-		settings: '设置',
-		refresh: '刷新',
-		zoom: '缩放',
-		'app-icon': '应用图标',
-		'app-title': '应用标题',
-		'always-on-top': '置顶',
-		drag: '拖拽',
-		minimize: '最小化',
-		maximize: '最大化',
-		fullscreen: '全屏',
-		close: '关闭',
-		'theme-toggle': '主题切换',
-		custom: '自定义'
-	};
 </script>
 
 <div class="flex gap-2">

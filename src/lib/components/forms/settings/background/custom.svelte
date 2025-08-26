@@ -9,8 +9,7 @@
 		resetImageToDefaults,
 		enableImageCustomConfig,
 		DEFAULT_LIGHT_OPACITY,
-		DEFAULT_DARK_OPACITY,
-		DefaultThemeOpacity
+		DEFAULT_DARK_OPACITY
 	} from '$lib/settings/background';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
@@ -88,7 +87,7 @@
 				<!-- 透明度设置 -->
 				<div class="space-y-3">
 					<Label class="text-base font-medium">透明度设置</Label>
-					
+
 					<!-- 亮色模式透明度 -->
 					<Card.ContentItem label="亮色模式透明度" description="调整亮色主题下的图片透明度: 0~100%">
 						<Slider
@@ -100,21 +99,24 @@
 							step={0.01}
 						/>
 						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{Math.round($currentSettings.background.images[activeImageIndex].config.opacity.light * 100)}%
+							{Math.round(
+								$currentSettings.background.images[activeImageIndex].config.opacity.light * 100
+							)}%
 						</span>
 						<Button
 							variant="outline"
 							size="icon"
 							onclick={() => {
 								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.opacity.light = DEFAULT_LIGHT_OPACITY;
+									$currentSettings.background.images[activeImageIndex].config.opacity.light =
+										DEFAULT_LIGHT_OPACITY;
 								}
 							}}
 						>
 							<RotateCcw />
 						</Button>
 					</Card.ContentItem>
-					
+
 					<!-- 暗色模式透明度 -->
 					<Card.ContentItem label="暗色模式透明度" description="调整暗色主题下的图片透明度: 0~100%">
 						<Slider
@@ -126,14 +128,17 @@
 							step={0.01}
 						/>
 						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{Math.round($currentSettings.background.images[activeImageIndex].config.opacity.dark * 100)}%
+							{Math.round(
+								$currentSettings.background.images[activeImageIndex].config.opacity.dark * 100
+							)}%
 						</span>
 						<Button
 							variant="outline"
 							size="icon"
 							onclick={() => {
 								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.opacity.dark = DEFAULT_DARK_OPACITY;
+									$currentSettings.background.images[activeImageIndex].config.opacity.dark =
+										DEFAULT_DARK_OPACITY;
 								}
 							}}
 						>
