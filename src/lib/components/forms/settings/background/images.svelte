@@ -11,7 +11,9 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { writeToClipBoard } from '$lib/utils/clip';
 	import { scale, slide } from 'svelte/transition';
-	import { ScrollArea } from '$lib/components/ui/scroll-area';
+	import { BACKGROUND_EVENTS } from '$lib/events/shortcut';
+	import { emit } from '@tauri-apps/api/event';
+	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 </script>
 
 <script lang="ts">
@@ -31,6 +33,8 @@
 				// 添加到设置中并设为活跃
 				$currentSettings.background.images = [...$currentSettings.background.images, newImage];
 				$currentSettings.background.activeImageId = newImage.id;
+				// 发送背景图片切换事件
+				emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
 			}
 		} catch (error) {
 			console.error('选择图片失败:', error);
@@ -60,11 +64,15 @@
 	// 激活背景图片
 	function activateImage(imageId: string) {
 		$currentSettings.background.activeImageId = imageId;
+		// 发送背景图片切换事件
+		emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
 	}
 
 	// 禁用背景图片
 	function disableBackground() {
 		$currentSettings.background.activeImageId = null;
+		// 发送背景图片切换事件
+		emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
 	}
 
 	// 编辑状态管理
@@ -151,63 +159,60 @@
 			</div>
 		{:else}
 			<div class="space-y-2">
-					{#each $currentSettings.background.images.filter((img) => !img.internal) as image (image.id)}
-						<div
-							class="flex items-center gap-3 rounded-lg border p-3 transition-colors"
-							class:bg-accent={$currentSettings.background.activeImageId === image.id}
-							class:text-accent-foreground={$currentSettings.background.activeImageId === image.id}
-						>
-							<div class="min-w-0 flex-1">
-								{#if editingImageId === image.id}
-									<div class="flex items-center gap-2" in:scale={{ duration: 300 }}>
-										<Input
-											bind:value={editingName}
-											onkeydown={handleKeydown}
-											class="h-8 text-sm"
-											placeholder="输入图片名称"
-										/>
-										<Button variant="ghost" class="size-8 p-0" onclick={saveImageName}>
-											<Check class="size-4" />
-										</Button>
-										<Button variant="ghost" class="size-8 p-0" onclick={cancelEditName}>
-											<X class="size-4" />
-										</Button>
-									</div>
-								{:else}
-									<div class="flex items-center gap-2" in:scale={{ duration: 300 }}>
-										<p class="flex-1 truncate font-medium">{image.name}</p>
-										<Button variant="ghost" class="size-8 p-0" onclick={() => startEditName(image)}>
-											<SquarePen />
-										</Button>
-									</div>
-								{/if}
-							</div>
-							{#if editingImageId !== image.id}
-								<!-- todo 动画结束卡顿一下 -->
-								<div
-									class="flex items-center gap-1"
-									transition:slide={{ axis: 'x', duration: 300 }}
-								>
-									<Button
-										class="size-8"
-										disabled={$currentSettings.background.activeImageId === image.id}
-										onclick={() => activateImage(image.id)}
-									>
-										<Eye />
+				{#each $currentSettings.background.images.filter((img) => !img.internal) as image (image.id)}
+					<div
+						class="flex items-center gap-3 rounded-lg border p-3 transition-colors"
+						class:bg-accent={$currentSettings.background.activeImageId === image.id}
+						class:text-accent-foreground={$currentSettings.background.activeImageId === image.id}
+					>
+						<div class="min-w-0 flex-1">
+							{#if editingImageId === image.id}
+								<div class="flex items-center gap-2" in:scale={{ duration: 300 }}>
+									<Input
+										bind:value={editingName}
+										onkeydown={handleKeydown}
+										class="h-8 text-sm"
+										placeholder="输入图片名称"
+									/>
+									<Button variant="ghost" class="size-8 p-0" onclick={saveImageName}>
+										<Check class="size-4" />
 									</Button>
-									{@render imageTooltip(image)}
-
-									<Button
-										variant="warnDestructive"
-										class="size-8"
-										onclick={() => removeImage(image.id)}
-									>
-										<Trash2 />
+									<Button variant="ghost" class="size-8 p-0" onclick={cancelEditName}>
+										<X class="size-4" />
+									</Button>
+								</div>
+							{:else}
+								<div class="flex items-center gap-2" in:scale={{ duration: 300 }}>
+									<p class="flex-1 truncate font-medium">{image.name}</p>
+									<Button variant="ghost" class="size-8 p-0" onclick={() => startEditName(image)}>
+										<SquarePen />
 									</Button>
 								</div>
 							{/if}
 						</div>
-					{/each}
+						{#if editingImageId !== image.id}
+							<!-- todo fix: 动画结束会卡顿一下 -->
+							<div class="flex items-center gap-1" transition:slide={{ axis: 'x', duration: 300 }}>
+								<Button
+									class="size-8"
+									disabled={$currentSettings.background.activeImageId === image.id}
+									onclick={() => activateImage(image.id)}
+								>
+									<Eye />
+								</Button>
+								{@render imageTooltip(image)}
+
+								<Button
+									variant="warnDestructive"
+									class="size-8"
+									onclick={() => removeImage(image.id)}
+								>
+									<Trash2 />
+								</Button>
+							</div>
+						{/if}
+					</div>
+				{/each}
 			</div>
 		{/if}
 	</Card.Content>

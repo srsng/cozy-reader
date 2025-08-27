@@ -10,9 +10,18 @@
 		ThemeBinding
 	} from '$lib/settings/background';
 	import { getImageFullConfig, getOpacityForTheme } from '$lib/settings/background';
-
+	import { initializeTheme, hasThemeBinding, isValidThemeBinding } from '$lib/theme/themeUtils';
+	import type {
+		AppThemeType,
+		FourColorsThemeData,
+		PonyThemeData,
+		StandardThemeData
+	} from '$lib/settings/Theme';
+	import { SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
+	import { BACKGROUND_EVENTS } from '$lib/events/shortcut';
 	import { convertFileSrc } from '@tauri-apps/api/core';
 	import { mode } from 'mode-watcher';
+	import { mergeUnlisten } from '$lib/utils/mergeUnlisten';
 
 	// 图片 URL 转换
 	export function convertToTauriUrl(filePath: string): string {
@@ -230,15 +239,8 @@
 </script>
 
 <script lang="ts">
-	import { initializeTheme, hasThemeBinding, isValidThemeBinding } from '$lib/theme/themeUtils';
-	import type {
-		AppThemeType,
-		FourColorsThemeData,
-		PonyThemeData,
-		StandardThemeData
-	} from '$lib/settings/Theme';
-
 	const userSettings = $state(inject(USER_SETTINGS));
+	const shortcutService = inject(SHORTCUT_SERVICE);
 
 	// 背景相关状态
 	// svelte-ignore non_reactive_update
@@ -252,7 +254,6 @@
 	/**
 	 * 应用主题绑定
 	 * @param themeBinding 主题绑定对象
-	 * @param userSettings 用户设置对象（用于更新）
 	 */
 	export function applyThemeBinding(themeBinding: ThemeBinding<AppThemeType>): void {
 		if (!isValidThemeBinding(themeBinding)) {
@@ -304,9 +305,6 @@
 		}
 	}
 
-	// 用于跟踪上次应用主题的图片ID，避免重复应用
-	let lastAppliedThemeImageId: string | null = null;
-
 	// 监听背景设置变化和主题变化
 	$effect(() => {
 		// 当背景设置发生变化或主题变化时重新应用样式
@@ -317,16 +315,17 @@
 		}
 	});
 
-	// 监听背景图片变化，自动应用绑定的主题
-	$effect(() => {
-		// 只有当图片ID发生变化时才应用主题，避免循环
-		if (activeImage && activeImage.id !== lastAppliedThemeImageId) {
-			lastAppliedThemeImageId = activeImage.id;
-			applyImageTheme(activeImage);
-		} else if (!activeImage) {
-			lastAppliedThemeImageId = null;
-		}
-	});
+	// 监听背景图片切换事件，只有通过事件触发的切换才应用主题
+	$effect(() =>
+		mergeUnlisten(
+			shortcutService.on(BACKGROUND_EVENTS.IMAGE_CHANGED, () => {
+				// 只有当新图片存在且有主题绑定时才应用主题
+				if (activeImage) {
+					applyImageTheme(activeImage);
+				}
+			})
+		)
+	);
 
 	onMount(() => {
 		// 初始化背景
