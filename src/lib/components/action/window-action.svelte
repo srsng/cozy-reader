@@ -38,7 +38,8 @@
 		| 'fullscreen'
 		| 'refresh-page'
 		| 'save-window-state'
-		| 'restore-window-state';
+		| 'restore-window-state'
+		| 'toggle-devtools';
 
 	const mainWOp2Event: Record<mainWindowOperator, string> = {
 		minimize: 'main-window-minimize',
@@ -48,7 +49,8 @@
 		fullscreen: 'main-window-fullscreen',
 		'refresh-page': 'main-window-refresh-page',
 		'save-window-state': 'main-window-save-window-state',
-		'restore-window-state': 'main-window-restore-window-state'
+		'restore-window-state': 'main-window-restore-window-state',
+		'toggle-devtools': 'main-window-toggle-devtools'
 	};
 
 	export function emitMainWindowEvent(event: mainWindowOperator) {
@@ -79,6 +81,11 @@
 			$appState.fullscreen = true;
 			document.documentElement.requestFullscreen();
 		}
+	}
+
+	// 切换开发者工具
+	export function toggleDevtools() {
+		// todo: 切换开发者工具
 	}
 
 	// 初始化窗口
@@ -131,6 +138,10 @@
 			// main 恢复窗口状态
 			shortcutService.on(mainWOp2Event['restore-window-state'], () => {
 				restoreAppWindowState();
+			}),
+			// main 切换开发者工具
+			shortcutService.on(mainWOp2Event['toggle-devtools'], () => {
+				toggleDevtools();
 			})
 		)
 	);

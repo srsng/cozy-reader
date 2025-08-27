@@ -97,13 +97,7 @@ export const DEFAULT_SHORTCUTS: StaticShortcut[] = [
 	// 	name: '切换开发者工具',
 	// 	description: '打开/关闭开发者工具',
 	// 	combination: { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] },
-	// 	handler: () => {
-	// 		// 在开发环境中打开开发者工具
-	// 		if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-	// 			// 这个功能需要Tauri的支持
-	// 			console.log('切换开发者工具');
-	// 		}
-	// 	}
+	// 	handler: () => emitMainWindowEvent('toggle-devtools')
 	// },
 	{
 		id: 'app.toggle-fullscreen',
