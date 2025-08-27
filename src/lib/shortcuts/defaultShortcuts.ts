@@ -4,8 +4,7 @@ import type { StaticShortcut } from './types';
 import { ModifierKey } from './types';
 import { simpleShortcutManager } from './shortcutManager';
 import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
-import { goHome, goSettings } from '$lib/utils/route.svelte';
-import { refreshWindow } from '$lib/components/action/window-action.svelte';
+import { goSettings } from '$lib/utils/route.svelte';
 import { emit } from '@tauri-apps/api/event';
 import { SHORTCUT_EVENT } from './shortcutService';
 
@@ -90,14 +89,14 @@ export const DEFAULT_SHORTCUTS: StaticShortcut[] = [
 	// 	description: '刷新当前页面',
 	// 	combination: { key: 'f5', modifiers: [] },
 	// 	handler: () => {
-	// 		refreshWindow();
+	// 		emitMainWindowEvent('refresh-page');
 	// 	}
 	// },
 	// {
 	// 	id: 'app.toggle-dev-tools',
 	// 	name: '切换开发者工具',
 	// 	description: '打开/关闭开发者工具',
-	// 	combination: { key: 'f12', modifiers: [] },
+	// 	combination: { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] },
 	// 	handler: () => {
 	// 		// 在开发环境中打开开发者工具
 	// 		if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {

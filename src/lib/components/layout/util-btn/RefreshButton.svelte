@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import { RefreshCcw } from 'lucide-svelte';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
-	import { refreshWindow } from '$lib/components/action/window-action.svelte';
+	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 </script>
 
 <script lang="ts">
@@ -31,7 +31,7 @@
 	{variant}
 	{size}
 	class={className}
-	onclick={onClick || refreshWindow}
+	onclick={onClick || (() => emitMainWindowEvent('refresh-page'))}
 	{...others}
 >
 	<RefreshCcw class={iconClass} />
