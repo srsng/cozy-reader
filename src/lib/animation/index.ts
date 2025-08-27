@@ -1,28 +1,4 @@
 import { elasticOut } from 'svelte/easing';
-// /**
-//  * 自定义入场动画：从左边低右边高的倾斜状态过渡到正常状态
-//  * 效果像是右手拿着平板抬起来的样子
-//  */
-// export function _tiltUp(node: HTMLElement) {
-// 	return {
-// 		duration: 800,
-// 		easing: elasticOut,
-// 		css: (t: number) => {
-// 			// 初始状态：左边低右边高，有一个倾斜角度
-// 			// t从0到1，0是初始状态，1是最终状态
-// 			const rotate = (1 - t) * -8; // 从-8度旋转到0度
-// 			const translateY = (1 - t) * 20; // 从向下偏移20px到0
-// 			const scale = 0.95 + t * 0.05; // 从0.95缩放到1
-// 			const opacity = t; // 从0透明度到1
-
-// 			return `
-// 					transform: rotate(${rotate}deg) translateY(${translateY}px) scale(${scale});
-// 					opacity: ${opacity};
-// 					transform-origin: center bottom;
-// 				`;
-// 		}
-// 	};
-// }
 
 /**
  * 使用CSS样式实现窗口级别的倾斜入场动画
@@ -66,11 +42,11 @@ export function tiltUp(node: HTMLElement) {
 			const rotate = (1 - t) * -5; // 从-5度旋转到0度（减小角度）
 			const translateY = (1 - t) * 10; // 从向下偏移10px到0（减小偏移）
 			const scale = 0.98 + t * 0.02; // 从0.98缩放到1（减小缩放差异）
-			const opacity = t;
+			// const opacity = t;
+			// opacity: ${opacity};
 
 			return `
 				transform: rotate(${rotate}deg) translateY(${translateY}px) scale(${scale});
-				opacity: ${opacity};
 				transform-origin: center bottom;
 				overflow: hidden;
 			`;
