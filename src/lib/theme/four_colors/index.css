@@ -16,8 +16,8 @@
 	--secondary-foreground: hsl(var(--data_theme_4colors_hue), 50%, 90%);
 	--muted: hsl(var(--data_theme_4colors_hue), 30%, 85%);
 	--muted-foreground: hsl(var(--data_theme_4colors_hue), 40%, 40%);
-	--accent: hsl(var(--accent-hue), 80%, 20%);
-	--accent-foreground: hsl(var(--accent-hue), 80%, 80%);
+	--accent: hsl(var(--accent-hue), 80%, 80%);
+	--accent-foreground: hsl(var(--accent-hue), 80%, 20%);
 	--destructive: hsl(0, 84%, 60%);
 	--border: hsl(var(--data_theme_4colors_hue), 30%, 80%);
 	--input: hsl(var(--data_theme_4colors_hue), 30%, 80%);
@@ -54,8 +54,8 @@
 	--secondary-foreground: hsl(var(--data_theme_4colors_hue), 50%, 10%);
 	--muted: hsl(var(--data_theme_4colors_hue), 30%, 15%);
 	--muted-foreground: hsl(var(--data_theme_4colors_hue), 40%, 60%);
-	--accent: hsl(var(--accent-hue), 80%, 80%);
-	--accent-foreground: hsl(var(--accent-hue), 80%, 20%);
+	--accent: hsl(var(--accent-hue), 80%, 20%);
+	--accent-foreground: hsl(var(--accent-hue), 80%, 80%);
 	--destructive: hsl(0, 84%, 60%);
 	--border: hsl(var(--data_theme_4colors_hue), 30%, 20%);
 	--input: hsl(var(--data_theme_4colors_hue), 30%, 20%);

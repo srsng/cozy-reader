@@ -122,7 +122,7 @@
 	</Tooltip.Provider>
 {/snippet}
 
-<Card.Root class="flex max-h-[80%] flex-col overflow-hidden">
+<Card.Root class="flex flex-col">
 	<Card.Header class="flex-shrink-0">
 		<Card.Title>背景图片</Card.Title>
 		<Card.Description>管理您的背景图片集合</Card.Description>
@@ -143,15 +143,14 @@
 			</div>
 		</Card.Action>
 	</Card.Header>
-	<Card.Content class="min-h-0 flex-1 space-y-4">
+	<Card.Content class="space-y-4">
 		{#if $currentSettings.background.images.length === 0}
 			<div class="text-muted-foreground py-8 text-center">
 				<p>暂无背景图片</p>
 				<p class="text-sm">点击上方按钮添加图片</p>
 			</div>
 		{:else}
-			<ScrollArea class="h-full w-full">
-				<div class="space-y-2">
+			<div class="space-y-2">
 					{#each $currentSettings.background.images.filter((img) => !img.internal) as image (image.id)}
 						<div
 							class="flex items-center gap-3 rounded-lg border p-3 transition-colors"
@@ -209,8 +208,7 @@
 							{/if}
 						</div>
 					{/each}
-				</div>
-			</ScrollArea>
+			</div>
 		{/if}
 	</Card.Content>
 </Card.Root>

@@ -7,7 +7,7 @@
 		/* 透明背景，让独立背景容器显示 */
 		background-color: transparent;
 		/* UI整体透明度 */
-		opacity: var(--ui-opacity, 0.96);
+		opacity: var(--ui-opacity, 0.1);
 	}
 
 	/* app布局-内容区域 */
