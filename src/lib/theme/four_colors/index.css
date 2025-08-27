@@ -35,8 +35,8 @@
 	--sidebar-foreground: hsl(var(--data_theme_4colors_hue), 50%, 10%);
 	--sidebar-primary: hsl(var(--data_theme_4colors_hue), 50%, 90%);
 	--sidebar-primary-foreground: hsl(var(--data_theme_4colors_hue), 50%, 10%);
-	--sidebar-accent: hsl(var(--accent-hue), 80%, 20%);
-	--sidebar-accent-foreground: hsl(var(--accent-hue), 80%, 80%);
+	--sidebar-accent: hsl(var(--accent-hue), 80%, 80%);
+	--sidebar-accent-foreground: hsl(var(--accent-hue), 80%, 20%);
 	--sidebar-border: hsl(var(--data_theme_4colors_hue), 30%, 80%);
 	--sidebar-ring: hsl(var(--data_theme_4colors_hue), 50%, 50%);
 }
@@ -73,8 +73,8 @@
 	--sidebar-foreground: hsl(var(--data_theme_4colors_hue), 50%, 90%);
 	--sidebar-primary: hsl(var(--data_theme_4colors_hue), 50%, 10%);
 	--sidebar-primary-foreground: hsl(var(--data_theme_4colors_hue), 50%, 90%);
-	--sidebar-accent: hsl(var(--accent-hue), 80%, 80%);
-	--sidebar-accent-foreground: hsl(var(--accent-hue), 80%, 20%);
+	--sidebar-accent: hsl(var(--accent-hue), 80%, 20%);
+	--sidebar-accent-foreground: hsl(var(--accent-hue), 80%, 80%);
 	--sidebar-border: hsl(var(--data_theme_4colors_hue), 30%, 20%);
 	--sidebar-ring: hsl(var(--data_theme_4colors_hue), 50%, 50%);
 }
