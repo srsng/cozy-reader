@@ -12,7 +12,7 @@
 	} from '$lib/settings/Theme';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Label } from '$lib/components/ui/label';
-	import { applyFourColorsHue, applyTheme } from '$lib/theme/themeUtils';
+	import { applyFourColorsHue, applyThemeType } from '$lib/theme/themeUtils';
 	import ThemePreview from '$lib/components/theme/ThemePreview.svelte';
 	import {
 		Card,
@@ -34,7 +34,7 @@
 
 	function handleThemeType(theme: AppThemeType) {
 		$currentSettings.theme.type = theme;
-		applyTheme(theme);
+		applyThemeType(theme);
 	}
 
 	function handleThemeMode(mode: AppThemeMode) {

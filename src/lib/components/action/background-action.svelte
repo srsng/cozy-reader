@@ -1,14 +1,16 @@
 <script lang="ts" module>
 	import { inject } from '$lib/utils/context';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import type {
 		BackgroundImage,
 		GlobalBackgroundConfig,
 		BackgroundFilters,
-		BackgroundPosition
+		BackgroundPosition,
+		ThemeBinding
 	} from '$lib/settings/background';
 	import { getImageFullConfig, getOpacityForTheme } from '$lib/settings/background';
+
 	import { convertFileSrc } from '@tauri-apps/api/core';
 	import { mode } from 'mode-watcher';
 
@@ -26,7 +28,7 @@
 		if (!image) {
 			// 获取当前主题模式
 			const currentTheme = mode.current === 'dark' ? 'dark' : 'light';
-			
+
 			return {
 				'--settings-bg-image': 'none',
 				'--settings-bg-opacity': '0',
@@ -39,7 +41,10 @@
 				'--settings-bg-background-overlay-opacity': '0',
 				'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'visible' : 'hidden',
 				'--settings-bg-top-overlay-color': globalConfig.topOverlay.color,
-				'--settings-bg-top-overlay-opacity': getOpacityForTheme(globalConfig.topOverlay.opacity, currentTheme).toString(),
+				'--settings-bg-top-overlay-opacity': getOpacityForTheme(
+					globalConfig.topOverlay.opacity,
+					currentTheme
+				).toString(),
 				'--settings-bg-top-overlay-filters': generateFiltersString(globalConfig.topOverlay.filters)
 			};
 		}
@@ -91,11 +96,17 @@
 				? 'visible'
 				: 'hidden',
 			'--settings-bg-background-overlay-color': globalConfig.backgroundOverlay.color,
-			'--settings-bg-background-overlay-opacity': getOpacityForTheme(globalConfig.backgroundOverlay.opacity, currentTheme).toString(),
+			'--settings-bg-background-overlay-opacity': getOpacityForTheme(
+				globalConfig.backgroundOverlay.opacity,
+				currentTheme
+			).toString(),
 			'--settings-bg-background-overlay-filters': backgroundOverlayFiltersString,
 			'--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled ? 'visible' : 'hidden',
 			'--settings-bg-top-overlay-color': globalConfig.topOverlay.color,
-			'--settings-bg-top-overlay-opacity': getOpacityForTheme(globalConfig.topOverlay.opacity, currentTheme).toString(),
+			'--settings-bg-top-overlay-opacity': getOpacityForTheme(
+				globalConfig.topOverlay.opacity,
+				currentTheme
+			).toString(),
 			'--settings-bg-top-overlay-filters': topOverlayFiltersString,
 			'--settings-bg-animation-duration': `${globalConfig.animationDuration}ms`
 		};
@@ -219,6 +230,14 @@
 </script>
 
 <script lang="ts">
+	import { initializeTheme, hasThemeBinding, isValidThemeBinding } from '$lib/theme/themeUtils';
+	import type {
+		AppThemeType,
+		FourColorsThemeData,
+		PonyThemeData,
+		StandardThemeData
+	} from '$lib/settings/Theme';
+
 	const userSettings = $state(inject(USER_SETTINGS));
 
 	// 背景相关状态
@@ -229,6 +248,49 @@
 	const activeImage = $derived(
 		$userSettings.background.images.find((img) => img.id === $userSettings.background.activeImageId)
 	);
+
+	/**
+	 * 应用主题绑定
+	 * @param themeBinding 主题绑定对象
+	 * @param userSettings 用户设置对象（用于更新）
+	 */
+	export function applyThemeBinding(themeBinding: ThemeBinding<AppThemeType>): void {
+		if (!isValidThemeBinding(themeBinding)) {
+			console.warn('Invalid theme binding:', themeBinding);
+			return;
+		}
+
+		// 更新用户设置中的主题类型
+		$userSettings.theme.type = themeBinding.type;
+		// $userSettings.theme.data[themeBinding.type] = themeBinding.data; // ?
+
+		// 更新对应主题类型的数据
+		switch (themeBinding.type) {
+			case 'standard':
+				$userSettings.theme.data.standard = themeBinding.data as StandardThemeData;
+				break;
+			case 'four_colors':
+				$userSettings.theme.data.four_colors = themeBinding.data as FourColorsThemeData;
+				break;
+			case 'pony':
+				$userSettings.theme.data.pony = themeBinding.data as PonyThemeData;
+				break;
+		}
+
+		// 应用主题
+		initializeTheme(themeBinding.type, $userSettings.theme.data);
+	}
+
+	// 应用图片绑定的主题
+	function applyImageTheme(image: BackgroundImage | undefined) {
+		if (!image || !hasThemeBinding(image)) return;
+
+		const themeBinding = image.themeBinding!;
+		// 使用 untrack 避免在主题更新过程中触发响应式更新
+		untrack(() => {
+			applyThemeBinding(themeBinding);
+		});
+	}
 
 	// 应用背景样式到独立背景容器
 	function applyBackgroundToContainer() {
@@ -242,6 +304,9 @@
 		}
 	}
 
+	// 用于跟踪上次应用主题的图片ID，避免重复应用
+	let lastAppliedThemeImageId: string | null = null;
+
 	// 监听背景设置变化和主题变化
 	$effect(() => {
 		// 当背景设置发生变化或主题变化时重新应用样式
@@ -249,6 +314,17 @@
 		const currentMode = mode.current;
 		if (activeImage || $userSettings.background.activeImageId === null) {
 			applyBackgroundToContainer();
+		}
+	});
+
+	// 监听背景图片变化，自动应用绑定的主题
+	$effect(() => {
+		// 只有当图片ID发生变化时才应用主题，避免循环
+		if (activeImage && activeImage.id !== lastAppliedThemeImageId) {
+			lastAppliedThemeImageId = activeImage.id;
+			applyImageTheme(activeImage);
+		} else if (!activeImage) {
+			lastAppliedThemeImageId = null;
 		}
 	});
 

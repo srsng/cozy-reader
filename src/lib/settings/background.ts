@@ -3,6 +3,7 @@ export const DEFAULT_DARK_OPACITY = 0.1;
 export const DEFAULT_LIGHT_OPACITY = 0.96;
 
 import { mode } from 'mode-watcher';
+import type { AppThemeType, AppThemeData, SomeThemeData } from './Theme';
 
 export function get_default_opacity() {
 	switch (mode.current) {
@@ -108,6 +109,12 @@ export interface ImageCustomConfig {
 	offsetY: number; // Y轴偏移 (-1000 到 1000)
 }
 
+// 主题绑定配置
+export interface ThemeBinding<T extends AppThemeType = AppThemeType> {
+	type: T; // 主题类型
+	data: AppThemeData[T]; // 对应主题类型的数据
+}
+
 // 单个背景图片配置
 export interface BackgroundImage {
 	id: string; // 唯一标识符
@@ -118,6 +125,9 @@ export interface BackgroundImage {
 
 	enableConfig: boolean; // 是否启用自定义配置
 	config?: ImageCustomConfig; // 可选的自定义配置，如果不设置则使用全局配置
+
+	// 主题绑定功能
+	themeBinding?: ThemeBinding; // 可选的主题绑定配置
 }
 
 // 背景图片集合配置
@@ -344,7 +354,8 @@ export function createBackgroundImage(
 		internal: partialConfig.internal ?? false,
 		createdAt: partialConfig.createdAt ?? Date.now(),
 		enableConfig: partialConfig.enableConfig ?? false,
-		config: partialConfig.config
+		config: partialConfig.config,
+		themeBinding: partialConfig.themeBinding
 	};
 }
 
@@ -357,7 +368,8 @@ export function resetImageToDefaults(image: BackgroundImage): BackgroundImage {
 		internal: image.internal,
 		createdAt: image.createdAt,
 		enableConfig: false,
-		config: undefined
+		config: undefined,
+		themeBinding: undefined
 	};
 }
 

@@ -17,6 +17,8 @@ export type AppThemeData = {
 			: PonyThemeData;
 };
 
+export type SomeThemeData = StandardThemeData | FourColorsThemeData | PonyThemeData;
+
 enum StdTDNameEnum {
 	black = 'black',
 	orange = 'orange',
@@ -48,15 +50,15 @@ for (let name in ALL_Std_TD_NAMES) {
 }
 export const Std_TD_NAMES_2_Str: Record<StdTDName, string> = temp;
 
-interface StandardThemeData {
+export interface StandardThemeData {
 	name: StdTDName;
 }
 
-interface FourColorsThemeData {
+export interface FourColorsThemeData {
 	hue: number;
 }
 
-interface PonyThemeData {
+export interface PonyThemeData {
 	name: PonyName;
 }
 

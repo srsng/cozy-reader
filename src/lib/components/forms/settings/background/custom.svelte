@@ -11,6 +11,14 @@
 		DEFAULT_LIGHT_OPACITY,
 		DEFAULT_DARK_OPACITY
 	} from '$lib/settings/background';
+	import {
+		AppThemeType2Str,
+		type AppThemeType,
+		type StandardThemeData,
+		type PonyThemeData,
+		type FourColorsThemeData
+	} from '$lib/settings/Theme';
+	import { createThemeBinding, hasThemeBinding } from '$lib/theme/themeUtils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Label } from '$lib/components/ui/label';
@@ -38,9 +46,151 @@
 			);
 		}
 	}
+
+	// 绑定当前主题到图片
+	function bindCurrentTheme(imageId: string) {
+		const imageIndex = $currentSettings.background.images.findIndex((img) => img.id === imageId);
+		if (imageIndex !== -1) {
+			const themeBinding = createThemeBinding(
+				$currentSettings.theme.type,
+				$currentSettings.theme.data
+			);
+			$currentSettings.background.images[imageIndex] = {
+				...$currentSettings.background.images[imageIndex],
+				themeBinding
+			};
+		}
+	}
+
+	// 移除主题绑定
+	function removeThemeBinding(imageId: string) {
+		const imageIndex = $currentSettings.background.images.findIndex((img) => img.id === imageId);
+		if (imageIndex !== -1) {
+			$currentSettings.background.images[imageIndex].themeBinding = undefined;
+		}
+	}
 </script>
 
 {#if activeImageIndex >= 0 && !$currentSettings.background.images[activeImageIndex].internal}
+	<!-- 主题绑定配置 -->
+	<Card.Root>
+		<Card.Header>
+			<Card.Title>主题绑定</Card.Title>
+			<Card.Description>将当前图片与特定主题绑定，切换到该图片时自动应用绑定的主题</Card.Description
+			>
+			<Card.Action>
+				{#if hasThemeBinding($currentSettings.background.images[activeImageIndex])}
+					<Button
+						variant="outline"
+						size="icon"
+						onclick={() =>
+							removeThemeBinding($currentSettings.background.images[activeImageIndex].id)}
+					>
+						<RotateCcw />
+					</Button>
+				{/if}
+			</Card.Action>
+		</Card.Header>
+		<Separator />
+		<Card.Content class="space-y-4">
+			{#if hasThemeBinding($currentSettings.background.images[activeImageIndex])}
+				<!-- 显示已绑定的主题信息 -->
+				<div class="space-y-3">
+					<Label class="text-base font-medium">已绑定主题</Label>
+					<div class="bg-muted rounded-lg p-4">
+						<div class="space-y-2">
+							<div class="flex items-center justify-between">
+								<span class="text-sm font-medium">主题类型:</span>
+								<span class="text-sm">
+									{AppThemeType2Str[
+										($currentSettings.background.images[activeImageIndex].themeBinding
+											?.type as AppThemeType) || $currentSettings.theme.type
+									]}
+								</span>
+							</div>
+							{#if $currentSettings.background.images[activeImageIndex].themeBinding?.type === 'four_colors'}
+								<div class="flex items-center justify-between">
+									<span class="text-sm font-medium">色相值:</span>
+									<span class="text-sm"
+										>{(
+											$currentSettings.background.images[activeImageIndex].themeBinding
+												?.data as FourColorsThemeData
+										)?.hue || 0}°</span
+									>
+								</div>
+							{:else if $currentSettings.background.images[activeImageIndex].themeBinding?.type === 'standard'}
+								<div class="flex items-center justify-between">
+									<span class="text-sm font-medium">主题名称:</span>
+									<span class="text-sm"
+										>{(
+											$currentSettings.background.images[activeImageIndex].themeBinding
+												?.data as StandardThemeData
+										)?.name || 'default'}</span
+									>
+								</div>
+							{:else if $currentSettings.background.images[activeImageIndex].themeBinding?.type === 'pony'}
+								<div class="flex items-center justify-between">
+									<span class="text-sm font-medium">角色名称:</span>
+									<span class="text-sm"
+										>{(
+											$currentSettings.background.images[activeImageIndex].themeBinding
+												?.data as PonyThemeData
+										)?.name || 'twilight_sparkle'}</span
+									>
+								</div>
+							{/if}
+						</div>
+					</div>
+					<Button
+						variant="destructive"
+						class="w-full"
+						onclick={() =>
+							removeThemeBinding($currentSettings.background.images[activeImageIndex].id)}
+					>
+						移除主题绑定
+					</Button>
+				</div>
+			{:else}
+				<!-- 绑定当前主题 -->
+				<div class="space-y-3">
+					<Label class="text-base font-medium">绑定当前主题</Label>
+					<div class="bg-muted rounded-lg p-4">
+						<div class="space-y-2">
+							<div class="flex items-center justify-between">
+								<span class="text-sm font-medium">当前主题类型:</span>
+								<span class="text-sm">{AppThemeType2Str[$currentSettings.theme.type]}</span>
+							</div>
+							{#if $currentSettings.theme.type === 'four_colors'}
+								<div class="flex items-center justify-between">
+									<span class="text-sm font-medium">色相值:</span>
+									<span class="text-sm">{$currentSettings.theme.data.four_colors.hue}°</span>
+								</div>
+							{:else if $currentSettings.theme.type === 'standard'}
+								<div class="flex items-center justify-between">
+									<span class="text-sm font-medium">主题名称:</span>
+									<span class="text-sm">{$currentSettings.theme.data.standard.name}</span>
+								</div>
+							{:else if $currentSettings.theme.type === 'pony'}
+								<div class="flex items-center justify-between">
+									<span class="text-sm font-medium">角色名称:</span>
+									<span class="text-sm">{$currentSettings.theme.data.pony.name}</span>
+								</div>
+							{/if}
+						</div>
+					</div>
+					<Button
+						variant="default"
+						class="w-full"
+						onclick={() =>
+							bindCurrentTheme($currentSettings.background.images[activeImageIndex].id)}
+					>
+						绑定当前主题
+					</Button>
+				</div>
+			{/if}
+		</Card.Content>
+	</Card.Root>
+
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>图片独立配置</Card.Title>
