@@ -15,18 +15,18 @@
 	} from '@tauri-apps/plugin-window-state';
 
 	// 恢复窗口状态
-	function restoreAppWindowState() {
-		restoreStateCurrent(StateFlags.ALL);
+	async function restoreAppWindowState() {
+		return await restoreStateCurrent(StateFlags.ALL);
 	}
 
 	// 保存窗口状态
-	function saveAppWindowState() {
-		saveWindowState(StateFlags.ALL);
+	async function saveAppWindowState() {
+		return await saveWindowState(StateFlags.ALL);
 	}
 
 	// 刷新页面
-	function refreshWindow() {
-		saveAppWindowState();
+	async function refreshWindow() {
+		await saveAppWindowState();
 		window.location.reload(); // note: 不是appwindow
 	}
 
@@ -61,6 +61,7 @@
 <script lang="ts">
 	const userSettings = inject(USER_SETTINGS);
 	const shortcutService = inject(SHORTCUT_SERVICE);
+	const appState = inject(APP_STATE);
 
 	// todo: 应该是main window 还是current window？
 	// import { getCurrentWindow } from '@tauri-apps/api/window';
@@ -71,15 +72,14 @@
 		appWindow.setAlwaysOnTop(aot);
 	}
 
-	const appState = inject(APP_STATE);
 	// 切换全屏
-	export function fullscreenWindow() {
+	export async function fullscreenWindow() {
 		if (document.fullscreenElement) {
 			$appState.fullscreen = false;
-			document.exitFullscreen();
+			await document.exitFullscreen();
 		} else {
 			$appState.fullscreen = true;
-			document.documentElement.requestFullscreen();
+			await document.documentElement.requestFullscreen();
 		}
 	}
 
@@ -110,9 +110,9 @@
 			shortcutService.on(mainWOp2Event.minimize, () => {
 				appWindow.minimize();
 			}),
-			shortcutService.on(mainWOp2Event.maximize, () => {
-				saveAppWindowState();
-				appWindow.toggleMaximize();
+			shortcutService.on(mainWOp2Event.maximize, async () => {
+				await appWindow.toggleMaximize();
+				await saveAppWindowState();
 			}),
 			shortcutService.on(mainWOp2Event.close, () => {
 				appWindow.close();
@@ -123,21 +123,21 @@
 				setAOT($userSettings.base.alwaysOnTop);
 			}),
 			// main 全屏
-			shortcutService.on(mainWOp2Event.fullscreen, () => {
-				saveAppWindowState();
-				fullscreenWindow();
+			shortcutService.on(mainWOp2Event.fullscreen, async () => {
+				await fullscreenWindow();
+				await saveAppWindowState();
 			}),
 			// main 刷新页面
-			shortcutService.on(mainWOp2Event['refresh-page'], () => {
-				refreshWindow();
+			shortcutService.on(mainWOp2Event['refresh-page'], async () => {
+				await refreshWindow();
 			}),
 			// main 保存窗口状态
-			shortcutService.on(mainWOp2Event['save-window-state'], () => {
-				saveAppWindowState();
+			shortcutService.on(mainWOp2Event['save-window-state'], async () => {
+				await saveAppWindowState();
 			}),
 			// main 恢复窗口状态
-			shortcutService.on(mainWOp2Event['restore-window-state'], () => {
-				restoreAppWindowState();
+			shortcutService.on(mainWOp2Event['restore-window-state'], async () => {
+				await restoreAppWindowState();
 			}),
 			// main 切换开发者工具
 			shortcutService.on(mainWOp2Event['toggle-devtools'], () => {

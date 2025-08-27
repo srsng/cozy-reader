@@ -46,10 +46,7 @@
 		<CardDescription>控制应用程序界面的显示选项</CardDescription>
 	</CardHeader>
 	<CardContent class="space-y-4">
-		<CardContentItem
-			label="UI透明度"
-			description="调整整体界面透明度: {Math.round($currentSettings.base.uiOpacity * 100)}%"
-		>
+		<CardContentItem label="UI透明度" description="调整整体界面透明度">
 			<Slider
 				type="single"
 				class="flex-1"

@@ -1,6 +1,7 @@
 // import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 // import { emit } from '@tauri-apps/api/event';
 
+// todo
 export enum SHORTCUT_EVENTS_ENUM {
 	'zoom-in' = 'zoom-in',
 	'zoom-out' = 'zoom-out',
@@ -24,4 +25,4 @@ export const BACKGROUND_EVENTS = {
 	IMAGE_CHANGED: 'background-image-changed'
 } as const;
 
-export type BackgroundEventType = typeof BACKGROUND_EVENTS[keyof typeof BACKGROUND_EVENTS];
+export type BackgroundEventType = (typeof BACKGROUND_EVENTS)[keyof typeof BACKGROUND_EVENTS];

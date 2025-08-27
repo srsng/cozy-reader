@@ -1,4 +1,4 @@
-export const DEFAULT_OPACITY = 0.96;
+export const DEFAULT_OPACITY = 0.88;
 export const DEFAULT_DARK_OPACITY = 0.1;
 export const DEFAULT_LIGHT_OPACITY = 0.96;
 

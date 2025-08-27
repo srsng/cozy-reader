@@ -1,4 +1,5 @@
 import { LogLevel } from '$lib/types';
+import { DEFAULT_OPACITY } from './background';
 
 export interface BaseSettings {
 	langCode: AppLanguageCode;
@@ -20,5 +21,5 @@ export const DefaultBaseSettings: BaseSettings = {
 	logLevel: LogLevel.info,
 	zoom: 1,
 	alwaysOnTop: false,
-	uiOpacity: 1 // 默认完全不透明
+	uiOpacity: DEFAULT_OPACITY
 };
