@@ -118,7 +118,11 @@
 	<Tooltip.Provider>
 		<Tooltip.Root>
 			<Tooltip.Trigger>
-				<Button variant="ghost" class="size-8" onclick={() => writeToClipBoard(image.filePath)}>
+				<Button
+					variant="ghost"
+					class="size-8"
+					onclick={() => writeToClipBoard(image.filePath, true)}
+				>
 					<Info />
 				</Button>
 			</Tooltip.Trigger>

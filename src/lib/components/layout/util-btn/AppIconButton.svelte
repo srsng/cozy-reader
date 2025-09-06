@@ -34,7 +34,7 @@
 	{variant}
 	{size}
 	class={className}
-	onclick={() => writeToClipBoard(appTitle)}
+	onclick={() => writeToClipBoard(appTitle, true)}
 	{...others}
 >
 	<AppIcon class={iconClass} />
