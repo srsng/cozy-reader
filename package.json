@@ -55,6 +55,7 @@
 		"@tauri-apps/plugin-sql": "^2.3.0",
 		"@tauri-apps/plugin-store": "~2.3.0",
 		"@tauri-apps/plugin-window-state": "~2.4.0",
+		"gsap": "^3.13.0",
 		"lucide-svelte": "^0.539.0",
 		"svelte-dnd-action": "^0.9.64",
 		"svelte-markdown": "^0.4.1"
