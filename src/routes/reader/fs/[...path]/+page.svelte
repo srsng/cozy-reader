@@ -16,20 +16,20 @@
 
 			switch (data.error.type) {
 				case 'unsupported_file':
-					toast.error('文件类型不支持', {
-						description: `${errorMessage}\n文件路径: ${filePath}`,
+					toast.warning('文件类型不支持', {
+						description: errorMessage,
 						duration: 5000
 					});
 					break;
 				case 'create_failed':
 					toast.error('创建书籍失败', {
-						description: `${errorMessage}\n文件路径: ${filePath}`,
+						description: errorMessage,
 						duration: 5000
 					});
 					break;
 				default:
 					toast.error('处理文件时出错', {
-						description: `${errorMessage}\n文件路径: ${filePath}`,
+						description: errorMessage,
 						duration: 5000
 					});
 			}
@@ -37,7 +37,7 @@
 			// 延迟跳转回书库
 			setTimeout(() => {
 				goReaderHome();
-			}, 2000);
+			}, 3000);
 		} else {
 			// 如果页面加载但没有重定向，可能是出现了错误
 			console.log('路径处理页面已加载，路径:', page.params.path);

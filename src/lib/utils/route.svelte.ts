@@ -73,8 +73,12 @@ export function goReaderHome() {
 	goto(RouteMap.reader_home);
 }
 
+export function getReadBookUrl(bookId: number) {
+	return `${RouteMap.reader_home}/${bookId}`;
+}
+
 export function goReadBook(bookId: number) {
-	goto(`${RouteMap.reader_home}/${bookId}`);
+	goto(getReadBookUrl(bookId));
 }
 
 export function goReadFsBook(bookPath: string) {

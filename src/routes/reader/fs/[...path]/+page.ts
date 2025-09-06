@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { BookService, BookFormat, StorageType } from '$lib/database/book';
+import { getReadBookUrl, RouteMap } from '$lib/utils/route.svelte.js';
 
 export const prerender = false;
 
@@ -27,7 +28,7 @@ export async function load({ params }) {
 
 		if (existingBook) {
 			// 如果书籍已存在，直接重定向到该书籍页面
-			throw redirect(302, `/md_reader/${existingBook.id.toString()}`);
+			throw redirect(302, getReadBookUrl(existingBook.id));
 		}
 
 		// 自动添加新书籍
@@ -54,7 +55,7 @@ export async function load({ params }) {
 		}
 
 		// 重定向到新创建的书籍页面
-		throw redirect(302, `/md_reader/${createResult.data!.id.toString()}`);
+		throw redirect(302, getReadBookUrl(createResult.data!.id));
 	} catch (error: any) {
 		// 如果是重定向错误，直接抛出
 		if (error.status === 302) {
