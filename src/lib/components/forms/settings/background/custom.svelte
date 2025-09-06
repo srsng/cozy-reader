@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { inject } from '$lib/utils/context';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 
@@ -22,12 +22,14 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Label } from '$lib/components/ui/label';
-	import { Slider } from '$lib/components/ui/slider';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Select from '$lib/components/ui/select';
 	import { RotateCcw } from 'lucide-svelte';
 	import { Separator } from '$lib/components/ui/separator';
+	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
+</script>
 
+<script lang="ts">
 	const currentSettings = $state(inject(USER_SETTINGS));
 
 	// 获取当前激活的背景图片索引
@@ -232,7 +234,7 @@
 		<Separator />
 
 		<Card.Content class="space-y-4">
-			{#if $currentSettings.background.images[activeImageIndex].enableConfig && $currentSettings.background.images[activeImageIndex].config}
+			{#if $currentSettings.background.images[activeImageIndex].config && $currentSettings.background.images[activeImageIndex].enableConfig}
 				<!-- 透明度 -->
 				<!-- 透明度设置 -->
 				<div class="space-y-3">
@@ -240,60 +242,42 @@
 
 					<!-- 亮色模式透明度 -->
 					<Card.ContentItem label="亮色模式透明度" description="调整亮色主题下的图片透明度: 0~100%">
-						<Slider
-							type="single"
-							class="flex-1"
+						<SliderWithControls
 							bind:value={$currentSettings.background.images[activeImageIndex].config.opacity.light}
+							defaultValue={DEFAULT_LIGHT_OPACITY}
 							min={0}
 							max={1}
 							step={0.01}
-						/>
-						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{Math.round(
-								$currentSettings.background.images[activeImageIndex].config.opacity.light * 100
-							)}%
-						</span>
-						<Button
-							variant="outline"
-							size="icon"
-							onclick={() => {
-								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.opacity.light =
-										DEFAULT_LIGHT_OPACITY;
-								}
-							}}
 						>
-							<RotateCcw />
-						</Button>
+							{#snippet valueLabel()}
+								<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+									{Math.round(
+										($currentSettings.background.images[activeImageIndex].config?.opacity?.light ||
+											1) * 100
+									)}%
+								</span>
+							{/snippet}
+						</SliderWithControls>
 					</Card.ContentItem>
 
 					<!-- 暗色模式透明度 -->
 					<Card.ContentItem label="暗色模式透明度" description="调整暗色主题下的图片透明度: 0~100%">
-						<Slider
-							type="single"
-							class="flex-1"
+						<SliderWithControls
 							bind:value={$currentSettings.background.images[activeImageIndex].config.opacity.dark}
+							defaultValue={DEFAULT_DARK_OPACITY}
 							min={0}
 							max={1}
 							step={0.01}
-						/>
-						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{Math.round(
-								$currentSettings.background.images[activeImageIndex].config.opacity.dark * 100
-							)}%
-						</span>
-						<Button
-							variant="outline"
-							size="icon"
-							onclick={() => {
-								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.opacity.dark =
-										DEFAULT_DARK_OPACITY;
-								}
-							}}
 						>
-							<RotateCcw />
-						</Button>
+							{#snippet valueLabel()}
+								<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+									{Math.round(
+										($currentSettings.background.images[activeImageIndex].config?.opacity?.dark ||
+											1) * 100
+									)}%
+								</span>
+							{/snippet}
+						</SliderWithControls>
 					</Card.ContentItem>
 				</div>
 				<!-- 显示模式 -->
@@ -426,206 +410,156 @@
 					{#if $currentSettings.background.images[activeImageIndex].config?.filters !== undefined}
 						<!-- 亮度 -->
 						<Card.ContentItem label="亮度" description="调整亮度: 0~200%">
-							<Slider
-								type="single"
-								class="flex-1"
+							<SliderWithControls
 								bind:value={
 									$currentSettings.background.images[activeImageIndex].config.filters.brightness
 								}
+								defaultValue={1}
 								min={0}
 								max={2}
 								step={0.1}
-							/>
-							<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-								{$currentSettings.background.images[
-									activeImageIndex
-								].config.filters.brightness.toFixed(1)}
-							</span>
-							<Button
-								variant="outline"
-								size="icon"
-								onclick={() => {
-									$currentSettings.background.images[activeImageIndex].config!.filters!.brightness =
-										1;
-								}}
 							>
-								<RotateCcw />
-							</Button>
+								{#snippet valueLabel()}
+									<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+										{(
+											$currentSettings.background.images[activeImageIndex].config?.filters
+												?.brightness || 1
+										).toFixed(1)}
+									</span>
+								{/snippet}
+							</SliderWithControls>
 						</Card.ContentItem>
 
 						<!-- 对比度 -->
 						<Card.ContentItem label="对比度" description="调整对比度: 0~200%">
-							<Slider
-								type="single"
-								class="flex-1"
+							<SliderWithControls
 								bind:value={
 									$currentSettings.background.images[activeImageIndex].config.filters.contrast
 								}
+								defaultValue={1}
 								min={0}
 								max={2}
 								step={0.1}
-							/>
-							<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-								{$currentSettings.background.images[
-									activeImageIndex
-								].config.filters.contrast.toFixed(1)}
-							</span>
-							<Button
-								variant="outline"
-								size="icon"
-								onclick={() => {
-									$currentSettings.background.images[activeImageIndex].config!.filters!.contrast =
-										1;
-								}}
 							>
-								<RotateCcw />
-							</Button>
+								{#snippet valueLabel()}
+									<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+										{(
+											$currentSettings.background.images[activeImageIndex].config?.filters
+												?.contrast || 1
+										).toFixed(1)}
+									</span>
+								{/snippet}
+							</SliderWithControls>
 						</Card.ContentItem>
 
 						<!-- 饱和度 -->
 						<Card.ContentItem label="饱和度" description="调整饱和度: 0~200%">
-							<Slider
-								type="single"
-								class="flex-1"
+							<SliderWithControls
 								bind:value={
 									$currentSettings.background.images[activeImageIndex].config.filters.saturate
 								}
+								defaultValue={1}
 								min={0}
 								max={2}
 								step={0.1}
-							/>
-							<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-								{$currentSettings.background.images[
-									activeImageIndex
-								].config.filters.saturate.toFixed(1)}
-							</span>
-							<Button
-								variant="outline"
-								size="icon"
-								onclick={() => {
-									$currentSettings.background.images[activeImageIndex].config!.filters!.saturate =
-										1;
-								}}
 							>
-								<RotateCcw />
-							</Button>
+								{#snippet valueLabel()}
+									<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+										{(
+											$currentSettings.background.images[activeImageIndex].config?.filters
+												?.saturate || 1
+										).toFixed(1)}
+									</span>
+								{/snippet}
+							</SliderWithControls>
 						</Card.ContentItem>
 
 						<!-- 模糊 -->
 						<Card.ContentItem label="模糊" description="调整模糊程度: 0~20px">
-							<Slider
-								type="single"
-								class="flex-1"
+							<SliderWithControls
 								bind:value={
 									$currentSettings.background.images[activeImageIndex].config.filters.blur
 								}
+								defaultValue={0}
 								min={0}
 								max={20}
 								step={0.5}
-							/>
-							<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-								{$currentSettings.background.images[activeImageIndex].config.filters.blur.toFixed(
-									1
-								)}px
-							</span>
-							<Button
-								variant="outline"
-								size="icon"
-								onclick={() => {
-									$currentSettings.background.images[activeImageIndex].config!.filters!.blur = 0;
-								}}
 							>
-								<RotateCcw />
-							</Button>
+								{#snippet valueLabel()}
+									<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+										{(
+											$currentSettings.background.images[activeImageIndex].config?.filters?.blur ||
+											0
+										).toFixed(1)}px
+									</span>
+								{/snippet}
+							</SliderWithControls>
 						</Card.ContentItem>
 
 						<!-- 灰度 -->
 						<Card.ContentItem label="灰度" description="调整灰度: 0~100%">
-							<Slider
-								type="single"
-								class="flex-1"
+							<SliderWithControls
 								bind:value={
 									$currentSettings.background.images[activeImageIndex].config.filters.grayscale
 								}
+								defaultValue={0}
 								min={0}
 								max={1}
 								step={0.01}
-							/>
-							<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-								{Math.round(
-									$currentSettings.background.images[activeImageIndex].config.filters.grayscale *
-										100
-								)}%
-							</span>
-							<Button
-								variant="outline"
-								size="icon"
-								onclick={() => {
-									$currentSettings.background.images[activeImageIndex].config!.filters!.grayscale =
-										0;
-								}}
 							>
-								<RotateCcw />
-							</Button>
+								{#snippet valueLabel()}
+									<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+										{Math.round(
+											($currentSettings.background.images[activeImageIndex].config?.filters
+												?.grayscale || 0) * 100
+										)}%
+									</span>
+								{/snippet}
+							</SliderWithControls>
 						</Card.ContentItem>
 
 						<!-- 色相旋转 -->
 						<Card.ContentItem label="色相旋转" description="调整色相旋转: 0~360°">
-							<Slider
-								type="single"
-								class="flex-1"
+							<SliderWithControls
 								bind:value={
 									$currentSettings.background.images[activeImageIndex].config.filters.hueRotate
 								}
+								defaultValue={0}
 								min={0}
 								max={360}
 								step={1}
-							/>
-							<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-								{Math.round(
-									$currentSettings.background.images[activeImageIndex].config!.filters!.hueRotate
-								)}°
-							</span>
-							<Button
-								variant="outline"
-								size="icon"
-								onclick={() => {
-									if ($currentSettings.background.images[activeImageIndex]?.config?.filters) {
-										$currentSettings.background.images[activeImageIndex].config.filters.hueRotate =
-											0;
-									}
-								}}
 							>
-								<RotateCcw />
-							</Button>
+								{#snippet valueLabel()}
+									<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+										{Math.round(
+											$currentSettings.background.images[activeImageIndex].config?.filters
+												?.hueRotate || 0
+										)}°
+									</span>
+								{/snippet}
+							</SliderWithControls>
 						</Card.ContentItem>
 
 						<!-- 反转 -->
 						<Card.ContentItem label="反转" description="调整反转程度: 0~100%">
-							<Slider
-								type="single"
-								class="flex-1"
+							<SliderWithControls
 								bind:value={
 									$currentSettings.background.images[activeImageIndex].config.filters.invert
 								}
+								defaultValue={0}
 								min={0}
 								max={1}
 								step={0.01}
-							/>
-							<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-								{Math.round(
-									$currentSettings.background.images[activeImageIndex].config!.filters!.invert * 100
-								)}%
-							</span>
-							<Button
-								variant="outline"
-								size="icon"
-								onclick={() => {
-									$currentSettings.background.images[activeImageIndex].config!.filters!.invert = 0;
-								}}
 							>
-								<RotateCcw />
-							</Button>
+								{#snippet valueLabel()}
+									<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+										{Math.round(
+											($currentSettings.background.images[activeImageIndex].config?.filters
+												?.invert || 0) * 100
+										)}%
+									</span>
+								{/snippet}
+							</SliderWithControls>
 						</Card.ContentItem>
 					{/if}
 				</div>
@@ -637,106 +571,74 @@
 
 					<!-- 缩放 -->
 					<Card.ContentItem label="缩放" description="调整图片缩放比例: 10%~500%">
-						<Slider
-							type="single"
-							class="flex-1"
+						<SliderWithControls
 							bind:value={$currentSettings.background.images[activeImageIndex].config.scale}
+							defaultValue={1.0}
 							min={0.1}
 							max={5.0}
 							step={0.1}
-						/>
-						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{Math.round($currentSettings.background.images[activeImageIndex].config.scale * 100)}%
-						</span>
-						<Button
-							variant="outline"
-							size="icon"
-							onclick={() => {
-								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.scale = 1.0;
-								}
-							}}
 						>
-							<RotateCcw />
-						</Button>
+							{#snippet valueLabel()}
+								<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+									{Math.round(
+										($currentSettings.background.images[activeImageIndex].config?.scale || 1) * 100
+									)}%
+								</span>
+							{/snippet}
+						</SliderWithControls>
 					</Card.ContentItem>
 
 					<!-- 旋转 -->
 					<Card.ContentItem label="旋转" description="调整图片旋转角度: 0~360°">
-						<Slider
-							type="single"
-							class="flex-1"
+						<SliderWithControls
 							bind:value={$currentSettings.background.images[activeImageIndex].config.rotation}
+							defaultValue={0}
 							min={0}
 							max={360}
 							step={1}
-						/>
-						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{Math.round($currentSettings.background.images[activeImageIndex].config.rotation)}°
-						</span>
-						<Button
-							variant="outline"
-							size="icon"
-							onclick={() => {
-								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.rotation = 0;
-								}
-							}}
 						>
-							<RotateCcw />
-						</Button>
+							{#snippet valueLabel()}
+								<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+									{Math.round(
+										$currentSettings.background.images[activeImageIndex].config?.rotation || 0
+									)}°
+								</span>
+							{/snippet}
+						</SliderWithControls>
 					</Card.ContentItem>
 
 					<!-- X轴偏移 -->
 					<Card.ContentItem label="X轴偏移" description="调整图片水平偏移: -1000~1000px">
-						<Slider
-							type="single"
-							class="flex-1"
+						<SliderWithControls
 							bind:value={$currentSettings.background.images[activeImageIndex].config.offsetX}
+							defaultValue={0}
 							min={-1000}
 							max={1000}
 							step={10}
-						/>
-						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{$currentSettings.background.images[activeImageIndex].config.offsetX}px
-						</span>
-						<Button
-							variant="outline"
-							size="icon"
-							onclick={() => {
-								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.offsetX = 0;
-								}
-							}}
 						>
-							<RotateCcw />
-						</Button>
+							{#snippet valueLabel()}
+								<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+									{$currentSettings.background.images[activeImageIndex].config?.offsetX || 0}px
+								</span>
+							{/snippet}
+						</SliderWithControls>
 					</Card.ContentItem>
 
 					<!-- Y轴偏移 -->
 					<Card.ContentItem label="Y轴偏移" description="调整图片垂直偏移: -1000~1000px">
-						<Slider
-							type="single"
-							class="flex-1"
+						<SliderWithControls
 							bind:value={$currentSettings.background.images[activeImageIndex].config.offsetY}
+							defaultValue={0}
 							min={-1000}
 							max={1000}
 							step={10}
-						/>
-						<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
-							{$currentSettings.background.images[activeImageIndex].config.offsetY}px
-						</span>
-						<Button
-							variant="outline"
-							size="icon"
-							onclick={() => {
-								if ($currentSettings.background.images[activeImageIndex]?.config) {
-									$currentSettings.background.images[activeImageIndex].config.offsetY = 0;
-								}
-							}}
 						>
-							<RotateCcw />
-						</Button>
+							{#snippet valueLabel()}
+								<span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+									{$currentSettings.background.images[activeImageIndex].config?.offsetY || 0}px
+								</span>
+							{/snippet}
+						</SliderWithControls>
 					</Card.ContentItem>
 				</div>
 			{:else}
