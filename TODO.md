@@ -12,7 +12,7 @@
 - [x] 主题数据编辑区
 - [x] 优化std主题选择器
 - [ ] reader文本等可选中
-- [ ] 应用页面元数据（title、description）
+- [x] 应用页面元数据（title、description）
 - [ ] window-vibrancy
 - [x] css默认值问题：ui透明度默认从0.1开始；移除body入场动画的透明度
 - [x] 四色主题颜色问题：accent明暗模式颜色值对调

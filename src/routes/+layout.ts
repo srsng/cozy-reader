@@ -17,13 +17,19 @@ export const prerender = false;
 export const ssr = false;
 export const csr = true;
 
-export type RootData = {
-	userSettings: Writable<UserSettings>;
-	tauri: Tauri;
+export type pageMetaData = {
+	title?: string;
+	description?: string;
 };
 
+// export type RootData = {
+// 	userSettings: Writable<UserSettings>;
+// 	tauri: Tauri;
+// 	metaData: pageMetaData;
+// };
+
 // eslint-disable-next-line
-export async function load({ params }): Promise<RootData> {
+export async function load({ params }) {
 	try {
 		// await initDatabase();
 		console.log('App initialized in +layout.ts');
@@ -66,11 +72,15 @@ export async function load({ params }): Promise<RootData> {
 	// const hooksService = new HooksService(tauri);
 	// const settingsService = new SettingsService(tauri);
 	// const githubAuthenticationService = new GitHubAuthenticationService(tauri);
-
+	const metaData: pageMetaData = {
+		title: 'Cozy Reader',
+		description: 'Cozy Reader is a reader that reads books in a cozy environment.'
+	};
 	return {
 		tauri,
 		// appData,
-		userSettings
+		userSettings,
+		metaData
 		// 	commandService,
 		// 	tokenMemoryService,
 		// 	appSettings,

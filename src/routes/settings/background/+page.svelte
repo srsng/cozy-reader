@@ -1,12 +1,13 @@
 <script lang="ts" module>
+	import type { PageData } from './$types';
 	import { BgForms } from '$lib/components/forms';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { slide } from 'svelte/transition';
+</script>
 
-	const metaData = {
-		title: '背景设置',
-		description: '管理应用程序的背景图片和设置选项'
-	};
+<script>
+	const { data } = $props<{ data: PageData }>();
+	const metaData = data.metaData;
 </script>
 
 <svelte:head>

@@ -3,16 +3,20 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { goBgSettings, goReaderHome, goReadFsBook, goSettings } from '$lib/utils/route.svelte';
-	import { BookOpen, Settings, Palette, FileText, Globe, Navigation } from 'lucide-svelte';
-	import { toast, Toaster } from 'svelte-sonner';
+	import { BookOpen, Settings, Palette, FileText, Navigation } from 'lucide-svelte';
+	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
+	import type { LayoutData } from './$types';
+
+	const { data } = $props<{ data: LayoutData }>();
+	const metaData = data.metaData;
 </script>
 
 <div class="container mx-auto max-w-4xl px-4 py-8" in:slide>
 	<!-- 主标题 -->
 	<div class="mb-8 text-center">
-		<h1 class="mb-4 text-4xl font-bold">Cozy Reader</h1>
-		<p class="text-muted-foreground text-lg">一个舒适的 Markdown 阅读器，支持主题定制和背景配置</p>
+		<h1 class="mb-4 text-4xl font-bold">{metaData.title}</h1>
+		<p class="text-muted-foreground text-lg">{metaData.description}</p>
 	</div>
 
 	<!-- 功能模块卡片 -->

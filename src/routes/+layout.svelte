@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	// types
-	import type { RootData } from './+layout';
+	import type { LayoutData } from './$types';
 	import { type Snippet } from 'svelte';
 	// tool funcs
 	import { provide } from '$lib/utils/context';
@@ -14,7 +14,7 @@
 	// background functions
 	import BackgroundAction from '$lib/components/action/background-action.svelte';
 	// animation func
-	import { startWindowTiltUpAnimation, tiltUp } from '$lib/animation';
+	import { startWindowTiltUpAnimation } from '$lib/animation';
 
 	// services
 	import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
@@ -30,7 +30,7 @@
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 
-	const { data, children }: { data: RootData; children: Snippet } = $props();
+	const { data, children }: { data: LayoutData; children: Snippet } = $props();
 
 	provide(APP_STATE, initAppState());
 	provide(USER_SETTINGS, data.userSettings);
@@ -52,24 +52,14 @@
 		// 启动窗口入场动画
 		startWindowTiltUpAnimation();
 	});
-
-	const metaData = {
-		title: 'Cozy Reader',
-		description: 'Cozy Reader is a reader that reads books in a cozy environment.'
-	};
-
-	// todo page.data.title获取不到值
-	// $effect(() => {
-	// 	console.log('page meta title', page.data.title);
-	// });
 </script>
 
 <svelte:head>
-	<title>{page.data.title ?? metaData.title}</title>
-	<meta name="description" content={page.data.description ?? metaData.description} />
+	<title>{page.data.metaData.title}</title>
+	<meta name="description" content={page.data.metaData.description} />
 </svelte:head>
 
-<svelte:body in:tiltUp />
+<svelte:body />
 <!-- <svelte:document transition:scale /> -->
 
 <ThemeAction />
