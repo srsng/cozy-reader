@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { writeToClipBoard } from '$lib/utils/clip';
-	import AppIcon from '$lib/components/app-icon.svelte';
+	import AppIcon from '$lib/components/common/app-icon.svelte';
 	import { inject } from '$lib/utils/context';
 	import { APP_STATE } from '$lib/stores/appState';
 </script>

@@ -1,7 +1,7 @@
 // import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 // import { emit } from '@tauri-apps/api/event';
 
-// todo
+// todo: how to manage all EVENTS?
 export enum SHORTCUT_EVENTS_ENUM {
 	'zoom-in' = 'zoom-in',
 	'zoom-out' = 'zoom-out',
