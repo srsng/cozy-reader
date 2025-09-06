@@ -1,12 +1,13 @@
 import { goto } from '$app/navigation';
 import { page } from '$app/state';
 
-export type Pages = 'home' | 'settings' | 'bg_settings';
+export type Pages = 'home' | 'settings' | 'bg_settings' | 'reader_home';
 
 export const RouteMap: Record<Pages, string> = {
 	home: '/',
 	settings: '/settings/',
-	bg_settings: '/settings/background'
+	bg_settings: '/settings/background',
+	reader_home: '/reader'
 };
 
 // 页面历史记录
@@ -66,6 +67,18 @@ export function goSettings() {
 
 export function goBgSettings() {
 	goto(RouteMap.bg_settings);
+}
+
+export function goReaderHome() {
+	goto(RouteMap.reader_home);
+}
+
+export function goReadBook(bookId: number) {
+	goto(`${RouteMap.reader_home}/${bookId}`);
+}
+
+export function goReadFsBook(bookPath: string) {
+	goto(`${RouteMap.reader_home}/fs/${bookPath}`);
 }
 
 // 获取当前页面路径

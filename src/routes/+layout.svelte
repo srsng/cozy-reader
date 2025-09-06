@@ -24,7 +24,7 @@
 	import ZoomInOutMenuAction from '$lib/components/action/ZoomInOutMenuAction.svelte';
 	import WindowAction from '$lib/components/action/window-action.svelte';
 	import HotkeysAction from '$lib/components/action/HotkeysAction.svelte';
-	import { Toaster } from 'svelte-sonner';
+	import { Toaster } from '$lib/components/ui/sonner';
 
 	// ui components
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';

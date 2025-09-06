@@ -2,7 +2,9 @@
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import { goBgSettings, goReaderHome, goReadFsBook, goSettings } from '$lib/utils/route.svelte';
 	import { BookOpen, Settings, Palette, FileText, Globe, Navigation } from 'lucide-svelte';
+	import { toast, Toaster } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
 </script>
 
@@ -16,10 +18,7 @@
 	<!-- 功能模块卡片 -->
 	<div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 		<!-- Markdown 阅读器 -->
-		<Card.Root
-			class="cursor-pointer transition-shadow hover:shadow-lg"
-			onclick={() => goto('/md_reader')}
-		>
+		<Card.Root class="cursor-pointer transition-shadow hover:shadow-lg" onclick={goReaderHome}>
 			<Card.Header>
 				<div class="flex items-center gap-3">
 					<BookOpen class="text-primary h-6 w-6" />
@@ -46,7 +45,7 @@
 		<!-- 背景设置 -->
 		<Card.Root
 			class="cursor-pointer transition-shadow hover:shadow-lg"
-			onclick={() => goto('/settings/background')}
+			onclick={() => goBgSettings()}
 		>
 			<Card.Header>
 				<div class="flex items-center gap-3">
@@ -58,43 +57,32 @@
 		</Card.Root>
 
 		<!-- 演示中心 -->
-		<!-- <Card.Root class="hover:shadow-lg transition-shadow cursor-pointer" onclick={() => goto('/demo')}>
+		<Card.Root
+			class="cursor-pointer transition-shadow hover:shadow-lg"
+			onclick={() => goto('/demo')}
+		>
 			<Card.Header>
 				<div class="flex items-center gap-3">
-					<FileText class="h-6 w-6 text-primary" />
+					<FileText class="text-primary h-6 w-6" />
 					<Card.Title>演示中心</Card.Title>
 				</div>
-				<Card.Description>
-					功能演示和测试页面，包含国际化和路由导航示例
-				</Card.Description>
+				<Card.Description>功能演示和测试页面，包含国际化和路由导航示例</Card.Description>
 			</Card.Header>
-		</Card.Root> -->
-
-		<!-- 国际化演示 -->
-		<!-- <Card.Root class="hover:shadow-lg transition-shadow cursor-pointer" onclick={() => goto('/demo/paraglide')}>
-			<Card.Header>
-				<div class="flex items-center gap-3">
-					<Globe class="h-6 w-6 text-primary" />
-					<Card.Title>国际化演示</Card.Title>
-				</div>
-				<Card.Description>
-					多语言支持演示，基于 Paraglide 国际化框架
-				</Card.Description>
-			</Card.Header>
-		</Card.Root> -->
+		</Card.Root>
 
 		<!-- 路由导航演示 -->
-		<!-- <Card.Root class="hover:shadow-lg transition-shadow cursor-pointer" onclick={() => goto('/demo/route-demo')}>
+		<Card.Root
+			class="cursor-pointer transition-shadow hover:shadow-lg"
+			onclick={() => goto('/demo/route-demo')}
+		>
 			<Card.Header>
 				<div class="flex items-center gap-3">
-					<Navigation class="h-6 w-6 text-primary" />
+					<Navigation class="text-primary h-6 w-6" />
 					<Card.Title>路由导航演示</Card.Title>
 				</div>
-				<Card.Description>
-					路由导航功能测试，包含返回功能和历史记录管理
-				</Card.Description>
+				<Card.Description>路由导航功能测试，包含返回功能和历史记录管理</Card.Description>
 			</Card.Header>
-		</Card.Root> -->
+		</Card.Root>
 	</div>
 
 	<!-- 项目特性 -->
@@ -130,18 +118,34 @@
 	<div class="text-center">
 		<h3 class="mb-4 text-xl font-semibold">快速开始</h3>
 		<div class="flex flex-wrap justify-center gap-3">
-			<Button onclick={() => goto('/md_reader')} class="gap-2">
+			<Button onclick={goReaderHome} class="gap-2">
 				<BookOpen class="h-4 w-4" />
 				开始阅读
 			</Button>
-			<Button variant="outline" onclick={() => goto('/settings')} class="gap-2">
+			<Button variant="outline" onclick={goSettings} class="gap-2">
 				<Settings class="h-4 w-4" />
 				个性化设置
 			</Button>
-			<Button variant="outline" onclick={() => goto('/settings/background')} class="gap-2">
+			<Button variant="outline" onclick={goBgSettings} class="gap-2">
 				<Palette class="h-4 w-4" />
 				背景配置
 			</Button>
+			<Button
+				variant="outline"
+				onclick={() =>
+					goReadFsBook(
+						`E:\\my_computer\\Documents\\工作汇总\\学业情况\\作业要求\\3.1-大三上\\看电影学哲学\\期末论文.md`
+					)}
+				class="gap-2"
+			>
+				<Palette class="h-4 w-4" />
+				Test
+			</Button>
+			<Button variant="outline" onclick={() => goReadFsBook(`E:\\`)} class="gap-2">
+				<Palette class="h-4 w-4" />
+				Test err
+			</Button>
+			<Button onclick={() => toast('Hello world')}>Show toast</Button>
 		</div>
 	</div>
 </div>
