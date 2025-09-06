@@ -24,6 +24,8 @@
 
 ### hard
 
+- [ ] md支持渲染数学公式
+- [ ] 增强md：table等组件 [参考](node_modules\.pnpm\marked@16.2.1\node_modules\marked\lib\marked.d.ts)
 - [ ] 书籍drag添加到书库
   - [ ] 支持批量添加
 - [ ] fix: 从深色mode切换到浅色模式时会有一个闪光弹效果
