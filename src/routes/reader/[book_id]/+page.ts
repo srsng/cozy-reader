@@ -31,7 +31,8 @@ export async function load({ params }) {
 
 		// 读取markdown文件内容
 		try {
-			const markdownContent = await invoke('read_markdown_file', { path: book.path });
+			const temp = (await invoke('read_markdown_file', { path: book.path })) as string;
+			const markdownContent = temp ? temp : '';
 
 			return {
 				book_id: bookId,

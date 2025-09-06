@@ -1,5 +1,6 @@
 import { goto } from '$app/navigation';
 import { page } from '$app/state';
+import { redirect } from '@sveltejs/kit';
 
 export type Pages = 'home' | 'settings' | 'bg_settings' | 'reader_home';
 
@@ -56,9 +57,23 @@ export function goBack() {
 		goHome();
 	}
 }
+export function redirectBack() {
+	if (currentIndex > 0) {
+		currentIndex--;
+		const previousPath = pageHistory[currentIndex];
+		redirect(302, previousPath);
+	} else {
+		// 如果没有历史记录，返回首页
+		redirectHome();
+	}
+}
 
 export function goHome() {
 	goto(RouteMap.home);
+}
+
+export function redirectHome() {
+	redirect(302, RouteMap.home);
 }
 
 export function goSettings() {
@@ -81,8 +96,8 @@ export function goReadBook(bookId: number) {
 	goto(getReadBookUrl(bookId));
 }
 
-export function goReadFsBook(bookPath: string) {
-	goto(`${RouteMap.reader_home}/fs/${bookPath}`);
+export function goReadFsBook(bookPath: string, goRead?: boolean) {
+	goto(`${RouteMap.reader_home}/fs/${bookPath}?goRead=${goRead ?? false}`);
 }
 
 // 获取当前页面路径

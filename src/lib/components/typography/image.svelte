@@ -1,13 +1,19 @@
 <script lang="ts">
 	import { convertFileSrc } from '@tauri-apps/api/core';
-	const { href, alt, title, ...other } = $props();
+
+	interface Props {
+		href?: string;
+		title?: string;
+		text?: string;
+	}
+
+	const { href = '', title = undefined, text = '' }: Props = $props();
 </script>
 
 <img
 	src={convertFileSrc(href)}
-	alt={alt || "Image didn't load"}
-	class="items-center justify-between"
 	{title}
+	alt={text}
+	class="items-center justify-between"
 	loading="lazy"
-	{...other}
 />

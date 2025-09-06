@@ -12,7 +12,7 @@
 		if (data.error) {
 			// 显示错误toast
 			const errorMessage = data.error.message;
-			const filePath = data.error.filePath;
+			// const filePath = data.error.filePath;
 
 			switch (data.error.type) {
 				case 'unsupported_file':

@@ -8,6 +8,6 @@
 	const { children }: Props = $props();
 </script>
 
-<span class="leading-7 [&:not(:first-child)]:mt-6">
+<span class="font-extrabold">
 	{@render children()}
 </span>

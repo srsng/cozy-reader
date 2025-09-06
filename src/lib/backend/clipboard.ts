@@ -15,15 +15,21 @@ export async function writeClipboard(
 	opt: {
 		errorMessage?: string;
 		message?: string;
+		description?: string;
+		errorDescription?: string;
 	} = {}
 ) {
 	const { errorMessage, message } = opt;
 	await writeText(text)
 		.then(() => {
-			toast.info(message || 'Copied to clipboard');
+			toast.info(message || 'Copied to clipboard', {
+				description: opt.description
+			});
 		})
 		.catch((err: any) => {
-			toast.error(errorMessage || 'Failed to copy');
+			toast.error(errorMessage || 'Failed to copy', {
+				description: opt.errorDescription
+			});
 			console.error(errorMessage, err);
 		});
 }

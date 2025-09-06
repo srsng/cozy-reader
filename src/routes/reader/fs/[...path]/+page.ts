@@ -1,6 +1,14 @@
 import { redirect } from '@sveltejs/kit';
-import { BookService, BookFormat, StorageType } from '$lib/database/book';
-import { getReadBookUrl, RouteMap } from '$lib/utils/route.svelte.js';
+import {
+	BookService,
+	BookFormat,
+	StorageType,
+	isSupportFormat,
+	getFileFormat
+} from '$lib/database/book';
+import { getReadBookUrl, redirectBack } from '$lib/utils/route.svelte.js';
+import { page } from '$app/state';
+import { toast } from 'svelte-sonner';
 
 export const prerender = false;
 
@@ -10,13 +18,11 @@ export async function load({ params }) {
 	const filePath = Array.isArray(pathSegments) ? pathSegments.join('/') : pathSegments;
 	console.log(filePath);
 
-	// todo: 支持更多文件类型
-	// 检查是否为markdown文件
-	if (!filePath.toLowerCase().endsWith('.md')) {
+	if (!isSupportFormat(filePath)) {
 		return {
 			error: {
 				type: 'unsupported_file',
-				message: `不支持的文件类型，仅支持.md文件`,
+				message: `不支持的文件类型`,
 				filePath: filePath
 			}
 		};
@@ -28,7 +34,18 @@ export async function load({ params }) {
 
 		if (existingBook) {
 			// 如果书籍已存在，直接重定向到该书籍页面
-			throw redirect(302, getReadBookUrl(existingBook.id));
+			if (page.url.searchParams.get('goRead')) {
+				// 重定向到新创建的书籍页面
+				throw redirect(302, getReadBookUrl(existingBook.id));
+			} else {
+				toast.info('书籍已存在', {
+					description: `书籍标题: ${existingBook.title}`
+				});
+				redirectBack();
+			}
+			return {
+				existingBook
+			};
 		}
 
 		// 自动添加新书籍
@@ -39,7 +56,7 @@ export async function load({ params }) {
 			path: filePath,
 			title: title,
 			author: '',
-			format: BookFormat.MARKDOWN,
+			format: getFileFormat(filePath) as BookFormat,
 			storage_type: StorageType.FILESYSTEM,
 			notes: `通过链接打开的书籍: ${title}`
 		});
@@ -54,8 +71,15 @@ export async function load({ params }) {
 			};
 		}
 
-		// 重定向到新创建的书籍页面
-		throw redirect(302, getReadBookUrl(createResult.data!.id));
+		if (page.url.searchParams.get('goRead')) {
+			// 重定向到新创建的书籍页面
+			throw redirect(302, getReadBookUrl(createResult.data!.id));
+		} else {
+			toast.info('书籍添加成功', {
+				description: `书籍标题: ${title}`
+			});
+			redirectBack();
+		}
 	} catch (error: any) {
 		// 如果是重定向错误，直接抛出
 		if (error.status === 302) {

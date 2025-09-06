@@ -11,9 +11,32 @@ export enum BookFormat {
 	/** PDF格式 */
 	PDF = 'pdf',
 	/** HTML格式 */
-	HTML = 'html',
-	/** 其他格式 */
-	OTHER = 'other'
+	HTML = 'html'
+}
+
+export const BookFormatSupportFmt = `${BookFormat}`;
+
+export const BookFormatNames = (() => {
+	let temp = [];
+	for (const key in BookFormat) {
+		if (Object.prototype.hasOwnProperty.call(BookFormat, key)) {
+			const element = BookFormat[key as keyof typeof BookFormat];
+			temp.push(element);
+		}
+	}
+	return temp;
+})();
+
+// 检查文件格式是否支持
+export function isSupportFormat(filepath: string): boolean {
+	const format = getFileFormat(filepath);
+	return BookFormatNames.includes(format as any);
+}
+
+// 获取文件格式
+export function getFileFormat(filepath: string): string {
+	const format = filepath.split('.').pop()?.toLowerCase();
+	return format || '';
 }
 
 /**

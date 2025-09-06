@@ -15,7 +15,7 @@ export type {
 	BookStatistics,
 	ReadingProgress
 } from './book';
-export { BookStatus, BookFormat, StorageType } from './book';
+export { BookStatus, BookFormat, StorageType, isSupportFormat, getFileFormat } from './book';
 export { BookService } from './bookService';
 
 // 阅读会话相关类型和服务

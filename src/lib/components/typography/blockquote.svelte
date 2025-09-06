@@ -1,4 +1,16 @@
-<blockquote class="mt-6 border-l-2 pl-6 italic">
-	&quot;After all,&quot; he said, &quot;everyone enjoys a good joke, so it&apos;s only fair that
-	they should pay for the privilege.&quot;
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		text: string;
+		raw: boolean;
+		children: Snippet;
+	}
+
+	const { text, raw, children }: Props = $props();
+	console.log('bq text', raw, text);
+</script>
+
+<blockquote class="border-primary bg-primary/10 rounded-r-lg border-l-4 border-solid px-4 py-2">
+	{@render children()}
 </blockquote>
