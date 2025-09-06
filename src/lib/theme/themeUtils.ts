@@ -89,7 +89,7 @@ export function createThemeBinding<T extends AppThemeType>(
 ): ThemeBinding<T> {
 	return {
 		type: themeType,
-		data: themeData[themeType]
+		data: structuredClone(themeData[themeType])
 	};
 }
 

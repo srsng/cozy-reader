@@ -71,11 +71,11 @@
 	</Card.Header>
 	<Card.Content class="space-y-4">
 		{#if $currentSettings.theme.type === 'four_colors'}
-			<Card.ContentItem label="色相值" description="0~360，每一个色相都是一个不同的主题">
+			<Card.ContentItem label="色相值" description="1~360°，每一个色相都是一个不同的主题">
 				<SliderWithControls
 					bind:value={$currentSettings.theme.data.four_colors.hue}
 					defaultValue={DefaultThemeData.four_colors.hue}
-					min={0}
+					min={1}
 					max={360}
 					step={1}
 				>
@@ -84,6 +84,7 @@
 							bind:value={$currentSettings.theme.data.four_colors.hue}
 							type="number"
 							placeholder="Hue"
+							class="w-20"
 						/>
 					{/snippet}
 				</SliderWithControls>

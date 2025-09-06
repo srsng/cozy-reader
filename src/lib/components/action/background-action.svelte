@@ -309,7 +309,7 @@
 	$effect(() => {
 		// 当背景设置发生变化或主题变化时重新应用样式
 		// 通过访问mode.current来建立对主题变化的响应性
-		const currentMode = mode.current;
+		// const currentMode = mode.current;
 		if (activeImage || $userSettings.background.activeImageId === null) {
 			applyBackgroundToContainer();
 		}

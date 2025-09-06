@@ -28,6 +28,7 @@ export async function saveUserSettingsImmediately(store: Writable<UserSettings>)
 	const cleanValue = clean(currentValue!);
 	await configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
 	await configStore.save();
+	console.log('saveUserSettingsImmediately success');
 }
 
 export async function loadUserSettings(): Promise<Writable<UserSettings>> {

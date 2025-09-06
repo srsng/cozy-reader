@@ -1,12 +1,13 @@
 <script lang="ts" module>
 	import { inject } from '$lib/utils/context';
+	import { exists } from '@tauri-apps/plugin-fs';
 	import { confirm } from '@tauri-apps/plugin-dialog';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { createBackgroundImage, type BackgroundImage } from '$lib/settings/background';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Card from '$lib/components/ui/card';
-	import { Info, Trash2, Upload, Check, X, SquarePen, EyeOff, Eye } from 'lucide-svelte';
+	import { Info, Trash2, Upload, Check, X, SquarePen, EyeOff, Eye, Copy } from 'lucide-svelte';
 	import { askOpenImg } from '$lib/utils/file';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { writeToClipBoard } from '$lib/utils/clip';
@@ -14,6 +15,7 @@
 	import { BACKGROUND_EVENTS } from '$lib/events/shortcut';
 	import { emit } from '@tauri-apps/api/event';
 	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
+	import { toast } from 'svelte-sonner';
 </script>
 
 <script lang="ts">
@@ -37,6 +39,9 @@
 				emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
 			}
 		} catch (error) {
+			toast.error('选择图片失败', {
+				description: `${error}`
+			});
 			console.error('选择图片失败:', error);
 		}
 	}
@@ -62,10 +67,23 @@
 	}
 
 	// 激活背景图片
-	function activateImage(imageId: string) {
-		$currentSettings.background.activeImageId = imageId;
-		// 发送背景图片切换事件
-		emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
+	async function activateImage(imageId: string) {
+		const image = $currentSettings.background.images.find((img) => img.id === imageId);
+		if (!image) {
+			toast.error('未知错误', {
+				description: '图片配置丢失'
+			});
+			return;
+		}
+		if (await exists(image.filePath)) {
+			$currentSettings.background.activeImageId = imageId;
+			// 发送背景图片切换事件
+			emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
+		} else {
+			toast.error('目标图片不存在', {
+				description: '请检查是否删除图片'
+			});
+		}
 	}
 
 	// 禁用背景图片
@@ -112,6 +130,48 @@
 			cancelEditName();
 		}
 	}
+
+	// 复制图片配置
+	function copyCurImageConfig() {
+		const sourceImage = $currentSettings.background.images.find(
+			(img) => img.id === $currentSettings.background.activeImageId && img.internal === false
+		);
+		if (!sourceImage) {
+			toast.warning('复制配置失败', {
+				description: '未使用任何背景图'
+			});
+			return;
+		}
+		try {
+			// 创建新的图片配置，复制所有配置但生成新的ID
+			const copiedImage = createBackgroundImage({
+				name: `${sourceImage.name} - 副本`,
+				filePath: sourceImage.filePath,
+				internal: sourceImage.internal,
+				enableConfig: sourceImage.enableConfig,
+				config: sourceImage.config ? { ...sourceImage.config } : undefined,
+				themeBinding: sourceImage.themeBinding ? { ...sourceImage.themeBinding } : undefined
+			});
+
+			// 添加到配置末尾
+			$currentSettings.background.images = [...$currentSettings.background.images, copiedImage];
+
+			// 设为活跃图片
+			$currentSettings.background.activeImageId = copiedImage.id;
+
+			// 发送背景图片切换事件
+			emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
+
+			toast.success('复制配置成功', {
+				description: `已复制 "${sourceImage.name}" 的配置`
+			});
+		} catch (error) {
+			toast.error('复制配置失败', {
+				description: `${error}`
+			});
+			console.error('复制配置失败:', error);
+		}
+	}
 </script>
 
 {#snippet imageTooltip(image: BackgroundImage)}
@@ -144,10 +204,21 @@
 					<Upload />
 				</Button>
 				<Button
+					title="复制当前背景图的配置"
+					class="flex-shrink-0"
+					size="icon"
+					variant={$currentSettings.background.activeImageId === null ? 'outline' : 'default'}
+					disabled={$currentSettings.background.activeImageId === null}
+					onclick={() => copyCurImageConfig()}
+				>
+					<Copy />
+				</Button>
+				<Button
 					title="禁用背景"
 					class="flex-shrink-0"
 					size="icon"
 					variant={$currentSettings.background.activeImageId === null ? 'outline' : 'default'}
+					disabled={$currentSettings.background.activeImageId === null}
 					onclick={disableBackground}
 				>
 					<EyeOff />
