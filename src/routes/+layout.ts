@@ -44,10 +44,6 @@ export async function load({ params }): Promise<RootData> {
 	// const appSettings = await loadAppSettings();
 	// initAnalyticsIfEnabled(appSettings, posthog);
 
-	// // TODO: Find a workaround to avoid this dynamic import
-	// // https://github.com/sveltejs/kit/issues/905
-	// const defaultPath = await (await import('@tauri-apps/api/path')).homeDir();
-
 	// const commandService = new CommandService();
 
 	// const tokenMemoryService = new TokenMemoryService();

@@ -7,6 +7,7 @@ import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte
 import { goSettings } from '$lib/utils/route.svelte';
 import { emit } from '@tauri-apps/api/event';
 import { SHORTCUT_EVENT } from './shortcutService';
+import { SHORTCUT_EVENTS_ENUM } from '$lib/events';
 
 /**
  * 默认快捷键定义
@@ -27,21 +28,21 @@ export const DEFAULT_SHORTCUTS: StaticShortcut[] = [
 		name: '放大',
 		description: '增加应用程序缩放比例',
 		combination: { key: '=', modifiers: [ModifierKey.Ctrl] },
-		handler: () => emit(SHORTCUT_EVENT, 'zoom-in')
+		handler: () => emit(SHORTCUT_EVENT, SHORTCUT_EVENTS_ENUM['zoom-in'])
 	},
 	{
 		id: 'zoom.out',
 		name: '缩小',
 		description: '减少应用程序缩放比例',
 		combination: { key: '-', modifiers: [ModifierKey.Ctrl] },
-		handler: () => emit(SHORTCUT_EVENT, 'zoom-out')
+		handler: () => emit(SHORTCUT_EVENT, SHORTCUT_EVENTS_ENUM['zoom-out'])
 	},
 	{
 		id: 'zoom.reset',
 		name: '重置缩放',
 		description: '重置应用程序缩放比例为100%',
 		combination: { key: '0', modifiers: [ModifierKey.Ctrl] },
-		handler: () => emit(SHORTCUT_EVENT, 'zoom-reset')
+		handler: () => emit(SHORTCUT_EVENT, SHORTCUT_EVENTS_ENUM['zoom-reset'])
 	},
 
 	// // 导航操作

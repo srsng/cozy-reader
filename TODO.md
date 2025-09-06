@@ -38,7 +38,7 @@
 - [ ] api系统
 - [x] 全局快捷键系统
 - [ ] 事件系统 - 事件列表 管理事件
-- [ ] 全局toast
+- [x] 全局toast
 - [x] 全局应用状态
 - [ ] 为bar添加变体封装
 - [ ] 集中管理theme
@@ -51,6 +51,7 @@
 - [x] 深色模式下按钮hover效果尤其是close window按钮不佳，destructive颜色没有
 - [ ] 尺寸/大小过渡动画
   - [ ] 优化主题数据编辑区高度变化动画 (Card组件)
+  - => 新思路：新增元素时，scale+slide过渡，挤压父元素尺寸
 - [ ] review 自定义titlebar配置页及相关组件的代码
   - src\lib\components\layout\custom\*
   - src\lib\components\forms\bar\*

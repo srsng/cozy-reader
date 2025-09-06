@@ -43,12 +43,13 @@ export enum PonyNameEnum {
 export type PonyName = `${PonyNameEnum}`;
 export const ALL_Pony_NAMES = Object.values(PonyNameEnum);
 
-// todo
-let temp: any = {};
-for (let name in ALL_Std_TD_NAMES) {
-	temp[name] = name;
-}
-export const Std_TD_NAMES_2_Str: Record<StdTDName, string> = temp;
+export const Std_TD_NAMES_2_Str: Record<StdTDName, string> = (() => {
+	let temp: any = {};
+	for (let name in ALL_Std_TD_NAMES) {
+		temp[name] = name;
+	}
+	return temp;
+})();
 
 export interface StandardThemeData {
 	name: StdTDName;

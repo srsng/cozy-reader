@@ -1,7 +1,6 @@
 // from gitbulter
-
-// import { chipToasts } from '@gitbutler/ui';
 import { writeText, readText } from '@tauri-apps/plugin-clipboard-manager';
+import { toast } from 'svelte-sonner';
 
 /**
  * Copy the provided text into the the system clipboard. Upon completion, a toast will be displayed which contains
@@ -21,11 +20,10 @@ export async function writeClipboard(
 	const { errorMessage, message } = opt;
 	await writeText(text)
 		.then(() => {
-			// todo
-			// chipToasts.success(message || 'Copied to clipboard');
+			toast.info(message || 'Copied to clipboard');
 		})
 		.catch((err: any) => {
-			// chipToasts.error(errorMessage || 'Failed to copy');
+			toast.error(errorMessage || 'Failed to copy');
 			console.error(errorMessage, err);
 		});
 }
