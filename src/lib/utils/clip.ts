@@ -7,10 +7,12 @@ export async function writeToClipBoard(text: string, toastIt?: boolean) {
 		if (toastIt) {
 			toast.success('复制成功');
 		}
+		return true;
 	} catch {
 		console.warn('Failed!');
 		if (toastIt) {
 			toast.error('复制失败');
 		}
+		return false;
 	}
 }
