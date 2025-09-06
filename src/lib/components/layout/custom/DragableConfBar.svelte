@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { cn } from '$lib/utils.js';
+	import { cn } from '$lib/utils';
 	import { type VariantProps, tv } from 'tailwind-variants';
 	import type { BarConfig, ButtonConfig } from '$lib/settings/Layout';
 	import { inject } from '$lib/utils/context';
@@ -87,14 +87,14 @@
 
 		// 创建新的配置
 		const newConfig = { ...config };
-		
+
 		// 从原位置移除
 		if (draggedFromSection === 'left') {
-			newConfig.left = newConfig.left.filter(b => b.name !== draggedButton!.name);
+			newConfig.left = newConfig.left.filter((b) => b.name !== draggedButton!.name);
 		} else if (draggedFromSection === 'center') {
-			newConfig.center = newConfig.center.filter(b => b.name !== draggedButton!.name);
+			newConfig.center = newConfig.center.filter((b) => b.name !== draggedButton!.name);
 		} else if (draggedFromSection === 'right') {
-			newConfig.right = newConfig.right.filter(b => b.name !== draggedButton!.name);
+			newConfig.right = newConfig.right.filter((b) => b.name !== draggedButton!.name);
 		}
 
 		// 添加到新位置
@@ -108,9 +108,9 @@
 		}
 
 		// 重新排序
-		newConfig.left.forEach((btn, i) => btn.order = i);
-		newConfig.center.forEach((btn, i) => btn.order = i);
-		newConfig.right.forEach((btn, i) => btn.order = i);
+		newConfig.left.forEach((btn, i) => (btn.order = i));
+		newConfig.center.forEach((btn, i) => (btn.order = i));
+		newConfig.right.forEach((btn, i) => (btn.order = i));
 
 		// 直接更新配置对象
 		config.left = newConfig.left;
@@ -123,7 +123,7 @@
 	function handleButtonToggle(button: ButtonConfig, section: string) {
 		if (!editable) return;
 		const sectionKey = section as 'left' | 'center' | 'right';
-		const buttonIndex = config[sectionKey].findIndex(btn => btn.name === button.name);
+		const buttonIndex = config[sectionKey].findIndex((btn) => btn.name === button.name);
 		if (buttonIndex !== -1) {
 			config[sectionKey][buttonIndex].enabled = !config[sectionKey][buttonIndex].enabled;
 		}
@@ -132,7 +132,7 @@
 	function handleButtonRemove(button: ButtonConfig, section: string) {
 		if (!editable) return;
 		const sectionKey = section as 'left' | 'center' | 'right';
-		config[sectionKey] = config[sectionKey].filter(btn => btn.name !== button.name);
+		config[sectionKey] = config[sectionKey].filter((btn) => btn.name !== button.name);
 		// 重新排序
 		config[sectionKey].forEach((btn, index) => {
 			btn.order = index;

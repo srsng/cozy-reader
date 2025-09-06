@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { cn } from '$lib/utils.js';
+	import { cn } from '$lib/utils';
 	import { type VariantProps, tv } from 'tailwind-variants';
 	import type { BarConfig } from '$lib/settings/Layout';
 	import BarSection from './BarSection.svelte';

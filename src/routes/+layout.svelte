@@ -24,12 +24,11 @@
 	import ZoomInOutMenuAction from '$lib/components/action/ZoomInOutMenuAction.svelte';
 	import WindowAction from '$lib/components/action/window-action.svelte';
 	import HotkeysAction from '$lib/components/action/HotkeysAction.svelte';
+	import { Toaster } from 'svelte-sonner';
 
 	// ui components
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
-	import { scale } from 'svelte/transition';
-	import { elasticOut } from 'svelte/easing';
 
 	const { data, children }: { data: RootData; children: Snippet } = $props();
 
@@ -79,17 +78,14 @@
 <BackgroundAction />
 <HotkeysAction />
 
-<div
-	class="app-layout"
-	role="application"
-	oncontextmenu={(e) => e.preventDefault()}
-	style:--ui-opacity={$userSettings.base.uiOpacity}
->
+<div class="app-layout" role="application" style:--ui-opacity={$userSettings.base.uiOpacity}>
 	<AppTitleBar />
 	<ScrollArea class="content-area">
 		{@render children?.()}
 	</ScrollArea>
 </div>
+
+<Toaster />
 
 <!-- todo: 根据AppTitleBar是否存在动态调整mt等样式 -->
 
