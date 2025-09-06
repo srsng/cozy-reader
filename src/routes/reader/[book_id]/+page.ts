@@ -31,6 +31,7 @@ export async function load({ params }) {
 
 		// 读取markdown文件内容
 		try {
+			// todo: 统一文件接口，包括读取，渲染。需要先调研如pdf之类的文件应该先读取怎么搞
 			const temp = (await invoke('read_markdown_file', { path: book.path })) as string;
 			const markdownContent = temp ? temp : '';
 
