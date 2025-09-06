@@ -9,13 +9,13 @@ export {
 // 书籍相关类型和服务
 export type {
 	Book,
-	BookStatus,
 	CreateBookInput,
 	UpdateBookInput,
 	BookQueryOptions,
 	BookStatistics,
 	ReadingProgress
 } from './book';
+export { BookStatus, BookFormat, StorageType } from './book';
 export { BookService } from './bookService';
 
 // 阅读会话相关类型和服务

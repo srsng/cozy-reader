@@ -1,4 +1,36 @@
 /**
+ * 书籍格式枚举
+ */
+export enum BookFormat {
+	/** 纯文本格式 */
+	TXT = 'txt',
+	/** Markdown格式 */
+	MARKDOWN = 'markdown',
+	/** EPUB电子书格式 */
+	EPUB = 'epub',
+	/** PDF格式 */
+	PDF = 'pdf',
+	/** HTML格式 */
+	HTML = 'html',
+	/** 其他格式 */
+	OTHER = 'other'
+}
+
+/**
+ * 存储方式枚举
+ */
+export enum StorageType {
+	/** 文件系统存储 */
+	FILESYSTEM = 'filesystem',
+	/** 本地存储 */
+	LOCALSTORAGE = 'localstorage',
+	/** 云存储 */
+	CLOUD = 'cloud',
+	/** 数据库存储 */
+	DATABASE = 'database'
+}
+
+/**
  * 书籍数据模型
  */
 export interface Book {
@@ -10,6 +42,10 @@ export interface Book {
 	title: string;
 	/** 书籍作者 */
 	author?: string;
+	/** 书籍格式 */
+	format: BookFormat;
+	/** 存储方式 */
+	storage_type: StorageType;
 	/** 加入时间 (ISO 8601 格式) */
 	added_at: string;
 	/** 最后阅读时间 (ISO 8601 格式) */
@@ -55,6 +91,8 @@ export interface CreateBookInput {
 	path: string;
 	title: string;
 	author?: string;
+	format: BookFormat;
+	storage_type: StorageType;
 	current_progress?: string;
 	total_characters?: number;
 	file_size?: number;
@@ -69,6 +107,8 @@ export interface CreateBookInput {
 export interface UpdateBookInput {
 	title?: string;
 	author?: string;
+	format?: BookFormat;
+	storage_type?: StorageType;
 	current_progress?: string;
 	read_characters?: number;
 	reading_time_minutes?: number;
