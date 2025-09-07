@@ -2,7 +2,7 @@
 	import { inject } from '$lib/utils/context';
 	import { exists } from '@tauri-apps/plugin-fs';
 	import { confirm } from '@tauri-apps/plugin-dialog';
-	import { USER_SETTINGS } from '$lib/stores/userSettings';
+	import { saveUserSettingsImmediately, USER_SETTINGS } from '$lib/stores/userSettings';
 	import { createBackgroundImage, type BackgroundImage } from '$lib/settings/background';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -20,6 +20,8 @@
 
 <script lang="ts">
 	const currentSettings = $state(inject(USER_SETTINGS));
+	let keepConfirm = false;
+	let askedKeepConfirm = false;
 
 	// 选择图片文件
 	async function selectImageFile() {
@@ -49,11 +51,12 @@
 	// 删除背景图片
 	async function removeImage(imageId: string) {
 		if (
-			await confirm('确定要删除这张背景图片吗？', {
+			keepConfirm ||
+			(await confirm('确定要删除这张背景图片吗？', {
 				title: '警告',
 				okLabel: '删除',
 				cancelLabel: '取消'
-			})
+			}))
 		) {
 			$currentSettings.background.images = $currentSettings.background.images.filter(
 				(img) => img.id !== imageId
@@ -62,6 +65,20 @@
 			// 如果删除的是当前激活的图片，清除激活状态
 			if ($currentSettings.background.activeImageId === imageId) {
 				$currentSettings.background.activeImageId = null;
+			}
+			saveUserSettingsImmediately(currentSettings);
+
+			if (!askedKeepConfirm) {
+				toast('近期删除不再确认？', {
+					action: {
+						label: 'Yes',
+						onClick: () => {
+							keepConfirm = true;
+							askedKeepConfirm = true;
+						}
+					},
+					onDismiss: () => (askedKeepConfirm = true)
+				});
 			}
 		}
 	}
