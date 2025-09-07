@@ -10,46 +10,52 @@
 		message?: string | string[];
 		/** 头部，可以放图标等 */
 		header?: Snippet;
+		/** 主体内容 */
+		body?: Snippet;
 		/** footer 可以放按钮等 */
 		footer?: Snippet;
 	}
 </script>
 
 <script lang="ts">
-	const { title, message, header, footer }: Props = $props();
+	const { title, message, header, body, footer }: Props = $props();
 
-	const messages = $derived.by(() => {
+	const messages: string[] = $derived.by(() => {
 		if (!message) return [];
-		if (Array.isArray(message)) return message;
 		if (typeof message === 'string') {
 			return message.split('\n\n').filter((msg) => msg.trim());
 		}
+		if (Array.isArray(message)) return message;
 		return [];
 	});
 </script>
 
-<div class="flex min-h-screen items-center justify-center p-4" transition:slide>
+<div class="flex max-h-full min-h-full items-center justify-center" transition:slide>
 	<Card.Root class="mx-auto w-full min-w-80 max-w-md">
 		<Card.Content class="p-8">
-			<div class="space-y-6 text-center">
+			<div class="space-y-6">
 				<div class="flex items-center justify-center">
 					{@render header?.()}
 				</div>
 
 				<!-- 内容区域 -->
-				<div class="space-y-3">
+				<div class="space-y-3 text-center">
 					<h2 class="text-foreground text-2xl font-bold">{title}</h2>
 
-					{#if messages.length > 0}
-						<div class="space-y-2">
-							{#each messages as msg}
-								<p class="text-muted-foreground text-sm leading-relaxed">{msg}</p>
-							{/each}
-						</div>
-					{/if}
+					<div class="space-y-2" class:hidden={messages.length === 0}>
+						{#each messages as msg}
+							<p class="text-muted-foreground text-sm leading-relaxed">{msg}</p>
+						{/each}
+					</div>
 				</div>
 
-				{@render footer?.()}
+				<div>
+					{@render body?.()}
+				</div>
+
+				<div class="text-center">
+					{@render footer?.()}
+				</div>
 			</div>
 		</Card.Content>
 	</Card.Root>

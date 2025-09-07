@@ -24,6 +24,7 @@
 
 ### hard
 
+- [ ] 阻止原本的 ctrl+r，f5等刷新快捷键
 - [ ] md支持渲染数学公式
 - [ ] 增强md：table等组件 [参考](node_modules\.pnpm\marked@16.2.1\node_modules\marked\lib\marked.d.ts)
 - [ ] 书籍drag添加到书库

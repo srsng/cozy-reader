@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { BookService } from '$lib/database/book';
 import apis from '$lib/apis/index.js';
+import { isTextBook } from '$lib/database/book/book.js';
 
 export const prerender = false;
 
@@ -32,8 +33,15 @@ export async function load({ params }) {
 		// 读取markdown文件内容
 		try {
 			// todo: 统一文件接口，包括读取，渲染。需要先调研如pdf之类的文件应该先读取怎么搞
-			const temp = await apis.fs.read_file_to_string({ path: book.path });
-			const markdownContent = temp ? temp : '';
+			const markdownContent = await (async () => {
+				if (isTextBook(book.path)) {
+					const temp = await apis.fs.read_file_to_string({ path: book.path });
+					const markdownContent = temp ? temp : '';
+					return markdownContent;
+				} else {
+					return 'This format is not supported yet.';
+				}
+			})();
 
 			return {
 				book_id: bookId,

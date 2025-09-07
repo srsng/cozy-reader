@@ -88,6 +88,10 @@ export function goReaderHome() {
 	goto(RouteMap.reader_home);
 }
 
+export function redirectReaderHome() {
+	redirect(302, RouteMap.reader_home);
+}
+
 export function getReadBookUrl(bookId: number) {
 	return `${RouteMap.reader_home}/${bookId}`;
 }

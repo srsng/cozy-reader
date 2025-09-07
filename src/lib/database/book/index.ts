@@ -20,6 +20,8 @@ export {
 	BookFormat,
 	StorageType,
 	BookFormatSupportFmt,
+	BookFormatTextType,
+	BookFormatTextTypes,
 	isSupportFormat,
 	getFileFormat
 } from './book';
@@ -46,6 +48,8 @@ export type {
 	PositionInfo
 } from './comment';
 export { CommentService } from './commentService';
+
+export { addBookByFsPath, DatabaseUtils as BookDbUtils } from './utils';
 
 // 便捷的初始化函数
 export async function initializeBooksDatabase() {

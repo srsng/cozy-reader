@@ -3,6 +3,7 @@ import { BookService } from './bookService';
 import { ReadingSessionService } from './readingSessionService';
 import type { DatabaseResult } from '../types';
 import { DatabaseUtils as BaseUtils } from '../utils';
+import { BookFormat, getFileFormat, isSupportFormat, StorageType, type Book } from './book';
 
 /**
  * 通用操作结果类型（向后兼容）
@@ -296,4 +297,51 @@ export class DatabaseUtils extends BaseUtils {
 			return false;
 		}
 	}
+}
+
+/**
+ * 从文件系统路径添加书籍
+ * @param filePath 文件路径
+ * @returns 数据库操作结果
+ */
+export async function addBookByFsPath(filePath: string): Promise<DatabaseResult<Book>> {
+	if (!isSupportFormat(filePath)) {
+		return {
+			success: false,
+			error: `不支持的文件类型: ${filePath}`
+		};
+	}
+
+	// 检查书籍是否已存在
+	const existingBook = await BookService.getBookByPath(filePath);
+
+	if (existingBook) {
+		return {
+			success: false,
+			data: existingBook,
+			error: `书籍 ${existingBook.title} 已存在`
+		};
+	}
+
+	console.log('add book', filePath);
+
+	// 添加新书籍
+	const title = (() => {
+		const fileName = filePath.split(/[\/]/).pop() || 'Unknown';
+		const temp = fileName.split('.');
+		temp.pop();
+		return temp.join('.');
+	})();
+
+	// todo: author
+	const createResult = await BookService.createBook({
+		path: filePath,
+		title: title,
+		author: '',
+		format: getFileFormat(filePath) as BookFormat,
+		storage_type: StorageType.FILESYSTEM,
+		notes: `通过链接打开的书籍: ${title}`
+	});
+
+	return createResult;
 }
