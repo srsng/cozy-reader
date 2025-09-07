@@ -8,6 +8,11 @@
 <script>
 	const { data } = $props<{ data: PageData }>();
 	const metaData = data.metaData;
+
+	// todo: state
+	// @ts-ignore
+	const _tab = page.state.tab;
+	let tab = $state(_tab || 'global');
 </script>
 
 <svelte:head>
@@ -23,7 +28,7 @@
 
 	<!-- 配置面板 -->
 	<div class="space-y-6 lg:col-span-2">
-		<Tabs.Root value="global" class="w-full">
+		<Tabs.Root bind:value={tab} class="w-full">
 			<Tabs.List class="grid w-full grid-cols-3">
 				<Tabs.Trigger value="global">全局设置</Tabs.Trigger>
 				<Tabs.Trigger value="overlay">遮罩层</Tabs.Trigger>

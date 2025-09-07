@@ -1,12 +1,18 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { BaseSettingsForm, ReaderSettingsForm, ThemeSettingsForm } from '$lib/components/forms';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { m } from '$lib/paraglide/messages.js';
 	import { slide } from 'svelte/transition';
+
+	// todo: state
+	// @ts-ignore
+	const _tab = page.state.tab;
+	let tab = $state(_tab || 'base');
 </script>
 
 <div transition:slide>
-	<Tabs.Root value="base" class="w-full">
+	<Tabs.Root bind:value={tab} class="w-full">
 		<Tabs.List class="grid w-full grid-cols-3">
 			<Tabs.Trigger value="base">{m['settings.base']()}</Tabs.Trigger>
 			<Tabs.Trigger value="theme">{m['settings.theme']()}</Tabs.Trigger>

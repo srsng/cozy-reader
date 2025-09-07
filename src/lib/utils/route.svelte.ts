@@ -77,12 +77,16 @@ export function redirectHome() {
 	redirect(302, RouteMap.home);
 }
 
-export function goSettings() {
-	goto(RouteMap.settings);
+export type SettingsTab = 'base' | 'theme' | 'reader';
+
+export function goSettings(tab: SettingsTab = 'base') {
+	goto(RouteMap.settings, { state: { tab } });
 }
 
-export function goBgSettings() {
-	goto(RouteMap.bg_settings);
+export type BgSettingsTab = 'golbal' | 'overlay' | 'custom';
+
+export function goBgSettings(tab: BgSettingsTab = 'golbal') {
+	goto(RouteMap.bg_settings, { state: { tab } });
 }
 
 export function goReaderHome() {

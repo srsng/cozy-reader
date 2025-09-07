@@ -109,11 +109,11 @@
 				<BookOpen class="h-4 w-4" />
 				开始阅读
 			</Button>
-			<Button variant="outline" onclick={goSettings} class="gap-2">
+			<Button variant="outline" onclick={() => goSettings('theme')} class="gap-2">
 				<Settings class="h-4 w-4" />
 				个性化设置
 			</Button>
-			<Button variant="outline" onclick={goBgSettings} class="gap-2">
+			<Button variant="outline" onclick={() => goBgSettings('golbal')} class="gap-2">
 				<Palette class="h-4 w-4" />
 				背景配置
 			</Button>

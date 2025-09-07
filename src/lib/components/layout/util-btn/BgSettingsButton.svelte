@@ -2,7 +2,6 @@
 	import { Wallpaper } from 'lucide-svelte';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { goBgSettings } from '$lib/utils/route.svelte';
-	// import { m } from '$lib/paraglide/messages';
 </script>
 
 <script lang="ts">
