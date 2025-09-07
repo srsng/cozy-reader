@@ -1,6 +1,5 @@
 <script lang="ts" module>
 	import { inject } from '$lib/utils/context';
-	import { exists } from '@tauri-apps/plugin-fs';
 	import { confirm } from '@tauri-apps/plugin-dialog';
 	import { saveUserSettingsImmediately, USER_SETTINGS } from '$lib/stores/userSettings';
 	import { createBackgroundImage, type BackgroundImage } from '$lib/settings/background';
@@ -16,6 +15,7 @@
 	import { emit } from '@tauri-apps/api/event';
 	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { toast } from 'svelte-sonner';
+	import apis from '$lib/apis';
 </script>
 
 <script lang="ts">
@@ -92,7 +92,8 @@
 			});
 			return;
 		}
-		if (await exists(image.filePath)) {
+
+		if (await apis.fs.exists({ path: image.filePath })) {
 			$currentSettings.background.activeImageId = imageId;
 			// 发送背景图片切换事件
 			emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
