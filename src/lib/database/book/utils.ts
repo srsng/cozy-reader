@@ -327,7 +327,7 @@ export async function addBookByFsPath(filePath: string): Promise<DatabaseResult<
 
 	// 添加新书籍
 	const title = (() => {
-		const fileName = filePath.split(/[\/]/).pop() || 'Unknown';
+		const fileName = filePath.split(/[\\/]/).pop() || 'Unknown';
 		const temp = fileName.split('.');
 		temp.pop();
 		return temp.join('.');
@@ -339,8 +339,7 @@ export async function addBookByFsPath(filePath: string): Promise<DatabaseResult<
 		title: title,
 		author: '',
 		format: getFileFormat(filePath) as BookFormat,
-		storage_type: StorageType.FILESYSTEM,
-		notes: `通过链接打开的书籍: ${title}`
+		storage_type: StorageType.FILESYSTEM
 	});
 
 	return createResult;

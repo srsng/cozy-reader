@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { Image, Heading } from '$lib/components/typography';
+	import Markdown from '$lib/components/reader/markdown/Markdown.svelte';
+	import { Image, Heading, Link, Strong, Blockquote } from '$lib/components/typography';
+	// import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+	// import { BookFormat } from '$lib/database/index.js';
+	// import type { Component } from 'svelte';
 	import SvelteMarkdown from 'svelte-markdown';
 	import { slide } from 'svelte/transition';
 
@@ -8,10 +12,21 @@
 	const book = data.book;
 	const markdownContent = data.markdownContent;
 
+	// const bookReaderers: Record<BookFormat, Component> = {
+	// 	[BookFormat.MARKDOWN]: Markdown<{ content: string }>,
+	// 	[BookFormat.TXT]: Markdown,
+	// 	[BookFormat.EPUB]: Markdown,
+	// 	[BookFormat.PDF]: Markdown,
+	// 	[BookFormat.HTML]: Markdown
+	// };
+
 	// 定义渲染器类型
 	const renderers: Record<string, any> = {
 		heading: Heading,
-		image: Image
+		image: Image,
+		link: Link,
+		strong: Strong,
+		blockquote: Blockquote
 	};
 </script>
 
@@ -21,58 +36,35 @@
 	oncontextmenu={(e) => e.stopPropagation()}
 	transition:slide
 >
-	<div class="markdown-reader">
-		<h1 class="align-center mb-6 text-3xl font-bold">{book.title}</h1>
-		<SvelteMarkdown source={markdownContent} {renderers} />
+	<div class="grid grid-cols-2 gap-4">
+		<div class="book-reader">
+			<!-- {@const BookReader = bookReaderers[book.format]}
+			<BookReader content={markdownContent} /> -->
+
+			<!-- {#if book.format === 'markdown'} -->
+			<h1 class="align-center mb-6 text-3xl font-bold">gitbutler {book.title}</h1>
+			<!-- <SvelteMarkdown source={markdownContent} {renderers} /> -->
+			<Markdown content={markdownContent} />
+			<!-- {:else if book.format === 'txt'}
+			<pre class="whitespace-pre-wrap break-words">{markdownContent}</pre>
+		{/if} -->
+		</div>
+		<div class="book-reader">
+			<h1 class="align-center mb-6 text-3xl font-bold">sveltemd {book.title}</h1>
+			<SvelteMarkdown source={markdownContent} {renderers} />
+		</div>
 	</div>
 </div>
 
 <style>
-	/* 优化阅读体验的样式 */
-	.markdown-reader {
+	/* .book-reader {
 		line-height: 1.8;
-	}
-
-	.markdown-reader :global(p) {
-		margin-bottom: 1.5rem;
-		text-align: justify;
-	}
-
-	.markdown-reader :global(h1),
-	.markdown-reader :global(h2),
-	.markdown-reader :global(h3),
-	.markdown-reader :global(h4),
-	.markdown-reader :global(h5),
-	.markdown-reader :global(h6) {
-		margin-top: 2rem;
-		margin-bottom: 1rem;
-		scroll-margin-top: 2rem;
-	}
-
-	.markdown-reader :global(img) {
-		border-radius: 8px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		transition: transform 0.3s ease;
-	}
-
-	/* .markdown-reader :global(img:hover) {
-		transform: scale(1.02);
 	} */
 
-	.markdown-reader :global(pre) {
+	/* .book-reader :global(pre) {
 		border-radius: 8px;
 		padding: 1rem;
 		margin: 1.5rem 0;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	}
-
-	.markdown-reader :global(blockquote) {
-		border-left: 4px solid var(--color-primary);
-		padding-left: 1rem;
-		margin: 1.5rem 0;
-		font-style: italic;
-		background: rgba(0, 0, 0, 0.02);
-		padding: 1rem;
-		border-radius: 0 8px 8px 0;
-	}
+	} */
 </style>

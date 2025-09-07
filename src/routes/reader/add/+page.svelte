@@ -1,13 +1,14 @@
 <script lang="ts">
 	import InfoCard from '$lib/components/common/info-card.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { goReaderHome, redirectReaderHome } from '$lib/utils/route.svelte.js';
+	import { goReaderHome } from '$lib/utils/route.svelte.js';
 	import { Info, Check, X, Frown, Loader } from 'lucide-svelte';
 	// import { BookService, type Book, type DatabaseResult } from '$lib/database';
 	// import type { Component } from 'svelte';
 
 	import { page } from '$app/state';
 	import { addBookByFsPath } from '$lib/database/book/utils.js';
+	import { View } from '$lib/components/layout/views';
 
 	// todo: 解决ts报错paths不存在的问题
 	// @ts-ignore
@@ -45,22 +46,15 @@
 </script>
 
 {#await Promise.all(addResults)}
-	<InfoCard title="添加中" message="请稍后">
-		{#snippet header()}
-			<Loader class="h-12 w-12 animate-[spin_2s_linear_infinite]" />
-		{/snippet}
-	</InfoCard>
+	<View.Loading title="添加中" message="请稍后" />
 {:then results}
 	<!-- {@const msgs = getMsgs(results)} -->
 	{#if results.length === 0}
-		<InfoCard title="无效" message={'没有给出有效书籍\n\n你是不小心来到这的吗？来了也没有奖励哦'}>
-			{#snippet header()}
-				<Info class="h-12 w-12" />
-			{/snippet}
+		<View.Info title="无效" message={'没有给出有效书籍\n\n你是不小心来到这的吗？来了也没有奖励哦'}>
 			{#snippet footer()}
 				<Button variant="secondary" onclick={goReaderHome}>返回书库</Button>
 			{/snippet}
-		</InfoCard>
+		</View.Info>
 	{:else}
 		<InfoCard title="添加结果">
 			{#snippet header()}
@@ -90,13 +84,10 @@
 		</InfoCard>
 	{/if}
 {:catch error}
-	<InfoCard title="添加失败" message={error.message}>
-		{#snippet header()}
-			<X class="text-destructive h-12 w-12" />
-		{/snippet}
-
-		{#snippet footer()}
-			<Button variant="secondary" onclick={goReaderHome}>返回书库</Button>
-		{/snippet}
-	</InfoCard>
+	<View.Error
+		title="添加失败"
+		message={error.message}
+		footerBtnText="返回书库"
+		footerBtnOnclick={goReaderHome}
+	/>
 {/await}
