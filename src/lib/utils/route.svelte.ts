@@ -2,13 +2,14 @@ import { goto } from '$app/navigation';
 import { page } from '$app/state';
 import { redirect } from '@sveltejs/kit';
 
-export type Pages = 'home' | 'settings' | 'bg_settings' | 'reader_home';
+export type Pages = 'home' | 'settings' | 'bg_settings' | 'reader_home' | 'reader_add';
 
 export const RouteMap: Record<Pages, string> = {
 	home: '/',
 	settings: '/settings/',
 	bg_settings: '/settings/background',
-	reader_home: '/reader'
+	reader_home: '/reader',
+	reader_add: '/reader/add'
 };
 
 // 页面历史记录
@@ -102,6 +103,10 @@ export function goReadBook(bookId: number) {
 
 export function goReadFsBook(bookPath: string, goRead?: boolean) {
 	goto(`${RouteMap.reader_home}/fs/${bookPath}?goRead=${goRead ?? false}`);
+}
+
+export function goReaderBatchAddPaths(paths: string[]) {
+	goto(RouteMap.reader_add, { state: { paths } });
 }
 
 // 获取当前页面路径

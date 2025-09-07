@@ -2,7 +2,13 @@
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import { goBgSettings, goReaderHome, goReadFsBook, goSettings } from '$lib/utils/route.svelte';
+	import {
+		goBgSettings,
+		goReaderBatchAddPaths,
+		goReaderHome,
+		goReadFsBook,
+		goSettings
+	} from '$lib/utils/route.svelte';
 	import { BookOpen, Settings, Palette, FileText, Navigation } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
@@ -10,6 +16,12 @@
 
 	const { data } = $props<{ data: LayoutData }>();
 	const metaData = data.metaData;
+
+	let paths = [
+		`E:\\my_computer\\Documents\\电子书\\机器学习实践：测试驱动的开发方法_9787115396181.epub`,
+		'E:/my_computer/Documents/工作汇总/学业情况/作业要求/2.2-大二下/英语课/英语活动读稿.md',
+		'/pages/about'
+	];
 </script>
 
 <div class="container mx-auto max-w-4xl px-4 py-8" in:slide>
@@ -89,35 +101,6 @@
 		</Card.Root>
 	</div>
 
-	<!-- 项目特性 -->
-	<!-- <Card.Root class="mb-6">
-		<Card.Header>
-			<Card.Title>项目特性</Card.Title>
-		</Card.Header>
-		<Card.Content>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div class="space-y-2">
-					<h4 class="font-semibold">技术栈</h4>
-					<ul class="text-sm text-muted-foreground space-y-1">
-						<li>• SvelteKit 5 + TypeScript</li>
-						<li>• Tauri 2.0 桌面应用框架</li>
-						<li>• TailwindCSS 样式框架</li>
-						<li>• Paraglide 国际化支持</li>
-					</ul>
-				</div>
-				<div class="space-y-2">
-					<h4 class="font-semibold">核心功能</h4>
-					<ul class="text-sm text-muted-foreground space-y-1">
-						<li>• Markdown 文档阅读</li>
-						<li>• 主题系统与背景定制</li>
-						<li>• 响应式设计</li>
-						<li>• 多语言界面支持</li>
-					</ul>
-				</div>
-			</div>
-		</Card.Content>
-	</Card.Root> -->
-
 	<!-- 快速开始 -->
 	<div class="text-center">
 		<h3 class="mb-4 text-xl font-semibold">快速开始</h3>
@@ -136,10 +119,9 @@
 			</Button>
 			<Button
 				variant="outline"
-				onclick={() =>
-					goReadFsBook(
-						`E:\\my_computer\\Documents\\工作汇总\\学业情况\\作业要求\\3.1-大三上\\看电影学哲学\\期末论文.md`
-					)}
+				onclick={() => {
+					goReaderBatchAddPaths(paths);
+				}}
 				class="gap-2"
 			>
 				<Palette class="h-4 w-4" />

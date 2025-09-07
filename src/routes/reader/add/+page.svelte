@@ -85,7 +85,7 @@
 			{/snippet}
 
 			{#snippet footer()}
-				<Button variant="secondary" onclick={redirectReaderHome}>返回书库</Button>
+				<Button variant="secondary" onclick={goReaderHome}>返回书库</Button>
 			{/snippet}
 		</InfoCard>
 	{/if}
@@ -96,7 +96,7 @@
 		{/snippet}
 
 		{#snippet footer()}
-			<Button variant="secondary" onclick={redirectReaderHome}>返回书库</Button>
+			<Button variant="secondary" onclick={goReaderHome}>返回书库</Button>
 		{/snippet}
 	</InfoCard>
 {/await}
