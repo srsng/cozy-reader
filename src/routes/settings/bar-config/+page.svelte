@@ -21,7 +21,8 @@
 	} from '$lib/components/forms/bar';
 	import { Info, Settings2 } from 'lucide-svelte';
 	import { inject } from '$lib/utils/context';
-	import { USER_SETTINGS, saveUserSettingsImmediately } from '$lib/stores/userSettings';
+	import { USER_SETTINGS, saveUserSettingsManually } from '$lib/stores/userSettings';
+	import { onDestroy } from 'svelte';
 </script>
 
 <script lang="ts">
@@ -48,11 +49,9 @@
 		$userSettings.layout.layoutConfigs.titlebar = structuredClone(DefaultTitleBarConfig);
 	}
 
-	async function saveConfig() {
-		// 立即保存用户设置
-		await saveUserSettingsImmediately(userSettings);
-		console.log('配置已保存');
-	}
+	onDestroy(async () => {
+		await saveUserSettingsManually(userSettings);
+	});
 </script>
 
 <div class="container mx-auto space-y-6 p-6">
@@ -82,7 +81,7 @@
 				<ButtonSelectorForm
 					onAddButton={addButton}
 					onReset={resetToDefault}
-					onSave={saveConfig}
+					onSave={() => {}}
 					section="left"
 				/>
 			</CardAction>

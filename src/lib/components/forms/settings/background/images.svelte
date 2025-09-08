@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import { inject } from '$lib/utils/context';
 	import { confirm } from '@tauri-apps/plugin-dialog';
-	import { saveUserSettingsImmediately, USER_SETTINGS } from '$lib/stores/userSettings';
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { createBackgroundImage, type BackgroundImage } from '$lib/settings/background';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -66,7 +66,6 @@
 			if ($currentSettings.background.activeImageId === imageId) {
 				$currentSettings.background.activeImageId = null;
 			}
-			saveUserSettingsImmediately(currentSettings);
 
 			if (!askedKeepConfirm) {
 				toast('近期删除不再确认？', {

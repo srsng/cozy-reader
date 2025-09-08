@@ -31,6 +31,14 @@
 
 ### hard
 
+- [ ] 将当前的路由历史记录换成更加原生的实现，解决goto 带 `{ state: { ... } }` 后（去设置与背景设置页面的utils按钮），偶尔出现的错误
+
+  ```txt
+  Uncaught (in promise) DataCloneError: Failed to execute 'pushState' on 'History': PointerEvent object could not be cloned.
+      at history.pushState (client.js:96:21)
+      at navigate (client.js:1596:6)
+  ```
+
 - [ ] 实装`window-vibrancy`后，考虑合并到背景图片设置中，一并管理
 - [ ] reader epub的注解，脚注等支持tooltip显示，而不跳转
 - [ ] 优化store的计时器保存，在立即保存中判断是否在计时（考虑清除计时器？因为有新的保存请求）

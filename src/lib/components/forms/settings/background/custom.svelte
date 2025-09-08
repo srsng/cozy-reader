@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { inject } from '$lib/utils/context';
-	import { saveUserSettingsImmediately, USER_SETTINGS } from '$lib/stores/userSettings';
+	import { USER_SETTINGS } from '$lib/stores/userSettings';
 
 	import {
 		DisplayModeOptions,
@@ -48,7 +48,6 @@
 			$currentSettings.background.images[imageIndex] = resetImageToDefaults(
 				$currentSettings.background.images[imageIndex]
 			);
-			saveUserSettingsImmediately(currentSettings);
 		}
 	}
 
@@ -62,7 +61,6 @@
 			);
 
 			$currentSettings.background.images[imageIndex].themeBinding = themeBinding;
-			saveUserSettingsImmediately(currentSettings);
 		}
 	}
 
@@ -71,7 +69,6 @@
 		const imageIndex = $currentSettings.background.images.findIndex((img) => img.id === imageId);
 		if (imageIndex !== -1) {
 			$currentSettings.background.images[imageIndex].themeBinding = undefined;
-			saveUserSettingsImmediately(currentSettings);
 		}
 	}
 
@@ -90,7 +87,6 @@
 					toast.success('背景图片已更新', {
 						description: '图片路径已更新，配置保持不变'
 					});
-					saveUserSettingsImmediately(currentSettings);
 				}
 			}
 		} catch (error) {

@@ -10,25 +10,48 @@ export const USER_SETTINGS = new InjectionToken<Writable<UserSettings>>(USER_SET
 // 创建配置存储
 const configStore = new LazyStore('settings.json');
 
+/**更新并保存用户设置
+ *
+ * @param value UserSettings对象
+ */
+async function saveConfigStore(value: UserSettings) {
+	const cleanValue = clean(value);
+	await configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
+	return configStore.save();
+}
+
 // 延时保存
 let timer: ReturnType<typeof setTimeout>;
+// timer状态
+let wattingToSave: boolean = false;
 
 function clean(value: any) {
 	return JSON.parse(JSON.stringify(value));
 }
 
-// 立即保存用户设置
-export async function saveUserSettingsImmediately(store: Writable<UserSettings>): Promise<void> {
+/** 如果有较新的设置未保存，立即保存用户设置
+ *
+ * *具体效果待验证*
+ */
+export async function saveUserSettingsManually(store: Writable<UserSettings>): Promise<void> {
+	console.log('try to save UserSettings Manually');
+	if (wattingToSave) {
+		clearTimeout(timer);
+		wattingToSave = false;
+		forceSaveUserSettings(store);
+		console.log('saveUserSettingsManually success');
+	}
+}
+
+/** 强制立即保存用户设置 */
+export async function forceSaveUserSettings(store: Writable<UserSettings>): Promise<void> {
 	let currentValue: UserSettings;
 	const unsubscribe = store.subscribe((value) => {
 		currentValue = value;
 	});
 	unsubscribe(); // 立即取消订阅，只获取当前值
 
-	const cleanValue = clean(currentValue!);
-	await configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
-	await configStore.save();
-	console.log('saveUserSettingsImmediately success');
+	return saveConfigStore(currentValue!);
 }
 
 export async function loadUserSettings(): Promise<Writable<UserSettings>> {
@@ -55,10 +78,10 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
 	// 订阅，自动保存
 	store.subscribe((value) => {
 		if (timer) clearTimeout(timer);
+		wattingToSave = true;
 		timer = setTimeout(() => {
-			const cleanValue = clean(value);
-			configStore.set(USER_SETTINGS_KEY_STR, cleanValue);
-			configStore.save();
+			wattingToSave = false;
+			saveConfigStore(value);
 		}, 10000); // 防抖
 	});
 

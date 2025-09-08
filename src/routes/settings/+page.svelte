@@ -4,11 +4,20 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { m } from '$lib/paraglide/messages.js';
 	import { slide } from 'svelte/transition';
+	import type { PageData } from './$types';
+	import { saveUserSettingsManually } from '$lib/stores/userSettings';
+	import { onDestroy } from 'svelte';
+
+	const { data }: { data: PageData } = $props();
 
 	// todo: state
 	// @ts-ignore
 	const _tab = page.state.tab;
 	let tab = $state(_tab || 'base');
+
+	onDestroy(async () => {
+		await saveUserSettingsManually(data.userSettings);
+	});
 </script>
 
 <div transition:slide>

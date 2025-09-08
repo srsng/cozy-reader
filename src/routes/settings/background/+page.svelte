@@ -1,24 +1,25 @@
 <script lang="ts" module>
 	import type { PageData } from './$types';
+	import { page } from '$app/state';
 	import { BgForms } from '$lib/components/forms';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { slide } from 'svelte/transition';
+	import { onDestroy } from 'svelte';
+	import { saveUserSettingsManually } from '$lib/stores/userSettings';
 </script>
 
 <script>
-	const { data } = $props<{ data: PageData }>();
-	const metaData = data.metaData;
+	const { data }: { data: PageData } = $props();
 
 	// todo: state
 	// @ts-ignore
 	const _tab = page.state.tab;
 	let tab = $state(_tab || 'global');
-</script>
 
-<svelte:head>
-	<title>{metaData.title}</title>
-	<meta name="description" content={metaData.description} />
-</svelte:head>
+	onDestroy(async () => {
+		await saveUserSettingsManually(data.userSettings);
+	});
+</script>
 
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3" transition:slide>
 	<!-- 图片列表 -->

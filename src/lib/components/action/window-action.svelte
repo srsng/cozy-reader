@@ -3,7 +3,7 @@
 	import { SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
 	import { inject } from '$lib/utils/context';
 	import { mergeUnlisten } from '$lib/utils/mergeUnlisten';
-	import { saveUserSettingsImmediately, USER_SETTINGS } from '$lib/stores/userSettings';
+	import { saveUserSettingsManually, USER_SETTINGS } from '$lib/stores/userSettings';
 	import { onMount } from 'svelte';
 	import { APP_STATE } from '$lib/stores/appState';
 	import { emit } from '@tauri-apps/api/event';
@@ -129,7 +129,7 @@
 			}),
 			// main 刷新页面
 			shortcutService.on(mainWOp2Event['refresh-page'], async () => {
-				await saveUserSettingsImmediately(userSettings);
+				await saveUserSettingsManually(userSettings);
 				await refreshWindow();
 			}),
 			// main 保存窗口状态
