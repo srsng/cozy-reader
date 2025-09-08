@@ -4,6 +4,7 @@
 
 ### eazy
 
+- [ ] 在设置页面的销毁钩子中添加立即保存
 - [x] 背景图片支持修改路径
 - [x] 添加goto背景图设置 util-btn， 图标`<Wallpaper />`
 - [x] 恢复钩子 adapter
@@ -21,10 +22,77 @@
 - [x] 重构slider的使用，封装带有contorls的slider组件
 - [x] 切换最大化/全屏时，保存窗口状态
 - [x] 错误处理: 原有的背景图片被删除或移走
+- [ ] 优化thumbnail，支持封面，支持hover时显示详情信息
+- [ ] 阻止原本的 ctrl+r，f5等刷新快捷键(把原本的刷新请求 e.stop, prevent，然后emit刷新事件)
+- [ ] 首行缩进、长图缩放等样式
+- [ ] 优化thumbnail，支持封面，支持hover时显示详情信息
+- [ ] 阻止原本的 ctrl+r，f5等刷新快捷键(把原本的刷新请求 e.stop, prevent，然后emit刷新事件)
+- [ ] 首行缩进、长图缩放等样式
 
 ### hard
 
-- [ ] 阻止原本的 ctrl+r，f5等刷新快捷键
+- [ ] 实装`window-vibrancy`后，考虑合并到背景图片设置中，一并管理
+- [ ] reader epub的注解，脚注等支持tooltip显示，而不跳转
+- [ ] 优化store的计时器保存，在立即保存中判断是否在计时（考虑清除计时器？因为有新的保存请求）
+
+- [ ] typography系列组件 样式控制器，用于控制reader的各种设置需要改变样式的地方
+
+- [ ] 参考 cozy-reader-old的主题，增加新主题类型`simple`
+
+  ```json
+    {
+      "theme-light-blue": {
+        "name": "Blue | 蓝",
+        "type": "light",
+        "css": {
+          "--header-color": "#006fc9",
+          "--header-text-color": "#e5e7eb",
+          "--background-color": "#f2f2f2",
+          "--text-color": "#323130"
+        }
+      },
+      "theme-gray-blue": {
+        "name": "Gray-Blue | 灰蓝",
+        "type": "both",
+        "css": {
+          "--header-color": "#374151",
+          "--background-color": "#4b5563",
+          "--text-color": "#e5e7eb"
+        }
+      },
+      "theme-dark-gray": {
+        "name": "Gray | 暗灰",
+        "type": "dark",
+        "css": {
+          "--header-color": "#333333",
+          "--background-color": "#282828",
+          "--text-color": "#e5e7eb"
+        }
+      },
+      "theme-light-coral": {
+        "name": "Coral | 珊瑚红",
+        "type": "light",
+        "css": {
+          "--header-color": "#f08080",
+          "--header-text-color": "#f2f4f8",
+          "--background-color": "#f2f2f2",
+          "--text-color": "#323130"
+        }
+      },
+      "theme-light-yellow123": {
+        "name": "bulue",
+        "type": "light",
+        "css": {
+          "--header-color": "#a63030",
+          "--background-color": "#7e6767",
+          "--text-color": "#331010",
+          "--header-text-color": "#d57272"
+        }
+      }
+    }
+    ```
+
+- [ ] 升级tauri等rust依赖，并排除可能的错误
 - [ ] md支持渲染数学公式
 - [ ] 增强md：table等组件 [参考](node_modules\.pnpm\marked@16.2.1\node_modules\marked\lib\marked.d.ts)
 - [x] 书籍drag添加到书库
@@ -65,6 +133,25 @@
   - src\lib\components\forms\bar\*
   - src\lib\components\forms\ButtonTypeSelector.svelte
   - src\route\settings\bar-config\+page.svelte
+
+## super hard
+
+- [ ] 将仓库改为[turborepo](https://turborepo.com/)模式
+  - [ ] 了解turborepo管理方式
+  - [ ] 将 foliate.js 作为submodule添加到仓库
+
+    ```cmd
+    git submodule add <https://github.com/johnfactotum/foliate-js> package/foliate-js
+    git submodule update --init --recursive
+    ```
+
+  - [ ] 考虑 pdf.js  djvu.js kthoom villain.js
+
+  - [ ] 将旧项目的 icon相关功能、fastlink项目作为crate一部分
+    - [ ] 重构icon相关功能作为一个crate
+    - [ ] 重构fastlink项目
+
+  - [ ] ...
 
 ## 平台特定
 
