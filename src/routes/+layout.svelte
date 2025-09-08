@@ -23,7 +23,7 @@
 	import ThemeAction from '$lib/components/action/theme-action.svelte';
 	import ZoomInOutMenuAction from '$lib/components/action/ZoomInOutMenuAction.svelte';
 	import WindowAction from '$lib/components/action/window-action.svelte';
-	import HotkeysAction from '$lib/components/action/HotkeysAction.svelte';
+	import HotkeysAction from '$lib/components/action/hotkeys-action.svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
 
 	// ui components
