@@ -3,18 +3,16 @@
 	import * as Select from '$lib/components/ui/select';
 	import { ALL_BUTTON_TYPES, buttonTypeLabels, type ButtonType } from '$lib/settings/Layout';
 	import { Plus } from 'lucide-svelte';
-</script>
 
-<script lang="ts">
-	const {
-		onAddButton,
-		section,
-		disabled = false
-	} = $props<{
+	interface Props {
 		onAddButton: (type: ButtonType, section: 'left' | 'center' | 'right') => void;
 		section: 'left' | 'center' | 'right';
 		disabled?: boolean;
-	}>();
+	}
+</script>
+
+<script lang="ts">
+	const { onAddButton, section, disabled = false }: Props = $props();
 
 	let selectedType: string | undefined = $state(undefined);
 

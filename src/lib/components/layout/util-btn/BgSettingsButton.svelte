@@ -2,6 +2,16 @@
 	import { Wallpaper } from 'lucide-svelte';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { goBgSettings } from '$lib/utils/route.svelte';
+
+	interface Props {
+		name?: string;
+		title?: string;
+		variant?: ButtonVariant;
+		size?: 'default' | 'sm' | 'lg' | 'icon';
+		className?: string;
+		iconClass?: string;
+		onClick?: (() => void) | undefined;
+	}
 </script>
 
 <script lang="ts">
@@ -14,15 +24,7 @@
 		iconClass = 'size-4',
 		onClick = undefined,
 		...others
-	} = $props<{
-		name?: string;
-		title?: string;
-		variant?: ButtonVariant;
-		size?: 'default' | 'sm' | 'lg' | 'icon';
-		className?: string;
-		iconClass?: string;
-		onClick?: (() => void) | undefined;
-	}>();
+	}: Props = $props();
 </script>
 
 <Button
@@ -31,7 +33,7 @@
 	{variant}
 	{size}
 	class={className}
-	onclick={onClick || goBgSettings}
+	onclick={onClick || (() => goBgSettings())}
 	{...others}
 >
 	<Wallpaper class={iconClass} />

@@ -31,7 +31,7 @@
 
 ### hard
 
-- [ ] 将当前的路由历史记录换成更加原生的实现，解决goto 带 `{ state: { ... } }` 后（去设置与背景设置页面的utils按钮），偶尔出现的错误
+- [ ] 将当前的路由历史记录换成更加原生的实现，提升带state的goto在项目中的兼容性，解决goto 带 `{ state: { ... } }` 后（去设置与背景设置页面的utils按钮），偶尔出现的错误
 
   ```txt
   Uncaught (in promise) DataCloneError: Failed to execute 'pushState' on 'History': PointerEvent object could not be cloned.

@@ -3,6 +3,15 @@
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { goSettings } from '$lib/utils/route.svelte';
 	import { m } from '$lib/paraglide/messages';
+	interface Props {
+		name?: string;
+		title?: string;
+		variant?: ButtonVariant;
+		size?: 'default' | 'sm' | 'lg' | 'icon';
+		className?: string;
+		iconClass?: string;
+		onClick?: (() => void) | undefined;
+	}
 </script>
 
 <script lang="ts">
@@ -15,15 +24,7 @@
 		iconClass = 'size-4',
 		onClick = undefined,
 		...others
-	} = $props<{
-		name?: string;
-		title?: string;
-		variant?: ButtonVariant;
-		size?: 'default' | 'sm' | 'lg' | 'icon';
-		className?: string;
-		iconClass?: string;
-		onClick?: (() => void) | undefined;
-	}>();
+	}: Props = $props();
 </script>
 
 <Button
@@ -32,7 +33,7 @@
 	{variant}
 	{size}
 	class={className}
-	onclick={onClick || goSettings}
+	onclick={onClick || (() => goSettings())}
 	{...others}
 >
 	<Settings class={iconClass} />

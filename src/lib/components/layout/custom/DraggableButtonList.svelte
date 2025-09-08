@@ -4,15 +4,17 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import { GripVertical, Trash2, ChevronUp, ChevronDown } from 'lucide-svelte';
-</script>
 
-<script lang="ts">
-	const { buttons, onReorder, onToggle, onRemove } = $props<{
+	interface Props {
 		buttons: ButtonConfig[];
 		onReorder: (fromIndex: number, toIndex: number) => void;
 		onToggle: (buttonId: string) => void;
 		onRemove: (buttonId: string) => void;
-	}>();
+	}
+</script>
+
+<script lang="ts">
+	const { buttons, onReorder, onToggle, onRemove }: Props = $props();
 
 	let draggedIndex: number | null = $state(null);
 	let draggedOverIndex: number | null = $state(null);

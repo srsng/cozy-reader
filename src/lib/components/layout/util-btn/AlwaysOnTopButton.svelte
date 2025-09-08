@@ -5,6 +5,16 @@
 	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
+
+	interface Props {
+		name?: string;
+		title?: string;
+		variant?: ButtonVariant;
+		size?: 'default' | 'sm' | 'lg' | 'icon';
+		className?: string;
+		iconClass?: string;
+		onClick?: (() => void) | undefined;
+	}
 </script>
 
 <script lang="ts">
@@ -17,15 +27,7 @@
 		iconClass = 'size-4',
 		onClick = undefined,
 		...others
-	} = $props<{
-		name?: string;
-		title?: string;
-		variant?: ButtonVariant;
-		size?: 'default' | 'sm' | 'lg' | 'icon';
-		className?: string;
-		iconClass?: string;
-		onClick?: (() => void) | undefined;
-	}>();
+	}: Props = $props();
 
 	const currentSettings = inject(USER_SETTINGS);
 

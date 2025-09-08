@@ -4,6 +4,15 @@
 	import { m } from '$lib/paraglide/messages';
 	import * as Popover from '$lib/components/ui/popover';
 	import { ZoomForm } from '$lib/components/forms';
+
+	interface Props {
+		name?: string;
+		title?: string;
+		variant?: ButtonVariant;
+		size?: 'default' | 'sm' | 'lg' | 'icon';
+		className?: string;
+		iconClass?: string;
+	}
 </script>
 
 <script lang="ts">
@@ -15,14 +24,7 @@
 		className = 'size-6',
 		iconClass = 'size-4',
 		...others
-	} = $props<{
-		name?: string;
-		title?: string;
-		variant?: ButtonVariant;
-		size?: 'default' | 'sm' | 'lg' | 'icon';
-		className?: string;
-		iconClass?: string;
-	}>();
+	}: Props = $props();
 </script>
 
 <Popover.Root>

@@ -14,7 +14,7 @@
 	import { slide } from 'svelte/transition';
 	import type { LayoutData } from './$types';
 
-	const { data } = $props<{ data: LayoutData }>();
+	const { data }: { data: LayoutData } = $props();
 	const metaData = data.metaData;
 
 	let paths = [

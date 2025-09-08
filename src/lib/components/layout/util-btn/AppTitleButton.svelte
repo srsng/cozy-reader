@@ -2,6 +2,13 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import { APP_STATE } from '$lib/stores/appState';
 	import { inject } from '$lib/utils/context';
+
+	interface Props {
+		name?: string;
+		appTitle?: string;
+		className?: string;
+		disabled?: boolean;
+	}
 </script>
 
 <script lang="ts">
@@ -11,12 +18,7 @@
 		className = 'app-title truncate px-4',
 		disabled = false,
 		...others
-	} = $props<{
-		name?: string;
-		appTitle?: string;
-		className?: string;
-		disabled?: boolean;
-	}>();
+	}: Props = $props();
 
 	const appState = inject(APP_STATE);
 </script>

@@ -4,6 +4,16 @@
 	import AppIcon from '$lib/components/common/app-icon.svelte';
 	import { inject } from '$lib/utils/context';
 	import { APP_STATE } from '$lib/stores/appState';
+
+	interface Props {
+		name?: string;
+		title?: string;
+		variant?: ButtonVariant;
+		size?: 'default' | 'sm' | 'lg' | 'icon';
+		className?: string;
+		iconClass?: string;
+		appTitle?: string;
+	}
 </script>
 
 <script lang="ts">
@@ -17,15 +27,7 @@
 		iconClass = 'size-5',
 		appTitle = $appState.appTitle,
 		...others
-	} = $props<{
-		name?: string;
-		title?: string;
-		variant?: ButtonVariant;
-		size?: 'default' | 'sm' | 'lg' | 'icon';
-		className?: string;
-		iconClass?: string;
-		appTitle?: string;
-	}>();
+	}: Props = $props();
 </script>
 
 <Button

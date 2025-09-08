@@ -4,6 +4,14 @@
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import { SunMediumIcon, MoonIcon } from 'lucide-svelte';
 	import { scale } from 'svelte/transition';
+	interface Props {
+		name?: string;
+		title?: string;
+		variant?: ButtonVariant;
+		size?: 'default' | 'sm' | 'lg' | 'icon';
+		className?: string;
+		iconClass?: string;
+	}
 </script>
 
 <script lang="ts">
@@ -15,14 +23,7 @@
 		className = 'size-6',
 		iconClass = 'size-4',
 		...others
-	} = $props<{
-		name?: string;
-		title?: string;
-		variant?: ButtonVariant;
-		size?: 'default' | 'sm' | 'lg' | 'icon';
-		className?: string;
-		iconClass?: string;
-	}>();
+	}: Props = $props();
 </script>
 
 <Button onclick={toggleMode} {name} {title} {variant} {size} class={className} {...others}>
