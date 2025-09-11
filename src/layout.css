@@ -7,10 +7,8 @@ body {
 	transition: background-color 0.3s ease;
 }
 
-.titlebar.bodyTransparent,
-#titlebar.bodyTransparent,
-body.bodyTransparent {
-	background: transparent;
+.bodyTransparent {
+	background: transparent !important;
 }
 
 @layer utilities {

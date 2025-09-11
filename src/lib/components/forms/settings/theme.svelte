@@ -20,8 +20,33 @@
 	import { Button } from '$lib/components/ui/button';
 	import { updateName } from '$lib/theme/standard';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
+	import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+	import { Effect, type Effects } from '@tauri-apps/api/window';
+	import { toast } from 'svelte-sonner';
+	import { Switch } from '$lib/components/ui/switch';
 
 	const currentSettings = inject(USER_SETTINGS);
+
+	// todo: 抽象到事件中
+	const w = getCurrentWebviewWindow();
+	function setEffects(effects: Effects) {
+		w.setEffects(effects)
+			.then((e) => {
+				toast.success('设置成功');
+			})
+			.catch((e) => {
+				toast.error('设置失败', { description: e.message });
+			});
+	}
+	function clearEffects() {
+		w.clearEffects()
+			.then((e) => {
+				toast.success('设置成功');
+			})
+			.catch((e) => {
+				toast.error('设置失败', { description: e.message });
+			});
+	}
 
 	$effect(() => {
 		applyFourColorsHue($currentSettings.theme.data.four_colors.hue);
@@ -122,6 +147,26 @@
 				<Label>当前主题无配置项: {$currentSettings.theme}</Label>
 			</div>
 		{/if}
+	</Card.Content>
+</Card.Root>
+
+<Card.Root>
+	<Card.Header>
+		<Card.Title>窗口效果</Card.Title>
+		<Card.Description>设置窗口背景层效果，需要开启"窗口背景层透明"才有效果</Card.Description>
+		<Card.Action>
+			<Card.ContentItem label="窗口背景层透明" class="w-36 md:w-72">
+				<Switch bind:checked={$currentSettings.base.bodyTransparent} />
+			</Card.ContentItem>
+		</Card.Action>
+	</Card.Header>
+	<!-- todo: 平台特定 -->
+	<Card.Content>
+		<Button size="sm" onclick={() => w.clearEffects()}>无</Button>
+		<!-- **Windows 10/11** -->
+		<Button size="sm" onclick={() => setEffects({ effects: [Effect.Acrylic] })}>亚克力</Button>
+		<!-- **Windows 11 Only** -->
+		<Button size="sm" onclick={() => setEffects({ effects: [Effect.Mica] })}>云母</Button>
 	</Card.Content>
 </Card.Root>
 

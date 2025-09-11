@@ -52,6 +52,11 @@
 		// 启动窗口入场动画
 		startWindowTiltUpAnimation();
 	});
+
+	// todo: 抽象到事件系统
+	$effect(() => {
+		document.body.classList.toggle('bodyTransparent', $userSettings.base.bodyTransparent);
+	});
 </script>
 
 <svelte:head>
@@ -59,7 +64,7 @@
 	<meta name="description" content={page.data.metaData.description} />
 </svelte:head>
 
-<svelte:body class:bodyTransparent={$userSettings.base.bodyTransparent} />
+<svelte:body />
 <!-- <svelte:document transition:scale /> -->
 
 <ThemeAction />

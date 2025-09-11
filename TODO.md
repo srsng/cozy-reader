@@ -16,16 +16,13 @@
 - [x] 优化std主题选择器
 - [ ] reader文本等可选中
 - [x] 应用页面元数据（title、description）
-- [ ] window-vibrancy
+- [ ] ~~window-vibrancy~~
 - [x] css默认值问题：ui透明度默认从0.1开始；移除body入场动画的透明度
 - [x] 四色主题颜色问题：accent明暗模式颜色值对调
 - [ ] 增强主题预览组件，完全覆盖所有主题css变量
 - [x] 重构slider的使用，封装带有contorls的slider组件
 - [x] 切换最大化/全屏时，保存窗口状态
 - [x] 错误处理: 原有的背景图片被删除或移走
-- [ ] 优化thumbnail，支持封面，支持hover时显示详情信息
-- [ ] 阻止原本的 ctrl+r，f5等刷新快捷键(把原本的刷新请求 e.stop, prevent，然后emit刷新事件)
-- [ ] 首行缩进、长图缩放等样式
 - [ ] 优化thumbnail，支持封面，支持hover时显示详情信息
 - [ ] 阻止原本的 ctrl+r，f5等刷新快捷键(把原本的刷新请求 e.stop, prevent，然后emit刷新事件)
 - [ ] 首行缩进、长图缩放等样式
@@ -113,7 +110,7 @@
 - [ ] 给titlebar等添加几种状态，如apptitle（常规状态）、header（固定在顶部）、hide（完全隐藏）、slide（平时隐藏，鼠标靠近滑出来）
 - [ ] 透明
   - [ ] 窗口透明
-  - [x] 背景透明
+  - [x] 背景图透明
 - [ ] 修复上层overlay失效问题
 - [x] 修复背景层overlay坏掉了的问题
 - [ ] 优化背景图片设置相关代码，包括background-action组件，主layout初始化背景图，更改、响应
