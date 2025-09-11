@@ -10,13 +10,20 @@
 	const appState = inject(APP_STATE);
 </script>
 
+<!-- todo: 优化样式设置 -->
 <div
 	data-tauri-drag-region={!$appState.fullscreen}
 	id="titlebar"
 	class:hidden={!$currentSettings.layout.titlebar}
-	class="bg-card border-muted fixed left-0 right-0 top-0 flex h-8 w-full select-none items-center justify-between border-b"
+	class:border-b={$currentSettings.base.layoutControlsOutline}
+	class:border-muted={$currentSettings.base.layoutControlsOutline}
+	class:bodyTransparent={$currentSettings.base.bodyTransparent}
+	class={'bg-card fixed left-0 right-0 top-0 flex h-8 w-full select-none items-center justify-between'}
 >
-	<ConfigurableBar config={$currentSettings.layout.layoutConfigs.titlebar} className="flex w-full items-center justify-between px-2" />
+	<ConfigurableBar
+		config={$currentSettings.layout.layoutConfigs.titlebar}
+		className="flex w-full items-center justify-between px-2"
+	/>
 </div>
 
 <style>

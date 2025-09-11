@@ -52,10 +52,22 @@
 				{/snippet}
 			</SliderWithControls>
 		</Card.ContentItem>
-		<Card.ContentItem label="缩放比例" description="调整应用程序的整体缩放比例">
+		<Card.ContentItem
+			label="窗口背景层透明"
+			description="窗口背景层是否透明，也会让标题栏等布局控件背景透明"
+		>
+			<Switch bind:checked={$currentSettings.base.bodyTransparent} />
+		</Card.ContentItem>
+		<Card.ContentItem
+			label="标题栏等布局控件外框线"
+			description="如果启用了窗口背景层透明，关闭该项可以提升沉浸感"
+		>
+			<Switch bind:checked={$currentSettings.base.layoutControlsOutline} />
+		</Card.ContentItem>
+		<Card.ContentItem label="缩放比例" description="应用程序的整体缩放比例">
 			<ZoomForm label />
 		</Card.ContentItem>
-		<Card.ContentItem label="始终置顶" description="窗口始终保持在最前面">
+		<Card.ContentItem label="始终置顶" description="让窗口始终保持在最前面">
 			<Switch
 				checked={$currentSettings.base.alwaysOnTop}
 				onCheckedChange={() => emitMainWindowEvent('toggle-always-on-top')}

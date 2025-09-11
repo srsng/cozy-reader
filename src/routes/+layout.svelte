@@ -59,7 +59,7 @@
 	<meta name="description" content={page.data.metaData.description} />
 </svelte:head>
 
-<svelte:body />
+<svelte:body class:bodyTransparent={$userSettings.base.bodyTransparent} />
 <!-- <svelte:document transition:scale /> -->
 
 <ThemeAction />

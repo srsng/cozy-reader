@@ -1,3 +1,18 @@
+/* 设置.base.bodyTransparent
+   窗口背景层透明，同时将titlebar等组件也要包含，统一风格
+ */
+.titlebar,
+#titlebar,
+body {
+	transition: background-color 0.3s ease;
+}
+
+.titlebar.bodyTransparent,
+#titlebar.bodyTransparent,
+body.bodyTransparent {
+	background: transparent;
+}
+
 @layer utilities {
 	/* app布局 */
 	.app-layout {
@@ -68,7 +83,7 @@
 		background-blend-mode: var(--settings-bg-blend-mode, normal);
 		filter: var(--settings-bg-filters, none);
 		opacity: var(--settings-bg-opacity, 0);
-		transform: scale(var(--settings-bg-scale, 1)) rotate(var(--settings-bg-rotation, 0deg))
+		transform: scale(var(--settings-bg-scale, 0)) rotate(var(--settings-bg-rotation, 0deg))
 			translate(var(--settings-bg-offset-x, 0px), var(--settings-bg-offset-y, 0px));
 		transition:
 			opacity var(--settings-bg-animation-duration, 300ms) ease-in-out,

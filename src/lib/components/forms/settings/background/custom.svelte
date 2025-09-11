@@ -639,11 +639,11 @@
 						</Card.ContentItem>
 
 						<!-- 旋转 -->
-						<Card.ContentItem label="旋转" description="调整图片旋转角度: 0~360°">
+						<Card.ContentItem label="旋转" description="调整图片旋转角度: -360~360°">
 							<SliderWithControls
 								bind:value={$currentSettings.background.images[activeImageIndex].config.rotation}
 								defaultValue={0}
-								min={0}
+								min={-360}
 								max={360}
 								step={1}
 							>
