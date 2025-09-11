@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { Window } from '@tauri-apps/api/window';
+	import { UserAttentionType, Window } from '@tauri-apps/api/window';
 	import { SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
 	import { inject } from '$lib/utils/context';
 	import { mergeUnlisten } from '$lib/utils/mergeUnlisten';
@@ -39,7 +39,8 @@
 		| 'refresh-page'
 		| 'save-window-state'
 		| 'restore-window-state'
-		| 'toggle-devtools';
+		| 'toggle-devtools'
+		| 'request-user-attention';
 
 	const mainWOp2Event: Record<mainWindowOperator, string> = {
 		minimize: 'main-window-minimize',
@@ -50,7 +51,8 @@
 		'refresh-page': 'main-window-refresh-page',
 		'save-window-state': 'main-window-save-window-state',
 		'restore-window-state': 'main-window-restore-window-state',
-		'toggle-devtools': 'main-window-toggle-devtools'
+		'toggle-devtools': 'main-window-toggle-devtools',
+		'request-user-attention': 'main-window-request-user-attention'
 	};
 
 	export function emitMainWindowEvent(event: mainWindowOperator) {
@@ -72,14 +74,18 @@
 		appWindow.setAlwaysOnTop(aot);
 	}
 
+	async function mainWindowRequestUserAttention() {
+		return appWindow.requestUserAttention(UserAttentionType.Informational);
+	}
+
 	// 切换全屏
 	export async function fullscreenWindow() {
 		if (document.fullscreenElement) {
 			$appState.fullscreen = false;
-			await document.exitFullscreen();
+			return await document.exitFullscreen();
 		} else {
 			$appState.fullscreen = true;
-			await document.documentElement.requestFullscreen();
+			return await document.documentElement.requestFullscreen();
 		}
 	}
 
@@ -143,6 +149,9 @@
 			// main 切换开发者工具
 			shortcutService.on(mainWOp2Event['toggle-devtools'], () => {
 				toggleDevtools();
+			}),
+			shortcutService.on(mainWOp2Event['request-user-attention'], () => {
+				mainWindowRequestUserAttention();
 			})
 		)
 	);
