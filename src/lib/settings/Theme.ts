@@ -1,6 +1,15 @@
+import { Effect } from '@tauri-apps/api/window';
+
 export type AppThemeMode = 'light' | 'dark' | 'system';
 export type AppThemeType = 'standard' | 'four_colors' | 'pony';
+export type AppThemeEffects = 'none' | 'mica' | 'acrylic' | 'blur';
 
+export const toEffects = {
+	mica: [Effect.Mica],
+	acrylic: [Effect.Acrylic],
+	blur: [Effect.Blur],
+	none: []
+};
 // export interface ThemeDataMap {
 // 	standard: StandardThemeData;
 // 	four_colors: FourColorsThemeData;
@@ -88,10 +97,13 @@ export type ThemeSettings = {
 	type: AppThemeType;
 	// data of solotution
 	data: AppThemeData;
+	// window effects
+	effects: AppThemeEffects;
 };
 
 export const DefaultThemeSettings: ThemeSettings = {
 	mode: 'system' as AppThemeMode,
 	type: 'standard',
-	data: DefaultThemeData
+	data: DefaultThemeData,
+	effects: 'none'
 };

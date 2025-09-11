@@ -11,6 +11,7 @@
 		"core:window:allow-set-always-on-top",
 		"core:window:allow-request-user-attention",
 		"core:window:allow-set-title",
-		"core:window:allow-set-effects"
+		"core:window:allow-set-effects",
+		"core:window:allow-set-theme"
 	]
 }

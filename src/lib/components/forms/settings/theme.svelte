@@ -20,38 +20,14 @@
 	import { Button } from '$lib/components/ui/button';
 	import { updateName } from '$lib/theme/standard';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
-	import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
-	import { Effect, type Effects } from '@tauri-apps/api/window';
-	import { toast } from 'svelte-sonner';
 	import { Switch } from '$lib/components/ui/switch';
+	import { emit } from '@tauri-apps/api/event';
+	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
+	import { toast } from 'svelte-sonner';
 
 	const currentSettings = inject(USER_SETTINGS);
 
-	// todo: 抽象到事件中
-	const w = getCurrentWebviewWindow();
-	function setEffects(effects: Effects) {
-		w.setEffects(effects)
-			.then((e) => {
-				toast.success('设置成功');
-			})
-			.catch((e) => {
-				toast.error('设置失败', { description: e.message });
-			});
-	}
-	function clearEffects() {
-		w.clearEffects()
-			.then((e) => {
-				toast.success('设置成功');
-			})
-			.catch((e) => {
-				toast.error('设置失败', { description: e.message });
-			});
-	}
-
-	$effect(() => {
-		applyFourColorsHue($currentSettings.theme.data.four_colors.hue);
-	});
-
+	// todo: 统一响应主题变化
 	function handleThemeType(theme: AppThemeType) {
 		$currentSettings.theme.type = theme;
 		applyThemeType(theme);
@@ -162,11 +138,21 @@
 	</Card.Header>
 	<!-- todo: 平台特定 -->
 	<Card.Content>
-		<Button size="sm" onclick={() => w.clearEffects()}>无</Button>
+		<Button size="sm" onclick={() => emit(SHORTCUT_EVENT, 'theme-effects-none')}>无</Button>
 		<!-- **Windows 10/11** -->
-		<Button size="sm" onclick={() => setEffects({ effects: [Effect.Acrylic] })}>亚克力</Button>
+		<Button size="sm" onclick={() => emit(SHORTCUT_EVENT, 'theme-effects-acrylic')}>亚克力</Button>
 		<!-- **Windows 11 Only** -->
-		<Button size="sm" onclick={() => setEffects({ effects: [Effect.Mica] })}>云母</Button>
+		<Button size="sm" onclick={() => emit(SHORTCUT_EVENT, 'theme-effects-mica')}>云母</Button>
+		<!-- **Windows 7/10/11(22H1) Only** -->
+		<Button
+			size="sm"
+			onclick={() => {
+				emit(SHORTCUT_EVENT, 'theme-effects-blur');
+				toast.warning('警告', {
+					description: '该效果在Win 10/11较新版本中表现较差，不建议对应系统用户使用'
+				});
+			}}>模糊</Button
+		>
 	</Card.Content>
 </Card.Root>
 

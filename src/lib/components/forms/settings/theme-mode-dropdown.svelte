@@ -10,6 +10,7 @@
 <script lang="ts">
 	const currentSettings = inject(USER_SETTINGS);
 
+	// todo 统一到theme action中
 	function handleThemeMode(mode: AppThemeMode) {
 		$currentSettings.theme.mode = mode;
 		if (mode === 'system') resetMode();

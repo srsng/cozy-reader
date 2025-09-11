@@ -68,5 +68,5 @@
 </script>
 
 {#if config.enabled}
-	<Btn {appTitle} {...getProps()} />
+	<Btn {appTitle} {...getProps()} variant="bar-no-bg" />
 {/if}

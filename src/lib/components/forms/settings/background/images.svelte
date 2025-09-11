@@ -118,6 +118,7 @@
 	function startEditName(image: BackgroundImage) {
 		editingImageId = image.id;
 		editingName = image.name;
+		// todo: 获取输入焦点
 	}
 
 	// 保存图片名称
