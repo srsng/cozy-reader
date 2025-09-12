@@ -47,11 +47,12 @@
 			<Markdown content={markdownContent} />
 			<!-- {:else if book.format === 'txt'}
 			<pre class="whitespace-pre-wrap break-words">{markdownContent}</pre>
-		{/if} -->
+			{/if} -->
 		</div>
-		<div class="book-reader">
+		<div class="book-reader prose">
 			<h1 class="align-center mb-6 text-3xl font-bold">sveltemd {book.title}</h1>
-			<SvelteMarkdown source={markdownContent} {renderers} />
+			<!-- <Markdown content={markdownContent} /> -->
+			<SvelteMarkdown source={markdownContent} />
 		</div>
 	</div>
 </div>
