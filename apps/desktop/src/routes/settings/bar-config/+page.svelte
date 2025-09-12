@@ -7,10 +7,10 @@
 		CardHeader,
 		CardTitle,
 		CardAction
-	} from '$lib/components/ui/card';
-	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
-	import { Separator } from '$lib/components/ui/separator';
-	import * as Alert from '$lib/components/ui/alert';
+	} from '@cozy/ui/card';
+	import { Tabs, TabsContent, TabsList, TabsTrigger } from '@cozy/ui/tabs';
+	import { Separator } from '@cozy/ui/separator';
+	import * as Alert from '@cozy/ui/alert';
 	import { ButtonType } from '$lib/settings/Layout';
 	import type { ButtonConfig } from '$lib/settings/Layout';
 	import { DefaultTitleBarConfig } from '$lib/settings/Layout';

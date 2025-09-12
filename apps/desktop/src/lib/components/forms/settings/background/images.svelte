@@ -3,12 +3,12 @@
 	import { confirm } from '@tauri-apps/plugin-dialog';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { createBackgroundImage, type BackgroundImage } from '$lib/settings/background';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
-	import * as Card from '$lib/components/ui/card';
+	import { Button } from '@cozy/ui/button';
+	import { Input } from '@cozy/ui/input';
+	import * as Card from '@cozy/ui/card';
 	import { Info, Trash2, Upload, Check, X, SquarePen, EyeOff, Eye, Copy } from 'lucide-svelte';
 	import { askOpenImg } from '$lib/utils/file';
-	import * as Tooltip from '$lib/components/ui/tooltip';
+	import * as Tooltip from '@cozy/ui/tooltip';
 	import { writeToClipBoard } from '$lib/utils/clip';
 	import { scale, slide } from 'svelte/transition';
 	import { BACKGROUND_EVENTS } from '$lib/events/shortcut';

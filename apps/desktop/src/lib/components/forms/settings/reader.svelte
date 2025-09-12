@@ -1,10 +1,10 @@
 <script lang="ts" module>
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
-	import { Switch } from '$lib/components/ui/switch';
-	import { Input } from '$lib/components/ui/input';
-	import * as Card from '$lib/components/ui/card';
-	import { Button } from '$lib/components/ui/button';
+	import { Switch } from '@cozy/ui/switch';
+	import { Input } from '@cozy/ui/input';
+	import * as Card from '@cozy/ui/card';
+	import { Button } from '@cozy/ui/button';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
 	import { DefaultReaderSettings } from '$lib/settings';
 	import { RotateCcw } from 'lucide-svelte';

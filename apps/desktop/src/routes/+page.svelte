@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button } from '$lib/components/ui/button';
-	import * as Card from '$lib/components/ui/card';
+	import { Button } from '@cozy/ui/button';
+	import * as Card from '@cozy/ui/card';
 	import {
 		goBgSettings,
 		goReaderBatchAddPaths,

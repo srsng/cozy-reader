@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
-	import { Badge } from '$lib/components/ui/badge';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
+	import { Card, CardContent, CardHeader, CardTitle } from '@cozy/ui/card';
+	import { Badge } from '@cozy/ui/badge';
+	import { Button } from '@cozy/ui/button';
+	import { Input } from '@cozy/ui/input';
 	import { AppThemeType2Str, type AppThemeType } from '$lib/settings/Theme';
 
 	let { themeType = 'standard' as AppThemeType } = $props();
@@ -93,11 +93,26 @@
 						<div class="flex items-center justify-center">
 							<!-- 简化的饼图表示 -->
 							<div class="relative h-32 w-32">
-								<div class="bg-chart-1 absolute inset-0 rounded-full" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 50%)"></div>
-								<div class="bg-chart-2 absolute inset-0 rounded-full" style="clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 75% 100%)"></div>
-								<div class="bg-chart-3 absolute inset-0 rounded-full" style="clip-path: polygon(50% 50%, 75% 100%, 25% 100%, 0% 75%)"></div>
-								<div class="bg-chart-4 absolute inset-0 rounded-full" style="clip-path: polygon(50% 50%, 0% 75%, 0% 25%, 25% 0%)"></div>
-								<div class="bg-chart-5 absolute inset-0 rounded-full" style="clip-path: polygon(50% 50%, 25% 0%, 50% 0%)"></div>
+								<div
+									class="bg-chart-1 absolute inset-0 rounded-full"
+									style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 50%)"
+								></div>
+								<div
+									class="bg-chart-2 absolute inset-0 rounded-full"
+									style="clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 75% 100%)"
+								></div>
+								<div
+									class="bg-chart-3 absolute inset-0 rounded-full"
+									style="clip-path: polygon(50% 50%, 75% 100%, 25% 100%, 0% 75%)"
+								></div>
+								<div
+									class="bg-chart-4 absolute inset-0 rounded-full"
+									style="clip-path: polygon(50% 50%, 0% 75%, 0% 25%, 25% 0%)"
+								></div>
+								<div
+									class="bg-chart-5 absolute inset-0 rounded-full"
+									style="clip-path: polygon(50% 50%, 25% 0%, 50% 0%)"
+								></div>
 							</div>
 						</div>
 						<div class="mt-4 space-y-2">

@@ -1,5 +1,5 @@
 {
-	"name": "@cozy-reader/ui",
+	"name": "@cozy/ui",
 	"version": "0.0.0",
 	"description": "Cozy Reader Component Library",
 	"keywords": [
@@ -21,22 +21,6 @@
 		"storybook:build": "storybook build"
 	},
 	"devDependencies": {
-		"svelte": "catalog:svelte",
-		"svelte-check": "catalog:svelte",
-		"@sveltejs/adapter-static": "catalog:svelte",
-		"@sveltejs/kit": "catalog:svelte",
-		"@sveltejs/package": "catalog:svelte",
-		"@sveltejs/vite-plugin-svelte": "catalog:svelte",
-		"mdsvex": "catalog:",
-		"marked": "catalog:",
-		"vite": "catalog:",
-		"storybook": "catalog:storybook",
-		"@storybook/addon-docs": "catalog:storybook",
-		"@storybook/addon-links": "catalog:storybook",
-		"@storybook/addon-svelte-csf": "catalog:storybook",
-		"@storybook/addon-vitest": "catalog:storybook",
-		"@storybook/experimental-addon-test": "catalog:storybook",
-		"@storybook/sveltekit": "catalog:storybook",
 		"@codemirror/lang-cpp": "^6.0.3",
 		"@codemirror/lang-css": "^6.3.1",
 		"@codemirror/lang-html": "^6.4.9",
@@ -52,31 +36,48 @@
 		"@codemirror/lang-xml": "^6.1.0",
 		"@codemirror/language": "^6.11.2",
 		"@codemirror/legacy-modes": "^6.5.1",
+		"@internationalized/date": "^3.9.0",
 		"@lezer/common": "^1.2.3",
 		"@lezer/highlight": "^1.2.1",
+		"@lucide/svelte": "^0.515.0",
 		"@replit/codemirror-lang-svelte": "^6.0.0",
+		"@storybook/addon-docs": "catalog:storybook",
+		"@storybook/addon-links": "catalog:storybook",
+		"@storybook/addon-svelte-csf": "catalog:storybook",
+		"@storybook/addon-vitest": "catalog:storybook",
+		"@storybook/experimental-addon-test": "catalog:storybook",
+		"@storybook/sveltekit": "catalog:storybook",
+		"@sveltejs/adapter-static": "catalog:svelte",
+		"@sveltejs/kit": "catalog:svelte",
+		"@sveltejs/package": "catalog:svelte",
+		"@sveltejs/vite-plugin-svelte": "catalog:svelte",
+		"@tailwindcss/forms": "catalog:shadcn-ui",
+		"@tailwindcss/typography": "catalog:shadcn-ui",
+		"@tailwindcss/vite": "catalog:shadcn-ui",
+		"@tanstack/table-core": "^8.21.3",
 		"@types/diff-match-patch": "^1.0.36",
 		"autoprefixer": "^10.4.21",
-		"dayjs": "^1.11.13",
-		"@internationalized/date": "catalog:shadcn-ui",
-		"@lucide/svelte": "catalog:shadcn-ui",
-		"tailwindcss": "catalog:tailwind",
-		"@tailwindcss/typography": "catalog:tailwind",
-		"@tailwindcss/vite": "catalog:tailwind",
-		"tw-animate-css": "catalog:shadcn-ui",
-		"tailwind-variants": "catalog:shadcn-ui",
-		"tailwind-merge": "catalog:shadcn-ui",
-		"@tanstack/table-core": "catalog:shadcn-ui",
-		"bits-ui": "catalog:shadcn-ui",
+		"bits-ui": "^2.9.7",
 		"clsx": "catalog:shadcn-ui",
-		"embla-carousel-svelte": "catalog:shadcn-ui",
-		"formsnap": "catalog:shadcn-ui",
-		"layerchart": "catalog:shadcn-ui",
-		"mode-watcher": "catalog:shadcn-ui",
-		"paneforge": "catalog:shadcn-ui",
-		"svelte-sonner": "catalog:shadcn-ui",
-		"sveltekit-superforms": "catalog:shadcn-ui",
-		"vaul-svelte": "catalog:shadcn-ui"
+		"dayjs": "^1.11.13",
+		"embla-carousel-svelte": "^8.6.0",
+		"formsnap": "^2.0.1",
+		"layerchart": "2.0.0-next.27",
+		"marked": "catalog:",
+		"mdsvex": "catalog:",
+		"mode-watcher": "^1.1.0",
+		"paneforge": "^1.0.2",
+		"storybook": "catalog:storybook",
+		"svelte": "catalog:svelte",
+		"svelte-check": "catalog:svelte",
+		"svelte-sonner": "^1.0.5",
+		"sveltekit-superforms": "^2.27.1",
+		"tailwind-merge": "catalog:shadcn-ui",
+		"tailwind-variants": "^1.0.0",
+		"tailwindcss": "catalog:shadcn-ui",
+		"tw-animate-css": "catalog:shadcn-ui",
+		"vaul-svelte": "1.0.0-next.7",
+		"vite": "catalog:"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0"
@@ -90,19 +91,26 @@
 			"svelte": "./dist/*.svelte",
 			"types": "./dist/*.svelte.d.ts"
 		},
-		"./*": {
-			"import": "./dist/*.js",
-			"types": "./dist/*.d.ts"
-		},
+		"./*": [
+			{
+				"import": "./dist/components/ui/*/index.js",
+				"types": "./dist/components/ui/*/index.d.ts"
+			},
+			{
+				"import": "./dist/*.js",
+				"types": "./dist/*.d.ts"
+			},
+			{
+				"svelte": "./dist/components/ui/*.svelte",
+				"types": "./dist/components/ui/*.svelte.d.ts"
+			}
+		],
 		"./*.css": {
 			"import": "./dist/themes/*.css"
 		},
 		"./*.json": {
 			"import": "./dist/*.json",
 			"types": "./dist/*.json"
-		},
-		"./themes/index.css": {
-			"import": "./dist/themes/index.css"
 		}
 	},
 	"files": [

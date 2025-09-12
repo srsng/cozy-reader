@@ -1,8 +1,8 @@
 <script lang="ts" module>
-	import { Button } from '$lib/components/ui/button';
+	import { Button } from '@cozy/ui/button';
 	import { Plus, Minus, RotateCcw } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
-	import { Slider } from '../ui/slider';
+	import { Slider } from '@cozy/ui/slider';
 
 	interface Props {
 		value: number;

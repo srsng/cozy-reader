@@ -1,6 +1,6 @@
 <script lang="ts">
 	import InfoCard from '$lib/components/common/info-card.svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { Button } from '@cozy/ui/button';
 	import { goBack } from '$lib/utils/route.svelte';
 	import { X } from 'lucide-svelte';
 

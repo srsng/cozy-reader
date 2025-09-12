@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { BaseSettingsForm, ReaderSettingsForm, ThemeSettingsForm } from '$lib/components/forms';
-	import * as Tabs from '$lib/components/ui/tabs';
+	import * as Tabs from '@cozy/ui/tabs';
 	import { m } from '$lib/paraglide/messages.js';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';

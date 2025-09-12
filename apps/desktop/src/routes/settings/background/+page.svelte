@@ -2,7 +2,7 @@
 	import type { PageData } from './$types';
 	import { page } from '$app/state';
 	import { BgForms } from '$lib/components/forms';
-	import * as Tabs from '$lib/components/ui/tabs';
+	import * as Tabs from '@cozy/ui/tabs';
 	import { slide } from 'svelte/transition';
 	import { onDestroy } from 'svelte';
 	import { saveUserSettingsManually } from '$lib/stores/userSettings';

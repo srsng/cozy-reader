@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import Label from '$lib/components/ui/label/label.svelte';
+	import { Label } from '@cozy/ui/label';
 	import { APP_STATE } from '$lib/stores/appState';
 	import { inject } from '$lib/utils/context';
 

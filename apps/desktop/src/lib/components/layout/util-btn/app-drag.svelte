@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { Move } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '@cozy/ui/button';
 	import { APP_STATE } from '$lib/stores/appState';
 	import { inject } from '$lib/utils/context';
 </script>

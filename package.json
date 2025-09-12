@@ -17,9 +17,10 @@
 		"globallint": "prettier --check . && eslint .",
 		"prettier": "prettier --check",
 		"format": "prettier --write .",
-		"dev:ui": "pnpm --filter @cozy-reader/ui storybook",
-		"check:ui": "pnpm -F @cozy-reader/ui check",
-		"check:ui:watch": "pnpm -F @cozy-reader/ui check:watch"
+		"dev:storybook": "pnpm --filter @cozy/ui storybook",
+		"check:ui": "pnpm -F @cozy/ui check",
+		"check:ui:watch": "pnpm -F @cozy/ui check:watch",
+		"dev:pkg:ui": "pnpm -F @cozy/ui dev:package:svelte"
 	},
 	"devDependencies": {
 		"@types/node": "catalog:",

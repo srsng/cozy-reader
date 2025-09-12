@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { Minus } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '@cozy/ui/button';
 	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 
 	interface Props {

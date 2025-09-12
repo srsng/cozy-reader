@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { Settings } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '$lib/components/ui/button';
+	import { Button, type ButtonVariant } from '@cozy/ui/button';
 	import { goSettings } from '$lib/utils/route.svelte';
 	import { m } from '$lib/paraglide/messages';
 	interface Props {

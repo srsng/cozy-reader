@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-svelte';
-	import { Button } from '$lib/components/ui/button';
-	import { Label } from '$lib/components/ui/label';
+	import { Button } from '@cozy/ui/button';
+	import { Label } from '@cozy/ui/label';
 	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { emit } from '@tauri-apps/api/event';
 	import { m } from '$lib/paraglide/messages';

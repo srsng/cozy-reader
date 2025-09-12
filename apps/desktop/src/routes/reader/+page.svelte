@@ -1,8 +1,8 @@
 <script lang="ts" module>
 	import FileDrop from '$lib/components/common/file-drop.svelte';
 	import { confirm } from '@tauri-apps/plugin-dialog';
-	import { Button } from '$lib/components/ui/button';
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
+	import { Button } from '@cozy/ui/button';
+	import { Card, CardContent, CardHeader, CardTitle } from '@cozy/ui/card';
 	import { Trash2, Plus, BookOpen, FileText, Upload } from 'lucide-svelte';
 	import type { Book } from '$lib/database/book/book.js';
 	import { BookFormat, BookFormatNames, StorageType } from '$lib/database/book/book.js';

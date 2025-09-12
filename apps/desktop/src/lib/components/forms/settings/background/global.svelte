@@ -10,11 +10,11 @@
 		DEFAULT_ANIMATION_DURATION
 	} from '$lib/settings/background';
 
-	import { Button } from '$lib/components/ui/button';
-	import * as Card from '$lib/components/ui/card';
-	import { Label } from '$lib/components/ui/label';
-	import * as Select from '$lib/components/ui/select';
-	import { Separator } from '$lib/components/ui/separator';
+	import { Button } from '@cozy/ui/button';
+	import * as Card from '@cozy/ui/card';
+	import { Label } from '@cozy/ui/label';
+	import * as Select from '@cozy/ui/select';
+	import { Separator } from '@cozy/ui/separator';
 	import { RotateCcw } from 'lucide-svelte';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
 </script>
