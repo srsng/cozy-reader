@@ -190,6 +190,9 @@ importers:
         specifier: ^0.9.64
         version: 0.9.65(svelte@5.38.10)
     devDependencies:
+      '@cozy-reader/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@internationalized/date':
         specifier: catalog:shadcn-ui
         version: 3.9.0

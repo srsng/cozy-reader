@@ -11,8 +11,8 @@
 	"type": "module",
 	"scripts": {
 		"dev:ui": "vite dev",
-		"check:ui": "svelte-check --tsconfig ./tsconfig.json",
-		"check:ui:watch": "pnpm check --watch",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "pnpm check --watch",
 		"dev:package:svelte": "svelte-kit sync && svelte-package --watch",
 		"package": "pnpm run --sequential \"/^package:.*/\"",
 		"package:svelte": "svelte-kit sync && svelte-package",
@@ -95,11 +95,14 @@
 			"types": "./dist/*.d.ts"
 		},
 		"./*.css": {
-			"import": "./dist/styles/*.css"
+			"import": "./dist/themes/*.css"
 		},
 		"./*.json": {
 			"import": "./dist/*.json",
 			"types": "./dist/*.json"
+		},
+		"./themes/index.css": {
+			"import": "./dist/themes/index.css"
 		}
 	},
 	"files": [

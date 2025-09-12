@@ -10,14 +10,16 @@
 	"scripts": {
 		"dev": "pnpm tauri dev",
 		"dev:desktop": "pnpm tauri dev",
-		"dev:ui": "pnpm --filter @cozy-reader/ui storybook",
+		"check:desktop": "pnpm --filter @cozy-reader/desktop check",
+		"check:desktop:watch": "pnpm --filter @cozy-reader/desktop check:watch",
+		"check:watch": "pnpm --filter @cozy-reader/desktop check:watch",
 		"tauri": "cargo tauri",
 		"globallint": "prettier --check . && eslint .",
 		"prettier": "prettier --check",
 		"format": "prettier --write .",
-		"check:desktop": "pnpm --filter @cozy-reader/desktop check",
-		"check:desktop:watch": "pnpm --filter @cozy-reader/desktop check:watch",
-		"check:watch": "pnpm --filter @cozy-reader/desktop check:watch"
+		"dev:ui": "pnpm --filter @cozy-reader/ui storybook",
+		"check:ui": "pnpm -F @cozy-reader/ui check",
+		"check:ui:watch": "pnpm -F @cozy-reader/ui check:watch"
 	},
 	"devDependencies": {
 		"@types/node": "catalog:",
