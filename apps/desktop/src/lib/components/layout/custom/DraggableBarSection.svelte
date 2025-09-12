@@ -51,7 +51,12 @@
 
 		// 检查索引是否有效
 		if (index < 0 || index >= sortedButtons.length || !sortedButtons[index]) {
-			console.warn('Invalid drag start index:', index, 'sortedButtons length:', sortedButtons.length);
+			console.warn(
+				'Invalid drag start index:',
+				index,
+				'sortedButtons length:',
+				sortedButtons.length
+			);
 			return;
 		}
 
@@ -156,12 +161,9 @@
 >
 	{#each sortedButtons as button, index (button.name)}
 		{#if button.enabled}
-			{@const isBeingDragged =
-				draggedButton?.section === section && draggedButton?.index === index}
+			{@const isBeingDragged = draggedButton?.section === section && draggedButton?.index === index}
 			{@const isDropTarget =
-				dragOverTarget?.section === section &&
-				dragOverTarget?.index === index &&
-				!isBeingDragged}
+				dragOverTarget?.section === section && dragOverTarget?.index === index && !isBeingDragged}
 			<div
 				class={cn('transition-all duration-200', {
 					'cursor-move': editable,

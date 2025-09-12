@@ -29,14 +29,22 @@
 	} = $props();
 
 	// 拖拽状态
-	let draggedButton: { button: ButtonConfig; section: 'left' | 'center' | 'right'; index: number } | null = $state(null);
+	let draggedButton: {
+		button: ButtonConfig;
+		section: 'left' | 'center' | 'right';
+		index: number;
+	} | null = $state(null);
 	let dragOverTarget: { section: 'left' | 'center' | 'right'; index: number } | null = $state(null);
 	let isDragging = $state(false);
 
 	// 获取所有按钮的扁平化列表，用于拖拽数据传输
 	function getAllButtons() {
-		const allButtons: Array<{ button: ButtonConfig; section: 'left' | 'center' | 'right'; index: number }> = [];
-		
+		const allButtons: Array<{
+			button: ButtonConfig;
+			section: 'left' | 'center' | 'right';
+			index: number;
+		}> = [];
+
 		config.left.forEach((btn, index) => {
 			if (btn.enabled) allButtons.push({ button: btn, section: 'left', index });
 		});
@@ -46,27 +54,32 @@
 		config.right.forEach((btn, index) => {
 			if (btn.enabled) allButtons.push({ button: btn, section: 'right', index });
 		});
-		
+
 		return allButtons;
 	}
 
 	// 处理跨section拖拽
-	function handleCrossSectionDrag(fromSection: 'left' | 'center' | 'right', fromSortedIndex: number, toSection: 'left' | 'center' | 'right', toSortedIndex: number) {
+	function handleCrossSectionDrag(
+		fromSection: 'left' | 'center' | 'right',
+		fromSortedIndex: number,
+		toSection: 'left' | 'center' | 'right',
+		toSortedIndex: number
+	) {
 		if (!editable) return;
-		
+
 		// 获取源section的排序按钮
 		const fromSortedButtons = [...config[fromSection]].sort((a, b) => a.order - b.order);
 		const movedButton = fromSortedButtons[fromSortedIndex];
 		if (!movedButton) return;
-		
+
 		// 从源section移除按钮
-		const sourceButtons = config[fromSection].filter(btn => btn.name !== movedButton.name);
+		const sourceButtons = config[fromSection].filter((btn) => btn.name !== movedButton.name);
 		// 重新排序
 		sourceButtons.forEach((btn, index) => {
 			btn.order = index;
 		});
 		config[fromSection] = sourceButtons;
-		
+
 		// 获取目标section的排序按钮
 		const toSortedButtons = [...config[toSection]].sort((a, b) => a.order - b.order);
 		// 插入到目标位置
@@ -79,25 +92,34 @@
 	}
 
 	// 处理同section内拖拽
-	function handleSameSectionReorder(section: 'left' | 'center' | 'right', fromSortedIndex: number, toSortedIndex: number) {
+	function handleSameSectionReorder(
+		section: 'left' | 'center' | 'right',
+		fromSortedIndex: number,
+		toSortedIndex: number
+	) {
 		if (!editable) return;
-		
+
 		// 获取排序后的按钮数组
 		const sortedButtons = [...config[section]].sort((a, b) => a.order - b.order);
 		// 移动按钮
 		const [movedButton] = sortedButtons.splice(fromSortedIndex, 1);
 		sortedButtons.splice(toSortedIndex, 0, movedButton);
-		
+
 		// 重新设置order属性
 		sortedButtons.forEach((btn, index) => {
 			btn.order = index;
 		});
-		
+
 		config[section] = sortedButtons;
 	}
 
 	// 统一的拖拽处理函数
-	function handleGlobalDrop(fromSection: 'left' | 'center' | 'right', fromSortedIndex: number, toSection: 'left' | 'center' | 'right', toSortedIndex: number) {
+	function handleGlobalDrop(
+		fromSection: 'left' | 'center' | 'right',
+		fromSortedIndex: number,
+		toSection: 'left' | 'center' | 'right',
+		toSortedIndex: number
+	) {
 		if (fromSection === toSection) {
 			handleSameSectionReorder(fromSection, fromSortedIndex, toSortedIndex);
 		} else {
@@ -118,7 +140,7 @@
 		section="left"
 		className={lr_class}
 		{btnClass}
-		btnDisabled={btnDisabled}
+		{btnDisabled}
 		{iconClass}
 		{editable}
 		bind:draggedButton
@@ -126,7 +148,7 @@
 		bind:isDragging
 		onGlobalDrop={handleGlobalDrop}
 	/>
-	
+
 	<!-- 中间区域 -->
 	<DraggableBarSection
 		appTitle={$appState.appTitle}
@@ -134,7 +156,7 @@
 		section="center"
 		className={md_class}
 		{btnClass}
-		btnDisabled={btnDisabled}
+		{btnDisabled}
 		{iconClass}
 		{editable}
 		bind:draggedButton
@@ -142,7 +164,7 @@
 		bind:isDragging
 		onGlobalDrop={handleGlobalDrop}
 	/>
-	
+
 	<!-- 右侧区域 -->
 	<DraggableBarSection
 		appTitle={$appState.appTitle}
@@ -150,7 +172,7 @@
 		section="right"
 		className={lr_class}
 		{btnClass}
-		btnDisabled={btnDisabled}
+		{btnDisabled}
 		{iconClass}
 		{editable}
 		bind:draggedButton

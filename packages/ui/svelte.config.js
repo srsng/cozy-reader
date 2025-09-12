@@ -23,10 +23,10 @@ const config = {
 			strict: true
 		}),
 		alias: {
-			$components: "src/lib/components",
-			$utils: "src/lib/utils",
-			$ui: "src/lib/components/ui",
-			$hooks: "src/lib/hooks"
+			$components: 'src/lib/components',
+			$utils: 'src/lib/utils',
+			$ui: 'src/lib/components/ui',
+			$hooks: 'src/lib/hooks'
 		}
 	}
 };

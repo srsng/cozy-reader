@@ -19,15 +19,14 @@ pnpm dlx shadcn-svelte@latest add --all
 就shadcn-svelte的组件而言，原本的导入方式
 
 ```svelte
-import * as Card from '$lib/components/ui/card'; 
+import * as Card from '$lib/components/ui/card';
 ```
 
 新的导入方式
 
 ```svelte
-import * as Card from '@cozy/ui/card';
-// 等效
-// import * as Card from '@cozy/ui/components/ui/card/index';
+import * as Card from '@cozy/ui/card'; // 等效 // import * as Card from
+'@cozy/ui/components/ui/card/index';
 ```
 
 其他组件同理，或可以根据目录结构查看怎么导入

@@ -1,16 +1,14 @@
 // 全局键盘事件监听器
 
-import type {
-	KeyboardEventContext,
-	KeyCombination
-} from './types';
+import type { KeyboardEventContext, KeyCombination } from './types';
 import { ModifierKey } from './types';
 
 /**
  * 键盘监听器类
  */
 export class KeyboardListener {
-	private listeners: Set<(combination: KeyCombination, context: KeyboardEventContext) => void> = new Set();
+	private listeners: Set<(combination: KeyCombination, context: KeyboardEventContext) => void> =
+		new Set();
 	private isListening = false;
 
 	/**
@@ -36,7 +34,9 @@ export class KeyboardListener {
 	/**
 	 * 添加键盘事件监听器
 	 */
-	addListener(listener: (combination: KeyCombination, context: KeyboardEventContext) => void): () => void {
+	addListener(
+		listener: (combination: KeyCombination, context: KeyboardEventContext) => void
+	): () => void {
 		this.listeners.add(listener);
 		return () => this.listeners.delete(listener);
 	}
@@ -56,7 +56,7 @@ export class KeyboardListener {
 		const context = this.createEventContext(event);
 
 		// 通知所有监听器
-		this.listeners.forEach(listener => {
+		this.listeners.forEach((listener) => {
 			try {
 				listener(combination, context);
 			} catch (error) {
@@ -91,13 +91,13 @@ export class KeyboardListener {
 		// 标准化特殊键名
 		const keyMap: Record<string, string> = {
 			' ': 'Space',
-			'ArrowUp': 'Up',
-			'ArrowDown': 'Down',
-			'ArrowLeft': 'Left',
-			'ArrowRight': 'Right',
-			'Escape': 'Esc',
-			'Delete': 'Del',
-			'Insert': 'Ins'
+			ArrowUp: 'Up',
+			ArrowDown: 'Down',
+			ArrowLeft: 'Left',
+			ArrowRight: 'Right',
+			Escape: 'Esc',
+			Delete: 'Del',
+			Insert: 'Ins'
 		};
 
 		return keyMap[key] || key.toLowerCase();
@@ -119,10 +119,10 @@ export class KeyboardListener {
 		const isInInput = this.isInputElement(target);
 
 		return {
-		originalEvent: event,
-		target: event.target,
-		isInInput
-	};
+			originalEvent: event,
+			target: event.target,
+			isInInput
+		};
 	}
 
 	/**
@@ -182,7 +182,7 @@ export class ShortcutUtils {
 	 * 从字符串解析快捷键组合
 	 */
 	static stringToCombination(str: string): KeyCombination | null {
-		const parts = str.split('+').map(p => p.trim());
+		const parts = str.split('+').map((p) => p.trim());
 		if (parts.length === 0) return null;
 
 		const key = parts.pop()!;
@@ -236,11 +236,37 @@ export class ShortcutUtils {
 		}
 
 		// 功能键可以不需要修饰键
-		const functionKeys = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12'];
+		const functionKeys = [
+			'f1',
+			'f2',
+			'f3',
+			'f4',
+			'f5',
+			'f6',
+			'f7',
+			'f8',
+			'f9',
+			'f10',
+			'f11',
+			'f12'
+		];
 		if (functionKeys.includes(combination.key.toLowerCase())) return true;
 
 		// 特殊键可以不需要修饰键
-		const specialKeys = ['esc', 'enter', 'space', 'tab', 'up', 'down', 'left', 'right', 'home', 'end', 'pageup', 'pagedown'];
+		const specialKeys = [
+			'esc',
+			'enter',
+			'space',
+			'tab',
+			'up',
+			'down',
+			'left',
+			'right',
+			'home',
+			'end',
+			'pageup',
+			'pagedown'
+		];
 		if (specialKeys.includes(combination.key.toLowerCase())) return true;
 
 		return combination.modifiers.length > 0;

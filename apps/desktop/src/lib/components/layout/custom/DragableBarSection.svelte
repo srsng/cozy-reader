@@ -63,7 +63,7 @@
 		const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 		const x = e.clientX;
 		const y = e.clientY;
-		
+
 		if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
 			onDragLeave();
 		}
@@ -72,25 +72,25 @@
 	function handleDrop(e: DragEvent) {
 		if (!canDrop) return;
 		e.preventDefault();
-		
+
 		// 计算插入位置
 		const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 		const x = e.clientX - rect.left;
 		const children = Array.from((e.currentTarget as HTMLElement).children);
-		
+
 		let insertIndex = sortedButtons.length;
-		
+
 		for (let i = 0; i < children.length; i++) {
 			const child = children[i] as HTMLElement;
 			const childRect = child.getBoundingClientRect();
 			const childX = childRect.left + childRect.width / 2;
-			
+
 			if (e.clientX < childX) {
 				insertIndex = i;
 				break;
 			}
 		}
-		
+
 		onDrop(section, insertIndex);
 	}
 
@@ -107,15 +107,11 @@
 	}
 </script>
 
-<div 
-	class={cn(
-		className,
-		'draggable-bar-section',
-		{
-			'drag-over': isDragOver && canDrop,
-			'drop-zone': canDrop
-		}
-	)}
+<div
+	class={cn(className, 'draggable-bar-section', {
+		'drag-over': isDragOver && canDrop,
+		'drop-zone': canDrop
+	})}
 	ondragover={handleDragOver}
 	ondragleave={handleDragLeave}
 	ondrop={handleDrop}
@@ -123,7 +119,7 @@
 	aria-label="{section} 按钮区域"
 >
 	{#each sortedButtons as button (button.name)}
-		<DragableBarButton 
+		<DragableBarButton
 			config={button}
 			className={btnClass}
 			{appTitle}
@@ -132,15 +128,15 @@
 			{editable}
 			beingDragged={draggedButton?.name === button.name}
 			onDragStart={() => handleButtonDragStart(button)}
-			onDragEnd={onDragEnd}
+			{onDragEnd}
 			onToggle={() => handleButtonToggle(button)}
 			onRemove={() => handleButtonRemove(button)}
 		/>
 	{/each}
-	
+
 	{#if sortedButtons.length === 0 && canDrop}
 		<div class="empty-drop-zone">
-			<span class="text-xs text-muted-foreground">拖拽按钮到此处</span>
+			<span class="text-muted-foreground text-xs">拖拽按钮到此处</span>
 		</div>
 	{/if}
 </div>

@@ -1,10 +1,6 @@
 // 简化的快捷键管理服务
 
-import type {
-	StaticShortcut,
-	KeyCombination,
-	KeyboardEventContext
-} from './types';
+import type { StaticShortcut, KeyCombination, KeyboardEventContext } from './types';
 import { KeyboardListener, ShortcutUtils } from './keyboardListener';
 
 /**
@@ -44,7 +40,7 @@ export class SimpleShortcutManager {
 	 * 批量注册快捷键
 	 */
 	registerShortcuts(shortcuts: StaticShortcut[]): void {
-		shortcuts.forEach(shortcut => this.register(shortcut));
+		shortcuts.forEach((shortcut) => this.register(shortcut));
 	}
 
 	/**
