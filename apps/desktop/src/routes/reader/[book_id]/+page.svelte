@@ -4,7 +4,6 @@
 	// import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	// import { BookFormat } from '$lib/database/index.js';
 	// import type { Component } from 'svelte';
-	import SvelteMarkdown from 'svelte-markdown';
 	import { slide } from 'svelte/transition';
 
 	const { data } = $props();
@@ -51,8 +50,8 @@
 		</div>
 		<div class="book-reader prose">
 			<h1 class="align-center mb-6 text-3xl font-bold">sveltemd {book.title}</h1>
-			<!-- <Markdown content={markdownContent} /> -->
-			<SvelteMarkdown source={markdownContent} />
+			<Markdown content={markdownContent} />
+			<!-- <SvelteMarkdown source={markdownContent} /> -->
 		</div>
 	</div>
 </div>

@@ -4,10 +4,10 @@
 	"version": "0.1.0",
 	"identifier": "com.srsng.cozy-reader",
 	"build": {
-		"frontendDist": "../build",
+		"frontendDist": "../../apps/desktop/build",
 		"devUrl": "http://localhost:5173",
-		"beforeDevCommand": "pnpm dev",
-		"beforeBuildCommand": "pnpm build"
+		"beforeDevCommand": "pnpm -F @cozy-reader/desktop run dev",
+		"beforeBuildCommand": "pnpm -F @cozy-reader/desktop run  build"
 	},
 	"app": {
 		"windows": [

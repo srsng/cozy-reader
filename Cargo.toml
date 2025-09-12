@@ -1,0 +1,37 @@
+[workspace]
+members = ["crates/cozy-reader-*"]
+resolver = "2"
+
+[workspace.dependencies]
+bstr = "1.11.1"
+uuid = { version = "1.18.0", features = ["v4", "serde"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.143"
+thiserror = "2.0.16"
+tokio = { version = "1.47.1", default-features = false }
+anyhow = "1.0.99"
+parking_lot = "0.12.4"
+futures = "0.3.31"
+toml = "0.9.5"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.20"
+tempfile = "3.21"
+rand = "0.9.2"
+notify-rust = "4.11.7"
+
+[profile.release]
+codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+lto = true        # Enables link to optimizations
+opt-level = "s"   # Optimize for binary size
+debug = true      # Enable debug symbols, for profiling
+
+[profile.bench]
+codegen-units = 256
+lto = false
+opt-level = 3
+
+[profile.dev]
+incremental = false
+
+[profile.test]
+incremental = false
