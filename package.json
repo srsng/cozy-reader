@@ -17,6 +17,7 @@
 		"globallint": "prettier --check . && eslint .",
 		"prettier": "prettier --check",
 		"format": "prettier --write .",
+		"prepare": "pnpm -F @cozy-reader/desktop prepare",
 		"dev:storybook": "pnpm --filter @cozy/ui storybook",
 		"check:ui": "pnpm -F @cozy/ui check",
 		"check:ui:watch": "pnpm -F @cozy/ui check:watch",
