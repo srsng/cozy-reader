@@ -105,8 +105,8 @@
 				"types": "./dist/components/ui/*.svelte.d.ts"
 			}
 		],
-		"./*.css": {
-			"import": "./dist/themes/*.css"
+		"./main.css": {
+			"import": "./dist/main.css"
 		},
 		"./*.json": {
 			"import": "./dist/*.json",
