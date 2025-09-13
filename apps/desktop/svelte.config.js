@@ -21,7 +21,13 @@ const config = {
 			fallback: 'index.html',
 			precompress: false,
 			strict: true
-		})
+		}),
+		alias: {
+			$components: 'src/lib/components',
+			$utils: 'src/lib/utils',
+			$ui: 'src/lib/components/ui',
+			$hooks: 'src/lib/hooks'
+		}
 	}
 };
 

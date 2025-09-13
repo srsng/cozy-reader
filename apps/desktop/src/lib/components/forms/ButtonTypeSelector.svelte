@@ -1,6 +1,6 @@
 <script lang="ts" module>
-	import { Button } from '@cozy/ui/button';
-	import * as Select from '@cozy/ui/select';
+	import { Button } from '$ui/button';
+	import * as Select from '$ui/select';
 	import { ALL_BUTTON_TYPES, buttonTypeLabels, type ButtonType } from '$lib/settings/Layout';
 	import { Plus } from 'lucide-svelte';
 

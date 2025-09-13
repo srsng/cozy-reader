@@ -1,15 +1,15 @@
 <script lang="ts" module>
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
-	import { Switch } from '@cozy/ui/switch';
-	import * as Card from '@cozy/ui/card';
+	import { Switch } from '$ui/switch';
+	import * as Card from '$ui/card';
 	import LanguageDropDown from './language.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { Badge } from '@cozy/ui/badge';
+	import { Badge } from '$ui/badge';
 	import { langCode2Name } from '$lib/settings/Base';
 	import { ZoomForm } from '$lib/components/forms';
 	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
-	import { Separator } from '@cozy/ui/separator';
+	import { Separator } from '$ui/separator';
 	import { DEFAULT_OPACITY } from '$lib/settings/background';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
 </script>

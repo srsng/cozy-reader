@@ -1,8 +1,8 @@
 <script lang="ts" module>
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 	import { inject } from '$lib/utils/context';
-	import * as DropdownMenu from '@cozy/ui/dropdown-menu';
-	import { Button } from '@cozy/ui/button';
+	import * as DropdownMenu from '$ui/dropdown-menu';
+	import { Button } from '$ui/button';
 	import { AppThemeMode2Str, type AppThemeMode } from '$lib/settings/Theme';
 	import { resetMode, setMode } from 'mode-watcher';
 </script>

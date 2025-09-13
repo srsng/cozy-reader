@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { Pin } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 	import { emit } from '@tauri-apps/api/event';
 	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';

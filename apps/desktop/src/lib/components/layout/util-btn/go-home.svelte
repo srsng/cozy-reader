@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { House } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 	import { goHome } from '$lib/utils/route.svelte';
 	import { m } from '$lib/paraglide/messages';
 </script>

@@ -1,8 +1,8 @@
 <script lang="ts" module>
 	import { ZoomIn } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 	import { m } from '$lib/paraglide/messages';
-	import * as Popover from '@cozy/ui/popover';
+	import * as Popover from '$ui/popover';
 	import { ZoomForm } from '$lib/components/forms';
 
 	interface Props {

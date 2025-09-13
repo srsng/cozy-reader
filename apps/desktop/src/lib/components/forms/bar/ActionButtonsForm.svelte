@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@cozy/ui/card';
-	import { Badge } from '@cozy/ui/badge';
-	import { Separator } from '@cozy/ui/separator';
+	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$ui/card';
+	import { Badge } from '$ui/badge';
+	import { Separator } from '$ui/separator';
 	import { Settings2, GripVertical, X, Plus } from 'lucide-svelte';
 </script>
 

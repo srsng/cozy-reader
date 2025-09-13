@@ -1,8 +1,8 @@
 <script lang="ts" module>
 	import { writeClipboard } from '$lib/backend/clipboard';
-	import { Button } from '@cozy/ui/button';
+	import { Button } from '$ui/button';
 	import { Link } from 'lucide-svelte';
-	import * as Tooltip from '@cozy/ui/tooltip';
+	import * as Tooltip from '$ui/tooltip';
 	import type { Snippet } from 'svelte';
 
 	// function isLocalLink(href: string) {

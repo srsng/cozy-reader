@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import { cn } from '$lib/utils';
 	import { mode, toggleMode } from 'mode-watcher';
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 	import { SunMediumIcon, MoonIcon } from 'lucide-svelte';
 	import { scale } from 'svelte/transition';
 	interface Props {

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { Label } from '@cozy/ui/label';
+	import { Label } from '$ui/label';
 	import { APP_STATE } from '$lib/stores/appState';
 	import { inject } from '$lib/utils/context';
 

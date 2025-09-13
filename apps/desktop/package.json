@@ -15,7 +15,6 @@
 	},
 	"devDependencies": {
 		"foliate-js": "workspace:*",
-		"@cozy/ui": "workspace:*",
 		"@types/node": "catalog:",
 		"mdsvex": "catalog:",
 		"typescript": "catalog:",

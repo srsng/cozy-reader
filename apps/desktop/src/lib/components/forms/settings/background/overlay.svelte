@@ -2,14 +2,14 @@
 	import { inject } from '$lib/utils/context';
 	import { USER_SETTINGS } from '$lib/stores/userSettings';
 
-	import { Button } from '@cozy/ui/button';
-	import * as Card from '@cozy/ui/card';
-	import { Switch } from '@cozy/ui/switch';
+	import { Button } from '$ui/button';
+	import * as Card from '$ui/card';
+	import { Switch } from '$ui/switch';
 	import { RotateCcw } from 'lucide-svelte';
-	import { Input } from '@cozy/ui/input';
-	import { Separator } from '@cozy/ui/separator';
+	import { Input } from '$ui/input';
+	import { Separator } from '$ui/separator';
 	import { DEFAULT_LIGHT_OPACITY, DEFAULT_DARK_OPACITY } from '$lib/settings/background';
-	import { Label } from '@cozy/ui/label';
+	import { Label } from '$ui/label';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
 </script>
 

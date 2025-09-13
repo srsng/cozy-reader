@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from '@cozy/ui/button';
+	import { Button } from '$ui/button';
 	import ButtonTypeSelector from '$lib/components/forms/ButtonTypeSelector.svelte';
 	import { RotateCcw, Save } from 'lucide-svelte';
 	import type { ButtonType } from '$lib/settings/Layout';

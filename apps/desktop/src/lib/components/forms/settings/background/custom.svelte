@@ -19,15 +19,15 @@
 		type FourColorsThemeData
 	} from '$lib/settings/Theme';
 	import { createThemeBinding, hasThemeBinding } from '$lib/theme/themeUtils';
-	import { Button } from '@cozy/ui/button';
-	import * as Card from '@cozy/ui/card';
-	import { Label } from '@cozy/ui/label';
-	import { Switch } from '@cozy/ui/switch';
-	import * as Select from '@cozy/ui/select';
+	import { Button } from '$ui/button';
+	import * as Card from '$ui/card';
+	import { Label } from '$ui/label';
+	import { Switch } from '$ui/switch';
+	import * as Select from '$ui/select';
 	import { RotateCcw, Upload } from 'lucide-svelte';
 	import { askOpenImg } from '$lib/utils/file';
 	import { toast } from 'svelte-sonner';
-	import { Separator } from '@cozy/ui/separator';
+	import { Separator } from '$ui/separator';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
 </script>
 

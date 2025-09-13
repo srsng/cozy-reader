@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 	import { writeToClipBoard } from '$lib/utils/clip';
 	import AppIcon from '$lib/components/common/app-icon.svelte';
 	import { inject } from '$lib/utils/context';

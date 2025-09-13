@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Button } from '@cozy/ui/button';
-	import * as Card from '@cozy/ui/card';
+	import { Button } from '$ui/button';
+	import * as Card from '$ui/card';
 	import { goto } from '$app/navigation';
 	import {
 		goBack,

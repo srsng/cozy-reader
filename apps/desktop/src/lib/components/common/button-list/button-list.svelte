@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from '@cozy/ui/button';
+	import { Button } from '$ui/button';
 
 	let {
 		Map2Str,

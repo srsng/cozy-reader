@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { Maximize, Minimize } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 	import { scale } from 'svelte/transition';
 	import { APP_STATE } from '$lib/stores/appState';

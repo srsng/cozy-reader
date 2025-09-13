@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle } from '@cozy/ui/card';
-	import { Badge } from '@cozy/ui/badge';
-	import { Button } from '@cozy/ui/button';
-	import { Input } from '@cozy/ui/input';
+	import { Card, CardContent, CardHeader, CardTitle } from '$ui/card';
+	import { Badge } from '$ui/badge';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import { AppThemeType2Str, type AppThemeType } from '$lib/settings/Theme';
 
 	let { themeType = 'standard' as AppThemeType } = $props();

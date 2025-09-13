@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 </script>
 
 <script lang="ts">

@@ -24,11 +24,11 @@
 	import ZoomInOutMenuAction from '$lib/components/action/zoom-menu-action.svelte';
 	import WindowAction from '$lib/components/action/window-action.svelte';
 	import HotkeysAction from '$lib/components/action/hotkeys-action.svelte';
-	import { Toaster } from '@cozy/ui/sonner';
+	import { Toaster } from '$ui/sonner';
 
 	// ui components
 	import AppTitleBar from '$lib/components/layout/AppTitleBar.svelte';
-	import { ScrollArea } from '@cozy/ui/scroll-area';
+	import { ScrollArea } from '$ui/scroll-area';
 
 	const { data, children }: { data: LayoutData; children: Snippet } = $props();
 

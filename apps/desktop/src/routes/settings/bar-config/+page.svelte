@@ -1,16 +1,9 @@
 <!-- todo -->
 <script lang="ts" module>
-	import {
-		Card,
-		CardContent,
-		CardDescription,
-		CardHeader,
-		CardTitle,
-		CardAction
-	} from '@cozy/ui/card';
-	import { Tabs, TabsContent, TabsList, TabsTrigger } from '@cozy/ui/tabs';
-	import { Separator } from '@cozy/ui/separator';
-	import * as Alert from '@cozy/ui/alert';
+	import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardAction } from '$ui/card';
+	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$ui/tabs';
+	import { Separator } from '$ui/separator';
+	import * as Alert from '$ui/alert';
 	import { ButtonType } from '$lib/settings/Layout';
 	import type { ButtonConfig } from '$lib/settings/Layout';
 	import { DefaultTitleBarConfig } from '$lib/settings/Layout';

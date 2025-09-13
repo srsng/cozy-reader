@@ -1,8 +1,8 @@
 <!-- todo -->
 <script lang="ts" module>
 	import type { ButtonConfig } from '$lib/settings/Layout';
-	import { Button } from '@cozy/ui/button';
-	import { Badge } from '@cozy/ui/badge';
+	import { Button } from '$ui/button';
+	import { Badge } from '$ui/badge';
 	import { GripVertical, Trash2, ChevronUp, ChevronDown } from 'lucide-svelte';
 
 	interface Props {

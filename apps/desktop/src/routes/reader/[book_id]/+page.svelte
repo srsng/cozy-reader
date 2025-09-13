@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Markdown from '$lib/components/reader/markdown/Markdown.svelte';
 	import { Image, Heading, Link, Strong, Blockquote } from '$lib/components/typography';
-	// import Textarea from '@cozy/ui/textarea/textarea.svelte';
+	// import Textarea from '$ui/textarea/textarea.svelte';
 	// import { BookFormat } from '$lib/database/index.js';
 	// import type { Component } from 'svelte';
 	import { slide } from 'svelte/transition';

@@ -11,19 +11,19 @@
 		type AppThemeMode,
 		type AppThemeType
 	} from '$lib/settings/Theme';
-	import { Label } from '@cozy/ui/label';
+	import { Label } from '$ui/label';
 	import { applyFourColorsHue, applyThemeType } from '$lib/theme/themeUtils';
 	import ThemePreview from '$lib/components/theme/ThemePreview.svelte';
-	// import * as Card from '@cozy/ui/card';
-	import * as Card from '@cozy/ui/card';
-	import { ButtonList } from '@cozy/ui/button-list';
-	import { Input } from '@cozy/ui/input';
-	import { Button } from '@cozy/ui/button';
+	// import * as Card from '$ui/card';
+	import * as Card from '$ui/card';
+	import { ButtonList } from '$ui/button-list';
+	import { Input } from '$ui/input';
+	import { Button } from '$ui/button';
 	// import Button from '@cozy-reader/ui/components/button/index';
-	// import { Button } from '@cozy/ui/button';
+	// import { Button } from '$ui/button';
 	import { updateName } from '$lib/theme/standard';
 	import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
-	import { Switch } from '@cozy/ui/switch';
+	import { Switch } from '$ui/switch';
 	import { emit } from '@tauri-apps/api/event';
 	import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 	import { toast } from 'svelte-sonner';

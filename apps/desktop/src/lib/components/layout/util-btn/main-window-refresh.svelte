@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { RefreshCcw } from 'lucide-svelte';
-	import { Button, type ButtonVariant } from '@cozy/ui/button';
+	import { Button, type ButtonVariant } from '$ui/button';
 	import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 	interface Props {
 		name?: string;

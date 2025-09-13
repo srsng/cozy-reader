@@ -9,7 +9,7 @@ import Paragraph from './paragraph.svelte';
 import Br from './br.svelte';
 import Em from './em.svelte';
 import Code from './code.svelte';
-import { Separator as Hr } from '@cozy/ui/separator';
+import { Separator as Hr } from '$ui/separator';
 import ListItem from './list-item.svelte';
 import List from './list.svelte';
 import Codespan from './codespan.svelte';

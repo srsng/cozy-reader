@@ -3,8 +3,8 @@
 	import { inject } from '$lib/utils/context';
 	import { setLocale } from '$lib/paraglide/runtime';
 	import { langCode2Name, type AppLanguageCode } from '$lib/settings/Base';
-	import * as DropdownMenu from '@cozy/ui/dropdown-menu';
-	import { Button } from '@cozy/ui/button';
+	import * as DropdownMenu from '$ui/dropdown-menu';
+	import { Button } from '$ui/button';
 	import { m } from '$lib/paraglide/messages.js';
 </script>
 

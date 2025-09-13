@@ -6,8 +6,8 @@
 </script>
 
 <script lang="ts">
-	import { Button } from '@cozy/ui/button';
-	import { Badge } from '@cozy/ui/badge';
+	import { Button } from '$ui/button';
+	import { Badge } from '$ui/badge';
 	import { GripVertical, X, Eye, EyeOff } from 'lucide-svelte';
 
 	const {

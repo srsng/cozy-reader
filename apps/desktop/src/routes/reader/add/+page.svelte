@@ -1,6 +1,6 @@
 <script lang="ts">
 	import InfoCard from '$lib/components/common/info-card.svelte';
-	import { Button } from '@cozy/ui/button';
+	import { Button } from '$ui/button';
 	import { goReaderHome } from '$lib/utils/route.svelte.js';
 	import { Info, Check, X, Frown, Loader } from 'lucide-svelte';
 	// import { BookService, type Book, type DatabaseResult } from '$lib/database';
