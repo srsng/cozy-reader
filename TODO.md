@@ -47,60 +47,60 @@
 
   ```json
   {
-   "theme-light-blue": {
-    "name": "Blue | 蓝",
-    "type": "light",
-    "css": {
-     "--header-color": "#006fc9",
-     "--header-text-color": "#e5e7eb",
-     "--background-color": "#f2f2f2",
-     "--text-color": "#323130"
-    }
-   },
-   "theme-gray-blue": {
-    "name": "Gray-Blue | 灰蓝",
-    "type": "both",
-    "css": {
-     "--header-color": "#374151",
-     "--background-color": "#4b5563",
-     "--text-color": "#e5e7eb"
-    }
-   },
-   "theme-dark-gray": {
-    "name": "Gray | 暗灰",
-    "type": "dark",
-    "css": {
-     "--header-color": "#333333",
-     "--background-color": "#282828",
-     "--text-color": "#e5e7eb"
-    }
-   },
-   "theme-light-coral": {
-    "name": "Coral | 珊瑚红",
-    "type": "light",
-    "css": {
-     "--header-color": "#f08080",
-     "--header-text-color": "#f2f4f8",
-     "--background-color": "#f2f2f2",
-     "--text-color": "#323130"
-    }
-   },
-   "theme-light-yellow123": {
-    "name": "bulue",
-    "type": "light",
-    "css": {
-     "--header-color": "#a63030",
-     "--background-color": "#7e6767",
-     "--text-color": "#331010",
-     "--header-text-color": "#d57272"
-    }
-   }
+  	"theme-light-blue": {
+  		"name": "Blue | 蓝",
+  		"type": "light",
+  		"css": {
+  			"--header-color": "#006fc9",
+  			"--header-text-color": "#e5e7eb",
+  			"--background-color": "#f2f2f2",
+  			"--text-color": "#323130"
+  		}
+  	},
+  	"theme-gray-blue": {
+  		"name": "Gray-Blue | 灰蓝",
+  		"type": "both",
+  		"css": {
+  			"--header-color": "#374151",
+  			"--background-color": "#4b5563",
+  			"--text-color": "#e5e7eb"
+  		}
+  	},
+  	"theme-dark-gray": {
+  		"name": "Gray | 暗灰",
+  		"type": "dark",
+  		"css": {
+  			"--header-color": "#333333",
+  			"--background-color": "#282828",
+  			"--text-color": "#e5e7eb"
+  		}
+  	},
+  	"theme-light-coral": {
+  		"name": "Coral | 珊瑚红",
+  		"type": "light",
+  		"css": {
+  			"--header-color": "#f08080",
+  			"--header-text-color": "#f2f4f8",
+  			"--background-color": "#f2f2f2",
+  			"--text-color": "#323130"
+  		}
+  	},
+  	"theme-light-yellow123": {
+  		"name": "bulue",
+  		"type": "light",
+  		"css": {
+  			"--header-color": "#a63030",
+  			"--background-color": "#7e6767",
+  			"--text-color": "#331010",
+  			"--header-text-color": "#d57272"
+  		}
+  	}
   }
   ```
 
 - [ ] 升级tauri等rust依赖，并排除可能的错误
 - [ ] md支持渲染数学公式
-- [ ] 增强md：table等组件 [参考](node_modules\.pnpm\marked@16.2.1\node_modules\marked\lib\marked.d.ts)
+- [ ] 增强md：table等组件 [参考](node_modules.pnpm\marked@16.2.1\node_modules\marked\lib\marked.d.ts)
 - [x] 书籍drag添加到书库
   - [x] 支持批量添加
 - [ ] fix: 从深色mode切换到浅色模式时会有一个闪光弹效果
@@ -140,7 +140,7 @@
   - src\lib\components\forms\ButtonTypeSelector.svelte
   - src\route\settings\bar-config\+page.svelte
   - [ ] 支持多webview-window，记得在app state中添加window列表以管理
-  - [ ] 支持多tab  tablist-warper manager
+  - [ ] 支持多tab tablist-warper manager
 
 ## super hard
 
