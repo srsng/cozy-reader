@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import * as Card from '@cozy/ui/card';
+	import * as Card from '$ui/card';
 	import { slide } from 'svelte/transition';
 	import type { Snippet } from 'svelte';
 
