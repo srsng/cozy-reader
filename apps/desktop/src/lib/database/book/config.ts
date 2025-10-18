@@ -59,11 +59,11 @@ async function initializeDatabase(db: Database): Promise<void> {
 			current_progress TEXT NOT NULL DEFAULT '{}',
 			total_characters INTEGER NOT NULL DEFAULT 0,
 			read_characters INTEGER NOT NULL DEFAULT 0,
-			reading_time_minutes INTEGER NOT NULL DEFAULT 0,
+				reading_time_minutes REAL NOT NULL DEFAULT 0.0,
 			file_size INTEGER NOT NULL DEFAULT 0,
 			status TEXT NOT NULL DEFAULT 'not_started' CHECK (status IN ('not_started', 'reading', 'completed', 'paused')),
 			tags TEXT NOT NULL DEFAULT '[]',
-			rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+				rating REAL CHECK (rating >= 0 AND rating <= 5),
 			notes TEXT,
 			created_at TEXT NOT NULL DEFAULT (datetime('now')),
 			updated_at TEXT NOT NULL DEFAULT (datetime('now'))

@@ -109,7 +109,7 @@ export interface Book {
 	status: BookStatus;
 	/** 书籍标签 (JSON 数组字符串) */
 	tags: string;
-	/** 书籍评分 (1-5) */
+	/** 书籍评分 (0~5) */
 	rating?: number;
 	/** 书籍备注 */
 	notes?: string;
