@@ -51,6 +51,9 @@ async function initializeDatabase(db: Database): Promise<void> {
 			path TEXT NOT NULL UNIQUE,
 			title TEXT NOT NULL,
 			author TEXT,
+			format TEXT NOT NULL,
+			cover TEXT,
+			storage_type TEXT NOT NULL,
 			added_at TEXT NOT NULL DEFAULT (datetime('now')),
 			last_read_at TEXT,
 			current_progress TEXT NOT NULL DEFAULT '{}',
@@ -66,6 +69,30 @@ async function initializeDatabase(db: Database): Promise<void> {
 			updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 		);
 	`);
+
+	// todo: remove
+	// -------------------------------------------------------
+	// 添加cover字段（如果不存在）
+	try {
+		await db.execute('ALTER TABLE books ADD COLUMN cover TEXT;');
+	} catch (error) {
+		// 字段可能已存在，忽略错误
+	}
+
+	// 添加format字段（如果不存在）
+	try {
+		await db.execute('ALTER TABLE books ADD COLUMN format TEXT;');
+	} catch (error) {
+		// 字段可能已存在，忽略错误
+	}
+
+	// 添加storage_type字段（如果不存在）
+	try {
+		await db.execute('ALTER TABLE books ADD COLUMN storage_type TEXT;');
+	} catch (error) {
+		// 字段可能已存在，忽略错误
+	}
+	// -------------------------------------------------------
 
 	// 创建索引以提高查询性能
 	await db.execute('CREATE INDEX IF NOT EXISTS idx_books_path ON books(path);');

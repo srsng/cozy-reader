@@ -38,13 +38,16 @@ export class BookService {
 
 			const result = await db.execute(
 				`INSERT INTO books (
-					path, title, author, current_progress, total_characters, 
-					file_size, tags, rating, notes
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+					path, title, author, format, cover, storage_type, current_progress, 
+					total_characters, file_size, tags, rating, notes
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 				[
 					input.path,
 					input.title,
 					input.author || null,
+					input.format,
+					input.cover || null,
+					input.storage_type,
 					progressJson,
 					input.total_characters || 0,
 					input.file_size || 0,
@@ -196,6 +199,21 @@ export class BookService {
 		if (input.notes !== undefined) {
 			updates.push('notes = ?');
 			params.push(input.notes);
+		}
+
+		if (input.cover !== undefined) {
+			updates.push('cover = ?');
+			params.push(input.cover);
+		}
+
+		if (input.format !== undefined) {
+			updates.push('format = ?');
+			params.push(input.format);
+		}
+
+		if (input.storage_type !== undefined) {
+			updates.push('storage_type = ?');
+			params.push(input.storage_type);
 		}
 
 		if (updates.length === 0) {

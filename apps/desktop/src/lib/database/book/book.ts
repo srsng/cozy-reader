@@ -87,6 +87,8 @@ export interface Book {
 	author?: string;
 	/** 书籍格式 */
 	format: BookFormat;
+	/** 封面 base64 */
+	cover?: string;
 	/** 存储方式 */
 	storage_type: StorageType;
 	/** 加入时间 (ISO 8601 格式) */
@@ -142,6 +144,7 @@ export interface CreateBookInput {
 	tags?: string[];
 	rating?: number;
 	notes?: string;
+	cover?: string;
 }
 
 /**
@@ -159,6 +162,7 @@ export interface UpdateBookInput {
 	tags?: string[];
 	rating?: number;
 	notes?: string;
+	cover?: string;
 }
 
 /**
