@@ -1,16 +1,16 @@
 <script lang="ts">
-	import type { HTMLAttributes } from 'svelte/elements';
-	import { cn, type WithElementRef } from '$lib/utils.js';
-	import { fade } from 'svelte/transition';
+    import type { HTMLAttributes } from 'svelte/elements';
+    import { cn, type WithElementRef } from '$lib/utils.js';
+    import { fade } from 'svelte/transition';
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		children,
-		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+    let {
+        ref = $bindable(null),
+        class: className,
+        children,
+        ...restProps
+    }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 </script>
 
 <div in:fade bind:this={ref} data-slot="card-content" class={cn('px-6', className)} {...restProps}>
-	{@render children?.()}
+    {@render children?.()}
 </div>

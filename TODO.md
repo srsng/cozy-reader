@@ -31,11 +31,11 @@
 
 - [ ] 将当前的路由历史记录换成更加原生的实现，提升带state的goto在项目中的兼容性，解决goto 带 `{ state: { ... } }` 后（去设置与背景设置页面的utils按钮），偶尔出现的错误
 
-  ```txt
-  Uncaught (in promise) DataCloneError: Failed to execute 'pushState' on 'History': PointerEvent object could not be cloned.
-      at history.pushState (client.js:96:21)
-      at navigate (client.js:1596:6)
-  ```
+    ```txt
+    Uncaught (in promise) DataCloneError: Failed to execute 'pushState' on 'History': PointerEvent object could not be cloned.
+        at history.pushState (client.js:96:21)
+        at navigate (client.js:1596:6)
+    ```
 
 - [ ] 实装`window-vibrancy`后，考虑合并到背景图片设置中，一并管理
 - [ ] reader epub的注解，脚注等支持tooltip显示，而不跳转
@@ -45,72 +45,72 @@
 
 - [ ] 参考 cozy-reader-old的主题，增加新主题类型`simple`
 
-  ```json
-  {
-   "theme-light-blue": {
-    "name": "Blue | 蓝",
-    "type": "light",
-    "css": {
-     "--header-color": "#006fc9",
-     "--header-text-color": "#e5e7eb",
-     "--background-color": "#f2f2f2",
-     "--text-color": "#323130"
+    ```json
+    {
+        "theme-light-blue": {
+            "name": "Blue | 蓝",
+            "type": "light",
+            "css": {
+                "--header-color": "#006fc9",
+                "--header-text-color": "#e5e7eb",
+                "--background-color": "#f2f2f2",
+                "--text-color": "#323130"
+            }
+        },
+        "theme-gray-blue": {
+            "name": "Gray-Blue | 灰蓝",
+            "type": "both",
+            "css": {
+                "--header-color": "#374151",
+                "--background-color": "#4b5563",
+                "--text-color": "#e5e7eb"
+            }
+        },
+        "theme-dark-gray": {
+            "name": "Gray | 暗灰",
+            "type": "dark",
+            "css": {
+                "--header-color": "#333333",
+                "--background-color": "#282828",
+                "--text-color": "#e5e7eb"
+            }
+        },
+        "theme-light-coral": {
+            "name": "Coral | 珊瑚红",
+            "type": "light",
+            "css": {
+                "--header-color": "#f08080",
+                "--header-text-color": "#f2f4f8",
+                "--background-color": "#f2f2f2",
+                "--text-color": "#323130"
+            }
+        },
+        "theme-light-yellow123": {
+            "name": "bulue",
+            "type": "light",
+            "css": {
+                "--header-color": "#a63030",
+                "--background-color": "#7e6767",
+                "--text-color": "#331010",
+                "--header-text-color": "#d57272"
+            }
+        }
     }
-   },
-   "theme-gray-blue": {
-    "name": "Gray-Blue | 灰蓝",
-    "type": "both",
-    "css": {
-     "--header-color": "#374151",
-     "--background-color": "#4b5563",
-     "--text-color": "#e5e7eb"
-    }
-   },
-   "theme-dark-gray": {
-    "name": "Gray | 暗灰",
-    "type": "dark",
-    "css": {
-     "--header-color": "#333333",
-     "--background-color": "#282828",
-     "--text-color": "#e5e7eb"
-    }
-   },
-   "theme-light-coral": {
-    "name": "Coral | 珊瑚红",
-    "type": "light",
-    "css": {
-     "--header-color": "#f08080",
-     "--header-text-color": "#f2f4f8",
-     "--background-color": "#f2f2f2",
-     "--text-color": "#323130"
-    }
-   },
-   "theme-light-yellow123": {
-    "name": "bulue",
-    "type": "light",
-    "css": {
-     "--header-color": "#a63030",
-     "--background-color": "#7e6767",
-     "--text-color": "#331010",
-     "--header-text-color": "#d57272"
-    }
-   }
-  }
-  ```
+    ```
 
 - [ ] 升级tauri等rust依赖，并排除可能的错误
 - [ ] md支持渲染数学公式
 - [ ] 增强md：table等组件 [参考](node_modules.pnpm\marked@16.2.1\node_modules\marked\lib\marked.d.ts)
 - [x] 书籍drag添加到书库
-  - [x] 支持批量添加
+    - [x] 支持批量添加
 - [ ] fix: 从深色mode切换到浅色模式时会有一个闪光弹效果
 - [x] 找出dev时老是莫名无响应 ( 似乎是 最大化就触发)
 - [x] 给背景图添加：internal标注字段，创建时间
 - [ ] 实现内置背景图(资源附加问题，可能直接把图片放public就实现了？)
 - [ ] 给titlebar等添加几种状态，如apptitle（常规状态）、header（固定在顶部）、hide（完全隐藏）、slide（平时隐藏，鼠标靠近滑出来）
 - [ ] 透明
-  - [ ] 窗口透明
-  - [x] 背景图透明
+    - [ ] 窗口透明
+    - [x] 背景图透明
 - [ ] 修复上层overlay失效问题
 - [x] 修复背景层overlay坏掉了的问题
 - [ ] 优化背景图片设置相关代码，包括background-action组件，主layout初始化背景图，更改、响应
@@ -127,40 +127,40 @@
 - [x] 集中管理window相关修改应用
 - [x] 主题背景图支持
 - [x] 背景图可以自定义与某一主题绑定
-  - [ ] 优化主题与背景图之间的关系(好抽象)
+    - [ ] 优化主题与背景图之间的关系(好抽象)
 - [ ] 背景图设置页面 图片列表 动画格格不入——还是给Card——已封装组件添加动画的问题
 - [ ] Pony主题
 - [x] 深色模式下按钮hover效果尤其是close window按钮不佳，destructive颜色没有
 - [ ] 尺寸/大小过渡动画
-  - [ ] 优化主题数据编辑区高度变化动画 (Card组件)
-  - => 新思路：新增元素时，scale+slide过渡，挤压父元素尺寸
+    - [ ] 优化主题数据编辑区高度变化动画 (Card组件)
+    - => 新思路：新增元素时，scale+slide过渡，挤压父元素尺寸
 - [ ] review 自定义titlebar配置页及相关组件的代码
-  - src\lib\components\layout\custom\*
-  - src\lib\components\forms\bar\*
-  - src\lib\components\forms\ButtonTypeSelector.svelte
-  - src\route\settings\bar-config\+page.svelte
-  - [ ] 支持多webview-window，记得在app state中添加window列表以管理
-  - [ ] 支持多tab tablist-warper manager
+    - src\lib\components\layout\custom\*
+    - src\lib\components\forms\bar\*
+    - src\lib\components\forms\ButtonTypeSelector.svelte
+    - src\route\settings\bar-config\+page.svelte
+    - [ ] 支持多webview-window，记得在app state中添加window列表以管理
+    - [ ] 支持多tab tablist-warper manager
 - [ ] 数据库版本管理
 
 ## super hard
 
 - [ ] 将仓库改为[turborepo](https://turborepo.com/)模式
-  - [ ] 了解turborepo管理方式
-  - [ ] 将 foliate.js 作为submodule添加到仓库
+    - [ ] 了解turborepo管理方式
+    - [ ] 将 foliate.js 作为submodule添加到仓库
 
-    ```cmd
-    git submodule add https://github.com/johnfactotum/foliate-js packages/foliate-js
-    git submodule update --init --recursive
-    ```
+        ```cmd
+        git submodule add https://github.com/johnfactotum/foliate-js packages/foliate-js
+        git submodule update --init --recursive
+        ```
 
-  - [ ] 考虑 pdf.js djvu.js kthoom villain.js
+    - [ ] 考虑 pdf.js djvu.js kthoom villain.js
 
-  - [ ] 将旧项目的 icon相关功能、fastlink项目作为crate一部分
-    - [ ] 重构icon相关功能作为一个crate
-    - [ ] 重构fastlink项目
+    - [ ] 将旧项目的 icon相关功能、fastlink项目作为crate一部分
+        - [ ] 重构icon相关功能作为一个crate
+        - [ ] 重构fastlink项目
 
-  - [ ] ...
+    - [ ] ...
 
 ## 平台特定
 

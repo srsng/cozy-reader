@@ -1,9 +1,9 @@
 {
-	"name": "@cozy-reader/crates",
-	"description": "Required for pnpm-workspace CI",
-	"scripts": {
-		"build:desktop": "pnpm --workspace-root build:desktop",
-		"dev:desktop": "pnpm --workspace-root dev:desktop"
-	},
-	"packageManager": "pnpm@10.15.1"
+    "name": "@cozy-reader/crates",
+    "description": "Required for pnpm-workspace CI",
+    "scripts": {
+        "build:desktop": "pnpm --workspace-root build:desktop",
+        "dev:desktop": "pnpm --workspace-root dev:desktop"
+    },
+    "packageManager": "pnpm@10.15.1"
 }

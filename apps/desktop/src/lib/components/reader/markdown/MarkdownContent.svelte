@@ -1,40 +1,40 @@
 <script lang="ts">
-	import Self from './MarkdownContent.svelte';
-	import type { Token } from 'marked';
-	import type { Component } from 'svelte';
+    import Self from './MarkdownContent.svelte';
+    import type { Token } from 'marked';
+    import type { Component } from 'svelte';
 
-	import { renderers } from '$lib/components/typography';
+    import { renderers } from '$lib/components/typography';
 
-	type Props = { type: 'init'; tokens: Token[] } | Token;
+    type Props = { type: 'init'; tokens: Token[] } | Token;
 
-	const { type, ...rest }: Props = $props();
+    const { type, ...rest }: Props = $props();
 </script>
 
 {#if type === 'init' && 'tokens' in rest && rest.tokens}
-	{#each rest.tokens as token}
-		<Self {...token} />
-	{/each}
+    {#each rest.tokens as token}
+        <Self {...token} />
+    {/each}
 {:else if renderers[type as keyof typeof renderers]}
-	{@const CurrentComponent = renderers[type as keyof typeof renderers] as Component<
-		Omit<Props, 'type'>
-	>}
-	{#if type === 'list'}
-		{@const listItems = (rest as Extract<Props, { type: 'list' }>).items}
-		<CurrentComponent {...rest}>
-			{#each listItems as item}
-				{@const ChildComponent = renderers[item.type]}
-				<ChildComponent {...item}>
-					<Self type="init" tokens={item.tokens} />
-				</ChildComponent>
-			{/each}
-		</CurrentComponent>
-	{:else}
-		<CurrentComponent {...rest}>
-			{#if 'tokens' in rest && rest.tokens}
-				<Self type="init" tokens={rest.tokens} />
-			{:else if 'raw' in rest}
-				{rest.raw}
-			{/if}
-		</CurrentComponent>
-	{/if}
+    {@const CurrentComponent = renderers[type as keyof typeof renderers] as Component<
+        Omit<Props, 'type'>
+    >}
+    {#if type === 'list'}
+        {@const listItems = (rest as Extract<Props, { type: 'list' }>).items}
+        <CurrentComponent {...rest}>
+            {#each listItems as item}
+                {@const ChildComponent = renderers[item.type]}
+                <ChildComponent {...item}>
+                    <Self type="init" tokens={item.tokens} />
+                </ChildComponent>
+            {/each}
+        </CurrentComponent>
+    {:else}
+        <CurrentComponent {...rest}>
+            {#if 'tokens' in rest && rest.tokens}
+                <Self type="init" tokens={rest.tokens} />
+            {:else if 'raw' in rest}
+                {rest.raw}
+            {/if}
+        </CurrentComponent>
+    {/if}
 {/if}

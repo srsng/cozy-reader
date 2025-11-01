@@ -1,27 +1,27 @@
 {
-	"$schema": "../gen/schemas/desktop-schema.json",
-	"identifier": "default",
-	"description": "enables the default permissions",
-	"windows": ["main"],
-	"permissions": [
-		"core:default",
-		"store:default",
-		"sql:allow-load",
-		"sql:default",
-		"sql:allow-execute",
-		"sql:allow-select",
-		"core:window:default",
-		"clipboard-manager:allow-read-text",
-		"clipboard-manager:allow-write-text",
-		"dialog:default",
-		"fs:default",
-		{
-			"identifier": "fs:allow-read",
-			"allow": [
-				{
-					"path": "*/*"
-				}
-			]
-		}
-	]
+    "$schema": "../gen/schemas/desktop-schema.json",
+    "identifier": "default",
+    "description": "enables the default permissions",
+    "windows": ["main"],
+    "permissions": [
+        "core:default",
+        "store:default",
+        "sql:allow-load",
+        "sql:default",
+        "sql:allow-execute",
+        "sql:allow-select",
+        "core:window:default",
+        "clipboard-manager:allow-read-text",
+        "clipboard-manager:allow-write-text",
+        "dialog:default",
+        "fs:default",
+        {
+            "identifier": "fs:allow-read",
+            "allow": [
+                {
+                    "path": "*/*"
+                }
+            ]
+        }
+    ]
 }

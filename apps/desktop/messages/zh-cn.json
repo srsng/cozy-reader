@@ -1,19 +1,19 @@
 {
-	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from zh-cn!",
-	"settings": {
-		"$": "设置",
-		"base": "基础设置",
-		"theme": "主题设置",
-		"reader": "阅读器设置",
-		"language": "语言",
-		"languageSetting": "语言设置",
-		"zoom": "缩放",
-		"zoom-in": "放大",
-		"zoom-out": "缩小",
-		"zoom-reset": "重置缩放",
-		"go home": "前往主页",
-		"go settings": "前往设置",
-		"zoom-current": "当前缩放比例"
-	}
+    "$schema": "https://inlang.com/schema/inlang-message-format",
+    "hello_world": "Hello, {name} from zh-cn!",
+    "settings": {
+        "$": "设置",
+        "base": "基础设置",
+        "theme": "主题设置",
+        "reader": "阅读器设置",
+        "language": "语言",
+        "languageSetting": "语言设置",
+        "zoom": "缩放",
+        "zoom-in": "放大",
+        "zoom-out": "缩小",
+        "zoom-reset": "重置缩放",
+        "go home": "前往主页",
+        "go settings": "前往设置",
+        "zoom-current": "当前缩放比例"
+    }
 }

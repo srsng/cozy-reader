@@ -19,27 +19,27 @@ import ZoomButton from './zoom-popover.svelte';
 import CustomButton from './custom.svelte';
 
 export const UtilButton: Record<ButtonType, Component> = {
-	// btns for app info
-	'app-icon': AppIconButton,
-	'app-title': AppTitleButton,
-	// btns for route
-	home: GoHomeButton,
-	back: GoBackButton,
-	drag: AppDragButton,
-	settings: GOSettingsButton,
-	'background-settings': GoBackgroundSettingsButton,
-	// btns for main window
-	refresh: RefreshButton,
-	'always-on-top': AlwaysOnTopButton,
-	close: CloseButton,
-	minimize: MinimizeButton,
-	maximize: MaximizeButton,
-	fullscreen: FullscreenButton,
-	// other utils
-	'theme-toggle': ThemeToggleButton,
-	zoom: ZoomButton,
-	// not sure
-	custom: CustomButton
+    // btns for app info
+    'app-icon': AppIconButton,
+    'app-title': AppTitleButton,
+    // btns for route
+    home: GoHomeButton,
+    back: GoBackButton,
+    drag: AppDragButton,
+    settings: GOSettingsButton,
+    'background-settings': GoBackgroundSettingsButton,
+    // btns for main window
+    refresh: RefreshButton,
+    'always-on-top': AlwaysOnTopButton,
+    close: CloseButton,
+    minimize: MinimizeButton,
+    maximize: MaximizeButton,
+    fullscreen: FullscreenButton,
+    // other utils
+    'theme-toggle': ThemeToggleButton,
+    zoom: ZoomButton,
+    // not sure
+    custom: CustomButton
 };
 
 export default UtilButton;

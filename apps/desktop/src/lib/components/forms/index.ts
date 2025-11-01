@@ -6,10 +6,10 @@ import ZoomForm from './settings/zoom.svelte';
 import * as BgForms from './settings/background';
 
 export {
-	BaseSettingsForm,
-	ThemeSettingsForm,
-	ReaderSettingsForm,
-	LanguageDropDown,
-	ZoomForm,
-	BgForms
+    BaseSettingsForm,
+    ThemeSettingsForm,
+    ReaderSettingsForm,
+    LanguageDropDown,
+    ZoomForm,
+    BgForms
 };

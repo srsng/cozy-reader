@@ -4,105 +4,105 @@
 .titlebar,
 #titlebar,
 body {
-	transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
 .bodyTransparent {
-	background: transparent !important;
+    background: transparent !important;
 }
 
 @layer utilities {
-	/* app布局 */
-	.app-layout {
-		/* 确保布局占满整个视口 */
-		height: 100vh !important;
-		overflow: hidden;
-		/* 透明背景，让独立背景容器显示 */
-		background-color: transparent;
-		/* UI整体透明度 */
-		opacity: var(--ui-opacity, 0.1);
-	}
+    /* app布局 */
+    .app-layout {
+        /* 确保布局占满整个视口 */
+        height: 100vh !important;
+        overflow: hidden;
+        /* 透明背景，让独立背景容器显示 */
+        background-color: transparent;
+        /* UI整体透明度 */
+        opacity: var(--ui-opacity, 0.1);
+    }
 
-	/* app布局-内容区域 */
-	.content-area {
-		/* 为标题栏留出空间，标题栏高度为 2rem (32px) */
-		margin-top: 2rem;
-		/* 设置内容区域高度，避免不必要的滚动 */
-		height: calc(100vh - 2rem) !important;
-		/* 透明背景，让独立背景容器显示 */
-		background-color: transparent;
-		/* 设置相对定位 */
-		position: relative;
-	}
+    /* app布局-内容区域 */
+    .content-area {
+        /* 为标题栏留出空间，标题栏高度为 2rem (32px) */
+        margin-top: 2rem;
+        /* 设置内容区域高度，避免不必要的滚动 */
+        height: calc(100vh - 2rem) !important;
+        /* 透明背景，让独立背景容器显示 */
+        background-color: transparent;
+        /* 设置相对定位 */
+        position: relative;
+    }
 
-	/* 前景/上层遮罩层 - 应用到整个应用容器 */
-	.app-layout::before {
-		content: '';
-		position: fixed;
-		top: 2rem;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 1000;
-		pointer-events: none;
-		background-color: var(--settings-bg-top-overlay-color, transparent);
-		opacity: var(--settings-bg-top-overlay-opacity, 0);
-		filter: var(--settings-bg-top-overlay-filters, none);
-		visibility: var(--settings-bg-top-overlay-enabled, hidden);
-	}
+    /* 前景/上层遮罩层 - 应用到整个应用容器 */
+    .app-layout::before {
+        content: '';
+        position: fixed;
+        top: 2rem;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        pointer-events: none;
+        background-color: var(--settings-bg-top-overlay-color, transparent);
+        opacity: var(--settings-bg-top-overlay-opacity, 0);
+        filter: var(--settings-bg-top-overlay-filters, none);
+        visibility: var(--settings-bg-top-overlay-enabled, hidden);
+    }
 
-	/* 独立背景容器 */
-	.background-container {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: -100;
-		pointer-events: none;
-		background-color: hsl(var(--background));
-	}
+    /* 独立背景容器 */
+    .background-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -100;
+        pointer-events: none;
+        background-color: hsl(var(--background));
+    }
 
-	/* 背景图片层 */
-	.background-container::before {
-		content: '';
-		position: absolute;
-		/* 扩展背景区域以避免模糊滤镜产生白边 */
-		top: -20px;
-		left: -20px;
-		right: -20px;
-		bottom: -20px;
-		/* 背景样式支持 */
-		background-image: var(--settings-bg-image, none);
-		background-size: var(--settings-bg-size, cover);
-		background-position: var(--settings-bg-position, center);
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-		background-blend-mode: var(--settings-bg-blend-mode, normal);
-		filter: var(--settings-bg-filters, none);
-		opacity: var(--settings-bg-opacity, 0);
-		transform: scale(var(--settings-bg-scale, 0)) rotate(var(--settings-bg-rotation, 0deg))
-			translate(var(--settings-bg-offset-x, 0px), var(--settings-bg-offset-y, 0px));
-		transition:
-			opacity var(--settings-bg-animation-duration, 300ms) ease-in-out,
-			filter var(--settings-bg-animation-duration, 300ms) ease-in-out,
-			transform var(--settings-bg-animation-duration, 300ms) ease-in-out;
-		pointer-events: none;
-		background-color: hsl(var(--background));
-	}
+    /* 背景图片层 */
+    .background-container::before {
+        content: '';
+        position: absolute;
+        /* 扩展背景区域以避免模糊滤镜产生白边 */
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        /* 背景样式支持 */
+        background-image: var(--settings-bg-image, none);
+        background-size: var(--settings-bg-size, cover);
+        background-position: var(--settings-bg-position, center);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-blend-mode: var(--settings-bg-blend-mode, normal);
+        filter: var(--settings-bg-filters, none);
+        opacity: var(--settings-bg-opacity, 0);
+        transform: scale(var(--settings-bg-scale, 0)) rotate(var(--settings-bg-rotation, 0deg))
+            translate(var(--settings-bg-offset-x, 0px), var(--settings-bg-offset-y, 0px));
+        transition:
+            opacity var(--settings-bg-animation-duration, 300ms) ease-in-out,
+            filter var(--settings-bg-animation-duration, 300ms) ease-in-out,
+            transform var(--settings-bg-animation-duration, 300ms) ease-in-out;
+        pointer-events: none;
+        background-color: hsl(var(--background));
+    }
 
-	/* 背景遮罩层 - 独立于UI透明度 */
-	.background-container::after {
-		content: '';
-		position: absolute;
-		top: 2rem;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: var(--settings-bg-background-overlay-color, transparent);
-		opacity: var(--settings-bg-background-overlay-opacity, 0);
-		filter: var(--settings-bg-background-overlay-filters, none);
-		pointer-events: none;
-		visibility: var(--settings-bg-background-overlay-enabled, hidden);
-	}
+    /* 背景遮罩层 - 独立于UI透明度 */
+    .background-container::after {
+        content: '';
+        position: absolute;
+        top: 2rem;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--settings-bg-background-overlay-color, transparent);
+        opacity: var(--settings-bg-background-overlay-opacity, 0);
+        filter: var(--settings-bg-background-overlay-filters, none);
+        pointer-events: none;
+        visibility: var(--settings-bg-background-overlay-enabled, hidden);
+    }
 }

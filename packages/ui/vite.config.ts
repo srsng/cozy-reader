@@ -4,11 +4,11 @@ import { defineConfig } from 'vite';
 import path from 'path';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
-	resolve: {
-		alias: {
-			$components: path.resolve('./src/lib/components')
-		}
-	},
-	build: { sourcemap: 'inline' }
+    plugins: [tailwindcss(), sveltekit()],
+    resolve: {
+        alias: {
+            $components: path.resolve('./src/lib/components')
+        }
+    },
+    build: { sourcemap: 'inline' }
 });

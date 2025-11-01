@@ -11,29 +11,29 @@ import { toast } from 'svelte-sonner';
  *                     not provided, a default generic message will be used.
  */
 export async function writeClipboard(
-	text: string,
-	opt: {
-		errorMessage?: string;
-		message?: string;
-		description?: string;
-		errorDescription?: string;
-	} = {}
+    text: string,
+    opt: {
+        errorMessage?: string;
+        message?: string;
+        description?: string;
+        errorDescription?: string;
+    } = {}
 ) {
-	const { errorMessage, message } = opt;
-	await writeText(text)
-		.then(() => {
-			toast.info(message || 'Copied to clipboard', {
-				description: opt.description
-			});
-		})
-		.catch((err: any) => {
-			toast.error(errorMessage || 'Failed to copy', {
-				description: opt.errorDescription
-			});
-			console.error(errorMessage, err);
-		});
+    const { errorMessage, message } = opt;
+    await writeText(text)
+        .then(() => {
+            toast.info(message || 'Copied to clipboard', {
+                description: opt.description
+            });
+        })
+        .catch((err: any) => {
+            toast.error(errorMessage || 'Failed to copy', {
+                description: opt.errorDescription
+            });
+            console.error(errorMessage, err);
+        });
 }
 
 export async function readClipboard() {
-	return await readText();
+    return await readText();
 }

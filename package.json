@@ -1,38 +1,38 @@
 {
-	"name": "cozy-reader",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"engines": {
-		"node": ">=20.11"
-	},
-	"packageManager": "pnpm@10.15.1",
-	"scripts": {
-		"dev": "pnpm tauri dev",
-		"dev:desktop": "pnpm tauri dev",
-		"check:desktop": "pnpm --filter @cozy-reader/desktop check",
-		"check:desktop:watch": "pnpm --filter @cozy-reader/desktop check:watch",
-		"check:watch": "pnpm --filter @cozy-reader/desktop check:watch",
-		"tauri": "cargo tauri",
-		"globallint": "prettier --check . && eslint .",
-		"prettier": "prettier --check",
-		"format": "prettier --write .",
-		"prepare": "pnpm -F @cozy-reader/desktop prepare",
-		"dev:storybook": "pnpm --filter @cozy/ui storybook",
-		"check:ui": "pnpm -F @cozy/ui check",
-		"check:ui:watch": "pnpm -F @cozy/ui check:watch",
-		"dev:pkg:ui": "pnpm -F @cozy/ui dev:package:svelte"
-	},
-	"devDependencies": {
-		"@types/node": "catalog:",
-		"prettier": "^3.6.2",
-		"prettier-plugin-svelte": "^3.4.0",
-		"prettier-plugin-tailwindcss": "^0.6.14",
-		"typescript": "catalog:"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
-	}
+    "name": "cozy-reader",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "engines": {
+        "node": ">=20.11"
+    },
+    "packageManager": "pnpm@10.15.1",
+    "scripts": {
+        "dev": "pnpm tauri dev",
+        "dev:desktop": "pnpm tauri dev",
+        "check:desktop": "pnpm --filter @cozy-reader/desktop check",
+        "check:desktop:watch": "pnpm --filter @cozy-reader/desktop check:watch",
+        "check:watch": "pnpm --filter @cozy-reader/desktop check:watch",
+        "tauri": "cargo tauri",
+        "globallint": "prettier --check . && eslint .",
+        "prettier": "prettier --check",
+        "format": "prettier --write .",
+        "prepare": "pnpm -F @cozy-reader/desktop prepare",
+        "dev:storybook": "pnpm --filter @cozy/ui storybook",
+        "check:ui": "pnpm -F @cozy/ui check",
+        "check:ui:watch": "pnpm -F @cozy/ui check:watch",
+        "dev:pkg:ui": "pnpm -F @cozy/ui dev:package:svelte"
+    },
+    "devDependencies": {
+        "@types/node": "catalog:",
+        "prettier": "^3.6.2",
+        "prettier-plugin-svelte": "^3.4.0",
+        "prettier-plugin-tailwindcss": "^0.6.14",
+        "typescript": "catalog:"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "esbuild"
+        ]
+    }
 }

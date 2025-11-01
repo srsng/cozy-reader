@@ -1,13 +1,13 @@
 import { setTheme as setModeWatcherTheme } from 'mode-watcher';
 import {
-	type AppThemeData,
-	type AppThemeType,
-	type StdTDName,
-	type StandardThemeData,
-	type FourColorsThemeData,
-	type PonyThemeData,
-	type PonyName,
-	DefaultThemeData
+    type AppThemeData,
+    type AppThemeType,
+    type StdTDName,
+    type StandardThemeData,
+    type FourColorsThemeData,
+    type PonyThemeData,
+    type PonyName,
+    DefaultThemeData
 } from '$lib/settings/Theme';
 import type { ThemeBinding } from '$lib/settings/background';
 import { updateHue as updateFourColorsHue } from './four_colors';
@@ -18,7 +18,7 @@ import { updateName as updateStdName } from './standard';
  * @param themeType 主题类型
  */
 export function applyThemeType(themeType: AppThemeType): void {
-	setModeWatcherTheme(themeType);
+    setModeWatcherTheme(themeType);
 }
 
 /**
@@ -26,8 +26,8 @@ export function applyThemeType(themeType: AppThemeType): void {
  * @param name 小马名
  */
 export function applyPonyName(name: PonyName): void {
-	// todo
-	console.log('todo: applyPonyName', name);
+    // todo
+    console.log('todo: applyPonyName', name);
 }
 
 /**
@@ -35,7 +35,7 @@ export function applyPonyName(name: PonyName): void {
  * @param hue 色相值 (0-360)
  */
 export function applyFourColorsHue(hue: number): void {
-	updateFourColorsHue(hue);
+    updateFourColorsHue(hue);
 }
 
 /**
@@ -43,7 +43,7 @@ export function applyFourColorsHue(hue: number): void {
  * @param name
  */
 export function applyStdName(name: StdTDName): void {
-	updateStdName(name);
+    updateStdName(name);
 }
 
 /**
@@ -52,8 +52,8 @@ export function applyStdName(name: StdTDName): void {
  * @param themeData 主题数据
  */
 export function initializeTheme(themeType: AppThemeType, themeData: AppThemeData): void {
-	applyThemeType(themeType);
-	applyAllThemeData(themeData);
+    applyThemeType(themeType);
+    applyAllThemeData(themeData);
 }
 
 /**
@@ -61,9 +61,9 @@ export function initializeTheme(themeType: AppThemeType, themeData: AppThemeData
  * @param themeData 主题数据
  */
 export function applyAllThemeData(themeData: AppThemeData): void {
-	applyFourColorsHue(themeData.four_colors.hue ?? DefaultThemeData.four_colors.hue);
-	applyStdName(themeData.standard.name ?? DefaultThemeData.standard.name);
-	applyPonyName(themeData.pony.name ?? DefaultThemeData.pony.name);
+    applyFourColorsHue(themeData.four_colors.hue ?? DefaultThemeData.four_colors.hue);
+    applyStdName(themeData.standard.name ?? DefaultThemeData.standard.name);
+    applyPonyName(themeData.pony.name ?? DefaultThemeData.pony.name);
 }
 
 /**
@@ -72,9 +72,9 @@ export function applyAllThemeData(themeData: AppThemeData): void {
  * @returns 默认主题数据
  */
 export function getDefaultThemeData<T extends AppThemeType = AppThemeType>(
-	themeType: T
+    themeType: T
 ): AppThemeData[T] {
-	return DefaultThemeData[themeType];
+    return DefaultThemeData[themeType];
 }
 
 /**
@@ -84,13 +84,13 @@ export function getDefaultThemeData<T extends AppThemeType = AppThemeType>(
  * @returns 主题绑定对象
  */
 export function createThemeBinding<T extends AppThemeType>(
-	themeType: T,
-	themeData: AppThemeData
+    themeType: T,
+    themeData: AppThemeData
 ): ThemeBinding<T> {
-	return {
-		type: themeType,
-		data: structuredClone(themeData[themeType])
-	};
+    return {
+        type: themeType,
+        data: structuredClone(themeData[themeType])
+    };
 }
 
 /**
@@ -99,27 +99,27 @@ export function createThemeBinding<T extends AppThemeType>(
  * @returns 是否有效
  */
 export function isValidThemeBinding(themeBinding: ThemeBinding<AppThemeType>): boolean {
-	if (!themeBinding || !themeBinding.type || !themeBinding.data) {
-		return false;
-	}
+    if (!themeBinding || !themeBinding.type || !themeBinding.data) {
+        return false;
+    }
 
-	switch (themeBinding.type) {
-		case 'four_colors':
-			const fourColorsData = themeBinding.data as FourColorsThemeData;
-			return (
-				typeof fourColorsData.hue === 'number' &&
-				fourColorsData.hue >= 0 &&
-				fourColorsData.hue <= 360
-			);
-		case 'standard':
-			const standardData = themeBinding.data as StandardThemeData;
-			return typeof standardData.name === 'string' && standardData.name.length > 0;
-		case 'pony':
-			const ponyData = themeBinding.data as PonyThemeData;
-			return typeof ponyData.name === 'string' && ponyData.name.length > 0;
-		default:
-			return false;
-	}
+    switch (themeBinding.type) {
+        case 'four_colors':
+            const fourColorsData = themeBinding.data as FourColorsThemeData;
+            return (
+                typeof fourColorsData.hue === 'number' &&
+                fourColorsData.hue >= 0 &&
+                fourColorsData.hue <= 360
+            );
+        case 'standard':
+            const standardData = themeBinding.data as StandardThemeData;
+            return typeof standardData.name === 'string' && standardData.name.length > 0;
+        case 'pony':
+            const ponyData = themeBinding.data as PonyThemeData;
+            return typeof ponyData.name === 'string' && ponyData.name.length > 0;
+        default:
+            return false;
+    }
 }
 
 /**
@@ -128,7 +128,7 @@ export function isValidThemeBinding(themeBinding: ThemeBinding<AppThemeType>): b
  * @returns 是否有主题绑定
  */
 export function hasThemeBinding(obj: { themeBinding?: ThemeBinding<AppThemeType> }): boolean {
-	return obj.themeBinding !== undefined && obj.themeBinding !== null;
+    return obj.themeBinding !== undefined && obj.themeBinding !== null;
 }
 
 /**
@@ -137,17 +137,17 @@ export function hasThemeBinding(obj: { themeBinding?: ThemeBinding<AppThemeType>
  * @returns 显示名称
  */
 export function getThemeBindingDisplayName(themeBinding: ThemeBinding<AppThemeType>): string {
-	switch (themeBinding.type) {
-		case 'four_colors':
-			const fourColorsData = themeBinding.data as FourColorsThemeData;
-			return `四色主题 (色相: ${fourColorsData.hue}°)`;
-		case 'standard':
-			const standardData = themeBinding.data as StandardThemeData;
-			return `标准主题 (${standardData.name})`;
-		case 'pony':
-			const ponyData = themeBinding.data as PonyThemeData;
-			return `小马主题 (${ponyData.name})`;
-		default:
-			return '未知主题';
-	}
+    switch (themeBinding.type) {
+        case 'four_colors':
+            const fourColorsData = themeBinding.data as FourColorsThemeData;
+            return `四色主题 (色相: ${fourColorsData.hue}°)`;
+        case 'standard':
+            const standardData = themeBinding.data as StandardThemeData;
+            return `标准主题 (${standardData.name})`;
+        case 'pony':
+            const ponyData = themeBinding.data as PonyThemeData;
+            return `小马主题 (${ponyData.name})`;
+        default:
+            return '未知主题';
+    }
 }

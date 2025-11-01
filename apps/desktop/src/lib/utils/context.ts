@@ -11,43 +11,43 @@ import { setContext, getContext as svelteGetContext } from 'svelte';
  * const stackService = inject(STACK_SERVICE); // of type `StackService`
  */
 export class InjectionToken<_T> {
-	private readonly _desc: string;
-	private readonly _symbol: symbol;
+    private readonly _desc: string;
+    private readonly _symbol: symbol;
 
-	constructor(desc: string) {
-		this._desc = desc;
-		this._symbol = Symbol(desc);
-	}
+    constructor(desc: string) {
+        this._desc = desc;
+        this._symbol = Symbol(desc);
+    }
 
-	get description(): string {
-		return this._desc;
-	}
+    get description(): string {
+        return this._desc;
+    }
 
-	toString(): string {
-		return `InjectionToken(${this._desc})`;
-	}
+    toString(): string {
+        return `InjectionToken(${this._desc})`;
+    }
 
-	get _key(): symbol {
-		return this._symbol;
-	}
+    get _key(): symbol {
+        return this._symbol;
+    }
 }
 
 /**
  * Provides a value for an injection token
  */
 export function provide<T>(token: InjectionToken<T>, value: T): void {
-	setContext(token._key, value);
+    setContext(token._key, value);
 }
 
 /**
  * An injector for use with `InjectionToken` rather than `Constructor`.
  */
 export function inject<T>(token: InjectionToken<T>): T {
-	const value = svelteGetContext<T>(token._key);
-	if (value === undefined) {
-		throw new Error(`No provider found for ${token.toString()}`);
-	}
-	return value;
+    const value = svelteGetContext<T>(token._key);
+    if (value === undefined) {
+        throw new Error(`No provider found for ${token.toString()}`);
+    }
+    return value;
 }
 
 /**
@@ -55,6 +55,6 @@ export function inject<T>(token: InjectionToken<T>): T {
  * Returns the default value if the token is not found
  */
 export function injectOptional<T>(token: InjectionToken<T>, defaultValue: T): T {
-	const value = svelteGetContext<T>(token._key);
-	return value !== undefined ? value : defaultValue;
+    const value = svelteGetContext<T>(token._key);
+    return value !== undefined ? value : defaultValue;
 }

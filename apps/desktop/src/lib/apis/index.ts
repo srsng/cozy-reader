@@ -1,7 +1,7 @@
 import * as fs from './fs';
 
 export const apis = {
-	fs
+    fs
 };
 
 export default apis;
