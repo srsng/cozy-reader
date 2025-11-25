@@ -10,7 +10,11 @@ import type {
     PositionInfo
 } from './comment';
 import type { DatabaseResult } from '../types';
-import { DatabaseUtils } from '../utils';
+import { DatabaseErrorHandler } from '../utils/databaseErrorHandler';
+import { buildLimitClause, escapeLikeQuery } from '../utils/sql';
+import { softDelete, buildSoftDeleteCondition } from '../utils/softDelete';
+import { DB_ENUM } from '../const';
+import { BookDbUtils } from '.';
 
 /**
  * 评论数据库服务类
@@ -20,8 +24,8 @@ export class CommentService {
      * 创建新评论
      */
     static async createComment(input: CreateCommentInput): Promise<DatabaseResult<Comment>> {
-        return await DatabaseUtils.safeExecute(async () => {
-            DatabaseUtils.validateRequiredFields(input, ['book_id', 'content']);
+        return await BookDbUtils.safeExecute(async () => {
+            DatabaseErrorHandler.validateRequiredFields(input, ['book_id', 'content']);
 
             const db = await getDatabase();
 
@@ -55,7 +59,11 @@ export class CommentService {
      */
     static async getCommentById(id: number): Promise<Comment> {
         const db = await getDatabase();
-        const result = await db.select<Comment[]>('SELECT * FROM comments WHERE id = ?', [id]);
+        const softDeleteCondition = buildSoftDeleteCondition();
+        const result = await db.select<Comment[]>(
+            `SELECT * FROM comments WHERE id = ? AND ${softDeleteCondition}`,
+            [id]
+        );
 
         if (result.length === 0) {
             throw new Error(`Comment with id ${id} not found`);
@@ -70,10 +78,11 @@ export class CommentService {
     static async getComments(
         options: CommentQueryOptions = {}
     ): Promise<DatabaseResult<Comment[]>> {
-        return await DatabaseUtils.safeExecute(async () => {
+        return await BookDbUtils.safeExecute(async () => {
             const db = await getDatabase();
 
-            let query = 'SELECT * FROM comments';
+            const softDeleteCondition = buildSoftDeleteCondition();
+            let query = `SELECT * FROM comments WHERE ${softDeleteCondition}`;
             const params: any[] = [];
             const conditions: string[] = [];
 
@@ -92,7 +101,7 @@ export class CommentService {
             // 搜索条件
             if (options.search) {
                 conditions.push('(content LIKE ? OR selected_text LIKE ?)');
-                const searchTerm = `%${DatabaseUtils.escapeLikeQuery(options.search)}%`;
+                const searchTerm = `%${escapeLikeQuery(options.search)}%`;
                 params.push(searchTerm, searchTerm);
             }
 
@@ -111,18 +120,21 @@ export class CommentService {
                 params.push(options.is_private);
             }
 
-            // 添加WHERE子句
+            // 添加其他条件
             if (conditions.length > 0) {
-                query += ' WHERE ' + conditions.join(' AND ');
+                query += ' AND ' + conditions.join(' AND ');
             }
 
-            // 排序
-            const sortBy = options.sort_by || 'created_at';
-            const sortOrder = options.sort_order || 'desc';
-            query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
+            // 排序 - 使用白名单验证防止 SQL 注入
+            const allowedSortFields = ['created_at', 'updated_at', 'comment_type'] as const;
+            const sortBy = options.sort_by && allowedSortFields.includes(options.sort_by as typeof allowedSortFields[number])
+                ? options.sort_by
+                : 'created_at';
+            const sortOrder = options.sort_order === 'asc' ? 'ASC' : 'DESC';
+            query += ` ORDER BY ${sortBy} ${sortOrder}`;
 
             // 分页
-            const { clause: limitClause, params: limitParams } = DatabaseUtils.buildLimitClause(
+            const { clause: limitClause, params: limitParams } = buildLimitClause(
                 options.limit,
                 options.offset
             );
@@ -140,7 +152,7 @@ export class CommentService {
         id: number,
         input: UpdateCommentInput
     ): Promise<DatabaseResult<Comment>> {
-        return await DatabaseUtils.safeExecute(async () => {
+        return await BookDbUtils.safeExecute(async () => {
             const db = await getDatabase();
 
             const updates: string[] = [];
@@ -187,8 +199,9 @@ export class CommentService {
 
             params.push(id);
 
+            const softDeleteCondition = buildSoftDeleteCondition();
             const result = await db.execute(
-                `UPDATE comments SET ${updates.join(', ')} WHERE id = ?`,
+                `UPDATE comments SET ${updates.join(', ')} WHERE id = ? AND ${softDeleteCondition}`,
                 params
             );
 
@@ -204,12 +217,9 @@ export class CommentService {
      * 删除评论
      */
     static async deleteComment(id: number): Promise<DatabaseResult<void>> {
-        return await DatabaseUtils.safeExecute(async () => {
-            const db = await getDatabase();
-
-            const result = await db.execute('DELETE FROM comments WHERE id = ?', [id]);
-
-            if (result.rowsAffected === 0) {
+        return await BookDbUtils.safeExecute(async () => {
+            const success = await softDelete(DB_ENUM.books, 'comments', id);
+            if (!success) {
                 throw new Error(`Comment with id ${id} not found`);
             }
         }, 'Failed to delete comment');
@@ -231,10 +241,11 @@ export class CommentService {
     static async getCommentCount(
         options: Omit<CommentQueryOptions, 'sort_by' | 'sort_order' | 'offset' | 'limit'> = {}
     ): Promise<DatabaseResult<number>> {
-        return await DatabaseUtils.safeExecute(async () => {
+        return await BookDbUtils.safeExecute(async () => {
             const db = await getDatabase();
 
-            let query = 'SELECT COUNT(*) as count FROM comments';
+            const softDeleteCondition = buildSoftDeleteCondition();
+            let query = `SELECT COUNT(*) as count FROM comments WHERE ${softDeleteCondition}`;
             const params: any[] = [];
             const conditions: string[] = [];
 
@@ -251,7 +262,7 @@ export class CommentService {
 
             if (options.search) {
                 conditions.push('(content LIKE ? OR selected_text LIKE ?)');
-                const searchTerm = `%${DatabaseUtils.escapeLikeQuery(options.search)}%`;
+                const searchTerm = `%${escapeLikeQuery(options.search)}%`;
                 params.push(searchTerm, searchTerm);
             }
 
@@ -269,7 +280,7 @@ export class CommentService {
             }
 
             if (conditions.length > 0) {
-                query += ' WHERE ' + conditions.join(' AND ');
+                query += ' AND ' + conditions.join(' AND ');
             }
 
             const result = await db.select<{ count: number }[]>(query, params);
@@ -281,7 +292,7 @@ export class CommentService {
      * 获取评论统计信息
      */
     static async getCommentStatistics(): Promise<DatabaseResult<CommentStatistics>> {
-        return await DatabaseUtils.safeExecute(async () => {
+        return await BookDbUtils.safeExecute(async () => {
             const db = await getDatabase();
 
             // 获取总评论数
@@ -289,8 +300,9 @@ export class CommentService {
             const totalComments = totalResult.success ? totalResult.data! : 0;
 
             // 获取各类型评论数量
+            const softDeleteCondition = buildSoftDeleteCondition();
             const typeStats = await db.select<{ comment_type: CommentType; count: number }[]>(
-                'SELECT comment_type, COUNT(*) as count FROM comments GROUP BY comment_type'
+                `SELECT comment_type, COUNT(*) as count FROM comments WHERE ${softDeleteCondition} GROUP BY comment_type`
             );
 
             const commentsByType: Record<CommentType, number> = {
@@ -305,15 +317,17 @@ export class CommentService {
             });
 
             // 获取最近7天的评论数
+            const sevenDaysAgo = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60);
             const recentResult = await db.select<{ count: number }[]>(
                 `SELECT COUNT(*) as count FROM comments 
-				 WHERE created_at >= datetime('now', '-7 days')`
+				 WHERE created_at >= ? AND ${softDeleteCondition}`,
+                [sevenDaysAgo]
             );
             const recentCommentsCount = recentResult[0].count;
 
             // 计算平均每本书的评论数
             const bookCountResult = await db.select<{ count: number }[]>(
-                'SELECT COUNT(DISTINCT book_id) as count FROM comments'
+                `SELECT COUNT(DISTINCT book_id) as count FROM comments WHERE ${softDeleteCondition}`
             );
             const uniqueBookCount = bookCountResult[0].count;
             const averageCommentsPerBook =
@@ -332,9 +346,10 @@ export class CommentService {
      * 获取书籍评论摘要
      */
     static async getBookCommentSummaries(): Promise<DatabaseResult<BookCommentSummary[]>> {
-        return await DatabaseUtils.safeExecute(async () => {
+        return await BookDbUtils.safeExecute(async () => {
             const db = await getDatabase();
 
+            const softDeleteCondition = buildSoftDeleteCondition();
             const result = await db.select<
                 {
                     book_id: number;
@@ -353,7 +368,8 @@ export class CommentService {
 					COUNT(c.comment_type) as type_count,
 					MAX(c.created_at) as last_comment_at
 				FROM comments c
-				JOIN books b ON c.book_id = b.id
+				JOIN books b ON c.book_id = b.id AND b.deleted_at IS NULL
+				WHERE c.${softDeleteCondition}
 				GROUP BY c.book_id, c.comment_type
 				ORDER BY c.book_id, c.comment_type
 			`);
@@ -395,11 +411,26 @@ export class CommentService {
      * 批量删除书籍的所有评论
      */
     static async deleteCommentsByBookId(bookId: number): Promise<DatabaseResult<number>> {
-        return await DatabaseUtils.safeExecute(async () => {
+        return await BookDbUtils.safeExecute(async () => {
             const db = await getDatabase();
 
-            const result = await db.execute('DELETE FROM comments WHERE book_id = ?', [bookId]);
-            return result.rowsAffected || 0;
+            // 先获取所有需要软删除的评论ID
+            const softDeleteCondition = buildSoftDeleteCondition();
+            const comments = await db.select<{ id: number }[]>(
+                `SELECT id FROM comments WHERE book_id = ? AND ${softDeleteCondition}`,
+                [bookId]
+            );
+
+            // 批量软删除
+            let deletedCount = 0;
+            for (const comment of comments) {
+                const success = await softDelete(DB_ENUM.books, 'comments', comment.id);
+                if (success) {
+                    deletedCount++;
+                }
+            }
+
+            return deletedCount;
         }, 'Failed to delete comments by book ID');
     }
 }

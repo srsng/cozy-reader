@@ -4,6 +4,7 @@
 // import { getResources, initDatabase } from "$lib/database/database.js";
 // import { AppManager } from "$lib/stores/AppManager";
 import { Tauri } from '$lib/backend/tauri.js';
+import { initializeDatabases } from '$lib/database';
 
 import type { UserSettings } from '$lib/settings/index.js';
 import { loadUserSettings } from '$lib/stores/userSettings';
@@ -31,10 +32,12 @@ export type pageMetaData = {
 // eslint-disable-next-line
 export async function load({ params }) {
     try {
-        // await initDatabase();
+        // 初始化数据库（包含一致性检查）
+        await initializeDatabases();
         console.log('App initialized in +layout.ts');
     } catch (error) {
         console.error('Failed to init App:', error);
+        throw error;
     }
 
     const tauri = new Tauri();

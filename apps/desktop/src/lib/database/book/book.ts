@@ -91,10 +91,10 @@ export interface Book {
     cover?: string;
     /** 存储方式 */
     storage_type: StorageType;
-    /** 加入时间 (ISO 8601 格式) */
-    added_at: string;
-    /** 最后阅读时间 (ISO 8601 格式) */
-    last_read_at?: string;
+    /** 加入时间 (Unix 时间戳，秒) */
+    added_at: number;
+    /** 最后阅读时间 (Unix 时间戳，秒) */
+    last_read_at?: number;
     /** 当前阅读进度 (JSON 字符串，可存储章节、页码等信息) */
     current_progress: string;
     /** 总字符数 */
@@ -113,6 +113,12 @@ export interface Book {
     rating?: number;
     /** 书籍备注 */
     notes?: string;
+    /** 创建时间 (Unix 时间戳，秒) */
+    created_at: number;
+    /** 更新时间 (Unix 时间戳，秒) */
+    updated_at: number;
+    /** 删除时间 (Unix 时间戳，秒，NULL 表示未删除) */
+    deleted_at?: number;
 }
 
 /**

@@ -1,3 +1,4 @@
+mod database;
 mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -26,13 +27,21 @@ pub fn run() {
     builder
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::new().build())
-        .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_fs::init())
+        .plugin({
+            let mut sql_builder = tauri_plugin_sql::Builder::default();
+            for db in database::DATABASES {
+                sql_builder = sql_builder
+                    .add_migrations(&format!("sqlite:{}", db.filename), (db.migrations)());
+            }
+            sql_builder.build()
+        })
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             utils::fs::read_file_to_string,
-            utils::fs::fs_exists
+            utils::fs::fs_exists,
+            database::commands::get_database_configs
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

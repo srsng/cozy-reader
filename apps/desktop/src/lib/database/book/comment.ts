@@ -20,10 +20,12 @@ export interface Comment {
     tags: string;
     /** 是否私有 */
     is_private: boolean;
-    /** 创建时间 (ISO 8601 格式) */
-    created_at: string;
-    /** 更新时间 (ISO 8601 格式) */
-    updated_at: string;
+    /** 创建时间 (Unix 时间戳，秒) */
+    created_at: number;
+    /** 更新时间 (Unix 时间戳，秒) */
+    updated_at: number;
+    /** 删除时间 (Unix 时间戳，秒，NULL 表示未删除) */
+    deleted_at?: number;
 }
 
 /**

@@ -2,30 +2,92 @@ import { getDatabase, closeDatabase } from './config';
 import { BookService } from './bookService';
 import { ReadingSessionService } from './readingSessionService';
 import type { DatabaseResult } from '../types';
-import { DatabaseUtils as BaseUtils } from '../utils';
+import { DatabaseErrorHandler } from '../utils/databaseErrorHandler';
 import { BookFormat, getFileFormat, isSupportFormat, StorageType, type Book } from './book';
+import { DB_ENUM } from '../const';
+import { isValidJSON } from '../utils/json';
 
 /**
- * 通用操作结果类型（向后兼容）
+ * 查询包含特定标签的书籍
+ * @param tag 标签名称
+ * @returns 书籍 ID 数组
  */
-export interface Result<T> {
-    success: boolean;
-    data?: T;
-    error?: string;
+export async function findBooksByTag(tag: string): Promise<number[]> {
+    const db = await getDatabase();
+
+    // 使用 JSON1 扩展查询标签数组
+    const result = await db.select<{ id: number }[]>(
+        `SELECT id FROM books 
+         WHERE deleted_at IS NULL 
+         AND json_extract(tags, '$[*]') LIKE ?`,
+        [`%"${tag}"%`]
+    );
+
+    return result.map(r => r.id);
+}
+
+/**
+ * 查询包含任意指定标签的书籍
+ * @param tags 标签名称数组
+ * @returns 书籍 ID 数组
+ */
+export async function findBooksByTags(tags: string[]): Promise<number[]> {
+    if (tags.length === 0) {
+        return [];
+    }
+
+    const db = await getDatabase();
+
+    // 构建查询条件
+    const conditions = tags.map(() => `json_extract(tags, '$[*]') LIKE ?`).join(' OR ');
+    const params = tags.map(tag => `%"${tag}"%`);
+
+    const result = await db.select<{ id: number }[]>(
+        `SELECT DISTINCT id FROM books 
+         WHERE deleted_at IS NULL 
+         AND (${conditions})`,
+        params
+    );
+
+    return result.map(r => r.id);
+}
+
+
+/**
+ * 验证阅读进度 JSON
+ * @param progressJson JSON 字符串
+ * @returns 是否有效
+ */
+export function validateProgressJson(progressJson: string): boolean {
+    return isValidJSON(progressJson);
+}
+
+/**
+ * 验证标签 JSON
+ * @param tagsJson JSON 字符串
+ * @returns 是否有效（确保是字符串数组）
+ */
+export function validateTagsJson(tagsJson: string): boolean {
+    try {
+        const tags = JSON.parse(tagsJson);
+        return Array.isArray(tags) && tags.every((tag) => typeof tag === 'string');
+    } catch {
+        return false;
+    }
 }
 
 /**
  * 数据库工具类
  */
-export class DatabaseUtils extends BaseUtils {
+export class DatabaseUtils {
     /**
-     * 安全执行数据库操作的包装函数（向后兼容）
+     * 安全执行数据库操作的包装函数（包含数据库名称）
      */
     static async safeExecute<T>(
         operation: () => Promise<T>,
         errorMessage: string = 'Database operation failed'
     ): Promise<DatabaseResult<T>> {
-        return await super.safeExecute(operation, errorMessage);
+        return await DatabaseErrorHandler.safeExecute(operation, errorMessage, DB_ENUM.books);
     }
 
     /**
@@ -116,7 +178,11 @@ export class DatabaseUtils extends BaseUtils {
             const totalBooks = await BookService.getBookCount();
 
             // 获取阅读会话统计
-            const sessionStats = await ReadingSessionService.getOverallReadingStats();
+            const sessionStatsResult = await ReadingSessionService.getOverallReadingStats();
+            if (!sessionStatsResult.success) {
+                throw new Error(sessionStatsResult.error || 'Failed to get session stats');
+            }
+            const sessionStats = sessionStatsResult.data!;
 
             // 获取各状态书籍数量
             const statusStats = await db.select<{ status: string; count: number }[]>(
@@ -168,16 +234,20 @@ export class DatabaseUtils extends BaseUtils {
             // 结束超时的阅读会话
             if (options.endTimeoutSessions !== false) {
                 const timeoutMinutes = options.sessionTimeoutMinutes || 60;
-                endedTimeoutSessions =
-                    await ReadingSessionService.endTimeoutSessions(timeoutMinutes);
+                const timeoutResult = await ReadingSessionService.endTimeoutSessions(timeoutMinutes);
+                if (!timeoutResult.success) {
+                    throw new Error(timeoutResult.error || 'Failed to end timeout sessions');
+                }
+                endedTimeoutSessions = timeoutResult.data!;
             }
 
             // 删除过期的阅读会话
             if (options.cleanupSessionsOlderThanDays) {
+                const cutoffTime = Math.floor(Date.now() / 1000) - (options.cleanupSessionsOlderThanDays * 24 * 60 * 60);
                 const result = await db.execute(
                     `DELETE FROM reading_sessions 
-					 WHERE datetime(created_at, '+${options.cleanupSessionsOlderThanDays} days') < datetime('now')`,
-                    []
+					 WHERE created_at < ?`,
+                    [cutoffTime]
                 );
                 deletedSessions = result.rowsAffected || 0;
             }
@@ -243,65 +313,6 @@ export class DatabaseUtils extends BaseUtils {
         }, 'Failed to close database');
     }
 
-    /**
-     * 格式化文件大小
-     */
-    static formatFileSize(bytes: number): string {
-        if (bytes === 0) return '0 B';
-
-        const k = 1024;
-        const sizes = ['B', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    /**
-     * 格式化阅读时间
-     */
-    static formatReadingTime(minutes: number): string {
-        if (minutes < 60) {
-            return `${minutes} 分钟`;
-        }
-
-        const hours = Math.floor(minutes / 60);
-        const remainingMinutes = minutes % 60;
-
-        if (hours < 24) {
-            return remainingMinutes > 0
-                ? `${hours} 小时 ${remainingMinutes} 分钟`
-                : `${hours} 小时`;
-        }
-
-        const days = Math.floor(hours / 24);
-        const remainingHours = hours % 24;
-
-        return remainingHours > 0 ? `${days} 天 ${remainingHours} 小时` : `${days} 天`;
-    }
-
-    /**
-     * 验证阅读进度 JSON
-     */
-    static validateProgressJson(progressJson: string): boolean {
-        try {
-            JSON.parse(progressJson);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
-    /**
-     * 验证标签 JSON
-     */
-    static validateTagsJson(tagsJson: string): boolean {
-        try {
-            const tags = JSON.parse(tagsJson);
-            return Array.isArray(tags) && tags.every((tag) => typeof tag === 'string');
-        } catch {
-            return false;
-        }
-    }
 }
 
 /**
@@ -349,3 +360,4 @@ export async function addBookByFsPath(filePath: string): Promise<DatabaseResult<
 
     return createResult;
 }
+

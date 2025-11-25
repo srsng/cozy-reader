@@ -3,7 +3,7 @@ export {
     getDatabase,
     closeDatabase,
     isDatabaseConnected,
-    DB_BOOKS_CONFIG as DATABASE_CONFIG
+    DB_BOOKS_CONFIG
 } from './config';
 
 // 书籍相关类型和服务
@@ -49,17 +49,5 @@ export type {
 } from './comment';
 export { CommentService } from './commentService';
 
-export { addBookByFsPath, DatabaseUtils as BookDbUtils } from './utils';
+export { addBookByFsPath, DatabaseUtils as BookDbUtils, findBooksByTag, findBooksByTags } from './utils';
 
-// 便捷的初始化函数
-export async function initializeBooksDatabase() {
-    try {
-        const { getDatabase } = await import('./config');
-        await getDatabase();
-        console.log('Book Database initialized successfully');
-        return true;
-    } catch (error) {
-        console.error('Failed to initialize Book database:', error);
-        return false;
-    }
-}

@@ -1,11 +1,11 @@
 /**
  * 通用数据库操作结果类型
  */
-export interface DatabaseResult<T> {
-    success: boolean;
-    data?: T;
-    error?: string;
-}
+export type DatabaseResult<T> =
+    | { success: true; data: T }
+    | { success: false; data?: T; error: string };
+
+import type { DB_NAME } from './const';
 
 /**
  * 数据库错误类型
@@ -13,10 +13,12 @@ export interface DatabaseResult<T> {
 export class DatabaseError extends Error {
     constructor(
         message: string,
+        public readonly databaseName?: DB_NAME,
         public readonly code?: string,
         public readonly originalError?: Error
     ) {
-        super(message);
+        const prefix = databaseName ? `[${databaseName}] ` : '';
+        super(`${prefix}${message}`);
         this.name = 'DatabaseError';
     }
 }
@@ -41,10 +43,10 @@ export interface BaseQueryOptions {
  * 数据库配置接口
  */
 export interface DatabaseConfig {
-    /** 数据库文件名, e.g. books.db */
+    /** 数据库名称, e.g. "books" */
+    name: string;
+    /** 数据库文件名, e.g. "books.db" */
     filename: string;
-    /** 数据库版本, e.g. 1.0 */
-    version: number;
     /** 是否启用 WAL 模式 */
     wal: boolean;
 }

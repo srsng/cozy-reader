@@ -8,7 +8,10 @@ import type {
     BookStatistics,
     ReadingProgress
 } from './book';
-import type { Result } from './utils';
+import type { DatabaseResult } from '../types';
+import { softDelete, buildSoftDeleteCondition } from '../utils/softDelete';
+import { DB_ENUM } from '../const';
+import { BookDbUtils } from '.';
 
 /**
  * 书籍数据库服务类
@@ -17,58 +20,50 @@ export class BookService {
     /**
      * 获取所有书籍
      */
-    static async getAllBooks(): Promise<Result<Book[]>> {
-        try {
-            const books = await this.getBooks();
-            return { success: true, data: books };
-        } catch (error) {
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : 'Unknown error'
-            };
-        }
+    static async getAllBooks(): Promise<DatabaseResult<Book[]>> {
+        return await BookDbUtils.safeExecute(
+            async () => await this.getBooks(),
+            'Failed to get all books',
+        );
     }
 
     /**
      * 创建新书籍
      */
-    static async createBook(input: CreateBookInput): Promise<Result<Book>> {
-        try {
-            const db = await getDatabase();
+    static async createBook(input: CreateBookInput): Promise<DatabaseResult<Book>> {
+        return await BookDbUtils.safeExecute(
+            async () => {
+                const db = await getDatabase();
 
-            const tagsJson = JSON.stringify(input.tags || []);
-            const progressJson = input.current_progress || '{}';
+                const tagsJson = JSON.stringify(input.tags || []);
+                const progressJson = input.current_progress || '{}';
 
-            const result = await db.execute(
-                `INSERT INTO books (
-					path, title, author, format, cover, storage_type, current_progress, 
-					total_characters, file_size, tags, rating, notes
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [
-                    input.path,
-                    input.title,
-                    input.author || null,
-                    input.format,
-                    input.cover || null,
-                    input.storage_type,
-                    progressJson,
-                    input.total_characters || 0,
-                    input.file_size || 0,
-                    tagsJson,
-                    input.rating || null,
-                    input.notes || null
-                ]
-            );
+                const result = await db.execute(
+                    `INSERT INTO books (
+						path, title, author, format, cover, storage_type, current_progress, 
+						total_characters, file_size, tags, rating, notes
+					) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                    [
+                        input.path,
+                        input.title,
+                        input.author || null,
+                        input.format,
+                        input.cover || null,
+                        input.storage_type,
+                        progressJson,
+                        input.total_characters || 0,
+                        input.file_size || 0,
+                        tagsJson,
+                        input.rating || null,
+                        input.notes || null
+                    ]
+                );
 
-            const bookId = result.lastInsertId as number;
-            const book = await this.getBookById(bookId);
-            return { success: true, data: book };
-        } catch (error) {
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : 'Unknown error'
-            };
-        }
+                const bookId = result.lastInsertId as number;
+                return await this.getBookById(bookId);
+            },
+            'Failed to create book',
+        );
     }
 
     /**
@@ -77,7 +72,11 @@ export class BookService {
     static async getBookById(id: number): Promise<Book> {
         const db = await getDatabase();
 
-        const result = await db.select<Book[]>('SELECT * FROM books WHERE id = ?', [id]);
+        const softDeleteCondition = buildSoftDeleteCondition();
+        const result = await db.select<Book[]>(
+            `SELECT * FROM books WHERE id = ? AND ${softDeleteCondition}`,
+            [id]
+        );
 
         if (result.length === 0) {
             throw new Error(`Book with id ${id} not found`);
@@ -92,7 +91,11 @@ export class BookService {
     static async getBookByPath(path: string): Promise<Book | null> {
         const db = await getDatabase();
 
-        const result = await db.select<Book[]>('SELECT * FROM books WHERE path = ?', [path]);
+        const softDeleteCondition = buildSoftDeleteCondition();
+        const result = await db.select<Book[]>(
+            `SELECT * FROM books WHERE path = ? AND ${softDeleteCondition}`,
+            [path]
+        );
 
         return result.length > 0 ? result[0] : null;
     }
@@ -103,7 +106,8 @@ export class BookService {
     static async getBooks(options: BookQueryOptions = {}): Promise<Book[]> {
         const db = await getDatabase();
 
-        let query = 'SELECT * FROM books';
+        const softDeleteCondition = buildSoftDeleteCondition();
+        let query = `SELECT * FROM books WHERE ${softDeleteCondition}`;
         const params: any[] = [];
         const conditions: string[] = [];
 
@@ -129,15 +133,18 @@ export class BookService {
             });
         }
 
-        // 添加 WHERE 子句
+        // 添加其他条件
         if (conditions.length > 0) {
-            query += ' WHERE ' + conditions.join(' AND ');
+            query += ' AND ' + conditions.join(' AND ');
         }
 
-        // 排序
-        const sortBy = options.sort_by || 'added_at';
-        const sortOrder = options.sort_order || 'desc';
-        query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
+        // 排序 - 使用白名单验证防止 SQL 注入
+        const allowedSortFields = ['title', 'author', 'added_at', 'last_read_at', 'rating'] as const;
+        const sortBy = options.sort_by && allowedSortFields.includes(options.sort_by as typeof allowedSortFields[number])
+            ? options.sort_by
+            : 'added_at';
+        const sortOrder = options.sort_order === 'asc' ? 'ASC' : 'DESC';
+        query += ` ORDER BY ${sortBy} ${sortOrder}`;
 
         // 分页
         if (options.limit) {
@@ -227,11 +234,15 @@ export class BookService {
         }
 
         // 更新最后阅读时间
-        updates.push("last_read_at = datetime('now')");
+        updates.push("last_read_at = strftime('%s', 'now')");
 
         params.push(id);
 
-        await db.execute(`UPDATE books SET ${updates.join(', ')} WHERE id = ?`, params);
+        const softDeleteCondition = buildSoftDeleteCondition();
+        await db.execute(
+            `UPDATE books SET ${updates.join(', ')} WHERE id = ? AND ${softDeleteCondition}`,
+            params
+        );
 
         return await this.getBookById(id);
     }
@@ -265,23 +276,17 @@ export class BookService {
     /**
      * 删除书籍
      */
-    static async deleteBook(id: number): Promise<Result<void>> {
-        try {
-            const db = await getDatabase();
-
-            const result = await db.execute('DELETE FROM books WHERE id = ?', [id]);
-
-            if (result.rowsAffected === 0) {
-                return { success: false, error: `Book with id ${id} not found` };
-            }
-
-            return { success: true, data: undefined };
-        } catch (error) {
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : 'Unknown error'
-            };
-        }
+    static async deleteBook(id: number): Promise<DatabaseResult<void>> {
+        return await BookDbUtils.safeExecute(
+            async () => {
+                const success = await softDelete(DB_ENUM.books, 'books', id);
+                if (!success) {
+                    throw new Error(`Book with id ${id} not found`);
+                }
+                return undefined;
+            },
+            'Failed to delete book',
+        );
     }
 
     /**
@@ -317,7 +322,8 @@ export class BookService {
     ): Promise<number> {
         const db = await getDatabase();
 
-        let query = 'SELECT COUNT(*) as count FROM books';
+        const softDeleteCondition = buildSoftDeleteCondition();
+        let query = `SELECT COUNT(*) as count FROM books WHERE ${softDeleteCondition}`;
         const params: any[] = [];
         const conditions: string[] = [];
 
@@ -343,9 +349,9 @@ export class BookService {
             });
         }
 
-        // 添加 WHERE 子句
+        // 添加其他条件
         if (conditions.length > 0) {
-            query += ' WHERE ' + conditions.join(' AND ');
+            query += ' AND ' + conditions.join(' AND ');
         }
 
         const result = await db.select<{ count: number }[]>(query, params);
@@ -377,8 +383,9 @@ export class BookService {
     static async getAllTags(): Promise<string[]> {
         const db = await getDatabase();
 
+        const softDeleteCondition = buildSoftDeleteCondition();
         const result = await db.select<{ tags: string }[]>(
-            'SELECT DISTINCT tags FROM books WHERE tags != "[]"'
+            `SELECT DISTINCT tags FROM books WHERE tags != "[]" AND ${softDeleteCondition}`
         );
 
         const allTags = new Set<string>();
