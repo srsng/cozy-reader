@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/cozy-reader-*"]
+members = ["crates/cozy-*"]
 resolver = "2"
 
 [workspace.dependencies]

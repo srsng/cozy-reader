@@ -5,5 +5,5 @@
         "build:desktop": "pnpm --workspace-root build:desktop",
         "dev:desktop": "pnpm --workspace-root dev:desktop"
     },
-    "packageManager": "pnpm@10.15.1"
+    "packageManager": "pnpm@10.23.0"
 }
