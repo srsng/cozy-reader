@@ -1,4 +1,5 @@
 use crate::books::entities::{books, comments, reading_sessions};
+use crate::{BooksStatus, CommentType};
 use sea_orm::prelude::Decimal;
 use sea_orm::{ColumnTrait, Database, EntityTrait, QueryFilter, Set};
 
@@ -53,7 +54,7 @@ async fn test_full_crud_workflow() {
         read_characters: Set(0),
         reading_time_minutes: Set(Decimal::ZERO),
         file_size: Set(1024000),
-        status: Set("not_started".to_string()),
+        status: Set(BooksStatus::NotStarted),
         tags: Set(r#"[]"#.to_string()),
         created_at: Set(1234567890),
         updated_at: Set(1234567890),
@@ -76,7 +77,7 @@ async fn test_full_crud_workflow() {
     // 更新 Book
     let mut book: books::ActiveModel = book.into();
     book.title = Set("Updated Book Title".to_string());
-    book.status = Set("reading".to_string());
+    book.status = Set(BooksStatus::Reading);
 
     let update_result = books::Entity::update(book).exec(&db).await;
     assert!(update_result.is_ok(), "Should update book successfully");
@@ -88,13 +89,13 @@ async fn test_full_crud_workflow() {
         .unwrap()
         .unwrap();
     assert_eq!(updated_book.title, "Updated Book Title");
-    assert_eq!(updated_book.status, "reading");
+    assert_eq!(updated_book.status, BooksStatus::Reading);
 
     // 创建 Comment
     let comment = comments::ActiveModel {
         book_id: Set(book_id),
         content: Set("This is a great book!".to_string()),
-        comment_type: Set("note".to_string()),
+        comment_type: Set(CommentType::Note),
         color: Set(Some("#ffeb3b".to_string())),
         tags: Set(Some(r#"[]"#.to_string())),
         is_private: Set(Some(false)),
@@ -190,7 +191,7 @@ async fn test_relationship_queries() {
         read_characters: Set(0),
         reading_time_minutes: Set(Decimal::ZERO),
         file_size: Set(1024000),
-        status: Set("not_started".to_string()),
+        status: Set(BooksStatus::NotStarted),
         tags: Set(r#"[]"#.to_string()),
         created_at: Set(1234567890),
         updated_at: Set(1234567890),
@@ -208,7 +209,7 @@ async fn test_relationship_queries() {
         let comment = comments::ActiveModel {
             book_id: Set(book_id),
             content: Set(format!("Comment {}", i)),
-            comment_type: Set("note".to_string()),
+            comment_type: Set(CommentType::Note),
             color: Set(Some("#ffeb3b".to_string())),
             tags: Set(Some(r#"[]"#.to_string())),
             is_private: Set(Some(false)),

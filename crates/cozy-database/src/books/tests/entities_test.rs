@@ -1,4 +1,7 @@
-use crate::books::entities::{books, comments, reading_sessions};
+use crate::{
+    books::entities::{books, comments, reading_sessions},
+    BooksStatus, CommentType,
+};
 use sea_orm::prelude::Decimal;
 
 /// 测试 BookEntity 序列化/反序列化
@@ -21,7 +24,7 @@ fn test_books_serialization() {
         read_characters: 50000,
         reading_time_minutes: Decimal::try_from(1205).unwrap() / Decimal::from(10),
         file_size: 1024000,
-        status: "reading".to_string(),
+        status: BooksStatus::Reading,
         tags: r#"["fiction", "sci-fi"]"#.to_string(),
         rating: Some(Decimal::try_from(45).unwrap() / Decimal::from(10)),
         notes: Some("Great book!".to_string()),
@@ -49,7 +52,7 @@ fn test_comments_serialization() {
         id: 1,
         book_id: 1,
         content: "This is a great book!".to_string(),
-        comment_type: "note".to_string(),
+        comment_type: CommentType::Note,
         position_info: Some(r#"{"chapter": 1, "page": 10}"#.to_string()),
         selected_text: Some("selected text".to_string()),
         color: Some("#ffeb3b".to_string()),
@@ -108,7 +111,7 @@ fn test_json_field_handling() {
         read_characters: 50000,
         reading_time_minutes: Decimal::try_from(1205).unwrap() / Decimal::from(10),
         file_size: 1024000,
-        status: "reading".to_string(),
+        status: BooksStatus::Reading,
         tags: r#"["fiction", "sci-fi"]"#.to_string(),
         rating: None,
         notes: None,
