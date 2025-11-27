@@ -1,104 +1,46 @@
 <script lang="ts" module>
-    import FileDrop from '$lib/components/common/file-drop.svelte';
     import { confirm } from '@tauri-apps/plugin-dialog';
+    import FileDrop from '$lib/components/common/file-drop.svelte';
     import { Button } from '$ui/button';
     import { Card, CardContent, CardHeader, CardTitle } from '$ui/card';
     import { Trash2, Plus, BookOpen, FileText, Upload } from 'lucide-svelte';
     import type { Book } from '$lib/database/book/book.js';
-    import { BookFormat, BookFormatNames, StorageType } from '$lib/database/book/book.js';
-    import { open } from '@tauri-apps/plugin-dialog';
+    import { BookFormatNames } from '$lib/database/book/book.js';
     import { toast } from 'svelte-sonner';
     import { slide, fade } from 'svelte/transition';
     import { goHome, goReadBook, goReaderBatchAddPaths } from '$lib/utils/route.svelte.js';
     import { View } from '$lib/components/layout/views/index.js';
+    import { USER_SETTINGS } from '$lib/stores/userSettings';
+    import { inject } from '$lib/utils/context';
+    import { formatDateWithLangCode } from '$lib/utils/date';
+    import { loadBooks, addBook, deleteBook as deleteBookUtil } from '$lib/apis/book';
 </script>
 
 <script lang="ts">
-    const { data } = $props();
+    // const { data } = $props();
     let books: Book[] = $state([]);
-    const BookService = data.bookService;
+    const currentSettings = inject(USER_SETTINGS);
 
     async function loadBooksUnsafe() {
-        const result = await BookService.getAllBooks();
-        if (result.success) {
-            books = result.data || [];
-        } else {
-            toast.error('加载书籍失败', {
-                description: result.error
-            });
-        }
+        books = await loadBooks();
     }
 
-    // 加载书籍列表
-    async function loadBooks() {
-        try {
+    async function handleAddBook() {
+        await addBook(async () => {
             await loadBooksUnsafe();
-        } catch (error) {
-            console.error('加载书籍失败:', error);
-            toast.error('加载书籍失败', {
-                description: `${error}`
-            });
-        }
+        });
     }
 
-    // 添加书籍
-    async function addBook() {
-        try {
-            const selected = await open({
-                multiple: false,
-                filters: [
-                    {
-                        name: 'Support Book Files',
-                        extensions: BookFormatNames
-                    }
-                ]
-            });
-
-            if (selected) {
-                const fileName = selected.split(/[\\/]/).pop() || 'Unknown';
-                const result = await BookService.createBook({
-                    path: selected,
-                    title: fileName.replace(/\.(md|markdown)$/i, ''),
-                    format: BookFormat.MARKDOWN,
-                    storage_type: StorageType.FILESYSTEM,
-                    file_size: 0,
-                    tags: []
-                });
-
-                if (result.success) {
-                    toast.success('书籍添加成功');
-                    await loadBooks();
-                } else {
-                    toast.error('添加书籍失败: ' + result.error);
-                }
-            }
-        } catch (error) {
-            console.error('添加书籍失败:', error);
-            toast.error('添加书籍失败');
-        }
-    }
-
-    // 删除书籍
-    async function deleteBook(book: Book) {
+    async function handleDeleteBook(book: Book) {
         if (await confirm(`确定要删除书籍 "${book.title}" 吗？`)) {
-            try {
-                const result = await BookService.deleteBook(book.id);
-                if (result.success) {
-                    toast.success('书籍删除成功');
-                    await loadBooks();
-                } else {
-                    toast.error('删除书籍失败: ' + result.error);
-                }
-            } catch (error) {
-                console.error('删除书籍失败:', error);
-                toast.error('删除书籍失败');
-            }
+            await deleteBookUtil(book, async () => {
+                await loadBooksUnsafe();
+            });
         }
     }
 
-    // 格式化日期
-    function formatDate(dateString: string) {
-        return new Date(dateString).toLocaleDateString('zh-CN');
+    function formatDate(dateInput: number | string | null | undefined): string {
+        return formatDateWithLangCode(dateInput, $currentSettings.base.langCode);
     }
 
     function handleDrop(files: string[]) {
@@ -126,7 +68,7 @@
             <div class="container mx-auto p-6" transition:slide>
                 <div class="mb-6 flex items-center justify-between">
                     <h1 class="text-3xl font-bold">我的书库 files:</h1>
-                    <Button onclick={addBook} class="flex items-center gap-2">
+                    <Button onclick={handleAddBook} class="flex items-center gap-2">
                         <Plus class="h-4 w-4" />
                         添加书籍
                     </Button>
@@ -139,7 +81,7 @@
                         <p class="text-muted-foreground mb-4">
                             点击上方的"添加书籍"按钮开始添加您的第一本书
                         </p>
-                        <Button onclick={addBook} class="flex items-center gap-2">
+                        <Button onclick={handleAddBook} class="flex items-center gap-2">
                             <Plus class="h-4 w-4" />
                             添加书籍
                         </Button>
@@ -159,7 +101,7 @@
                                             size="sm"
                                             onclick={(e) => {
                                                 e.stopPropagation();
-                                                deleteBook(book);
+                                                handleDeleteBook(book);
                                             }}
                                             class="text-destructive hover:text-destructive"
                                         >

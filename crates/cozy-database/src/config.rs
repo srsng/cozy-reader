@@ -18,7 +18,7 @@ pub const DATABASES: &[DatabaseDefinition] = &[
         name: "books",
         filename: "books.db",
         wal: true,
-        migrations: crate::database::migrations::books_migrations,
+        migrations: crate::books::books_migrations,
     },
     // 未来添加新数据库时，只需在这里添加一条记录
 ];

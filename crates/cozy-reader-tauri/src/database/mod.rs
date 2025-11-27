@@ -1,5 +1,4 @@
+pub mod books;
 pub mod commands;
-pub mod config;
-pub mod migrations;
 
-pub use config::DATABASES;
+pub use cozy_database::DATABASES;

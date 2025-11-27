@@ -21,9 +21,14 @@ test = false
 tauri-build = { version = "2.3.1", features = [] }
 
 [dependencies]
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
+cozy-database = { path = "../cozy-database" }
+regex = { workspace = true }
+glob = { workspace = true }
+serde_json = { workspace = true }
+serde = { workspace = true }
+
 log = "0.4"
+tracing = { workspace = true }
 tauri = { version = "2.7.0", features = ["protocol-asset"] }
 tauri-plugin-log = "2"
 tauri-plugin-store = "2"
@@ -33,7 +38,17 @@ tauri-plugin-devtools = "2.0.0"
 tauri-plugin-clipboard-manager = "2"
 tauri-plugin-dialog = "2"
 tokio = { version = "1.47.1", features = ["fs"] }
-
+chrono = { version = "0.4.42", features = ["serde"] }
+ts-rs = "10.1.0"
+sea-orm = { version = "1.1.1", features = [
+    "sqlx-sqlite",
+    "runtime-tokio-rustls",
+    "macros",
+] }
+sea-orm-migration = { version = "1.1.19", features = [
+    "sqlx-sqlite",
+    "runtime-tokio-rustls",
+] }
 [dev-dependencies]
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
