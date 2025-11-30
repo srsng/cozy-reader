@@ -14,6 +14,7 @@
         className = 'size-6',
         iconClass = 'size-4',
         onClick = undefined,
+        hiddenOnDisabled = false,
         ...others
     }: {
         name?: string;
@@ -22,6 +23,7 @@
         size?: 'default' | 'sm' | 'lg' | 'icon';
         className?: string;
         iconClass?: string;
+        hiddenOnDisabled?: boolean;
         onClick?: (() => void) | undefined;
     } = $props();
 </script>
@@ -34,6 +36,7 @@
     class={className}
     onclick={onClick || goBack}
     disabled={!canGoBack()}
+    hidden={hiddenOnDisabled && !canGoBack()}
     {...others}
 >
     <ArrowLeft class={iconClass} />

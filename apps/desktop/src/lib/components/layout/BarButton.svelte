@@ -11,7 +11,8 @@
         config,
         className = 'size-6',
         btnDisabled = false,
-        iconClass = 'size-4'
+        iconClass = 'size-4',
+        ...others
     }: {
         appTitle: string;
         config: ButtonConfig;
@@ -22,6 +23,8 @@
 
     function getButtonProps() {
         const _props: Record<string, any> = {
+            ...others,
+            ...config.customProps,
             name: config.name,
             className: cn(config.customProps?.className, className),
             iconClass: cn(config.customProps?.iconClass, iconClass),
@@ -34,6 +37,8 @@
 
     function getTextProps() {
         const _props: Record<string, any> = {
+            ...others,
+            ...config.customProps,
             name: config.name,
             disabled: btnDisabled,
             appTitle

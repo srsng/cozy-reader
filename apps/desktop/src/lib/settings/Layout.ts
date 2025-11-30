@@ -118,6 +118,15 @@ export const DefaultTitleBarConfig: BarConfig = {
             type: 'zoom',
             enabled: true,
             order: 4
+        },
+        {
+            name: 'back',
+            type: 'back',
+            enabled: true,
+            order: 999,
+            customProps: {
+                hiddenOnDisabled: true
+            }
         }
     ],
     center: [
