@@ -7,21 +7,14 @@
     // import type { Component } from 'svelte';
 
     import { page } from '$app/state';
-    import { addBookByFsPath } from '$lib/database/book/utils.js';
+    import { BookService } from '@cozy-reader/database';
     import { View } from '$lib/components/layout/views';
 
     // todo: 解决ts报错paths不存在的问题
     // @ts-ignore
-    const paths = page.state.paths || [];
+    const paths: string[] = page.state.paths || [];
 
-    let handlers = [];
-    for (const path of paths) {
-        handlers.push(addBookByFsPath(path));
-    }
-
-    const addResults = handlers.map(async (handler) => {
-        return await handler;
-    });
+    const addResults = Promise.all(paths.map((path) => BookService.addBookByFsPath(path)));
 
     // function getMsgs(results: DatabaseResult<Book>[]) {
     // 	if (results.length === 0) return '没有有效书籍';
@@ -45,7 +38,7 @@
     // }) as unknown as Component;
 </script>
 
-{#await Promise.all(addResults)}
+{#await addResults}
     <View.Loading title="添加中" message="请稍后" />
 {:then results}
     <!-- {@const msgs = getMsgs(results)} -->

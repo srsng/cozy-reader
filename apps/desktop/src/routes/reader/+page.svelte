@@ -4,7 +4,7 @@
     import { Button } from '$ui/button';
     import { Card, CardContent, CardHeader, CardTitle } from '$ui/card';
     import { Trash2, Plus, BookOpen, FileText, Upload } from 'lucide-svelte';
-    import type { Book } from '$lib/database/book/book.js';
+    import type { Book } from '@cozy-reader/database';
     import { BookFormatNames } from '$lib/database/book/book.js';
     import { toast } from 'svelte-sonner';
     import { slide, fade } from 'svelte/transition';
@@ -13,7 +13,8 @@
     import { USER_SETTINGS } from '$lib/stores/userSettings';
     import { inject } from '$lib/utils/context';
     import { formatDateWithLangCode } from '$lib/utils/date';
-    import { loadBooks, addBook, deleteBook as deleteBookUtil } from '$lib/apis/book';
+    import { BookService } from '@cozy-reader/database';
+    import { open } from '@tauri-apps/plugin-dialog';
 </script>
 
 <script lang="ts">
@@ -22,20 +23,51 @@
     const currentSettings = inject(USER_SETTINGS);
 
     async function loadBooksUnsafe() {
-        books = await loadBooks();
+        const result = await BookService.list();
+        if (!result.success) {
+            toast.error('加载书籍列表失败', {
+                description: result.error || '加载书籍列表失败'
+            });
+        }
+        books = result.data || [];
     }
 
     async function handleAddBook() {
-        await addBook(async () => {
-            await loadBooksUnsafe();
+        const selected = await open({
+            multiple: false,
+            filters: [
+                {
+                    name: 'Support Book Files',
+                    extensions: BookFormatNames
+                }
+            ]
         });
+
+        if (selected) {
+            const result = await BookService.getInstance().addBookByFsPath(selected);
+
+            if (result.success) {
+                toast.success('书籍添加成功');
+            } else {
+                toast.error('添加书籍失败: ', {
+                    description: result.error
+                });
+            }
+        }
+        await loadBooksUnsafe();
     }
 
     async function handleDeleteBook(book: Book) {
         if (await confirm(`确定要删除书籍 "${book.title}" 吗？`)) {
-            await deleteBookUtil(book, async () => {
+            const result = await BookService.getInstance().softDelete(book.id);
+            if (result.success) {
+                toast.success('书籍删除成功');
                 await loadBooksUnsafe();
-            });
+            } else {
+                toast.error('删除书籍失败', {
+                    description: result.error
+                });
+            }
         }
     }
 
@@ -156,7 +188,7 @@
                                             class="text-muted-foreground flex items-center gap-2 text-xs"
                                         >
                                             <FileText class="h-3 w-3" />
-                                            <span>添加于 {formatDate(book.added_at)}</span>
+                                            <span>添加于 {formatDate(book.addedAt)}</span>
                                         </div>
                                     </div>
                                 </CardContent>

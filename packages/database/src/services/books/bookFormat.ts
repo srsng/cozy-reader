@@ -1,22 +1,3 @@
-// /** 使用纯文本作为内容的书籍格式 */
-// export enum BookFormatTextType {
-//     /** 纯文本格式 */
-//     TXT = 'txt',
-//     /** Markdown格式 1 */
-//     MARKDOWN = 'markdown',
-//     /** Markdown格式 2 */
-//     MD = 'md',
-//     /** HTML格式 */
-//     HTML = 'html'
-// }
-
-// export enum BookFormatExtra {
-//     /** EPUB电子书格式 */
-//     EPUB = 'epub',
-//     /** PDF格式 */
-//     PDF = 'pdf'
-// }
-
 /**
  * 支持的书籍格式列表
  */
