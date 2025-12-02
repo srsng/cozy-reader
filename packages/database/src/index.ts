@@ -6,9 +6,6 @@
 // 核心模块（包含类型、Schema、数据库管理、错误处理、执行、验证、查询）
 export * from './core';
 
-// 工具函数
-export * from './utils';
-
 // 服务层
 export * from './services';
 

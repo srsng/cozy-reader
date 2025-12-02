@@ -4,17 +4,16 @@ import type { DatabaseName } from "./DatabaseName";
 /**
  * 数据库配置（导出到前端）
  */
-export type DatabaseConfig = {
-    /**
-     * 数据库名称
-     */
-    name: DatabaseName,
-    /**
-     * 数据库文件名（如 "books.db"）
-     */
-    filename: string,
-    /**
-     * 是否启用 WAL 模式
-     */
-    wal: boolean,
-};
+export type DatabaseConfig = { 
+/**
+ * 数据库名称
+ */
+name: DatabaseName, 
+/**
+ * 数据库文件名（如 "books.db"）
+ */
+filename: string, 
+/**
+ * 是否启用 WAL 模式
+ */
+wal: boolean, };
