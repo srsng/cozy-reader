@@ -44,6 +44,7 @@
         "vite": "catalog:"
     },
     "dependencies": {
+        "@cozy-reader/database": "workspace:*",
         "@inlang/paraglide-js": "^2.0.0",
         "@sveltejs/adapter-static": "catalog:svelte",
         "@tauri-apps/api": "catalog:tauri",

@@ -1,9 +1,5 @@
-pub mod books;
 pub mod config;
-pub mod error;
-pub mod transaction;
+pub mod db;
 
-pub use books::*;
-pub use config::DATABASES;
-pub use error::DatabaseError;
-pub use transaction::with_transaction;
+pub use config::{DatabaseConfig, DatabaseName};
+pub use db::DATABASES;

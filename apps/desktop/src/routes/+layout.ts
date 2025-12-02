@@ -4,9 +4,9 @@
 // import { getResources, initDatabase } from "$lib/database/database.js";
 // import { AppManager } from "$lib/stores/AppManager";
 import { Tauri } from '$lib/backend/tauri.js';
-import { initializeDatabases } from '$lib/database';
+import { initializeDatabases } from '@cozy-reader/database';
 
-import type { UserSettings } from '$lib/settings/index.js';
+import type { UserSettings } from '$lib/settings/index';
 import { loadUserSettings } from '$lib/stores/userSettings';
 
 import type { Writable } from 'svelte/store';

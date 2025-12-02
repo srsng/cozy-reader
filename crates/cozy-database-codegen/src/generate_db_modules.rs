@@ -1,0 +1,261 @@
+use std::fs;
+use std::path::{Path, PathBuf};
+
+/// 设置 rerun-if-changed 指令，监听迁移目录变化
+pub fn setup_rerun_if_changed(project_root: &Path) {
+    println!("cargo:rerun-if-changed=src/config.rs");
+
+    let drizzle_dir = project_root.join("packages/database/drizzle");
+    if drizzle_dir.exists() {
+        println!("cargo:rerun-if-changed={}", drizzle_dir.display());
+
+        // 监听每个数据库的 migrations 目录
+        if let Ok(entries) = std::fs::read_dir(&drizzle_dir) {
+            for entry in entries.flatten() {
+                let migrations_dir = entry.path().join("migrations");
+                if migrations_dir.exists() {
+                    println!("cargo:rerun-if-changed={}", migrations_dir.display());
+                }
+            }
+        }
+    }
+}
+
+/// 扫描迁移目录，发现所有数据库
+pub fn discover_databases_from_migrations(
+    drizzle_dir: &Path,
+) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let mut databases = Vec::new();
+
+    if !drizzle_dir.exists() {
+        return Ok(databases);
+    }
+
+    let entries = fs::read_dir(drizzle_dir)?;
+
+    for entry in entries {
+        let entry = entry?;
+        let path = entry.path();
+
+        if !path.is_dir() {
+            continue;
+        }
+
+        let dir_name = path.file_name().unwrap().to_string_lossy();
+
+        // 检查是否包含 migrations 目录
+        let migrations_dir = path.join("migrations");
+        if migrations_dir.exists() && migrations_dir.is_dir() {
+            databases.push(dir_name.to_string());
+        }
+    }
+
+    Ok(databases)
+}
+
+type MigrationInfo = (u32, String, PathBuf);
+
+/// 扫描指定数据库的迁移文件
+pub fn discover_migration_files(
+    migrations_dir: &Path,
+) -> Result<Vec<MigrationInfo>, Box<dyn std::error::Error>> {
+    let mut migrations = Vec::new();
+
+    if !migrations_dir.exists() {
+        return Ok(migrations);
+    }
+
+    let entries = fs::read_dir(migrations_dir)?;
+
+    for entry in entries {
+        let entry = entry?;
+        let path = entry.path();
+
+        if !path.is_file() {
+            continue;
+        }
+
+        if let Some(ext) = path.extension() {
+            if ext != "sql" {
+                continue;
+            }
+        } else {
+            continue;
+        }
+
+        // 解析文件名：{version}_{description}.sql
+        if let Some(file_stem) = path.file_stem().and_then(|s| s.to_str()) {
+            let parts: Vec<&str> = file_stem.splitn(2, '_').collect();
+            if !parts.is_empty() {
+                if let Ok(version) = parts[0].parse::<u32>() {
+                    let description = if parts.len() >= 2 {
+                        parts[1].to_string()
+                    } else {
+                        "unknown".to_string()
+                    };
+
+                    migrations.push((version, description, path));
+                }
+            }
+        }
+    }
+
+    // 按版本号排序
+    migrations.sort_by_key(|(version, _, _)| *version);
+
+    Ok(migrations)
+}
+
+/// 生成单个数据库的 migration 函数代码和数据库定义
+pub fn generate_db_module_code(
+    db_name: &str,
+    migrations: &[(u32, String, PathBuf)],
+    project_root: &Path,
+    _db_src_dir: &Path,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let mut code = String::new();
+
+    code.push_str("use crate::config::DatabaseDefinition;\n");
+    code.push_str("use tauri_plugin_sql::{Migration, MigrationKind};\n\n");
+
+    code.push_str(&format!("/// {} 数据库的所有迁移\n", db_name));
+    code.push_str(&format!(
+        "pub fn {}_migrations() -> Vec<Migration> {{\n",
+        db_name
+    ));
+    code.push_str("    vec![\n");
+
+    for (version, description, sql_path) in migrations {
+        // 计算相对于 src/db/{db_name}.rs 的路径
+        // src/db/{db_name}.rs 位于 crates/cozy-database/src/db/{db_name}.rs
+        // 需要向上 5 级到达项目根目录：../../../../../packages/database/drizzle/{db_name}/migrations/{file}
+        let relative_to_project = sql_path
+            .strip_prefix(project_root)
+            .map_err(|_| "无法计算相对路径")?;
+
+        // 从 src/db/{db_name}.rs 到项目根目录需要 ../../../../，然后再到 SQL 文件
+        // src/db/books.rs -> ../../../../ -> 项目根目录
+        let relative_path = format!(
+            "../../../../{}",
+            relative_to_project.to_string_lossy().replace('\\', "/")
+        );
+
+        // 直接使用 include_str! 宏，传入字符串字面量
+        code.push_str(&format!(
+            "        Migration {{\n            version: {},\n            description: \"{}\",\n            sql: include_str!(\"{}\"),\n            kind: MigrationKind::Up,\n        }},\n",
+            version, description, relative_path
+        ));
+    }
+
+    code.push_str("    ]\n}\n\n");
+
+    // 生成数据库定义
+    code.push_str(&format!("/// {} 数据库定义\n", db_name));
+    code.push_str(&format!(
+        "pub const {}_DEFINITION: DatabaseDefinition = DatabaseDefinition {{\n",
+        db_name.to_uppercase()
+    ));
+    code.push_str(&format!("    name: \"{}\",\n", db_name));
+    code.push_str(&format!("    filename: \"{}.db\",\n", db_name));
+    code.push_str("    wal: true,\n");
+    code.push_str(&format!("    migrations: {}_migrations,\n", db_name));
+    code.push_str("};\n");
+
+    Ok(code)
+}
+
+/// 生成 db/mod.rs 文件内容
+pub fn generate_db_mod_code(db_names: &[String]) -> String {
+    let mut code = String::new();
+
+    code.push_str("// 此文件由 build.rs 自动生成，请勿手动修改\n");
+    code.push_str("// This file is auto-generated by build.rs, do not edit manually\n\n");
+
+    code.push_str("use crate::config::DatabaseDefinition;\n\n");
+
+    for db_name in db_names {
+        code.push_str(&format!("pub mod {};\n", db_name));
+    }
+
+    code.push('\n');
+
+    for db_name in db_names {
+        code.push_str(&format!("pub use {}::*;\n", db_name));
+    }
+
+    code.push('\n');
+
+    // 生成 DATABASES 常量
+    code.push_str("/// 所有数据库定义\n");
+    code.push_str("pub const DATABASES: &[DatabaseDefinition] = &[\n");
+    for db_name in db_names {
+        code.push_str(&format!(
+            "    {}::{}_DEFINITION,\n",
+            db_name,
+            db_name.to_uppercase()
+        ));
+    }
+    code.push_str("];\n");
+
+    code
+}
+
+/// 生成所有 db 模块文件
+/// 包括所有数据库的模块文件和 mod.rs
+pub fn generate_all_db_modules(project_root: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    println!("=== 生成 db 模块 ===");
+
+    let drizzle_dir = project_root.join("packages/database/drizzle");
+    let db_src_dir = project_root.join("crates/cozy-database/src/db");
+
+    // 发现所有数据库
+    let databases = discover_databases_from_migrations(&drizzle_dir)?;
+
+    if databases.is_empty() {
+        println!("未找到任何数据库迁移目录");
+        // 即使没有数据库，也要生成空的 mod.rs，避免编译错误
+        let mod_code = generate_db_mod_code(&databases);
+        let mod_file = db_src_dir.join("mod.rs");
+        fs::create_dir_all(&db_src_dir)?;
+        fs::write(&mod_file, mod_code)?;
+        println!("生成空的 mod.rs: {:?}", mod_file);
+        return Ok(());
+    }
+
+    println!("发现 {} 个数据库: {:?}", databases.len(), databases);
+
+    // 确保 db 目录存在
+    fs::create_dir_all(&db_src_dir)?;
+
+    // 先为每个数据库生成模块文件
+    for db_name in &databases {
+        let migrations_dir = drizzle_dir.join(db_name).join("migrations");
+        let migrations = discover_migration_files(&migrations_dir)?;
+
+        if migrations.is_empty() {
+            println!("警告: {} 数据库没有找到迁移文件", db_name);
+            continue;
+        }
+
+        println!(
+            "为 {} 数据库生成模块，发现 {} 个迁移文件",
+            db_name,
+            migrations.len()
+        );
+
+        let module_code = generate_db_module_code(db_name, &migrations, project_root, &db_src_dir)?;
+        let module_file = db_src_dir.join(format!("{}.rs", db_name));
+
+        fs::write(&module_file, module_code)?;
+        println!("生成: {:?}", module_file);
+    }
+
+    // 最后生成 mod.rs（必须在所有模块文件生成之后）
+    let mod_code = generate_db_mod_code(&databases);
+    let mod_file = db_src_dir.join("mod.rs");
+    fs::write(&mod_file, mod_code)?;
+    println!("生成: {:?}", mod_file);
+
+    println!("✅ db 模块生成完成");
+    Ok(())
+}

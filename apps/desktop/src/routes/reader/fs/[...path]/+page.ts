@@ -1,11 +1,9 @@
 import { redirect } from '@sveltejs/kit';
 import {
     BookService,
-    BookFormat,
-    StorageType,
     isSupportFormat,
     getFileFormat
-} from '$lib/database/book';
+} from '@cozy-reader/database';
 import { getReadBookUrl, redirectBack } from '$lib/utils/route.svelte.js';
 import { page } from '$app/state';
 import { toast } from 'svelte-sonner';
@@ -30,7 +28,20 @@ export async function load({ params }) {
 
     try {
         // 检查书籍是否已存在
-        const existingBook = await BookService.getBookByPath(filePath);
+        const existingBookResult = await BookService.getByPath(filePath);
+
+        // 如果查询失败，返回错误
+        if (!existingBookResult.success) {
+            return {
+                error: {
+                    type: 'query_failed',
+                    message: `查询书籍失败: ${existingBookResult.error}`,
+                    filePath: filePath
+                }
+            };
+        }
+
+        const existingBook = existingBookResult.data;
 
         if (existingBook) {
             // 如果书籍已存在，直接重定向到该书籍页面
@@ -52,12 +63,12 @@ export async function load({ params }) {
         const fileName = filePath.split(/[\/]/).pop() || 'Unknown';
         const title = fileName.replace(/\.md$/i, '');
 
-        const createResult = await BookService.createBook({
+        const createResult = await BookService.create({
             path: filePath,
             title: title,
             author: '',
-            format: getFileFormat(filePath) as BookFormat,
-            storage_type: StorageType.FILESYSTEM,
+            format: getFileFormat(filePath),
+            storageType: 'filesystem',
             notes: `通过链接打开的书籍: ${title}`
         });
 

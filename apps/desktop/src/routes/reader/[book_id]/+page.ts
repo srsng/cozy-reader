@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { BookService } from '$lib/database/book';
+import { BookService } from '@cozy-reader/database';
 import apis from '$lib/apis/index.js';
 import { isTextBook } from '$lib/database/book/book.js';
 
@@ -16,13 +16,23 @@ export async function load({ params }) {
     }
 
     try {
-        const book = await BookService.getBookById(Number(bookId));
+        const bookResult = await BookService.getById(Number(bookId));
 
-        if (!book) {
+        // 如果查询失败，抛出 500 错误
+        if (!bookResult.success) {
+            throw error(500, {
+                message: `查询书籍失败: ${bookResult.error || '未知错误'}`
+            });
+        }
+
+        // 如果记录不存在，抛出 404 错误
+        if (!bookResult.data) {
             throw error(404, {
                 message: `未找到指定书籍ID: ${bookId}`
             });
         }
+
+        const book = bookResult.data;
 
         if (!book.path) {
             throw error(400, {
