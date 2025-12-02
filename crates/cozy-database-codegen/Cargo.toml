@@ -1,13 +1,6 @@
 [package]
 name = "cozy-database-codegen"
-version = "0.1.0"
+version = "0.0.0"
 edition = "2021"
 
 [dependencies]
-rusqlite = { version = "0.32", features = ["bundled"] }
-tempfile = "3.10"
-urlencoding = "2.1"
-regex = "1.12.2"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-ts-rs = "10.1.0"
