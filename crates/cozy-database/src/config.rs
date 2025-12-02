@@ -6,7 +6,7 @@ use ts_rs::TS;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, TS)]
 #[ts(
     export,
-    export_to = "../../../packages/database/src/types/generated/DatabaseName.ts"
+    export_to = "../../../packages/database/src/core/types/generated/DatabaseName.ts"
 )]
 pub enum DatabaseName {
     #[serde(rename = "books")]
@@ -61,7 +61,7 @@ pub struct DatabaseDefinition {
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
 #[ts(
     export,
-    export_to = "../../../packages/database/src/types/generated/DatabaseConfig.ts"
+    export_to = "../../../packages/database/src/core/types/generated/DatabaseConfig.ts"
 )]
 pub struct DatabaseConfig {
     /// 数据库名称
