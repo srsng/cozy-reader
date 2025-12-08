@@ -48,14 +48,14 @@
                     <RotateCcw />
                 </Button>
             </Card.ContentItem>
-            <!-- 遮罩透明度设置 -->
+            <!-- 遮罩不透明度设置 -->
             <div class="space-y-3">
-                <Label class="text-base font-medium">遮罩透明度设置</Label>
+                <Label class="text-base font-medium">遮罩不透明度设置</Label>
 
-                <!-- 亮色模式遮罩透明度 -->
+                <!-- 亮色模式遮罩不透明度 -->
                 <Card.ContentItem
-                    label="亮色模式遮罩透明度"
-                    description="调整亮色主题下的遮罩层透明度: 0~100%"
+                    label="亮色模式遮罩不透明度"
+                    description="调整亮色主题下的遮罩层不透明度: 0~100%"
                 >
                     <SliderWithControls
                         bind:value={
@@ -77,10 +77,10 @@
                     </SliderWithControls>
                 </Card.ContentItem>
 
-                <!-- 暗色模式遮罩透明度 -->
+                <!-- 暗色模式遮罩不透明度 -->
                 <Card.ContentItem
-                    label="暗色模式遮罩透明度"
-                    description="调整暗色主题下的遮罩层透明度: 0~100%"
+                    label="暗色模式遮罩不透明度"
+                    description="调整暗色主题下的遮罩层不透明度: 0~100%"
                 >
                     <SliderWithControls
                         bind:value={
@@ -301,14 +301,14 @@
                     <RotateCcw />
                 </Button>
             </Card.ContentItem>
-            <!-- 上层遮罩透明度设置 -->
+            <!-- 上层遮罩不透明度设置 -->
             <div class="space-y-3">
-                <Label class="text-base font-medium">上层遮罩透明度设置</Label>
+                <Label class="text-base font-medium">上层遮罩不透明度设置</Label>
 
-                <!-- 亮色模式上层遮罩透明度 -->
+                <!-- 亮色模式上层遮罩不透明度 -->
                 <Card.ContentItem
-                    label="亮色模式上层遮罩透明度"
-                    description="调整亮色主题下的上层遮罩层透明度: 0~100%"
+                    label="亮色模式上层遮罩不透明度"
+                    description="调整亮色主题下的上层遮罩层不透明度: 0~100%"
                 >
                     <SliderWithControls
                         bind:value={$currentSettings.background.global.topOverlay.opacity.light}
@@ -328,10 +328,10 @@
                     </SliderWithControls>
                 </Card.ContentItem>
 
-                <!-- 暗色模式上层遮罩透明度 -->
+                <!-- 暗色模式上层遮罩不透明度 -->
                 <Card.ContentItem
-                    label="暗色模式上层遮罩透明度"
-                    description="调整暗色主题下的上层遮罩层透明度: 0~100%"
+                    label="暗色模式上层遮罩不透明度"
+                    description="调整暗色主题下的上层遮罩层不透明度: 0~100%"
                 >
                     <SliderWithControls
                         bind:value={$currentSettings.background.global.topOverlay.opacity.dark}

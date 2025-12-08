@@ -37,7 +37,7 @@
         <Card.Description>控制应用程序界面的显示选项</Card.Description>
     </Card.Header>
     <Card.Content class="space-y-4">
-        <Card.ContentItem label="UI透明度" description="调整整体界面透明度">
+        <Card.ContentItem label="UI不透明度" description="调整整体界面不透明度">
             <SliderWithControls
                 bind:value={$currentSettings.base.uiOpacity}
                 min={0.1}
@@ -53,14 +53,26 @@
             </SliderWithControls>
         </Card.ContentItem>
         <Card.ContentItem
-            label="窗口背景层透明"
-            description="窗口背景层是否透明，也会让标题栏等布局控件背景透明"
+            label="窗口背景层不透明度"
+            description="调整窗口背景层不透明度: 0~100%（1为完全不透明，0为完全透明）"
         >
-            <Switch bind:checked={$currentSettings.base.bodyTransparent} />
+            <SliderWithControls
+                bind:value={$currentSettings.base.bodyTransparent}
+                min={0}
+                max={1}
+                step={0.02}
+                defaultValue={1}
+            >
+                {#snippet valueLabel()}
+                    <span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+                        {Math.round($currentSettings.base.bodyTransparent * 100)}%
+                    </span>
+                {/snippet}
+            </SliderWithControls>
         </Card.ContentItem>
         <Card.ContentItem
             label="标题栏等布局控件外框线"
-            description="如果启用了窗口背景层透明，关闭该项可以提升沉浸感"
+            description="如果启用了窗口背景层不透明度，关闭该项可以提升沉浸感"
         >
             <Switch bind:checked={$currentSettings.base.layoutControlsOutline} />
         </Card.ContentItem>

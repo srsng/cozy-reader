@@ -3,6 +3,7 @@
     import { APP_STATE } from '$lib/stores/appState';
     import { inject } from '$lib/utils/context';
     import { USER_SETTINGS } from '$lib/stores/userSettings';
+    import { slide } from 'svelte/transition';
 </script>
 
 <script lang="ts">
@@ -17,8 +18,8 @@
     class:hidden={!$currentSettings.layout.titlebar}
     class:border-b={$currentSettings.base.layoutControlsOutline}
     class:border-muted={$currentSettings.base.layoutControlsOutline}
-    class:bodyTransparent={$currentSettings.base.bodyTransparent}
     class={'bg-card fixed left-0 right-0 top-0 flex h-8 w-full select-none items-center justify-between'}
+    transition:slide={{ axis: 'y' }}
 >
     <ConfigurableBar
         config={$currentSettings.layout.layoutConfigs.titlebar}

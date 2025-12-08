@@ -42,14 +42,14 @@
 <div class="flex items-center gap-1">
     {@render valueLabel?.()}
 
-    <Button variant="outline" size="icon" class="h-8 w-8" onclick={decrement}>
+    <Button variant="outline" size="icon" class="hidden h-8 w-8 lg:flex" onclick={decrement}>
         <Minus class="h-3 w-3" />
     </Button>
-    <Button variant="outline" size="icon" class="h-8 w-8" onclick={increment}>
+    <Button variant="outline" size="icon" class="hidden h-8 w-8 lg:flex" onclick={increment}>
         <Plus class="h-3 w-3" />
     </Button>
 
-    <Button variant="outline" size="icon" class="h-8 w-8" onclick={reset}>
+    <Button variant="outline" size="icon" class="hidden h-8 w-8 md:flex" onclick={reset}>
         <RotateCcw class="h-3 w-3" />
     </Button>
 </div>

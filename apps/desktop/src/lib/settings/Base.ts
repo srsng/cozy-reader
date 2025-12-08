@@ -6,8 +6,8 @@ export interface BaseSettings {
     logLevel: LogLevel;
     zoom: number;
     alwaysOnTop: boolean;
-    uiOpacity: number; // UI整体透明度 (0-1)
-    bodyTransparent: boolean; // 窗口背景层透明
+    uiOpacity: number; // UI整体不透明度 (0-1)
+    bodyTransparent: number; // 窗口背景层不透明度 (0-1)
     layoutControlsOutline: boolean; // titlebar等布局层控件外框
 }
 
@@ -24,6 +24,6 @@ export const DefaultBaseSettings: BaseSettings = {
     zoom: 1,
     alwaysOnTop: false,
     uiOpacity: DEFAULT_OPACITY,
-    bodyTransparent: false,
+    bodyTransparent: 1,
     layoutControlsOutline: true
 };

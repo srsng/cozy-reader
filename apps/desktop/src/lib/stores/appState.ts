@@ -15,3 +15,10 @@ export function initAppState(): Writable<AppState> {
         update: store.update
     };
 }
+
+export function resetAppTitle(appState: Writable<AppState>) {
+    appState.update((a) => {
+        a.appTitle = DEFAULT_APP_STATE.appTitle;
+        return a;
+    });
+}

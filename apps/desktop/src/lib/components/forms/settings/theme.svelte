@@ -134,10 +134,23 @@
 <Card.Root>
     <Card.Header>
         <Card.Title>窗口效果</Card.Title>
-        <Card.Description>设置窗口背景层效果，需要开启"窗口背景层透明"才有效果</Card.Description>
+        <Card.Description>设置窗口背景层效果，需要开启"窗口背景层不透明度"才有效果</Card.Description
+        >
         <Card.Action>
-            <Card.ContentItem label="窗口背景层透明" class="w-36 md:w-72">
-                <Switch bind:checked={$currentSettings.base.bodyTransparent} />
+            <Card.ContentItem label="窗口背景层不透明度" class="w-36 md:w-72">
+                <SliderWithControls
+                    bind:value={$currentSettings.base.bodyTransparent}
+                    min={0}
+                    max={1}
+                    step={0.02}
+                    defaultValue={1}
+                >
+                    {#snippet valueLabel()}
+                        <span class="text-muted-foreground ml-4 w-12 pr-2 text-sm">
+                            {Math.round($currentSettings.base.bodyTransparent * 100)}%
+                        </span>
+                    {/snippet}
+                </SliderWithControls>
             </Card.ContentItem>
         </Card.Action>
     </Card.Header>

@@ -13,30 +13,70 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
-    --color-background: var(--background);
+
+    /* UI不透明度控制 - 默认值1（完全不透明） */
+    --ui-opacity: 1;
+
+    /* body背景不透明度控制 - 独立于UI不透明度 */
+    --body-opacity: 1;
+
+    /* 使用color-mix()动态计算不透明度 */
+    /* body背景色变量 - 使用body不透明度，独立于UI不透明度 */
+    --color-body-background: color-mix(
+        in oklab,
+        var(--background) calc(var(--body-opacity) * 100%),
+        transparent calc((1 - var(--body-opacity)) * 100%)
+    );
+    /* 为主要颜色添加透明通道 */
+    --color-background: color-mix(
+        in oklab,
+        var(--background),
+        transparent calc((1 - var(--ui-opacity)) * 100%)
+    );
+    --color-card: color-mix(
+        in oklab,
+        var(--card),
+        transparent calc((1 - var(--ui-opacity)) * 100%)
+    );
+    --color-popover: color-mix(
+        in oklab,
+        var(--popover),
+        transparent calc((1 - var(--ui-opacity)) * 100%)
+    );
+    --color-sidebar: color-mix(
+        in oklab,
+        var(--sidebar),
+        transparent calc((1 - var(--ui-opacity)) * 100%)
+    );
+    --color-input: color-mix(
+        in oklab,
+        var(--input),
+        transparent calc((1 - var(--ui-opacity)) * 100%)
+    );
+    --color-muted: color-mix(
+        in oklab,
+        var(--muted),
+        transparent calc((1 - var(--ui-opacity)) * 100%)
+    );
+
     --color-foreground: var(--foreground);
-    --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
-    --color-popover: var(--popover);
     --color-popover-foreground: var(--popover-foreground);
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
     --color-destructive: var(--destructive);
     --color-border: var(--border);
-    --color-input: var(--input);
     --color-ring: var(--ring);
     --color-chart-1: var(--chart-1);
     --color-chart-2: var(--chart-2);
     --color-chart-3: var(--chart-3);
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
-    --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar-primary: var(--sidebar-primary);
     --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
@@ -51,6 +91,7 @@
         @apply border-border outline-ring/50;
     }
     body {
-        @apply bg-background text-foreground;
+        background-color: var(--color-body-background);
+        color: var(--color-foreground);
     }
 }

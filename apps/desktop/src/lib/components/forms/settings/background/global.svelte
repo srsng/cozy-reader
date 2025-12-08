@@ -30,14 +30,14 @@
     </Card.Header>
     <Separator />
     <Card.Content class="space-y-4">
-        <!-- 透明度 -->
+        <!-- 不透明度 -->
         <div class="space-y-3">
-            <Label class="text-base font-medium">透明度设置</Label>
+            <Label class="text-base font-medium">不透明度设置</Label>
 
-            <!-- 亮色模式透明度 -->
+            <!-- 亮色模式不透明度 -->
             <Card.ContentItem
-                label="亮色模式透明度"
-                description="调整亮色主题下的背景透明度: 0~100%"
+                label="亮色模式不透明度"
+                description="调整亮色主题下的背景不透明度: 0~100%"
             >
                 <SliderWithControls
                     bind:value={$currentSettings.background.global.opacity.light}
@@ -54,10 +54,10 @@
                 </SliderWithControls>
             </Card.ContentItem>
 
-            <!-- 暗色模式透明度 -->
+            <!-- 暗色模式不透明度 -->
             <Card.ContentItem
-                label="暗色模式透明度"
-                description="调整暗色主题下的背景透明度: 0~100%"
+                label="暗色模式不透明度"
+                description="调整暗色主题下的背景不透明度: 0~100%"
             >
                 <SliderWithControls
                     bind:value={$currentSettings.background.global.opacity.dark}

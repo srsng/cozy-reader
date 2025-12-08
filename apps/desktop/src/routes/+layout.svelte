@@ -24,6 +24,7 @@
     import ZoomInOutMenuAction from '$lib/components/action/zoom-menu-action.svelte';
     import WindowAction from '$lib/components/action/window-action.svelte';
     import HotkeysAction from '$lib/components/action/hotkeys-action.svelte';
+    import UIOpacityAction from '$lib/components/action/ui-opacity-action.svelte';
     import { Toaster } from '$ui/sonner';
 
     // ui components
@@ -52,11 +53,6 @@
         // 启动窗口入场动画
         startWindowTiltUpAnimation();
     });
-
-    // todo: 抽象到事件系统
-    $effect(() => {
-        document.body.classList.toggle('bodyTransparent', $userSettings.base.bodyTransparent);
-    });
 </script>
 
 <svelte:head>
@@ -72,8 +68,9 @@
 <WindowAction />
 <BackgroundAction />
 <HotkeysAction />
+<UIOpacityAction />
 
-<div class="app-layout" role="application" style:--ui-opacity={$userSettings.base.uiOpacity}>
+<div class="app-layout" role="application">
     <AppTitleBar />
     <ScrollArea class="content-area">
         {@render children?.()}

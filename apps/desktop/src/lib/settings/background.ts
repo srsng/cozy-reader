@@ -17,10 +17,10 @@ export function get_default_opacity() {
     }
 }
 
-// 主题透明度配置
+// 主题不透明度配置
 export interface ThemeOpacity {
-    light: number; // 亮色模式透明度 (0-1)
-    dark: number; // 暗色模式透明度 (0-1)
+    light: number; // 亮色模式不透明度 (0-1)
+    dark: number; // 暗色模式不透明度 (0-1)
 }
 
 // 背景显示模式/铺设方式
@@ -68,14 +68,14 @@ export interface BackgroundFilters {
 export interface OverlayConfig {
     enabled: boolean; // 是否启用遮罩层
     color: string; // 遮罩颜色
-    opacity: ThemeOpacity; // 主题透明度配置 (0-1)
+    opacity: ThemeOpacity; // 主题不透明度配置 (0-1)
     filters: BackgroundFilters; // 滤镜配置
 }
 
 // 全局背景配置
 export interface GlobalBackgroundConfig {
     // 基础显示设置
-    opacity: ThemeOpacity; // 主题透明度配置
+    opacity: ThemeOpacity; // 主题不透明度配置
     displayMode: BackgroundDisplayMode; // 显示模式
     position: BackgroundPosition; // 位置
     blendMode: BackgroundBlendMode; // 混合模式
@@ -95,7 +95,7 @@ export interface GlobalBackgroundConfig {
 // 图片自定义配置类型
 export interface ImageCustomConfig {
     // 基础显示设置
-    opacity: ThemeOpacity; // 主题透明度配置
+    opacity: ThemeOpacity; // 主题不透明度配置
     displayMode: BackgroundDisplayMode; // 显示模式
     position: BackgroundPosition; // 位置
     blendMode: BackgroundBlendMode; // 混合模式
@@ -150,7 +150,7 @@ export const DefaultBackgroundFilters: BackgroundFilters = {
     invert: 0
 };
 
-// 默认主题透明度配置
+// 默认主题不透明度配置
 export const DefaultThemeOpacity: ThemeOpacity = {
     light: DEFAULT_LIGHT_OPACITY,
     dark: DEFAULT_DARK_OPACITY
@@ -247,10 +247,10 @@ export const BlendModeOptions = [
     { value: 'lighten', label: '变亮' }
 ];
 
-// 运行时图片配置（包含解析后的透明度值）
+// 运行时图片配置（包含解析后的不透明度值）
 export interface RuntimeImageConfig {
     // 基础显示设置
-    opacity: number; // 当前主题下的透明度值 (0-1)
+    opacity: number; // 当前主题下的不透明度值 (0-1)
     displayMode: BackgroundDisplayMode; // 显示模式
     position: BackgroundPosition; // 位置
     blendMode: BackgroundBlendMode; // 混合模式
@@ -265,7 +265,7 @@ export interface RuntimeImageConfig {
     offsetY: number; // Y轴偏移 (-1000 到 1000)
 }
 
-// 工具函数：根据主题获取透明度值（支持向后兼容）
+// 工具函数：根据主题获取不透明度值（支持向后兼容）
 export function getOpacityForTheme(
     opacity: ThemeOpacity | number,
     theme: 'light' | 'dark'
@@ -274,7 +274,7 @@ export function getOpacityForTheme(
     if (typeof opacity === 'number') {
         return opacity;
     }
-    // 新格式：从ThemeOpacity对象中获取对应主题的透明度
+    // 新格式：从ThemeOpacity对象中获取对应主题的不透明度
     return opacity[theme];
 }
 
@@ -288,21 +288,21 @@ export function getImageFullConfig(
         image.enableConfig && image.config
             ? image.config
             : {
-                  // 基础显示设置
-                  opacity: globalConfig.opacity,
-                  displayMode: globalConfig.displayMode,
-                  position: globalConfig.position,
-                  blendMode: globalConfig.blendMode,
+                // 基础显示设置
+                opacity: globalConfig.opacity,
+                displayMode: globalConfig.displayMode,
+                position: globalConfig.position,
+                blendMode: globalConfig.blendMode,
 
-                  // 滤镜效果
-                  filters: globalConfig.filters,
+                // 滤镜效果
+                filters: globalConfig.filters,
 
-                  // 变换设置（使用默认值）
-                  scale: 1.0,
-                  rotation: 0,
-                  offsetX: 0,
-                  offsetY: 0
-              };
+                // 变换设置（使用默认值）
+                scale: 1.0,
+                rotation: 0,
+                offsetX: 0,
+                offsetY: 0
+            };
 
     return {
         // 基础显示设置
