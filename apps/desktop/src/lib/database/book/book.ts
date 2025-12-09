@@ -1,3 +1,5 @@
+// 过时
+
 /** 使用纯文本作为内容的书籍格式 */
 export enum BookFormatTextType {
     /** 纯文本格式 */

@@ -1008,9 +1008,8 @@ dependencies = [
  "cozy-database",
  "glob",
  "log",
+ "mimetype-detector",
  "regex",
- "sea-orm",
- "sea-orm-migration",
  "serde",
  "serde_json",
  "tauri",
@@ -3021,6 +3020,12 @@ name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6877bb514081ee2a7ff5ef9de3281f14a4dd4bceac4c09388074a6b5df8a139a"
+
+[[package]]
+name = "mimetype-detector"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ceab4e154ca8389642e18046b753bed8e672ba4a249407ff115d54e297094329"
 
 [[package]]
 name = "minimal-lexical"

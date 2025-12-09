@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { BookService } from '@cozy-reader/database';
-import apis from '$lib/apis/index.js';
-import { isTextBook } from '$lib/database/book/book.js';
+import { read_file_to_string, getFileInfo } from '$lib/apis/fs';
+import type { FileInfo } from '$lib/backend/types/FileInfo';
 
 export const prerender = false;
 
@@ -16,6 +16,7 @@ export async function load({ params }) {
     }
 
     try {
+        // 1. 查询书籍信息
         const bookResult = await BookService.getById(Number(bookId));
 
         // 如果查询失败，抛出 500 错误
@@ -40,28 +41,44 @@ export async function load({ params }) {
             });
         }
 
-        // 读取markdown文件内容
+        // 2. 使用后端 API 获取文件信息（格式、大小、是否文本等）
+        let fileInfo: FileInfo;
         try {
-            // todo: 统一文件接口，包括读取，渲染。需要先调研如pdf之类的文件应该先读取怎么搞
-            const markdownContent = await (async () => {
-                if (isTextBook(book.path)) {
-                    const temp = await apis.fs.read_file_to_string({ path: book.path });
-                    const markdownContent = temp ? temp : '';
-                    return markdownContent;
-                } else {
-                    return 'This format is not supported yet.';
-                }
-            })();
+            fileInfo = await getFileInfo(book.path);
+        } catch (infoErr: any) {
+            throw error(500, {
+                message: `获取文件信息失败: ${infoErr.message || infoErr}`
+            });
+        }
 
+        // 3. 如果是文本格式（txt/md/markdown/html），读取文件内容
+        // 如果是二进制格式（epub/pdf/mobi等），只返回文件路径，由 FoliateReader 处理
+        if (fileInfo.is_text) {
+            try {
+                const content = await read_file_to_string({ path: book.path });
+                return {
+                    book_id: bookId,
+                    book: book,
+                    filePath: book.path,
+                    format: fileInfo.format,
+                    content: content,
+                    isText: true
+                };
+            } catch (readErr: any) {
+                throw error(500, {
+                    message: `读取文件失败: ${readErr.message || readErr}`
+                });
+            }
+        } else {
+            // EPUB/PDF/MOBI 等格式，直接返回文件路径
+            // 前端会使用 convertFileSrc 转换为 URL，然后传给 foliate-view
             return {
                 book_id: bookId,
                 book: book,
-                markdownContent: markdownContent
+                filePath: book.path,
+                format: fileInfo.format,
+                isText: false
             };
-        } catch (fileError) {
-            throw error(500, {
-                message: `无法读取文件: ${book.path}\n\n错误信息: ${fileError}`
-            });
         }
     } catch (err: any) {
         // 如果是已经抛出的error，直接重新抛出

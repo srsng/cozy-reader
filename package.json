@@ -23,7 +23,8 @@
         "check:ui:watch": "pnpm -F @cozy/ui check:watch",
         "dev:pkg:ui": "pnpm -F @cozy/ui dev:package:svelte",
         "db:gen": "pnpm -F @cozy-reader/database db:gen:all",
-        "db:sync": "cargo check -p cozy-database"
+        "db:sync": "cargo check -p cozy-database",
+        "ts-rs:gen": "cargo test export_bindings"
     },
     "devDependencies": {
         "@types/node": "catalog:",

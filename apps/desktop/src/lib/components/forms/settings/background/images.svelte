@@ -19,7 +19,7 @@
 </script>
 
 <script lang="ts">
-    const currentSettings = $state(inject(USER_SETTINGS));
+    const currentSettings = inject(USER_SETTINGS);
     let keepConfirm = false;
     let askedKeepConfirm = false;
 

@@ -28,6 +28,9 @@ export const books = sqliteTable('books', {
         .$type<ReadingProgress>()
         .notNull()
         .default({}),
+    readerSettings: text('reader_settings', { mode: 'json' })
+        .$type<Record<string, unknown>>()
+        .default({}),
     totalCharacters: integer('total_characters').notNull().default(0),
     readCharacters: integer('read_characters').notNull().default(0),
     readingTime: integer('reading_time').notNull().default(0), // 单位：秒
@@ -48,6 +51,7 @@ export const books = sqliteTable('books', {
     check('rating_check', sql`${table.rating} IS NULL OR (${table.rating} >= 0 AND ${table.rating} <= 5)`),
     check('tags_json_check', sql`json_valid(${table.tags})`),
     check('current_progress_json_check', sql`json_valid(${table.currentProgress})`),
+    check('reader_settings_json_check', sql`json_valid(${table.readerSettings})`),
     check('books_constraints_check', sql`${table.totalCharacters} >= 0 AND ${table.readCharacters} >= 0 AND ${table.readCharacters} <= ${table.totalCharacters} AND ${table.fileSize} >= 0`),
 
     // 索引
@@ -87,6 +91,7 @@ export const readingSessions = sqliteTable('reading_sessions', {
 // Comments 表
 export const comments = sqliteTable('comments', {
     id: integer('id').primaryKey({ autoIncrement: true }),
+    externalId: text('external_id'), // 外部系统 ID（如 foliate-js 的字符串 ID）
     bookId: integer('book_id').notNull().references(() => books.id, { onDelete: 'cascade' }),
     content: text('content').notNull(),
     commentType: text('comment_type', { enum: commentTypeEnum }).notNull().default('note'),
@@ -109,12 +114,14 @@ export const comments = sqliteTable('comments', {
     index('idx_comments_type').on(table.commentType),
     index('idx_comments_created_at').on(table.createdAt),
     index('idx_comments_deleted_at').on(table.deletedAt),
+    index('idx_comments_external_id').on(table.externalId), // 外部 ID 索引
     index('idx_comments_book_type_created').on(table.bookId, table.commentType, table.createdAt),
 ]);
 
 
 /**
  * 阅读进度数据结构
+ * 支持多种位置格式：EPUB CFI、XPointer、页码、锚点等
  */
 export interface ReadingProgress {
     /** 当前章节 */
@@ -125,8 +132,14 @@ export interface ReadingProgress {
     percentage?: number;
     /** 当前滚动位置 */
     scroll_position?: number;
-    /** 自定义位置标记 */
-    custom_marker?: string;
+    /** EPUB CFI 格式位置标识 */
+    cfi?: string;
+    /** XPointer 格式位置标识 */
+    xpointer?: string;
+    /** 资源引用（href） */
+    href?: string;
+    /** 锚点标识 */
+    anchor?: string;
     /** 其他自定义字段 */
     [key: string]: unknown;
 }

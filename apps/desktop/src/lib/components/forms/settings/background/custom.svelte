@@ -32,7 +32,7 @@
 </script>
 
 <script lang="ts">
-    const currentSettings = $state(inject(USER_SETTINGS));
+    const currentSettings = inject(USER_SETTINGS);
 
     // 获取当前激活的背景图片索引
     const activeImageIndex = $derived(

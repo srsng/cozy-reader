@@ -14,7 +14,7 @@
 </script>
 
 <script lang="ts">
-    const currentSettings = $state(inject(USER_SETTINGS));
+    const currentSettings = inject(USER_SETTINGS);
 </script>
 
 <!-- 背景遮罩层 -->

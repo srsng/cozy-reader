@@ -3,7 +3,8 @@
     "description": "Required for pnpm-workspace CI",
     "scripts": {
         "build:desktop": "pnpm --workspace-root build:desktop",
-        "dev:desktop": "pnpm --workspace-root dev:desktop"
+        "dev:desktop": "pnpm --workspace-root dev:desktop",
+        "ts-rs:gen": "pnpm --workspace-root ts-rs:gen"
     },
     "packageManager": "pnpm@10.23.0"
 }

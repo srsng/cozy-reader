@@ -137,7 +137,7 @@
         <Card.Description>设置窗口背景层效果，需要开启"窗口背景层不透明度"才有效果</Card.Description
         >
         <Card.Action>
-            <Card.ContentItem label="窗口背景层不透明度" class="w-36 md:w-72">
+            <Card.ContentItem label="窗口背景层不透明度" class="lg:w-128 w-48 md:w-72">
                 <SliderWithControls
                     bind:value={$currentSettings.base.bodyTransparent}
                     min={0}

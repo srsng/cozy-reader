@@ -7,7 +7,13 @@ export const SUPPORTED_BOOK_FORMATS = [
     'md',
     'html',
     'epub',
-    'pdf'
+    'pdf',
+    'mobi',
+    'azw',
+    'azw3',
+    'cbz',
+    'fb2',
+    'fbz'
 ] as const;
 
 export type BookFormat = typeof SUPPORTED_BOOK_FORMATS[number];
@@ -43,6 +49,7 @@ export function isSupportFormat(filepath: string): boolean {
 
 /**
  * 获取文件格式（小写）
+ * @deprecated 此函数仅通过扩展名判断，不可靠。请使用后端 `get_file_info` API 获取准确的文件格式信息。
  * @param filepath 文件路径
  * @returns 文件格式（小写），如果无法获取则返回空字符串
  */

@@ -245,7 +245,7 @@
 </script>
 
 <script lang="ts">
-    const userSettings = $state(inject(USER_SETTINGS));
+    const userSettings = inject(USER_SETTINGS);
     const shortcutService = inject(SHORTCUT_SERVICE);
 
     // 背景相关状态

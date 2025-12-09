@@ -29,6 +29,7 @@ export const COMMENTS_DEFAULTS = {
     // isPrivate 使用 SQL 表达式 sql`1`，需要手动处理
     isPrivate: 1, // SQLite boolean: 1 = true
     positionInfo: getDefaultValue(comments.positionInfo) ?? null,
+    externalId: getDefaultValue(comments.externalId) ?? null,
 } as const;
 
 /**

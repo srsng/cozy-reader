@@ -10,6 +10,7 @@
     // stores
     import { USER_SETTINGS } from '$lib/stores/userSettings';
     import { APP_STATE, initAppState } from '$lib/stores/appState';
+    import { READER_SETTINGS } from '$lib/reader/stores/readerSettings';
     import { page } from '$app/state';
     // background functions
     import BackgroundAction from '$lib/components/action/background-action.svelte';
@@ -35,6 +36,7 @@
 
     provide(APP_STATE, initAppState());
     provide(USER_SETTINGS, data.userSettings);
+    provide(READER_SETTINGS, data.readerSettings);
 
     // shortcut service
     const shortcutService = new ShortcutService(data.tauri);

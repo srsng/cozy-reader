@@ -35,6 +35,7 @@ export interface CommentQueryOptions extends BaseQueryOptions {
     search?: string;
     tags?: string[];
     isPrivate?: boolean;
+    externalId?: string;
     /** 排序字段 */
     sortBy?: 'createdAt' | 'updatedAt' | 'commentType';
 }

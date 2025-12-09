@@ -21,7 +21,7 @@
     bind:this={ref}
     data-slot="card-content-item"
     class={cn(
-        'hover:bg-muted/50 flex items-center gap-2 rounded-lg p-4 transition-colors',
+        'hover:bg-muted/80 flex items-center gap-2 rounded-lg p-4 transition-colors',
         className
     )}
     {...restProps}

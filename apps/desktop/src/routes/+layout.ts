@@ -8,6 +8,8 @@ import { initializeDatabases } from '@cozy-reader/database';
 
 import type { UserSettings } from '$lib/settings/index';
 import { loadUserSettings } from '$lib/stores/userSettings';
+import { loadReaderSettings } from '$lib/reader/stores/readerSettings';
+import type { ReaderSettings } from '$lib/reader/settings';
 
 import type { Writable } from 'svelte/store';
 // import { loadFastLinks } from "$lib/stores/Links.js";
@@ -42,6 +44,7 @@ export async function load({ params }) {
 
     const tauri = new Tauri();
     const userSettings = await loadUserSettings();
+    const readerSettings = await loadReaderSettings();
     // const appData = {
     // 	resources: await getResources(),
     // 	 fastLinks: await loadFastLinks()
@@ -83,6 +86,7 @@ export async function load({ params }) {
         tauri,
         // appData,
         userSettings,
+        readerSettings,
         metaData
         // 	commandService,
         // 	tokenMemoryService,

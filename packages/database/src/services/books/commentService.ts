@@ -196,6 +196,12 @@ export class CommentService extends BaseService<Comment, NewComment, CommentUpda
             conditions.push('is_private = ?');
             params.push(options.isPrivate ? 1 : 0);
         }
+
+        // 外部ID筛选
+        if (options?.externalId) {
+            conditions.push('external_id = ?');
+            params.push(options.externalId);
+        }
     }
 
     /**
@@ -217,7 +223,8 @@ export class CommentService extends BaseService<Comment, NewComment, CommentUpda
                 'selected_text',
                 'color',
                 'tags',
-                'is_private'
+                'is_private',
+                'external_id'
             ],
             values: [
                 input.bookId,
@@ -228,6 +235,7 @@ export class CommentService extends BaseService<Comment, NewComment, CommentUpda
                 input.color || COMMENTS_DEFAULTS.color,
                 serializeJSON(tags),
                 input.isPrivate !== undefined ? (input.isPrivate ? 1 : 0) : COMMENTS_DEFAULTS.isPrivate,
+                input.externalId || COMMENTS_DEFAULTS.externalId,
             ]
         };
     }
@@ -263,6 +271,10 @@ export class CommentService extends BaseService<Comment, NewComment, CommentUpda
         if (input.isPrivate !== undefined) {
             updates.push('is_private = ?');
             params.push(input.isPrivate ? 1 : 0);
+        }
+        if (input.externalId !== undefined) {
+            updates.push('external_id = ?');
+            params.push(input.externalId);
         }
     }
 

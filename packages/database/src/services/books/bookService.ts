@@ -42,7 +42,8 @@ export class BookService extends BaseService<Book, NewBook, BookUpdate, BookQuer
             allowedUpdateFields: booksAllowedUpdateFields,
             jsonFields: [
                 { fieldName: 'current_progress', defaultValue: BOOKS_DEFAULTS.currentProgress, nullable: false },
-                { fieldName: 'tags', defaultValue: BOOKS_DEFAULTS.tags, nullable: false }
+                { fieldName: 'tags', defaultValue: BOOKS_DEFAULTS.tags, nullable: false },
+                { fieldName: 'reader_settings', defaultValue: {}, nullable: true }
             ]
         });
     }
@@ -324,6 +325,10 @@ export class BookService extends BaseService<Book, NewBook, BookUpdate, BookQuer
         if (input.currentProgress !== undefined) {
             updates.push('current_progress = ?');
             params.push(serializeJSON(input.currentProgress));
+        }
+        if (input.readerSettings !== undefined) {
+            updates.push('reader_settings = ?');
+            params.push(serializeJSON(input.readerSettings));
         }
         if (input.readCharacters !== undefined) {
             updates.push('read_characters = ?');

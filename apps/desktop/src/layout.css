@@ -1,14 +1,6 @@
-/* 设置.base.bodyTransparent
-   窗口背景层透明，同时将titlebar等组件也要包含，统一风格
- */
 .titlebar,
-#titlebar,
-body {
+#titlebar {
     transition: background-color 0.3s ease;
-}
-
-.bodyTransparent {
-    background: transparent !important;
 }
 
 @layer utilities {
@@ -19,8 +11,6 @@ body {
         overflow: hidden;
         /* 透明背景，让独立背景容器显示 */
         background-color: transparent;
-        /* UI整体透明度 */
-        opacity: var(--ui-opacity, 0.1);
     }
 
     /* app布局-内容区域 */
@@ -91,7 +81,7 @@ body {
         background-color: hsl(var(--background));
     }
 
-    /* 背景遮罩层 - 独立于UI透明度 */
+    /* 背景遮罩层 - 独立于UI不透明度 */
     .background-container::after {
         content: '';
         position: absolute;
