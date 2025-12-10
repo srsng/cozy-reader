@@ -25,7 +25,6 @@
     import { DocumentService } from '$lib/reader/services/DocumentService';
     import { getDefaultReaderSettings } from '$lib/reader/constants';
     import { sidebarStore } from '$lib/reader/stores/sidebarStore';
-    import { bookDataStore } from '$lib/reader/stores/bookDataStore';
     import { uniqueId } from '$lib/reader/utils/misc';
     import { getMaxInlineSize } from '$lib/reader/utils/config';
     import HeaderBar from '../HeaderBar.svelte';
@@ -36,6 +35,7 @@
     import { READER_SETTINGS } from '$lib/reader/stores/readerSettings';
     import { inject } from '$lib/utils/context';
     import { untrack } from 'svelte';
+    import { bookDataStore } from '$lib/reader';
 
     // 获取全局 READER_SETTINGS（响应式）
     const globalReaderSettings = inject(READER_SETTINGS);
@@ -105,8 +105,7 @@
         lastGlobalSettingsHash = globalSettingsHash;
 
         // 获取书籍特定配置（如果有）
-        // 使用 untrack 避免响应 location 和 progress 的变化
-        const bookConfigSettings = untrack(() => bookConfig?.readerSettings) || {};
+        const bookConfigSettings = bookConfig?.readerSettings || {};
 
         // 合并：全局设置 + 书籍配置设置（参考 readest）
         const mergedSettings: ReaderSettings = {
@@ -373,7 +372,7 @@
             view.id = `foliate-view-${bookKey}`;
             viewElement = view;
 
-            // 初始化视图状态（先初始化，获取 viewSettings）
+            // 初始化视图状态（先初始化，获取 readerSettings）
             // 使用响应式的全局设置
             const currentGlobalReaderSettings = $globalReaderSettings;
 
@@ -525,8 +524,8 @@
             applyMarginAndGap(view, settings, gridInsets);
 
             // 初始化视图位置（恢复阅读进度）
-            // 使用 untrack 读取初始 config，避免响应式更新触发重新初始化
-            const configToUse = untrack(() => bookConfig) || bookConfig;
+            // 优先使用当前 viewState 中的 bookConfig，因为它可能已从数据库加载
+            const configToUse = bookConfig;
             const lastLocation = configToUse?.location;
 
             console.log('Restoring reading progress:', {
@@ -737,7 +736,7 @@
         }
     };
 
-    // 响应式样式更新：监听 viewSettings 和主题变化
+    // 响应式样式更新：监听 readerSettings 和主题变化
     // 使用防抖和值比较避免无限循环
     let lastSettingsHash = $state<string | null>(null);
     let updateTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -871,11 +870,9 @@
             coverCleanup = null;
         }
         if (bookDoc && viewState?.inited) {
-            import('$lib/reader/hooks/useAutoSaveBookCover.svelte').then(
-                ({ useAutoSaveBookCover }) => {
-                    coverCleanup = useAutoSaveBookCover(bookKey, bookDoc);
-                }
-            );
+            import('$lib/reader/hooks/useAutoSaveBookCover').then(({ useAutoSaveBookCover }) => {
+                coverCleanup = useAutoSaveBookCover(bookKey, bookDoc);
+            });
         }
         return () => {
             if (coverCleanup) {
@@ -893,7 +890,7 @@
             shortcutsCleanup = null;
         }
         if (viewState?.inited && viewElement) {
-            import('$lib/reader/hooks/useBookShortcuts.svelte').then(
+            import('$lib/reader/hooks/useBookShortcuts').then(
                 ({ useBookShortcuts, createDefaultShortcutHandlers }) => {
                     const handlers = createDefaultShortcutHandlers(bookKey);
                     shortcutsCleanup = useBookShortcuts(bookKey, handlers);
@@ -1077,7 +1074,8 @@
 
     /* 通过 part 选择器样式化 Shadow DOM 内部的 container */
     :global(foliate-view::part(container)) {
-        overflow: auto;
+        max-width: 100%;
+        overflow-y: auto;
         scrollbar-width: thin;
         scrollbar-color: var(--color-card-foreground) var(--color-card);
     }

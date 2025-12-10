@@ -133,9 +133,9 @@ export {
 } from './utils/sel';
 
 // Hooks
-export { useTextSelector } from './hooks/useTextSelector.svelte';
-export { useAutoSaveBookCover } from './hooks/useAutoSaveBookCover.svelte';
-export { useBooksManager } from './hooks/useBooksManager.svelte';
-export type { BooksManagerOptions } from './hooks/useBooksManager.svelte';
-export { useBookShortcuts, createDefaultShortcutHandlers } from './hooks/useBookShortcuts.svelte';
-export type { ShortcutConfig, ShortcutHandlers } from './hooks/useBookShortcuts.svelte';
+export { useTextSelector } from './hooks/useTextSelector';
+export { useAutoSaveBookCover } from './hooks/useAutoSaveBookCover';
+export { useBooksManager } from './hooks/useBooksManager';
+export type { BooksManagerOptions } from './hooks/useBooksManager';
+export { useBookShortcuts, createDefaultShortcutHandlers } from './hooks/useBookShortcuts';
+export type { ShortcutConfig, ShortcutHandlers } from './hooks/useBookShortcuts';

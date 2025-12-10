@@ -5,8 +5,8 @@
     import { bookDataStore } from '$lib/reader/stores/bookDataStore';
     import { notebookStore } from '$lib/reader/stores/notebookStore';
     import { annotationService } from '$lib/reader/services/AnnotationService';
-    import { useTextSelector } from '$lib/reader/hooks/useTextSelector.svelte';
-    import { useFoliateEvents } from '$lib/reader/hooks/useFoliateEvents.svelte';
+    import { useTextSelector } from '$lib/reader/hooks/useTextSelector';
+    import { useFoliateEvents } from '$lib/reader/hooks/useFoliateEvents';
     import {
         getPosition,
         getPopupPosition,

@@ -2,7 +2,7 @@
     import { onMount, onDestroy } from 'svelte';
     import { readerStore } from '$lib/reader/stores/readerStore';
     import { bookDataStore } from '$lib/reader/stores/bookDataStore';
-    import { useFoliateEvents } from '$lib/reader/hooks/useFoliateEvents.svelte';
+    import { useFoliateEvents } from '$lib/reader/hooks/useFoliateEvents';
     import { getPopupPosition, getPosition, type Position } from '$lib/reader/utils/sel';
     import Popup from './annotator/Popup.svelte';
     import type { BookDoc, FoliateViewElement } from '$lib/reader/types';

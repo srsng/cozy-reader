@@ -1,7 +1,7 @@
 <script lang="ts">
     import { readerStore } from '$lib/reader/stores/readerStore';
     import type { BookSearchMatch, BookSearchResult, SearchExcerpt } from '$lib/reader/types';
-    import { useScrollToItem } from '$lib/reader/hooks/useScrollToItem';
+    import { useScrollToItem } from '$lib/reader/hooks/useScrollToItem.svelte';
     import { cn } from '$lib/utils';
 
     interface Props {
@@ -20,24 +20,13 @@
     }
 
     function SearchResultItem({ cfi, excerpt }: SearchResultItemProps) {
-        // 使用纯函数 hook，直接传递 progress 值
-        // 由于 progress 是 $derived，每次变化时会重新调用 useScrollToItem
         const { isCurrent, viewRef } = useScrollToItem(cfi, progress);
         let itemElement: HTMLElement | null = $state(null);
 
-        // 处理滚动逻辑：当 isCurrent 为 true 且元素存在时，滚动到可见区域
         $effect(() => {
-            if (!itemElement || !isCurrent) return;
-
-            const element = itemElement;
-            const rect = element.getBoundingClientRect();
-            const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
-
-            if (!isVisible) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (itemElement) {
+                viewRef(itemElement);
             }
-
-            element.setAttribute('aria-current', 'page');
         });
 
         const handleClick = () => {

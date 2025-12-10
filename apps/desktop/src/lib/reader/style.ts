@@ -230,7 +230,7 @@ function getColorStyles(
       ${overrideColor ? `background-color: var(--color-background) !important;` : ''}
     }
     a:any-link {
-      color: var(--color-primary) !important;
+      color: var(--color-muted-foreground) !important;
       text-decoration: none;
     }
     a:hover {
