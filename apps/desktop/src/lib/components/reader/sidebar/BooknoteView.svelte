@@ -6,6 +6,7 @@
     import { Trash2 } from '@lucide/svelte';
     import { readerStore } from '$lib/reader/stores/readerStore';
     import { notebookStore } from '$lib/reader/stores/notebookStore';
+    import { sidebarStore } from '$lib/reader/stores/sidebarStore';
     import type { BookNote } from '$lib/reader/types';
 
     interface Props {
@@ -15,16 +16,29 @@
     const { bookKey }: Props = $props();
 
     let notes = $state<BookNote[]>([]);
-    let selectedNoteId = $state<string | null>(null);
+    
+    // 使用 store 管理 selectedNoteId
+    let selectedNoteId = $state(sidebarStore.getSelectedNoteId());
 
     const viewState = $derived(readerStore.getViewState(bookKey));
     const view = $derived(viewState?.view);
     const bookDoc = $derived(viewState?.bookDoc);
     const toc = $derived(bookDoc?.toc || []);
 
-    const unsubscribe = notebookStore.subscribe((state) => {
-        notes = state.notes[bookKey] || [];
-        selectedNoteId = state.selectedNoteId;
+    // 订阅 notebookStore 获取笔记列表
+    $effect(() => {
+        const unsubscribe = notebookStore.subscribe((state) => {
+            notes = state.notes[bookKey] || [];
+        });
+        return unsubscribe;
+    });
+
+    // 订阅 sidebarStore 获取选中的笔记 ID
+    $effect(() => {
+        const unsubscribe = sidebarStore.subscribe((state) => {
+            selectedNoteId = state.selectedNoteId;
+        });
+        return unsubscribe;
     });
 
     onMount(() => {
@@ -34,7 +48,8 @@
 
     const handleNoteClick = async (note: BookNote) => {
         if (!view) return;
-        notebookStore.setSelectedNoteId(note.id);
+        // 使用 sidebarStore 管理选中状态
+        sidebarStore.setSelectedNoteId(note.id);
         try {
             const resolved = view.resolveCFI(note.cfi);
             if (resolved) await view.goTo(resolved.index);

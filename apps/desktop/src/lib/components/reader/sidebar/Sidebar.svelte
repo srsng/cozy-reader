@@ -10,7 +10,7 @@
     import SearchBar from './SearchBar.svelte';
     import SearchResults from './SearchResults.svelte';
     import BooknoteView from './BooknoteView.svelte';
-    import type { BookSearchResult } from '$lib/reader/types';
+    import { useSidebarSearch } from './useSidebarSearch.svelte';
     import { cn } from '$utils';
     import * as Tabs from '$components/ui/tabs';
 
@@ -21,59 +21,53 @@
 
     const { bookKey, book }: Props = $props();
 
+    // 使用 $state 和 $effect 从 store 中获取响应式状态
     let isVisible = $state(sidebarStore.getVisible());
     let currentTab = $state(sidebarStore.getCurrentTab());
     let isPinned = $state(sidebarStore.getPinned());
-    let isSearchBarVisible = $state(false);
-    let searchResults = $state<BookSearchResult[] | null>(null);
-    let searchTerm = $state('');
+    let isSearchBarVisible = $state(sidebarStore.getSearchBarVisible());
+    let searchResults = $state(sidebarStore.getSearchResults());
 
     const viewState = $derived(readerStore.getViewState(bookKey));
     const view = $derived(viewState?.view);
 
-    // 订阅 sidebarStore
-    const unsubscribe = sidebarStore.subscribe((state) => {
-        isVisible = state.isVisible;
-        currentTab = state.currentTab;
-        isPinned = state.isPinned;
-        // 当切换到搜索标签时，显示搜索栏
-        if (state.currentTab === 'search') {
-            isSearchBarVisible = true;
-        }
+    // 订阅 sidebarStore 以响应状态变化
+    $effect(() => {
+        const unsubscribe = sidebarStore.subscribe((state) => {
+            isVisible = state.isVisible;
+            currentTab = state.currentTab;
+            isPinned = state.isPinned;
+            isSearchBarVisible = state.isSearchBarVisible;
+            searchResults = state.searchResults;
+        });
+        return unsubscribe;
     });
+
+    // 初始化搜索 hook，确保搜索逻辑正常工作
+    useSidebarSearch({ bookKey });
 
     const handleOpenChange = (open: boolean) => {
         if (!open) {
             sidebarStore.setVisible(false);
-        } else {
-            // 当侧边栏打开时，保持搜索结果状态（不清空）
-            // 只有在切换标签或用户明确清除时才清空搜索结果
         }
+        // 当侧边栏打开时，保持搜索结果状态（不清空）
+        // 状态现在存储在 store 中，不会因为组件重新创建而丢失
     };
 
     const handleTabChange = (tab: typeof currentTab) => {
         sidebarStore.setCurrentTab(tab);
-        if (tab === 'search') {
-            isSearchBarVisible = true;
-            // 切换到搜索标签时，不清空已有搜索结果
-        } else {
-            isSearchBarVisible = false;
-            // 切换到其他标签时才清空搜索结果
-            searchResults = null;
-        }
+        // setCurrentTab 已经处理了搜索栏的显示/隐藏
+        // 不清空搜索结果，保持状态以便切换回来时显示
     };
 
     const handleTogglePin = () => {
         sidebarStore.togglePinned();
-    };
-
-    const handleSearchResultChange = (results: BookSearchResult[]) => {
-        searchResults = results;
+        // 切换 pin 状态时，状态保持在 store 中，不会丢失
     };
 
     const handleHideSearchBar = () => {
         // 隐藏搜索栏时不清空搜索结果，保持状态以便再次打开时显示
-        isSearchBarVisible = false;
+        sidebarStore.setSearchBarVisible(false);
         // 不清空 searchResults，保持搜索结果状态
         // 不清空 searchTerm，保持搜索词状态
         // 不清除搜索高亮，保持高亮显示
@@ -86,14 +80,14 @@
     };
 </script>
 
-<Drawer bind:open={isVisible} onOpenChange={handleOpenChange} direction="left" modal={!isPinned}>
+<Drawer open={isVisible} onOpenChange={handleOpenChange} direction="left" modal={!isPinned}>
     <DrawerContent
         noPortal={isPinned}
         class={cn(
-            'bg-background p-0',
+            'bg-background h-full p-0',
             'transition-[width] duration-300 ease-in-out',
             isVisible ? 'w-80 max-w-[80vw]' : 'w-0',
-            isPinned ? 'h-full' : 'mt-8 h-full',
+            isPinned ? '' : 'mt-8',
             isPinned && 'overflow-hidden'
         )}
     >
@@ -130,7 +124,7 @@
 
             <!-- 侧边栏内容 -->
             <div
-                class="flex-1 overflow-y-auto"
+                class="h-full flex-1 overflow-y-auto"
                 role="region"
                 aria-label={currentTab === 'toc'
                     ? '目录'
@@ -145,8 +139,6 @@
                         <SearchBar
                             isVisible={isSearchBarVisible}
                             {bookKey}
-                            {searchTerm}
-                            onSearchResultChange={handleSearchResultChange}
                             onHideSearchBar={handleHideSearchBar}
                         />
                         <SearchResults
