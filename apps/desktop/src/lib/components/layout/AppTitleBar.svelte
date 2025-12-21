@@ -20,10 +20,11 @@
 <!-- todo: 优化样式设置 -->
 <div
     id="titlebar"
+    data-tauri-drag-region
     class:hidden={!$currentSettings.layout.titlebar}
     class:border-b={$currentSettings.base.layoutControlsOutline}
     class:border-muted={$currentSettings.base.layoutControlsOutline}
-    class={cn('bg-card flex h-8 w-full select-none items-center justify-between ', className)}
+    class={cn('bg-card flex h-full w-full select-none items-center justify-between ', className)}
     {...others}
     transition:slide={{ axis: 'y' }}
 >

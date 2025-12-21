@@ -51,6 +51,7 @@
         btnClass?: string;
         btnDisabled?: boolean;
         iconClass?: string;
+        'data-tauri-drag-region'?: boolean;
     } = $props();
 
     const lr_class = cn(sectionClass, 'flex items-center gap-1');
