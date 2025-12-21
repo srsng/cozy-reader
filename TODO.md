@@ -26,8 +26,11 @@
 - [ ] 优化thumbnail，支持封面，支持hover时显示详情信息
 - [ ] 阻止原本的 ctrl+r，f5等刷新快捷键(把原本的刷新请求 e.stop, prevent，然后emit刷新事件)
 - [ ] 首行缩进、长图缩放等样式
+- [ ] 为APP状态添加一个是否有焦点的标记，并添加一个防误触功能：当窗口没有焦点时，部分功能如翻页会被保护。
 
 ### hard
+
+- [ ] 调整设置架构，支持搜索设置项
 
 - [ ] 将当前的路由历史记录换成更加原生的实现，提升带state的goto在项目中的兼容性，解决goto 带 `{ state: { ... } }` 后（去设置与背景设置页面的utils按钮），偶尔出现的错误
 
@@ -149,10 +152,10 @@
   - [ ] 了解turborepo管理方式
   - [ ] 将 foliate.js 作为submodule添加到仓库
 
-        ```cmd
-        git submodule add https://github.com/johnfactotum/foliate-js packages/foliate-js
-        git submodule update --init --recursive
-        ```
+            ```cmd
+            git submodule add https://github.com/johnfactotum/foliate-js packages/foliate-js
+            git submodule update --init --recursive
+            ```
 
   - [ ] 考虑 pdf.js djvu.js kthoom villain.js
 

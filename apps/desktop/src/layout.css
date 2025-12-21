@@ -11,18 +11,42 @@
         overflow: hidden;
         /* 透明背景，让独立背景容器显示 */
         background-color: transparent;
+        /* grid布局 */
+        display: grid;
+        --header-h: 2rem;
+        --footer-h: 0;
+        /* todo：调整行列宽高 */
+        --aside-l-width: 0;
+        --aside-r-width: 0;
+        grid-template-columns: var(--aside-l-width) 3fr var(--aside-r-width);
+        grid-template-rows: var(--header-h) 1fr var(--footer-h);
+        grid-template-areas:
+            'header header header'
+            'aside-l main aside-r'
+            'footer footer footer';
     }
 
     /* app布局-内容区域 */
-    .content-area {
-        /* 为标题栏留出空间，标题栏高度为 2rem (32px) */
-        margin-top: 2rem;
-        /* 设置内容区域高度，避免不必要的滚动 */
-        height: calc(100vh - 2rem) !important;
+    .main-area {
         /* 透明背景，让独立背景容器显示 */
         background-color: transparent;
         /* 设置相对定位 */
         position: relative;
+        /* grid区域定义 */
+        grid-area: main;
+    }
+
+    /* grid区域定义 */
+    .header {
+        grid-area: header;
+    }
+
+    .aside-l {
+        grid-area: aside-l;
+    }
+
+    .footer {
+        grid-area: footer;
     }
 
     /* 前景/上层遮罩层 - 应用到整个应用容器 */

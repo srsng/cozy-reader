@@ -73,10 +73,15 @@
 <UIOpacityAction />
 
 <div class="app-layout" role="application">
-    <AppTitleBar />
-    <ScrollArea class="content-area">
+    <AppTitleBar className="header" />
+    <ScrollArea class="main-area">
         {@render children?.()}
     </ScrollArea>
+
+    <!-- 侧栏通过aside-l aside-r设定 -->
+    <!-- <div class="aside-l"></div> -->
+    <!-- <div class="aside-r"></div> -->
+    <div class="footer"></div>
 </div>
 
 <Toaster />
