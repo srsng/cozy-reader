@@ -31,3 +31,7 @@ src/lib/paraglide
 
 *storybook.log
 storybook-static
+
+# agents
+/.sisyphus
+/.spec-workflow
