@@ -5,7 +5,7 @@
     "identifier": "com.srsng.cozy-reader",
     "build": {
         "frontendDist": "../../apps/desktop/build",
-        "devUrl": "http://localhost:5173",
+        "devUrl": "http://localhost:13210",
         "beforeDevCommand": "pnpm -F @cozy-reader/desktop run dev",
         "beforeBuildCommand": "pnpm -F @cozy-reader/desktop run  build"
     },

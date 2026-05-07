@@ -5,6 +5,10 @@ import { defineConfig } from 'vite';
 import path from 'path';
 
 export default defineConfig({
+    server: {
+        port: 13210,
+        strictPort: true
+    },
     plugins: [
         tailwindcss(),
         sveltekit(),
