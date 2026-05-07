@@ -13,7 +13,7 @@
         "check:desktop": "pnpm --filter @cozy-reader/desktop check",
         "check:desktop:watch": "pnpm --filter @cozy-reader/desktop check:watch",
         "check:watch": "pnpm --filter @cozy-reader/desktop check:watch",
-        "tauri": "cargo tauri",
+        "tauri": "tauri",
         "globallint": "prettier --check . && eslint .",
         "prettier": "prettier --check",
         "format": "prettier --write .",
@@ -27,6 +27,7 @@
         "ts-rs:gen": "cargo test export_bindings"
     },
     "devDependencies": {
+        "@tauri-apps/cli": "^2.11.1",
         "@types/node": "catalog:",
         "prettier": "^3.6.2",
         "prettier-plugin-svelte": "^3.4.0",
