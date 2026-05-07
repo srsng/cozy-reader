@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+---
+
+技术栈 svelte 5 + tauri v2 + rust.
+
+不要使用过时的svelte4语法，灵活使用svelte5的runes。并注意普通ts、js文件中不可以使用runes，但在*.svelte.ts/js文件中可以使用。
+
+前端优先使用 shadcn-ui-svelte 组件库 ('$lib\components\ui')，样式优先使用tailwind css4.
+
+遇到不知道如何使用的库或框架，使用 MCP context7 查阅文档。
