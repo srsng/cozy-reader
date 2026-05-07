@@ -18,7 +18,7 @@ interface ParallelViewState {
  */
 function createInitialState(): ParallelViewState {
     return {
-        parallelViews: [],
+        parallelViews: []
     };
 }
 
@@ -49,7 +49,7 @@ class ParallelViewStore {
         if (bookKeys.length === 0) {
             this.store.update((state) => ({
                 ...state,
-                parallelViews: [],
+                parallelViews: []
             }));
             return;
         }
@@ -67,7 +67,7 @@ class ParallelViewStore {
 
             return {
                 ...state,
-                parallelViews: newGroups,
+                parallelViews: newGroups
             };
         });
     }
@@ -88,7 +88,7 @@ class ParallelViewStore {
 
             return {
                 ...state,
-                parallelViews: newGroups,
+                parallelViews: newGroups
             };
         });
     }
@@ -111,9 +111,7 @@ class ParallelViewStore {
      * @returns 并行视图组，如果没有则返回 null
      */
     getParallels(bookKey: string): Set<string> | null {
-        return (
-            get(this.store).parallelViews.find((group) => group.has(bookKey)) || null
-        );
+        return get(this.store).parallelViews.find((group) => group.has(bookKey)) || null;
     }
 
     /**

@@ -25,7 +25,7 @@ export function getCurrentTimestamp(): number {
 
 /**
  * 格式化阅读时间（分钟）
- * 
+ *
  * 返回包含 day、hour、min 字段的对象
  */
 export function formatReadingTime(minutes: number): { day: number; hour: number; min: number } {
@@ -71,14 +71,13 @@ export class TimeFieldConverter {
      * 将数据库时间戳数组转换为 Date 对象数组
      */
     static toDateArray(timestamps: (number | null | undefined)[]): (Date | null)[] {
-        return timestamps.map(ts => this.toDate(ts));
+        return timestamps.map((ts) => this.toDate(ts));
     }
 
     /**
      * 将 Date 对象数组转换为数据库时间戳数组
      */
     static toTimestampArray(dates: (Date | null | undefined)[]): (number | null)[] {
-        return dates.map(date => this.toTimestamp(date));
+        return dates.map((date) => this.toTimestamp(date));
     }
 }
-

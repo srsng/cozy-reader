@@ -288,21 +288,21 @@ export function getImageFullConfig(
         image.enableConfig && image.config
             ? image.config
             : {
-                // 基础显示设置
-                opacity: globalConfig.opacity,
-                displayMode: globalConfig.displayMode,
-                position: globalConfig.position,
-                blendMode: globalConfig.blendMode,
+                  // 基础显示设置
+                  opacity: globalConfig.opacity,
+                  displayMode: globalConfig.displayMode,
+                  position: globalConfig.position,
+                  blendMode: globalConfig.blendMode,
 
-                // 滤镜效果
-                filters: globalConfig.filters,
+                  // 滤镜效果
+                  filters: globalConfig.filters,
 
-                // 变换设置（使用默认值）
-                scale: 1.0,
-                rotation: 0,
-                offsetX: 0,
-                offsetY: 0
-            };
+                  // 变换设置（使用默认值）
+                  scale: 1.0,
+                  rotation: 0,
+                  offsetX: 0,
+                  offsetY: 0
+              };
 
     return {
         // 基础显示设置

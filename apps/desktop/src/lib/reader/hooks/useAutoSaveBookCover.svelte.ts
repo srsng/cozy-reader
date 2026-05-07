@@ -1,7 +1,7 @@
 /**
  * useAutoSaveBookCover - 自动保存书籍封面
  * 在书籍加载后自动提取封面图片并保存到数据库
- * 
+ *
  * 这是一个 Svelte 5 的 rune-based hook，使用 .svelte.ts 扩展名以支持 runes
  */
 
@@ -98,6 +98,5 @@ export function useAutoSaveBookCover(bookKey: string, bookDoc: BookDoc | null): 
     });
 
     // 为了保持 API 兼容性，仍然返回一个清理函数（虽然 $effect 会自动清理）
-    return () => { };
+    return () => {};
 }
-

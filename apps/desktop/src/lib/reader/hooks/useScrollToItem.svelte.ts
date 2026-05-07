@@ -1,7 +1,7 @@
 /**
  * useScrollToItem hook
  * 用于检测当前搜索结果并自动滚动到可见区域
- * 
+ *
  * 这是一个 Svelte 5 的 rune-based hook，使用 .svelte.ts 扩展名以支持 runes 和 TypeScript
  */
 
@@ -50,4 +50,3 @@ export function useScrollToItem(
 
     return { isCurrent, viewRef };
 }
-

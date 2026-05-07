@@ -36,5 +36,3 @@ export function safeParseJSON<T>(jsonString: string | null | undefined, defaultV
         return defaultValue;
     }
 }
-
-

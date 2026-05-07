@@ -1,7 +1,7 @@
 /**
  * useScrollToItem hook
  * 用于检测当前搜索结果并自动滚动到可见区域
- * 
+ *
  * 这是一个纯函数式 hook，不依赖 Svelte runes
  */
 
@@ -37,4 +37,3 @@ export function useScrollToItem(
 
     return { isCurrent, viewRef };
 }
-

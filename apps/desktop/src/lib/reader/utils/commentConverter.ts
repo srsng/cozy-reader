@@ -26,7 +26,7 @@ export function commentToBookNote(comment: Comment, bookHash?: string): BookNote
         note: comment.content,
         createdAt: comment.createdAt,
         updatedAt: comment.updatedAt,
-        deletedAt: comment.deletedAt || undefined,
+        deletedAt: comment.deletedAt || undefined
     };
 }
 
@@ -38,7 +38,7 @@ export function commentToBookNote(comment: Comment, bookHash?: string): BookNote
  */
 export function bookNoteToComment(note: BookNote, bookId: number): NewComment {
     const positionInfo: PositionInfo = {
-        cfi: note.cfi,
+        cfi: note.cfi
     };
 
     return {
@@ -53,17 +53,14 @@ export function bookNoteToComment(note: BookNote, bookId: number): NewComment {
         isPrivate: true,
         createdAt: note.createdAt,
         updatedAt: note.updatedAt,
-        deletedAt: note.deletedAt || null,
+        deletedAt: note.deletedAt || null
     };
 }
 
 /**
  * 批量转换 Comment 数组为 BookNote 数组
  */
-export function commentsToBookNotes(
-    comments: Comment[],
-    bookHash?: string
-): BookNote[] {
+export function commentsToBookNotes(comments: Comment[], bookHash?: string): BookNote[] {
     return comments.map((comment) => commentToBookNote(comment, bookHash));
 }
 

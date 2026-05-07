@@ -34,4 +34,3 @@ export function getLocaleFromLangCode(langCode: AppLanguageCode | string): strin
     // 单语言代码直接返回
     return langCode.toLowerCase();
 }
-

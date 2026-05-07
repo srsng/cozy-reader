@@ -72,9 +72,12 @@ function parseShortcut(shortcut: string): {
     metaKey: boolean;
     shiftKey: boolean;
 } {
-    const parts = shortcut.toLowerCase().split('+').map(p => p.trim());
+    const parts = shortcut
+        .toLowerCase()
+        .split('+')
+        .map((p) => p.trim());
     return {
-        key: parts.find(p => !['ctrl', 'alt', 'meta', 'cmd', 'shift'].includes(p)) || '',
+        key: parts.find((p) => !['ctrl', 'alt', 'meta', 'cmd', 'shift'].includes(p)) || '',
         ctrlKey: parts.includes('ctrl'),
         altKey: parts.includes('alt'),
         metaKey: parts.includes('meta') || parts.includes('cmd'),
@@ -85,10 +88,7 @@ function parseShortcut(shortcut: string): {
 /**
  * 检查快捷键是否匹配
  */
-function isShortcutMatch(
-    shortcut: string,
-    event: KeyboardEvent
-): boolean {
+function isShortcutMatch(shortcut: string, event: KeyboardEvent): boolean {
     const parsed = parseShortcut(shortcut);
     const eventKey = event.key.toLowerCase();
 
@@ -131,63 +131,63 @@ export function useBookShortcuts(
         const key = event.key;
 
         // 上一页
-        if (shortcuts.prevPage?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.prevPage?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onPrevPage?.();
             return;
         }
 
         // 下一页
-        if (shortcuts.nextPage?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.nextPage?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onNextPage?.();
             return;
         }
 
         // 上一章节
-        if (shortcuts.prevSection?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.prevSection?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onPrevSection?.();
             return;
         }
 
         // 下一章节
-        if (shortcuts.nextSection?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.nextSection?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onNextSection?.();
             return;
         }
 
         // 切换侧边栏
-        if (shortcuts.toggleSidebar?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.toggleSidebar?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onToggleSidebar?.();
             return;
         }
 
         // 切换笔记本
-        if (shortcuts.toggleNotebook?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.toggleNotebook?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onToggleNotebook?.();
             return;
         }
 
         // 打开设置
-        if (shortcuts.openSettings?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.openSettings?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onOpenSettings?.();
             return;
         }
 
         // 搜索
-        if (shortcuts.search?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.search?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onSearch?.();
             return;
         }
 
         // 退出全屏
-        if (shortcuts.exitFullscreen?.some(s => isShortcutMatch(s, event))) {
+        if (shortcuts.exitFullscreen?.some((s) => isShortcutMatch(s, event))) {
             event.preventDefault();
             handlers.onExitFullscreen?.();
             return;

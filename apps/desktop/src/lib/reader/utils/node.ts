@@ -11,7 +11,7 @@ export function createRejectFilter({
     tags = [],
     classes = [],
     attributes = [],
-    contents = [],
+    contents = []
 }: {
     tags?: string[];
     classes?: string[];
@@ -50,4 +50,3 @@ export function createRejectFilter({
         return NodeFilter.FILTER_ACCEPT;
     };
 }
-

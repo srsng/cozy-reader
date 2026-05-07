@@ -66,9 +66,9 @@ export const viewPagination = (
                 break;
             case 'section':
                 if (side === 'left' || side === 'up') {
-                    renderer.prevSection?.().catch(() => { });
+                    renderer.prevSection?.().catch(() => {});
                 } else {
-                    renderer.nextSection?.().catch(() => { });
+                    renderer.nextSection?.().catch(() => {});
                 }
                 break;
         }
@@ -83,9 +83,9 @@ export const viewPagination = (
                 break;
             case 'section':
                 if (side === 'left' || side === 'up') {
-                    renderer.prevSection?.().catch(() => { });
+                    renderer.prevSection?.().catch(() => {});
                 } else {
-                    renderer.nextSection?.().catch(() => { });
+                    renderer.nextSection?.().catch(() => {});
                 }
                 break;
         }
@@ -101,14 +101,10 @@ export function usePagination(
     viewRef: { current: FoliateViewElement | null },
     containerRef: { current: HTMLDivElement | null }
 ): {
-    handlePageFlip: (
-        msg: MessageEvent | CustomEvent | MouseEvent
-    ) => void | Promise<void>;
+    handlePageFlip: (msg: MessageEvent | CustomEvent | MouseEvent) => void | Promise<void>;
     handleContinuousScroll: (mode: ScrollSource, scrollDelta: number, threshold: number) => void;
 } {
-    const handlePageFlip = async (
-        msg: MessageEvent | CustomEvent | MouseEvent
-    ): Promise<void> => {
+    const handlePageFlip = async (msg: MessageEvent | CustomEvent | MouseEvent): Promise<void> => {
         const viewState = readerStore.getViewState(bookKey);
         const bookData = bookDataStore.getBookData(bookKey);
         if (!viewState?.inited || !bookData) return;
@@ -259,14 +255,9 @@ export function usePagination(
                     }, 100);
                 }
                 // 向下滚动：可能触发下一页
-                else if (
-                    Math.ceil(end) - scrollDelta >= viewSize &&
-                    scrollDelta < -threshold
-                ) {
+                else if (Math.ceil(end) - scrollDelta >= viewSize && scrollDelta < -threshold) {
                     setTimeout(() => {
-                        viewRef.current?.next(
-                            viewSize - Math.floor(end) + 1
-                        );
+                        viewRef.current?.next(viewSize - Math.floor(end) + 1);
                     }, 100);
                 }
             };
@@ -290,6 +281,6 @@ export function usePagination(
 
     return {
         handlePageFlip,
-        handleContinuousScroll,
+        handleContinuousScroll
     };
 }

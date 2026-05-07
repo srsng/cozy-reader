@@ -8,7 +8,9 @@
  * @returns 是否包含 CJK 字符
  */
 export function isCJKStr(str: string): boolean {
-    return /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(str ?? '');
+    return /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(
+        str ?? ''
+    );
 }
 
 /**
@@ -31,4 +33,3 @@ export function normalizedLangCode(lang: string | null | undefined): string {
     if (!lang) return '';
     return lang.split('-')[0]!.toLowerCase();
 }
-

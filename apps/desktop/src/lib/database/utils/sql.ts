@@ -45,7 +45,10 @@ export function buildOrderClause(sortBy?: string, sortOrder: 'asc' | 'desc' = 'd
  * @param offset 偏移量
  * @returns LIMIT/OFFSET 子句和参数数组
  */
-export function buildLimitClause(limit?: number, offset?: number): { clause: string; params: any[] } {
+export function buildLimitClause(
+    limit?: number,
+    offset?: number
+): { clause: string; params: any[] } {
     const params: any[] = [];
     let clause = '';
 
@@ -70,4 +73,3 @@ export function buildLimitClause(limit?: number, offset?: number): { clause: str
 export function escapeLikeQuery(query: string): string {
     return query.replace(/[%_]/g, '\\$&');
 }
-

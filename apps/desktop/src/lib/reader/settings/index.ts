@@ -10,7 +10,7 @@ import type {
     ViewConfig,
     TTSConfig,
     TranslatorConfig,
-    ScreenConfig,
+    ScreenConfig
 } from '../types';
 import {
     DEFAULT_BOOK_FONT,
@@ -20,7 +20,7 @@ import {
     DEFAULT_VIEW_CONFIG,
     DEFAULT_TTS_CONFIG,
     DEFAULT_TRANSLATOR_CONFIG,
-    DEFAULT_SCREEN_CONFIG,
+    DEFAULT_SCREEN_CONFIG
 } from '../constants';
 
 /**
@@ -29,13 +29,13 @@ import {
  */
 export interface ReaderSettings
     extends BookLayout,
-    BookStyle,
-    BookFont,
-    BookLanguage,
-    ViewConfig,
-    TTSConfig,
-    TranslatorConfig,
-    ScreenConfig { }
+        BookStyle,
+        BookFont,
+        BookLanguage,
+        ViewConfig,
+        TTSConfig,
+        TranslatorConfig,
+        ScreenConfig {}
 
 /**
  * 默认 Reader 设置
@@ -48,5 +48,5 @@ export const DEFAULT_READER_SETTINGS: ReaderSettings = {
     ...DEFAULT_VIEW_CONFIG,
     ...DEFAULT_TTS_CONFIG,
     ...DEFAULT_TRANSLATOR_CONFIG,
-    ...DEFAULT_SCREEN_CONFIG,
+    ...DEFAULT_SCREEN_CONFIG
 };

@@ -1,7 +1,7 @@
 /**
  * 文本选择 Hook
  * 用于处理文本选择、弹窗显示等逻辑
- * 
+ *
  * 这是一个 Svelte 5 的 rune-based hook，使用 .svelte.ts 扩展名以支持 runes
  */
 
@@ -37,15 +37,15 @@ export function useTextSelector(
 } {
     const view = readerStore.getView(bookKey);
     const bookData = bookDataStore.getBookData(bookKey);
-    
+
     // 使用 $derived 计算主要语言
     const primaryLang = $derived.by(() => {
         return bookData?.bookDoc?.metadata?.language
-            ? (Array.isArray(bookData.bookDoc.metadata.language)
+            ? Array.isArray(bookData.bookDoc.metadata.language)
                 ? bookData.bookDoc.metadata.language[0]
                 : typeof bookData.bookDoc.metadata.language === 'string'
-                    ? bookData.bookDoc.metadata.language
-                    : 'en')
+                  ? bookData.bookDoc.metadata.language
+                  : 'en'
             : 'en';
     });
 
@@ -63,16 +63,13 @@ export function useTextSelector(
     };
 
     const getAnnotationText = async (range: Range): Promise<string> => {
-        const text = getTextFromRange(
-            range,
-            primaryLang.startsWith('ja') ? ['rt'] : []
-        );
+        const text = getTextFromRange(range, primaryLang.startsWith('ja') ? ['rt'] : []);
         const transformed = await transformContent({
             bookKey,
             readerSettings: readerStore.getReaderSettings(bookKey)!,
             content: text,
             transformers: ['punctuation'],
-            reversePunctuationTransform: true,
+            reversePunctuationTransform: true
         });
         return transformed;
     };
@@ -89,7 +86,7 @@ export function useTextSelector(
             key: bookKey,
             text: await getAnnotationText(range),
             range,
-            index,
+            index
         });
     };
 
@@ -107,7 +104,7 @@ export function useTextSelector(
                     key: bookKey,
                     text: await getAnnotationText(range),
                     range,
-                    index,
+                    index
                 });
             }, 30);
         }, 30);
@@ -215,7 +212,7 @@ export function useTextSelector(
             },
             // TODO: 检测平台
             // ['android', 'ios'].includes(osPlatform) || appService?.isIOSApp ? 0 : 500,
-            500,
+            500
         );
     };
 
@@ -272,7 +269,11 @@ export function useTextSelector(
     $effect(() => {
         // 监听 window message 事件（来自 iframe）
         const messageHandler = (event: MessageEvent) => {
-            if (event.data && event.data.type === 'iframe-single-click' && event.data.bookKey === bookKey) {
+            if (
+                event.data &&
+                event.data.type === 'iframe-single-click' &&
+                event.data.bookKey === bookKey
+            ) {
                 handleSingleClick();
             }
         };
@@ -314,7 +315,6 @@ export function useTextSelector(
         handleShowPopup,
         handleUpToPopup,
         handleContextmenu,
-        setup,
+        setup
     };
 }
-

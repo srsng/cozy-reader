@@ -1,9 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import {
-    BookService,
-    isSupportFormat,
-    getFileFormat
-} from '@cozy-reader/database';
+import { BookService, isSupportFormat, getFileFormat } from '@cozy-reader/database';
 import { getReadBookUrl, redirectBack } from '$lib/utils/route.svelte.js';
 import { page } from '$app/state';
 import { toast } from 'svelte-sonner';

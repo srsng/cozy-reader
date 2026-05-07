@@ -16,7 +16,7 @@
     const { bookKey }: Props = $props();
 
     let notes = $state<BookNote[]>([]);
-    
+
     // 使用 store 管理 selectedNoteId
     let selectedNoteId = $state(sidebarStore.getSelectedNoteId());
 

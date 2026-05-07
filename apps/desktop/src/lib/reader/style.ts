@@ -5,52 +5,56 @@
 
 import type { ReaderSettings } from './settings';
 import {
-  SERIF_FONTS,
-  SANS_SERIF_FONTS,
-  MONOSPACE_FONTS,
-  CJK_SERIF_FONTS,
-  CJK_SANS_SERIF_FONTS,
-  FALLBACK_FONTS,
+    SERIF_FONTS,
+    SANS_SERIF_FONTS,
+    MONOSPACE_FONTS,
+    CJK_SERIF_FONTS,
+    CJK_SANS_SERIF_FONTS,
+    FALLBACK_FONTS
 } from './constants';
-import { transformStylesheet, applyImageStyle, applyFixedlayoutStyles } from './services/TransformService';
+import {
+    transformStylesheet,
+    applyImageStyle,
+    applyFixedlayoutStyles
+} from './services/TransformService';
 
 /**
  * 获取字体样式
  */
 function getFontStyles(
-  serif: string,
-  sansSerif: string,
-  monospace: string,
-  defaultFont: string,
-  defaultCJKFont: string,
-  fontSize: number,
-  minFontSize: number,
-  fontWeight: number,
-  overrideFont: boolean,
+    serif: string,
+    sansSerif: string,
+    monospace: string,
+    defaultFont: string,
+    defaultCJKFont: string,
+    fontSize: number,
+    minFontSize: number,
+    fontWeight: number,
+    overrideFont: boolean
 ): string {
-  const lastSerifFonts = ['Georgia', 'Times New Roman'];
-  const serifFonts = [
-    serif,
-    ...SERIF_FONTS.filter(
-      (font) => font !== serif && font !== defaultCJKFont && !lastSerifFonts.includes(font),
-    ),
-    ...(defaultCJKFont !== serif ? [defaultCJKFont] : []),
-    ...CJK_SERIF_FONTS.filter((font) => font !== serif && font !== defaultCJKFont),
-    ...lastSerifFonts.filter(
-      (font) => SERIF_FONTS.includes(font) && !lastSerifFonts.includes(defaultCJKFont),
-    ),
-    ...FALLBACK_FONTS,
-  ];
-  const sansSerifFonts = [
-    sansSerif,
-    ...SANS_SERIF_FONTS.filter((font) => font !== sansSerif && font !== defaultCJKFont),
-    ...(defaultCJKFont !== sansSerif ? [defaultCJKFont] : []),
-    ...CJK_SANS_SERIF_FONTS.filter((font) => font !== sansSerif && font !== defaultCJKFont),
-    ...FALLBACK_FONTS,
-  ];
-  const monospaceFonts = [monospace, ...MONOSPACE_FONTS.filter((font) => font !== monospace)];
+    const lastSerifFonts = ['Georgia', 'Times New Roman'];
+    const serifFonts = [
+        serif,
+        ...SERIF_FONTS.filter(
+            (font) => font !== serif && font !== defaultCJKFont && !lastSerifFonts.includes(font)
+        ),
+        ...(defaultCJKFont !== serif ? [defaultCJKFont] : []),
+        ...CJK_SERIF_FONTS.filter((font) => font !== serif && font !== defaultCJKFont),
+        ...lastSerifFonts.filter(
+            (font) => SERIF_FONTS.includes(font) && !lastSerifFonts.includes(defaultCJKFont)
+        ),
+        ...FALLBACK_FONTS
+    ];
+    const sansSerifFonts = [
+        sansSerif,
+        ...SANS_SERIF_FONTS.filter((font) => font !== sansSerif && font !== defaultCJKFont),
+        ...(defaultCJKFont !== sansSerif ? [defaultCJKFont] : []),
+        ...CJK_SANS_SERIF_FONTS.filter((font) => font !== sansSerif && font !== defaultCJKFont),
+        ...FALLBACK_FONTS
+    ];
+    const monospaceFonts = [monospace, ...MONOSPACE_FONTS.filter((font) => font !== monospace)];
 
-  const fontStyles = `
+    const fontStyles = `
     html {
       --serif: ${serifFonts.map((font) => `"${font}"`).join(', ')}, serif;
       --sans-serif: ${sansSerifFonts.map((font) => `"${font}"`).join(', ')}, sans-serif;
@@ -95,7 +99,7 @@ function getFontStyles(
       ${overrideFont ? 'font-family: revert !important;' : ''}
     }
   `;
-  return fontStyles;
+    return fontStyles;
 }
 
 /**
@@ -103,91 +107,91 @@ function getFontStyles(
  * 从主窗口获取所有主题相关的 CSS 变量并注入到文档中
  */
 function injectThemeVariables(): string {
-  if (typeof window === 'undefined') {
-    return '';
-  }
-
-  // 定义需要注入的主题变量列表（使用 app.css 中实际使用的 --color-* 系列变量）
-  const themeVariables = [
-    // 颜色变量（app.css 中实际使用的）
-    '--color-foreground',
-    '--color-background',
-    '--color-card',
-    '--color-card-foreground',
-    '--color-primary',
-    '--color-primary-foreground',
-    '--color-secondary',
-    '--color-secondary-foreground',
-    '--color-muted',
-    '--color-muted-foreground',
-    '--color-accent',
-    '--color-accent-foreground',
-    '--color-destructive',
-    '--color-border',
-    '--color-input',
-    '--color-ring',
-    '--color-popover',
-    '--color-popover-foreground',
-    '--color-sidebar',
-    '--color-sidebar-foreground',
-    '--color-sidebar-primary',
-    '--color-sidebar-primary-foreground',
-    '--color-sidebar-accent',
-    '--color-sidebar-accent-foreground',
-    '--color-sidebar-border',
-    '--color-sidebar-ring',
-    '--color-body-background',
-    // 图表颜色
-    '--color-chart-1',
-    '--color-chart-2',
-    '--color-chart-3',
-    '--color-chart-4',
-    '--color-chart-5',
-    // 圆角变量
-    '--radius-sm',
-    '--radius-md',
-    '--radius-lg',
-    '--radius-xl',
-    '--radius',
-    // 不透明度变量
-    '--ui-opacity',
-    '--body-opacity',
-  ];
-
-  // 从主窗口获取 CSS 变量值（如果在 iframe 中）
-  let root: HTMLElement;
-  try {
-    // 优先尝试从主窗口获取
-    if (window.parent && window.parent !== window) {
-      root = window.parent.document.documentElement;
-    } else if (window.top && window.top !== window) {
-      root = window.top.document.documentElement;
-    } else {
-      // 不在 iframe 中，使用当前窗口
-      root = document.documentElement;
+    if (typeof window === 'undefined') {
+        return '';
     }
-  } catch (e) {
-    // 跨域限制，使用当前窗口
-    root = document.documentElement;
-  }
 
-  const computedStyle = getComputedStyle(root);
-  const variableDefinitions: string[] = [];
+    // 定义需要注入的主题变量列表（使用 app.css 中实际使用的 --color-* 系列变量）
+    const themeVariables = [
+        // 颜色变量（app.css 中实际使用的）
+        '--color-foreground',
+        '--color-background',
+        '--color-card',
+        '--color-card-foreground',
+        '--color-primary',
+        '--color-primary-foreground',
+        '--color-secondary',
+        '--color-secondary-foreground',
+        '--color-muted',
+        '--color-muted-foreground',
+        '--color-accent',
+        '--color-accent-foreground',
+        '--color-destructive',
+        '--color-border',
+        '--color-input',
+        '--color-ring',
+        '--color-popover',
+        '--color-popover-foreground',
+        '--color-sidebar',
+        '--color-sidebar-foreground',
+        '--color-sidebar-primary',
+        '--color-sidebar-primary-foreground',
+        '--color-sidebar-accent',
+        '--color-sidebar-accent-foreground',
+        '--color-sidebar-border',
+        '--color-sidebar-ring',
+        '--color-body-background',
+        // 图表颜色
+        '--color-chart-1',
+        '--color-chart-2',
+        '--color-chart-3',
+        '--color-chart-4',
+        '--color-chart-5',
+        // 圆角变量
+        '--radius-sm',
+        '--radius-md',
+        '--radius-lg',
+        '--radius-xl',
+        '--radius',
+        // 不透明度变量
+        '--ui-opacity',
+        '--body-opacity'
+    ];
 
-  // 从主窗口获取所有变量值
-  themeVariables.forEach((varName) => {
-    const value = computedStyle.getPropertyValue(varName)?.trim();
-    if (value) {
-      variableDefinitions.push(`      ${varName}: ${value};`);
+    // 从主窗口获取 CSS 变量值（如果在 iframe 中）
+    let root: HTMLElement;
+    try {
+        // 优先尝试从主窗口获取
+        if (window.parent && window.parent !== window) {
+            root = window.parent.document.documentElement;
+        } else if (window.top && window.top !== window) {
+            root = window.top.document.documentElement;
+        } else {
+            // 不在 iframe 中，使用当前窗口
+            root = document.documentElement;
+        }
+    } catch (e) {
+        // 跨域限制，使用当前窗口
+        root = document.documentElement;
     }
-  });
 
-  if (variableDefinitions.length === 0) {
-    // 没有找到任何主题变量，返回空字符串
-    return '';
-  }
+    const computedStyle = getComputedStyle(root);
+    const variableDefinitions: string[] = [];
 
-  return `
+    // 从主窗口获取所有变量值
+    themeVariables.forEach((varName) => {
+        const value = computedStyle.getPropertyValue(varName)?.trim();
+        if (value) {
+            variableDefinitions.push(`      ${varName}: ${value};`);
+        }
+    });
+
+    if (variableDefinitions.length === 0) {
+        // 没有找到任何主题变量，返回空字符串
+        return '';
+    }
+
+    return `
     html {
 ${variableDefinitions.join('\n')}
     }
@@ -197,14 +201,11 @@ ${variableDefinitions.join('\n')}
 /**
  * 获取颜色样式
  */
-function getColorStyles(
-  overrideColor: boolean,
-  invertImgColorInDark: boolean,
-): string {
-  // 注入完整的主题变量
-  const themeVars = injectThemeVariables();
+function getColorStyles(overrideColor: boolean, invertImgColorInDark: boolean): string {
+    // 注入完整的主题变量
+    const themeVars = injectThemeVariables();
 
-  const colorStyles = `
+    const colorStyles = `
     ${themeVars}
     html {
       color-scheme: light dark;
@@ -423,26 +424,26 @@ function getColorStyles(
       white-space: pre-wrap !important;
     }
   `;
-  return colorStyles;
+    return colorStyles;
 }
 
 /**
  * 获取布局样式
  */
 function getLayoutStyles(
-  overrideLayout: boolean,
-  paragraphMargin: number,
-  lineSpacing: number,
-  wordSpacing: number,
-  letterSpacing: number,
-  textIndent: number,
-  justify: boolean,
-  hyphenate: boolean,
-  zoomLevel: number,
-  writingMode: string,
-  vertical: boolean,
+    overrideLayout: boolean,
+    paragraphMargin: number,
+    lineSpacing: number,
+    wordSpacing: number,
+    letterSpacing: number,
+    textIndent: number,
+    justify: boolean,
+    hyphenate: boolean,
+    zoomLevel: number,
+    writingMode: string,
+    vertical: boolean
 ): string {
-  const layoutStyle = `
+    const layoutStyle = `
   @namespace epub "http://www.idpf.org/2007/ops";
   html {
     --default-text-align: ${justify ? 'justify' : 'start'};
@@ -578,14 +579,14 @@ function getLayoutStyles(
     text-indent: unset !important;
   }
 `;
-  return layoutStyle;
+    return layoutStyle;
 }
 
 /**
  * 获取翻译样式
  */
 function getTranslationStyles(showSource: boolean): string {
-  return `
+    return `
   .translation-source {
   }
   .translation-target {
@@ -611,70 +612,69 @@ function getTranslationStyles(showSource: boolean): string {
  * 直接使用全局 CSS 变量，不依赖主题代码
  */
 export function getStyles(readerSettings: ReaderSettings): string {
+    const layoutStyles = getLayoutStyles(
+        readerSettings.overrideLayout ?? false,
+        readerSettings.paragraphMargin ?? 1,
+        readerSettings.lineHeight ?? 1.6,
+        readerSettings.wordSpacing ?? 0,
+        readerSettings.letterSpacing ?? 0,
+        readerSettings.textIndent ?? 0,
+        readerSettings.fullJustification ?? true,
+        readerSettings.hyphenation ?? true,
+        (readerSettings.zoomLevel ?? 100) / 100.0,
+        readerSettings.writingMode ?? 'auto',
+        readerSettings.vertical ?? false
+    );
 
-  const layoutStyles = getLayoutStyles(
-    readerSettings.overrideLayout ?? false,
-    readerSettings.paragraphMargin ?? 1,
-    readerSettings.lineHeight ?? 1.6,
-    readerSettings.wordSpacing ?? 0,
-    readerSettings.letterSpacing ?? 0,
-    readerSettings.textIndent ?? 0,
-    readerSettings.fullJustification ?? true,
-    readerSettings.hyphenation ?? true,
-    (readerSettings.zoomLevel ?? 100) / 100.0,
-    readerSettings.writingMode ?? 'auto',
-    readerSettings.vertical ?? false,
-  );
+    // 移动端字体缩放
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const fontScale = isMobile ? 1.25 : 1;
 
-  // 移动端字体缩放
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const fontScale = isMobile ? 1.25 : 1;
+    const fontStyles = getFontStyles(
+        readerSettings.serifFont ?? 'Georgia',
+        readerSettings.sansSerifFont ?? 'Arial',
+        readerSettings.monospaceFont ?? 'Consolas',
+        readerSettings.defaultFont ?? 'Serif',
+        readerSettings.defaultCJKFont ?? 'SimSun',
+        (readerSettings.defaultFontSize ?? 16) * fontScale,
+        readerSettings.minimumFontSize ?? 8,
+        readerSettings.fontWeight ?? 400,
+        readerSettings.overrideFont ?? false
+    );
 
-  const fontStyles = getFontStyles(
-    readerSettings.serifFont ?? 'Georgia',
-    readerSettings.sansSerifFont ?? 'Arial',
-    readerSettings.monospaceFont ?? 'Consolas',
-    readerSettings.defaultFont ?? 'Serif',
-    readerSettings.defaultCJKFont ?? 'SimSun',
-    (readerSettings.defaultFontSize ?? 16) * fontScale,
-    readerSettings.minimumFontSize ?? 8,
-    readerSettings.fontWeight ?? 400,
-    readerSettings.overrideFont ?? false,
-  );
+    const colorStyles = getColorStyles(
+        readerSettings.overrideColor ?? false,
+        readerSettings.invertImgColorInDark ?? false
+    );
 
-  const colorStyles = getColorStyles(
-    readerSettings.overrideColor ?? false,
-    readerSettings.invertImgColorInDark ?? false,
-  );
+    const translationStyles = getTranslationStyles(readerSettings.showTranslateSource ?? true);
+    const userStylesheet = readerSettings.userStylesheet ?? '';
 
-  const translationStyles = getTranslationStyles(readerSettings.showTranslateSource ?? true);
-  const userStylesheet = readerSettings.userStylesheet ?? '';
-
-  return `${layoutStyles}\n${fontStyles}\n${colorStyles}\n${translationStyles}\n${userStylesheet}`;
+    return `${layoutStyles}\n${fontStyles}\n${colorStyles}\n${translationStyles}\n${userStylesheet}`;
 }
 
 /**
  * 应用翻译样式
  */
 export function applyTranslationStyle(readerSettings: ReaderSettings): void {
-  const styleId = 'translation-style';
-  const existingStyle = document.getElementById(styleId);
-  if (existingStyle) {
-    existingStyle.remove();
-  }
+    const styleId = 'translation-style';
+    const existingStyle = document.getElementById(styleId);
+    if (existingStyle) {
+        existingStyle.remove();
+    }
 
-  const styleElement = document.createElement('style');
-  styleElement.id = styleId;
-  styleElement.textContent = getTranslationStyles(readerSettings.showTranslateSource ?? true);
-  document.head.appendChild(styleElement);
+    const styleElement = document.createElement('style');
+    styleElement.id = styleId;
+    styleElement.textContent = getTranslationStyles(readerSettings.showTranslateSource ?? true);
+    document.head.appendChild(styleElement);
 }
 
 /**
  * 应用滚动模式类
  */
 export function applyScrollModeClass(document: Document, isScrollMode: boolean): void {
-  document.body.classList.remove('scroll-mode', 'paginated-mode');
-  document.body.classList.add(isScrollMode ? 'scroll-mode' : 'paginated-mode');
+    document.body.classList.remove('scroll-mode', 'paginated-mode');
+    document.body.classList.add(isScrollMode ? 'scroll-mode' : 'paginated-mode');
 }
 
 // 导出 TransformService 的函数

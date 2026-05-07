@@ -20,7 +20,7 @@ export class AnnotationService {
      */
     async addAnnotation(
         view: FoliateViewElement,
-        note: BookNote,
+        note: BookNote
     ): Promise<{ index: number; label: string }> {
         try {
             // 使用 foliate-view 的 addAnnotation API
@@ -108,10 +108,14 @@ export class AnnotationService {
             if (note.id) {
                 const existingResult = await CommentService.list({
                     bookId,
-                    externalId: note.id,
+                    externalId: note.id
                 });
 
-                if (existingResult.success && existingResult.data && existingResult.data.length > 0) {
+                if (
+                    existingResult.success &&
+                    existingResult.data &&
+                    existingResult.data.length > 0
+                ) {
                     // 更新现有注释
                     const existingComment = existingResult.data[0];
                     if (existingComment) {
@@ -122,14 +126,19 @@ export class AnnotationService {
                             selectedText: newComment.selectedText,
                             color: newComment.color,
                             externalId: newComment.externalId,
-                            updatedAt: Date.now(),
+                            updatedAt: Date.now()
                         });
 
                         if (updateResult.success && updateResult.data) {
                             // 更新运行时缓存
-                            const updatedNote = commentToBookNote(updateResult.data, bookData.config?.bookHash);
+                            const updatedNote = commentToBookNote(
+                                updateResult.data,
+                                bookData.config?.bookHash
+                            );
                             const booknotes = bookData.config?.booknotes || [];
-                            const existingIndex = booknotes.findIndex((item) => item.id === note.id);
+                            const existingIndex = booknotes.findIndex(
+                                (item) => item.id === note.id
+                            );
                             if (existingIndex !== -1) {
                                 booknotes[existingIndex] = updatedNote;
                             } else {
@@ -143,7 +152,10 @@ export class AnnotationService {
                     const createResult = await CommentService.create(newComment);
                     if (createResult.success && createResult.data) {
                         // 更新运行时缓存
-                        const createdNote = commentToBookNote(createResult.data, bookData.config?.bookHash);
+                        const createdNote = commentToBookNote(
+                            createResult.data,
+                            bookData.config?.bookHash
+                        );
                         const booknotes = bookData.config?.booknotes || [];
                         booknotes.push(createdNote);
                         bookDataStore.updateBooknotes(bookKey, booknotes);
@@ -154,7 +166,10 @@ export class AnnotationService {
                 const createResult = await CommentService.create(newComment);
                 if (createResult.success && createResult.data) {
                     // 更新运行时缓存
-                    const createdNote = commentToBookNote(createResult.data, bookData.config?.bookHash);
+                    const createdNote = commentToBookNote(
+                        createResult.data,
+                        bookData.config?.bookHash
+                    );
                     const booknotes = bookData.config?.booknotes || [];
                     booknotes.push(createdNote);
                     bookDataStore.updateBooknotes(bookKey, booknotes);
@@ -175,7 +190,7 @@ export class AnnotationService {
     async updateAnnotation(
         bookKey: string,
         noteId: string,
-        updates: Partial<BookNote>,
+        updates: Partial<BookNote>
     ): Promise<void> {
         try {
             const bookData = bookDataStore.getBookData(bookKey);
@@ -196,13 +211,13 @@ export class AnnotationService {
             const updatedNote: BookNote = {
                 ...existingNote,
                 ...updates,
-                updatedAt: Date.now(),
+                updatedAt: Date.now()
             };
 
             // 查找数据库中的注释（通过 externalId）
             const existingResult = await CommentService.list({
                 bookId,
-                externalId: noteId,
+                externalId: noteId
             });
 
             if (existingResult.success && existingResult.data && existingResult.data.length > 0) {
@@ -216,12 +231,15 @@ export class AnnotationService {
                         selectedText: newComment.selectedText,
                         color: newComment.color,
                         externalId: newComment.externalId,
-                        updatedAt: Date.now(),
+                        updatedAt: Date.now()
                     });
 
                     if (updateResult.success && updateResult.data) {
                         // 更新运行时缓存
-                        const dbNote = commentToBookNote(updateResult.data, bookData.config?.bookHash);
+                        const dbNote = commentToBookNote(
+                            updateResult.data,
+                            bookData.config?.bookHash
+                        );
                         const index = booknotes.findIndex((item) => item.id === noteId);
                         if (index !== -1) {
                             booknotes[index] = dbNote;
@@ -257,7 +275,7 @@ export class AnnotationService {
             // 查找数据库中的注释（通过 externalId）
             const existingResult = await CommentService.list({
                 bookId,
-                externalId: noteId,
+                externalId: noteId
             });
 
             if (existingResult.success && existingResult.data && existingResult.data.length > 0) {
@@ -274,7 +292,7 @@ export class AnnotationService {
             if (index !== -1) {
                 booknotes[index] = {
                     ...booknotes[index]!,
-                    deletedAt: Date.now(),
+                    deletedAt: Date.now()
                 };
                 bookDataStore.updateBooknotes(bookKey, booknotes);
             }
@@ -292,9 +310,7 @@ export class AnnotationService {
      */
     getAnnotationsByCFI(bookKey: string, cfi: string): BookNote[] {
         const annotations = this.getAnnotations(bookKey);
-        return annotations.filter(
-            (item) => item.cfi === cfi && !item.deletedAt
-        );
+        return annotations.filter((item) => item.cfi === cfi && !item.deletedAt);
     }
 
     /**
@@ -305,12 +321,9 @@ export class AnnotationService {
      */
     getAnnotationsByType(bookKey: string, type: BookNote['type']): BookNote[] {
         const annotations = this.getAnnotations(bookKey);
-        return annotations.filter(
-            (item) => item.type === type && !item.deletedAt
-        );
+        return annotations.filter((item) => item.type === type && !item.deletedAt);
     }
 }
 
 // 导出单例实例
 export const annotationService = new AnnotationService();
-

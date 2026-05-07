@@ -1,7 +1,7 @@
 /**
  * iframe 事件处理 Hook
  * 用于处理来自 iframe 的消息事件（鼠标、触摸、滚轮等）
- * 
+ *
  * 这是一个 Svelte 5 的 rune-based hook，使用 .svelte.ts 扩展名以支持 runes
  */
 
@@ -80,7 +80,7 @@ export function useMouseEvent(
 
     $effect(() => {
         window.addEventListener('message', handleMouseEvent as EventListener);
-        
+
         cleanup = () => {
             window.removeEventListener('message', handleMouseEvent as EventListener);
         };
@@ -100,7 +100,7 @@ export function useMouseEvent(
     return {
         onClick: handlePageFlip as (msg: MouseEvent) => void,
         onWheel: handleMouseEvent as (event: WheelEvent) => void,
-        setup,
+        setup
     };
 }
 
@@ -234,8 +234,8 @@ export function useTouchEvent(
                         startX: touchStart.screenX,
                         startY: touchStart.screenY,
                         endX: touchEnd.screenX,
-                        endY: touchEnd.screenY,
-                    },
+                        endY: touchEnd.screenY
+                    }
                 })
             );
             handleContinuousScroll('touch', deltaY, 30);
@@ -262,7 +262,7 @@ export function useTouchEvent(
 
     $effect(() => {
         window.addEventListener('message', handleTouch);
-        
+
         cleanup = () => {
             window.removeEventListener('message', handleTouch);
         };
@@ -283,7 +283,6 @@ export function useTouchEvent(
         onTouchStart,
         onTouchMove,
         onTouchEnd,
-        setup,
+        setup
     };
 }
-

@@ -21,10 +21,10 @@ export const getViewInsets = (readerSettings: ReaderSettings): Insets => {
     const showHeader = readerSettings.showHeader ?? false;
     const showFooter = readerSettings.showFooter ?? false;
     const isVertical =
-        readerSettings.vertical ||
-        (readerSettings.writingMode?.includes('vertical') ?? false);
+        readerSettings.vertical || (readerSettings.writingMode?.includes('vertical') ?? false);
     const fullMarginTopPx = readerSettings.marginPx ?? readerSettings.marginTopPx ?? 0;
-    const compactMarginTopPx = readerSettings.compactMarginPx ?? readerSettings.compactMarginTopPx ?? 0;
+    const compactMarginTopPx =
+        readerSettings.compactMarginPx ?? readerSettings.compactMarginTopPx ?? 0;
     const fullMarginBottomPx = readerSettings.marginBottomPx ?? 0;
     const compactMarginBottomPx = readerSettings.compactMarginBottomPx ?? 0;
     const fullMarginLeftPx = readerSettings.marginLeftPx ?? 0;
@@ -36,6 +36,6 @@ export const getViewInsets = (readerSettings: ReaderSettings): Insets => {
         top: showHeader && !isVertical ? fullMarginTopPx : compactMarginTopPx,
         right: showHeader && isVertical ? fullMarginRightPx : compactMarginRightPx,
         bottom: showFooter && !isVertical ? fullMarginBottomPx : compactMarginBottomPx,
-        left: showFooter && isVertical ? fullMarginLeftPx : compactMarginLeftPx,
+        left: showFooter && isVertical ? fullMarginLeftPx : compactMarginLeftPx
     };
 };

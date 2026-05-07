@@ -48,7 +48,7 @@ function createInitialState(): SidebarStoreState {
         isPinned: false,
         sideBarBookKey: null,
         selectedNoteId: null,
-        expandedNoteGroups: new Set<string>(),
+        expandedNoteGroups: new Set<string>()
     };
 }
 
@@ -77,7 +77,7 @@ class SidebarStore {
     setVisible(visible: boolean): void {
         this.store.update((state) => ({
             ...state,
-            isVisible: visible,
+            isVisible: visible
         }));
     }
 
@@ -104,7 +104,7 @@ class SidebarStore {
             currentTab: tab,
             // 切换到搜索标签页时自动显示侧边栏和搜索栏
             isVisible: tab === 'search' ? true : state.isVisible,
-            isSearchBarVisible: tab === 'search' ? true : state.isSearchBarVisible,
+            isSearchBarVisible: tab === 'search' ? true : state.isSearchBarVisible
         }));
     }
 
@@ -121,7 +121,7 @@ class SidebarStore {
     setSearchTerm(term: string): void {
         this.store.update((state) => ({
             ...state,
-            searchTerm: term,
+            searchTerm: term
         }));
     }
 
@@ -138,7 +138,7 @@ class SidebarStore {
     setPinned(pinned: boolean): void {
         this.store.update((state) => ({
             ...state,
-            isPinned: pinned,
+            isPinned: pinned
         }));
     }
 
@@ -162,7 +162,7 @@ class SidebarStore {
     setSideBarBookKey(bookKey: string | null): void {
         this.store.update((state) => ({
             ...state,
-            sideBarBookKey: bookKey,
+            sideBarBookKey: bookKey
         }));
     }
 
@@ -179,7 +179,7 @@ class SidebarStore {
     setSearchResults(results: BookSearchResult[] | null): void {
         this.store.update((state) => ({
             ...state,
-            searchResults: results,
+            searchResults: results
         }));
     }
 
@@ -196,7 +196,7 @@ class SidebarStore {
     setSearchBarVisible(visible: boolean): void {
         this.store.update((state) => ({
             ...state,
-            isSearchBarVisible: visible,
+            isSearchBarVisible: visible
         }));
     }
 
@@ -213,7 +213,7 @@ class SidebarStore {
     setSelectedNoteId(noteId: string | null): void {
         this.store.update((state) => ({
             ...state,
-            selectedNoteId: noteId,
+            selectedNoteId: noteId
         }));
     }
 
@@ -237,7 +237,7 @@ class SidebarStore {
             }
             return {
                 ...state,
-                expandedNoteGroups: newExpanded,
+                expandedNoteGroups: newExpanded
             };
         });
     }
@@ -262,7 +262,7 @@ class SidebarStore {
             }
             return {
                 ...state,
-                expandedNoteGroups: newExpanded,
+                expandedNoteGroups: newExpanded
             };
         });
     }

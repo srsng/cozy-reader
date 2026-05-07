@@ -165,7 +165,7 @@
                     {/if}
 
                     {#if showFooter && progress}
-                        <ProgressInfo {section} {pageinfo} {timeinfo} readerSettings={readerSettings} />
+                        <ProgressInfo {section} {pageinfo} {timeinfo} {readerSettings} />
                     {/if}
 
                     {#if progress}

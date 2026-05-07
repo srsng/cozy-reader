@@ -54,6 +54,6 @@ export const getInsetEdges = (index: number, count: number, aspectRatio: number)
         top: row === 0,
         right: col === cols - 1,
         bottom: row === rows - 1,
-        left: col === 0,
+        left: col === 0
     };
 };

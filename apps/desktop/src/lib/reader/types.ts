@@ -417,7 +417,7 @@ export type BookNoteType = CommentType;
 /**
  * 书籍笔记（foliate-js 运行时格式）
  * 基于数据库 Comment 类型，用于与 foliate-js 交互
- * 
+ *
  * 字段映射关系：
  * - BookNote.note ↔ Comment.content（注释内容）
  * - BookNote.text ↔ Comment.selectedText（选中的文本）
@@ -576,7 +576,9 @@ export interface FoliateViewElement extends HTMLElement {
     /** 关闭书籍 */
     close(): void;
     /** 跳转到指定位置 */
-    goTo(target: string | number | { fraction: number }): Promise<{ index: number; anchor: (doc: Document) => Range | Node } | undefined>;
+    goTo(
+        target: string | number | { fraction: number }
+    ): Promise<{ index: number; anchor: (doc: Document) => Range | Node } | undefined>;
     /** 跳转到指定比例位置 */
     goToFraction(fraction: number): Promise<void>;
     /** 向左翻页 */
@@ -584,7 +586,9 @@ export interface FoliateViewElement extends HTMLElement {
     /** 向右翻页 */
     goRight(): Promise<void>;
     /** 跳转到文本开始位置 */
-    goToTextStart(): Promise<{ index: number; anchor: (doc: Document) => Range | Node } | undefined>;
+    goToTextStart(): Promise<
+        { index: number; anchor: (doc: Document) => Range | Node } | undefined
+    >;
     /** 向前翻页 */
     prev(distance?: number): Promise<void>;
     /** 向后翻页 */
@@ -615,11 +619,16 @@ export interface FoliateViewElement extends HTMLElement {
     /** 解析 CFI */
     resolveCFI(cfi: string): { index: number; anchor: (doc: Document) => Range | Node };
     /** 解析导航目标 */
-    resolveNavigation(target: string | number | { fraction: number }): { index: number; anchor: (doc: Document) => Range | Node } | undefined;
+    resolveNavigation(
+        target: string | number | { fraction: number }
+    ): { index: number; anchor: (doc: Document) => Range | Node } | undefined;
     /** 获取章节比例列表 */
     getSectionFractions(): number[];
     /** 获取指定位置的进度信息 */
-    getProgressOf(index: number, range?: Range): {
+    getProgressOf(
+        index: number,
+        range?: Range
+    ): {
         tocItem?: TOCItem;
         pageItem?: { label: string };
     };
@@ -683,7 +692,11 @@ export interface FoliateViewElement extends HTMLElement {
         /** 上一章节（可选） */
         prevSection?(): Promise<void>;
         /** 跳转到指定位置（可选） */
-        goTo?(target: { index: number; anchor: (doc: Document) => Range | Node; select?: boolean }): Promise<void>;
+        goTo?(target: {
+            index: number;
+            anchor: (doc: Document) => Range | Node;
+            select?: boolean;
+        }): Promise<void>;
         /** 滚动到锚点（可选） */
         scrollToAnchor?(range: Range, smooth?: boolean): void;
         /** 获取内容列表（可选） */
@@ -697,9 +710,17 @@ export interface FoliateViewElement extends HTMLElement {
         /** 移除（可选） */
         remove?(): void;
         /** 添加事件监听器（可选） */
-        addEventListener?(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        addEventListener?(
+            type: string,
+            listener: EventListenerOrEventListenerObject,
+            options?: boolean | AddEventListenerOptions
+        ): void;
         /** 移除事件监听器（可选） */
-        removeEventListener?(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+        removeEventListener?(
+            type: string,
+            listener: EventListenerOrEventListenerObject,
+            options?: boolean | EventListenerOptions
+        ): void;
     };
     /** 是否为固定布局 */
     isFixedLayout: boolean;

@@ -15,7 +15,10 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@pdfjs/pdf.mjs': path.resolve(__dirname, '../../packages/foliate-js/vendor/pdfjs/pdf.mjs')
+            '@pdfjs/pdf.mjs': path.resolve(
+                __dirname,
+                '../../packages/foliate-js/vendor/pdfjs/pdf.mjs'
+            )
         }
     }
 });

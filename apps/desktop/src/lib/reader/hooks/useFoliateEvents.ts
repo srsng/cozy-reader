@@ -28,11 +28,17 @@ export function useFoliateEvents(
     handlers?: FoliateEventHandler
 ): () => void {
     if (!view || !handlers) {
-        return () => { };
+        return () => {};
     }
 
-    const { onLoad, onRelocate, onLinkClick, onRendererRelocate, onDrawAnnotation, onShowAnnotation } =
-        handlers;
+    const {
+        onLoad,
+        onRelocate,
+        onLinkClick,
+        onRendererRelocate,
+        onDrawAnnotation,
+        onShowAnnotation
+    } = handlers;
 
     // 添加事件监听器
     if (onLoad) view.addEventListener('load', onLoad);

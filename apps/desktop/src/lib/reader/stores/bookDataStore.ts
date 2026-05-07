@@ -40,7 +40,7 @@ interface BookDataStoreState {
  */
 function createInitialState(): BookDataStoreState {
     return {
-        booksData: {},
+        booksData: {}
     };
 }
 
@@ -89,7 +89,7 @@ class BookDataStore {
             book: null,
             file: null,
             config: null,
-            bookDoc: null,
+            bookDoc: null
         };
 
         this.store.update((state) => ({
@@ -98,9 +98,9 @@ class BookDataStore {
                 ...state.booksData,
                 [id]: {
                     ...existing,
-                    ...data,
-                },
-            },
+                    ...data
+                }
+            }
         }));
     }
 
@@ -125,7 +125,7 @@ class BookDataStore {
         }
 
         const config = bookData.config || {
-            updatedAt: Date.now(),
+            updatedAt: Date.now()
         };
 
         this.store.update((state) => ({
@@ -137,10 +137,10 @@ class BookDataStore {
                     config: {
                         ...config,
                         ...partialConfig,
-                        updatedAt: Date.now(),
-                    },
-                },
-            },
+                        updatedAt: Date.now()
+                    }
+                }
+            }
         }));
     }
 
@@ -165,18 +165,18 @@ class BookDataStore {
             // 更新配置时间戳
             const updatedConfig: BookConfig = {
                 ...config,
-                updatedAt: Date.now(),
+                updatedAt: Date.now()
             };
 
             // 转换为 ReadingProgress 格式保存
             const readingProgress = {
                 location: updatedConfig.location,
                 currentPage: updatedConfig.progress?.[0],
-                totalPages: updatedConfig.progress?.[1],
+                totalPages: updatedConfig.progress?.[1]
             };
 
             await BookService.update(bookId, {
-                currentProgress: readingProgress,
+                currentProgress: readingProgress
             });
 
             // 更新本地状态
@@ -200,15 +200,13 @@ class BookDataStore {
 
         // 去重：基于 id-type-cfi 组合
         const dedupedBooknotes = Array.from(
-            new Map(
-                booknotes.map((item) => [`${item.id}-${item.type}-${item.cfi}`, item])
-            ).values()
+            new Map(booknotes.map((item) => [`${item.id}-${item.type}-${item.cfi}`, item])).values()
         );
 
         const updatedConfig: BookConfig = {
             ...bookData.config,
             booknotes: dedupedBooknotes,
-            updatedAt: Date.now(),
+            updatedAt: Date.now()
         };
 
         this.setConfig(key, updatedConfig);
@@ -231,8 +229,8 @@ class BookDataStore {
             ...config,
             searchConfig: {
                 ...config.searchConfig,
-                ...searchConfig,
-            },
+                ...searchConfig
+            }
         });
     }
 
@@ -253,7 +251,7 @@ class BookDataStore {
             const { [id]: _, ...rest } = state.booksData;
             return {
                 ...state,
-                booksData: rest,
+                booksData: rest
             };
         });
     }

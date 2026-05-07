@@ -80,7 +80,7 @@ export function useMouseEvent(
     return {
         onClick: handlePageFlip as (msg: MouseEvent) => void,
         onWheel: handleMouseEvent as (event: WheelEvent) => void,
-        setup,
+        setup
     };
 }
 
@@ -211,8 +211,8 @@ export function useTouchEvent(
                         startX: touchStart.screenX,
                         startY: touchStart.screenY,
                         endX: touchEnd.screenX,
-                        endY: touchEnd.screenY,
-                    },
+                        endY: touchEnd.screenY
+                    }
                 })
             );
             handleContinuousScroll('touch', deltaY, 30);
@@ -245,6 +245,6 @@ export function useTouchEvent(
         onTouchStart,
         onTouchMove,
         onTouchEnd,
-        setup,
+        setup
     };
 }

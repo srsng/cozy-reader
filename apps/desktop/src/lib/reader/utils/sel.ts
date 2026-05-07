@@ -72,7 +72,7 @@ const getIframeElement = (nodeElement: Range | Element): HTMLIFrameElement | nul
 const constrainPointWithinRect = (point: Point, rect: Rect, padding: number) => {
     return {
         x: Math.max(padding, Math.min(point.x, rect.right - padding)),
-        y: Math.max(padding, Math.min(point.y, rect.bottom - padding)),
+        y: Math.max(padding, Math.min(point.y, rect.bottom - padding))
     };
 };
 
@@ -80,7 +80,7 @@ export const getPosition = (
     target: Range | Element,
     rect: Rect,
     paddingPx: number,
-    isVertical: boolean = false,
+    isVertical: boolean = false
 ): Position => {
     const frameElement = getIframeElement(target);
     const transform = frameElement ? getComputedStyle(frameElement).transform : '';
@@ -95,7 +95,7 @@ export const getPosition = (
             top: parseInt(computedStyle.paddingTop, 10) || 0,
             right: parseInt(computedStyle.paddingRight, 10) || 0,
             bottom: parseInt(computedStyle.paddingBottom, 10) || 0,
-            left: parseInt(computedStyle.paddingLeft, 10) || 0,
+            left: parseInt(computedStyle.paddingLeft, 10) || 0
         };
     }
     const rects = Array.from(target.getClientRects()).map((rect) => {
@@ -103,7 +103,7 @@ export const getPosition = (
             top: rect.top + padding.top,
             right: rect.right - padding.right,
             bottom: rect.bottom - padding.bottom,
-            left: rect.left + padding.left,
+            left: rect.left + padding.left
         };
     });
     const first = frameRect(frame, rects[0], sx, sy);
@@ -117,12 +117,12 @@ export const getPosition = (
             point: constrainPointWithinRect(
                 {
                     x: dir === 'left' ? first.left - rect.left - 6 : first.right - rect.left + 6,
-                    y: (first.top + first.bottom) / 2 - rect.top,
+                    y: (first.top + first.bottom) / 2 - rect.top
                 },
                 rect,
-                paddingPx,
+                paddingPx
             ),
-            dir,
+            dir
         } as Position;
         const inView = pointIsInView(position.point);
         return inView ? position : ({ point: { x: 0, y: 0 }, dir } as Position);
@@ -130,11 +130,11 @@ export const getPosition = (
 
     const start = {
         point: { x: (first.left + first.right) / 2 - rect.left, y: first.top - rect.top - 12 },
-        dir: 'up',
+        dir: 'up'
     } as Position;
     const end = {
         point: { x: (last.left + last.right) / 2 - rect.left, y: last.bottom - rect.top + 6 },
-        dir: 'down',
+        dir: 'down'
     } as Position;
     const startInView = pointIsInView(start.point);
     const endInView = pointIsInView(end.point);
@@ -154,7 +154,7 @@ export const getPopupPosition = (
     boundingReact: Rect,
     popupWidthPx: number,
     popupHeightPx: number,
-    popupPaddingPx: number,
+    popupPaddingPx: number
 ): Position => {
     const popupPoint = { x: 0, y: 0 };
     if (position.dir === 'up') {
@@ -197,7 +197,7 @@ export const getTextFromRange = (range: Range, rejectTags: string[] = []): strin
                 return NodeFilter.FILTER_REJECT;
             }
             return NodeFilter.FILTER_ACCEPT;
-        },
+        }
     });
 
     let text = '';

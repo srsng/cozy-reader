@@ -43,7 +43,7 @@ const basicGoogleFonts = [
     { family: 'Noto Sans', weights: 'ital,wght@0,100..900;1,100..900' },
     { family: 'Open Sans', weights: 'ital,wght@0,300..800;1,300..800' },
     { family: 'Roboto', weights: 'ital,wght@0,100..900;1,100..900' },
-    { family: 'Vollkorn', weights: 'ital,wght@0,400..900;1,400..900' },
+    { family: 'Vollkorn', weights: 'ital,wght@0,400..900;1,400..900' }
 ];
 
 /**
@@ -53,7 +53,7 @@ const cjkGoogleFonts = [
     { family: 'LXGW WenKai TC', weights: '' },
     { family: 'Noto Sans SC', weights: '' },
     { family: 'Noto Sans TC', weights: '' },
-    { family: 'Noto Serif JP', weights: '' },
+    { family: 'Noto Serif JP', weights: '' }
 ];
 
 /**
@@ -62,11 +62,11 @@ const cjkGoogleFonts = [
 function getAdditionalBasicFontLinks(): string {
     return `
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?${basicGoogleFonts
-            .map(
-                ({ family, weights }) =>
-                    `family=${encodeURIComponent(family)}${weights ? `:${weights}` : ''}`,
-            )
-            .join('&')}&display=swap" crossorigin="anonymous">
+      .map(
+          ({ family, weights }) =>
+              `family=${encodeURIComponent(family)}${weights ? `:${weights}` : ''}`
+      )
+      .join('&')}&display=swap" crossorigin="anonymous">
 `;
 }
 
@@ -82,11 +82,11 @@ function getAdditionalCJKFontLinks(): string {
   <link rel='stylesheet' href='https://chinese-fonts-cdn.netlify.app/packages/syst/dist/SourceHanSerifCN/result.css' crossorigin="anonymous" />
   <link rel='stylesheet' href='https://chinese-fonts-cdn.netlify.app/packages/GuanKiapTsingKhai/dist/GuanKiapTsingKhai-T/result.css' crossorigin="anonymous" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?${cjkGoogleFonts
-            .map(
-                ({ family, weights }) =>
-                    `family=${encodeURIComponent(family)}${weights ? `:${weights}` : ''}`,
-            )
-            .join('&')}&display=swap" crossorigin="anonymous" />
+      .map(
+          ({ family, weights }) =>
+              `family=${encodeURIComponent(family)}${weights ? `:${weights}` : ''}`
+      )
+      .join('&')}&display=swap" crossorigin="anonymous" />
 `;
 }
 
@@ -180,7 +180,7 @@ export function mountAdditionalFonts(doc: Document, isCJK: boolean = false): voi
 
             // 检查是否已存在相同的链接
             const existingLink = Array.from(doc.head.querySelectorAll('link')).find(
-                (l) => l.href === link.href,
+                (l) => l.href === link.href
             );
             if (!existingLink) {
                 doc.head.appendChild(link);
@@ -257,7 +257,7 @@ function getCSSFormatString(format: FontFormat): string {
         ttf: 'truetype',
         otf: 'opentype',
         woff: 'woff',
-        woff2: 'woff2',
+        woff2: 'woff2'
     };
     return formats[format] || 'truetype';
 }

@@ -24,12 +24,10 @@ export type {
     ScreenConfig,
     BookConfig,
     TTSHighlightOptions,
-    ConvertChineseVariant,
+    ConvertChineseVariant
 } from './types';
 
-export type {
-    ReaderSettings,
-} from './settings';
+export type { ReaderSettings } from './settings';
 
 export type {
     BookProgress,
@@ -40,7 +38,7 @@ export type {
     BookSearchConfig,
     SearchExcerpt,
     BookSearchMatch,
-    BookSearchResult,
+    BookSearchResult
 } from './types';
 
 export { FIXED_LAYOUT_FORMATS } from './types';
@@ -64,7 +62,7 @@ export {
     CJK_SERIF_FONTS,
     CJK_SANS_SERIF_FONTS,
     FALLBACK_FONTS,
-    getDefaultReaderSettings,
+    getDefaultReaderSettings
 } from './constants';
 
 export { DEFAULT_READER_SETTINGS } from './settings';
@@ -77,29 +75,26 @@ export { DocumentService } from './services/DocumentService';
 export {
     TransformService,
     transformContent,
-    type TransformContext,
+    type TransformContext
 } from './services/TransformService';
 export {
     transformStylesheet,
     applyImageStyle,
-    applyFixedlayoutStyles,
+    applyFixedlayoutStyles
 } from './services/TransformService';
 export {
     mountAdditionalFonts,
     mountCustomFont,
     isCJKLang,
     type CustomFont,
-    type FontFormat,
+    type FontFormat
 } from './services/FontService';
 export { manageSyntaxHighlighting } from './services/HighlightService';
 export { searchService, SearchService } from './services/SearchService';
 export { annotationService, AnnotationService } from './services/AnnotationService';
 
 // 样式生成
-export {
-    getStyles,
-    applyTranslationStyle,
-} from './style';
+export { getStyles, applyTranslationStyle } from './style';
 
 // Store
 export { readerStore } from './stores/readerStore';
@@ -116,7 +111,7 @@ export {
     commentToBookNote,
     bookNoteToComment,
     commentsToBookNotes,
-    bookNotesToComments,
+    bookNotesToComments
 } from './utils/commentConverter';
 
 // 文本选择工具
@@ -129,7 +124,7 @@ export {
     type PositionDir,
     type Point,
     type Rect,
-    type Frame,
+    type Frame
 } from './utils/sel';
 
 // Hooks

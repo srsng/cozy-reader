@@ -19,7 +19,7 @@ const punctuationMap: Record<string, string> = {
     '\u201C': '\uFE43', // " -> ﹃
     '\u201D': '\uFE44', // " -> ﹄
     '\u2018': '\uFE41', // ' -> ﹁
-    '\u2019': '\uFE42', // ' -> ﹂
+    '\u2019': '\uFE42' // ' -> ﹂
 };
 
 /**
@@ -132,7 +132,7 @@ export class TransformService {
         // 标准化 EPUB 脚注标签
         return content.replace(
             /<aside\s+epub:type\s*=\s*["'](footnote|endnote|note|rearnote)["']([^>]*)>/gi,
-            '<aside class="epubtype-footnote" epub:type="$1"$2>',
+            '<aside class="epubtype-footnote" epub:type="$1"$2>'
         );
     }
 
@@ -186,7 +186,7 @@ export function transformStylesheet(vw: number, vh: number, css: string): string
             block = block.replace(/(text-align\s*:\s*center)(\s*;|\s*$)/g, '$1 !important$2');
             block = block.replace(
                 /(text-indent\s*:\s*0(?:\.0+)?(?:px|em|rem|%)?)(\s*;|\s*$)/g,
-                '$1 !important$2',
+                '$1 !important$2'
             );
             return selector + block;
         }
@@ -236,7 +236,7 @@ export function applyImageStyle(doc: Document): void {
         const parent = img.parentNode;
         if (!parent || parent.nodeType !== Node.ELEMENT_NODE) return;
         const hasTextSiblings = Array.from(parent.childNodes).some(
-            (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
+            (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()
         );
         if (hasTextSiblings) {
             img.classList.add('has-text-siblings');
@@ -247,10 +247,7 @@ export function applyImageStyle(doc: Document): void {
 /**
  * 应用固定布局样式（PDF/CBZ）
  */
-export function applyFixedlayoutStyles(
-    doc: Document,
-    readerSettings: ReaderSettings,
-): void {
+export function applyFixedlayoutStyles(doc: Document, readerSettings: ReaderSettings): void {
     const overrideColor = readerSettings.overrideColor ?? false;
     const invertImgColorInDark = readerSettings.invertImgColorInDark ?? false;
 
@@ -297,5 +294,3 @@ export function applyFixedlayoutStyles(
   `;
     doc.head.appendChild(style);
 }
-
-

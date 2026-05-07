@@ -41,8 +41,8 @@ export function useSidebarSearch(options: UseSidebarSearchOptions) {
             ? Array.isArray(bookData.bookDoc.metadata.language)
                 ? bookData.bookDoc.metadata.language[0] || 'en'
                 : typeof bookData.bookDoc.metadata.language === 'string'
-                    ? bookData.bookDoc.metadata.language
-                    : 'en'
+                  ? bookData.bookDoc.metadata.language
+                  : 'en'
             : 'en'
     );
 
@@ -222,11 +222,13 @@ export function useSidebarSearch(options: UseSidebarSearchOptions) {
         const term = untrack(() => sidebarStore.getSearchTerm());
 
         // 检查配置是否真的变化了
-        if (lastSearchConfig &&
+        if (
+            lastSearchConfig &&
             lastSearchConfig.scope === config.scope &&
             lastSearchConfig.matchCase === config.matchCase &&
             lastSearchConfig.matchWholeWords === config.matchWholeWords &&
-            lastSearchConfig.matchDiacritics === config.matchDiacritics) {
+            lastSearchConfig.matchDiacritics === config.matchDiacritics
+        ) {
             return;
         }
 
@@ -256,4 +258,3 @@ export function useSidebarSearch(options: UseSidebarSearchOptions) {
         performSearch
     };
 }
-

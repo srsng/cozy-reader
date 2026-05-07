@@ -10,7 +10,9 @@ import { InjectionToken } from '$lib/utils/context';
 
 export const READER_SETTINGS_KEY_STR = 'reader-settings';
 // reader settings context Key
-export const READER_SETTINGS = new InjectionToken<Writable<ReaderSettings>>(READER_SETTINGS_KEY_STR);
+export const READER_SETTINGS = new InjectionToken<Writable<ReaderSettings>>(
+    READER_SETTINGS_KEY_STR
+);
 
 // 创建配置存储
 const readerConfigStore = new LazyStore('reader-settings.json');
@@ -67,7 +69,7 @@ export async function loadReaderSettings(): Promise<Writable<ReaderSettings>> {
     if (cleanConfig) {
         const mergedConfig = {
             ...DEFAULT_READER_SETTINGS,
-            ...cleanConfig,
+            ...cleanConfig
         };
         store.set(mergedConfig);
     }
@@ -85,6 +87,6 @@ export async function loadReaderSettings(): Promise<Writable<ReaderSettings>> {
     return {
         subscribe: store.subscribe,
         set: store.set,
-        update: store.update,
+        update: store.update
     };
 }

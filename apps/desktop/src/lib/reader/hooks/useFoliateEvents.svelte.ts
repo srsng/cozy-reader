@@ -1,7 +1,7 @@
 /**
  * Foliate 事件处理 Hook
  * 用于处理 foliate-view 元素的各种事件
- * 
+ *
  * 这是一个 Svelte 5 的 rune-based hook，使用 .svelte.ts 扩展名以支持 runes
  */
 
@@ -31,11 +31,17 @@ export function useFoliateEvents(
     handlers?: FoliateEventHandler
 ): () => void {
     if (!view || !handlers) {
-        return () => { };
+        return () => {};
     }
 
-    const { onLoad, onRelocate, onLinkClick, onRendererRelocate, onDrawAnnotation, onShowAnnotation } =
-        handlers;
+    const {
+        onLoad,
+        onRelocate,
+        onLinkClick,
+        onRendererRelocate,
+        onDrawAnnotation,
+        onShowAnnotation
+    } = handlers;
 
     // 使用 $effect 管理事件监听器的生命周期
     $effect(() => {
@@ -65,7 +71,7 @@ export function useFoliateEvents(
     });
 
     // 为了保持 API 兼容性，仍然返回一个清理函数（虽然 $effect 会自动清理）
-    return () => { };
+    return () => {};
 }
 
 /**
@@ -79,4 +85,3 @@ export function setupFoliateEvents(
 ): () => void {
     return useFoliateEvents(view, handlers);
 }
-

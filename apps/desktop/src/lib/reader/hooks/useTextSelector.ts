@@ -34,11 +34,11 @@ export function useTextSelector(
     const bookData = bookDataStore.getBookData(bookKey);
     // 从 bookDoc.metadata.language 获取语言，如果没有则默认为 'en'
     const primaryLang = bookData?.bookDoc?.metadata?.language
-        ? (Array.isArray(bookData.bookDoc.metadata.language)
+        ? Array.isArray(bookData.bookDoc.metadata.language)
             ? bookData.bookDoc.metadata.language[0]
             : typeof bookData.bookDoc.metadata.language === 'string'
-                ? bookData.bookDoc.metadata.language
-                : 'en')
+              ? bookData.bookDoc.metadata.language
+              : 'en'
         : 'en';
 
     // 使用普通变量而不是 $state，因为这些是内部状态
@@ -55,16 +55,13 @@ export function useTextSelector(
     };
 
     const getAnnotationText = async (range: Range): Promise<string> => {
-        const text = getTextFromRange(
-            range,
-            primaryLang.startsWith('ja') ? ['rt'] : []
-        );
+        const text = getTextFromRange(range, primaryLang.startsWith('ja') ? ['rt'] : []);
         const transformed = await transformContent({
             bookKey,
             readerSettings: readerStore.getReaderSettings(bookKey)!,
             content: text,
             transformers: ['punctuation'],
-            reversePunctuationTransform: true,
+            reversePunctuationTransform: true
         });
         return transformed;
     };
@@ -81,7 +78,7 @@ export function useTextSelector(
             key: bookKey,
             text: await getAnnotationText(range),
             range,
-            index,
+            index
         });
     };
 
@@ -99,7 +96,7 @@ export function useTextSelector(
                     key: bookKey,
                     text: await getAnnotationText(range),
                     range,
-                    index,
+                    index
                 });
             }, 30);
         }, 30);
@@ -207,7 +204,7 @@ export function useTextSelector(
             },
             // TODO: 检测平台
             // ['android', 'ios'].includes(osPlatform) || appService?.isIOSApp ? 0 : 500,
-            500,
+            500
         );
     };
 
@@ -261,7 +258,11 @@ export function useTextSelector(
     const setup = () => {
         // 监听 window message 事件（来自 iframe）
         const messageHandler = (event: MessageEvent) => {
-            if (event.data && event.data.type === 'iframe-single-click' && event.data.bookKey === bookKey) {
+            if (
+                event.data &&
+                event.data.type === 'iframe-single-click' &&
+                event.data.bookKey === bookKey
+            ) {
                 handleSingleClick();
             }
         };
@@ -286,6 +287,6 @@ export function useTextSelector(
         handleShowPopup,
         handleUpToPopup,
         handleContextmenu,
-        setup,
+        setup
     };
 }

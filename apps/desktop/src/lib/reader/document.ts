@@ -78,7 +78,11 @@ export class DocumentLoader {
     private async isPDF(): Promise<boolean> {
         const arr = new Uint8Array(await this.file.slice(0, 5).arrayBuffer());
         return (
-            arr[0] === 0x25 && arr[1] === 0x50 && arr[2] === 0x44 && arr[3] === 0x46 && arr[4] === 0x2d
+            arr[0] === 0x25 &&
+            arr[1] === 0x50 &&
+            arr[2] === 0x44 &&
+            arr[3] === 0x46 &&
+            arr[4] === 0x2d
         );
     }
 
@@ -91,7 +95,9 @@ export class DocumentLoader {
             const maxEOCDSearch = 1024 * 64;
 
             const sliceSize = Math.min(maxEOCDSearch, this.file.size);
-            const tail = await this.file.slice(this.file.size - sliceSize, this.file.size).arrayBuffer();
+            const tail = await this.file
+                .slice(this.file.size - sliceSize, this.file.size)
+                .arrayBuffer();
             const bytes = new Uint8Array(tail);
 
             for (let i = bytes.length - 22; i >= 0; i--) {
@@ -117,7 +123,7 @@ export class DocumentLoader {
         );
         configure({ useWebWorkers: false });
         const reader = new ZipReader(new BlobReader(this.file));
-        const entries = await reader.getEntries() as ZipEntry[];
+        const entries = (await reader.getEntries()) as ZipEntry[];
         const map = new Map(entries.map((entry) => [entry.filename, entry]));
         const loadText = async (name: string): Promise<string | null> => {
             const entry = map.get(name);
@@ -227,8 +233,8 @@ export class DocumentLoader {
                 ...pdfBook,
                 dir: 'ltr',
                 metadata: {
-                    title: this.file.name,
-                },
+                    title: this.file.name
+                }
             } as unknown as BookDoc;
             format = 'pdf';
         } else if (await (await import('foliate-js/mobi.js')).isMOBI(this.file)) {

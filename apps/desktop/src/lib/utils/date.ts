@@ -57,4 +57,3 @@ export function formatDateWithLangCode(
     const locale = getLocaleFromLangCode(langCode);
     return formatDate(dateInput, locale);
 }
-

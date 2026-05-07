@@ -3,7 +3,12 @@
  * 提供全文搜索、结果高亮和搜索导航功能
  */
 
-import type { FoliateViewElement, BookSearchConfig, BookSearchResult, BookSearchMatch } from '../types';
+import type {
+    FoliateViewElement,
+    BookSearchConfig,
+    BookSearchResult,
+    BookSearchMatch
+} from '../types';
 
 /**
  * 搜索服务类
@@ -17,7 +22,7 @@ export class SearchService {
      */
     async *search(
         view: FoliateViewElement,
-        config: BookSearchConfig,
+        config: BookSearchConfig
     ): AsyncGenerator<BookSearchResult | string, void, unknown> {
         if (!config.query) {
             return;
@@ -36,7 +41,7 @@ export class SearchService {
                 query: config.query,
                 matchCase: config.matchCase,
                 matchWholeWords: config.matchWholeWords,
-                matchDiacritics: config.matchDiacritics,
+                matchDiacritics: config.matchDiacritics
             };
 
             // 只在 section 搜索模式下传递 index
@@ -107,4 +112,3 @@ export class SearchService {
 
 // 导出单例实例
 export const searchService = new SearchService();
-

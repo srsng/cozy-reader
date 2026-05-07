@@ -17,9 +17,7 @@ export function formatReadingTime(minutes: number): string {
     const remainingMinutes = minutes % 60;
 
     if (hours < 24) {
-        return remainingMinutes > 0
-            ? `${hours} 小时 ${remainingMinutes} 分钟`
-            : `${hours} 小时`;
+        return remainingMinutes > 0 ? `${hours} 小时 ${remainingMinutes} 分钟` : `${hours} 小时`;
     }
 
     const days = Math.floor(hours / 24);
@@ -77,7 +75,14 @@ export class TimeFieldConverter {
      */
     static convertFromDatabase<T extends Record<string, any>>(
         data: T,
-        timeFields: string[] = ['created_at', 'updated_at', 'added_at', 'last_read_at', 'start_time', 'end_time']
+        timeFields: string[] = [
+            'created_at',
+            'updated_at',
+            'added_at',
+            'last_read_at',
+            'start_time',
+            'end_time'
+        ]
     ): T {
         const converted = { ...data } as any;
         for (const field of timeFields) {
@@ -96,7 +101,14 @@ export class TimeFieldConverter {
      */
     static convertToDatabase<T extends Record<string, any>>(
         data: T,
-        timeFields: string[] = ['created_at', 'updated_at', 'added_at', 'last_read_at', 'start_time', 'end_time']
+        timeFields: string[] = [
+            'created_at',
+            'updated_at',
+            'added_at',
+            'last_read_at',
+            'start_time',
+            'end_time'
+        ]
     ): T {
         const converted = { ...data } as any;
         for (const field of timeFields) {
@@ -110,4 +122,3 @@ export class TimeFieldConverter {
         return converted as T;
     }
 }
-

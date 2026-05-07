@@ -1,4 +1,3 @@
-
 /**
  * NotebookStore - 笔记存储
  * 管理书籍笔记、笔记分组和笔记搜索
@@ -44,9 +43,8 @@ const InitialState: NotebookStoreState = {
     editAnnotation: null,
     annotationDrafts: {},
     notebookWidth: '30%',
-    isPinned: false,
+    isPinned: false
 } as const;
-
 
 /**
  * NotebookStore 类
@@ -73,7 +71,7 @@ class NotebookStore {
     setVisible(visible: boolean): void {
         this.store.update((state) => ({
             ...state,
-            isVisible: visible,
+            isVisible: visible
         }));
     }
 
@@ -95,8 +93,8 @@ class NotebookStore {
             ...state,
             notes: {
                 ...state.notes,
-                [bookKey]: booknotes.filter((note) => !note.deletedAt),
-            },
+                [bookKey]: booknotes.filter((note) => !note.deletedAt)
+            }
         }));
     }
 
@@ -133,8 +131,8 @@ class NotebookStore {
                 ...state,
                 notes: {
                     ...state.notes,
-                    [bookKey]: booknotes,
-                },
+                    [bookKey]: booknotes
+                }
             }));
         } catch (error) {
             console.error('Failed to load notes from database:', error);
@@ -160,8 +158,8 @@ class NotebookStore {
             ...state,
             notes: {
                 ...state.notes,
-                [bookKey]: updatedNotes,
-            },
+                [bookKey]: updatedNotes
+            }
         }));
 
         // 更新 BookDataStore 运行时缓存
@@ -185,7 +183,7 @@ class NotebookStore {
         const updatedNote: BookNote = {
             ...notes[index]!,
             ...updates,
-            updatedAt: Date.now(),
+            updatedAt: Date.now()
         };
 
         const updatedNotes = [...notes];
@@ -195,8 +193,8 @@ class NotebookStore {
             ...state,
             notes: {
                 ...state.notes,
-                [bookKey]: updatedNotes,
-            },
+                [bookKey]: updatedNotes
+            }
         }));
 
         // 更新 BookDataStore 运行时缓存
@@ -220,8 +218,8 @@ class NotebookStore {
             ...state,
             notes: {
                 ...state.notes,
-                [bookKey]: updatedNotes,
-            },
+                [bookKey]: updatedNotes
+            }
         }));
 
         // 更新 BookDataStore 运行时缓存
@@ -252,7 +250,10 @@ class NotebookStore {
     /**
      * 按章节分组笔记
      */
-    getNotesGroupedBySection(bookKey: string, tocItems: Array<{ id: number; href: string; label: string }>): BooknoteGroup[] {
+    getNotesGroupedBySection(
+        bookKey: string,
+        tocItems: Array<{ id: number; href: string; label: string }>
+    ): BooknoteGroup[] {
         const notes = this.getNotesByBook(bookKey);
         const groups: BooknoteGroup[] = [];
 
@@ -260,7 +261,9 @@ class NotebookStore {
         for (const tocItem of tocItems) {
             const sectionNotes = notes.filter((note) => {
                 // 根据 CFI 或 href 判断笔记是否属于该章节
-                return note.cfi.includes(tocItem.href) || note.cfi.startsWith(`epubcfi(${tocItem.id}`);
+                return (
+                    note.cfi.includes(tocItem.href) || note.cfi.startsWith(`epubcfi(${tocItem.id}`)
+                );
             });
 
             if (sectionNotes.length > 0) {
@@ -268,7 +271,7 @@ class NotebookStore {
                     id: tocItem.id,
                     href: tocItem.href,
                     label: tocItem.label,
-                    booknotes: sectionNotes,
+                    booknotes: sectionNotes
                 });
             }
         }
@@ -281,7 +284,7 @@ class NotebookStore {
                 id: 0,
                 href: '',
                 label: '未分组',
-                booknotes: ungroupedNotes,
+                booknotes: ungroupedNotes
             });
         }
 
@@ -294,7 +297,7 @@ class NotebookStore {
     setSelectedNoteId(noteId: string | null): void {
         this.store.update((state) => ({
             ...state,
-            selectedNoteId: noteId,
+            selectedNoteId: noteId
         }));
     }
 
@@ -306,7 +309,7 @@ class NotebookStore {
             const { [bookKey]: _, ...rest } = state.notes;
             return {
                 ...state,
-                notes: rest,
+                notes: rest
             };
         });
     }
@@ -317,7 +320,7 @@ class NotebookStore {
     setNewAnnotation(selection: TextSelection | null): void {
         this.store.update((state) => ({
             ...state,
-            newAnnotation: selection,
+            newAnnotation: selection
         }));
     }
 
@@ -334,7 +337,7 @@ class NotebookStore {
     setEditAnnotation(note: BookNote | null): void {
         this.store.update((state) => ({
             ...state,
-            editAnnotation: note,
+            editAnnotation: note
         }));
     }
 
@@ -353,8 +356,8 @@ class NotebookStore {
             ...state,
             annotationDrafts: {
                 ...state.annotationDrafts,
-                [key]: note,
-            },
+                [key]: note
+            }
         }));
     }
 
@@ -371,7 +374,7 @@ class NotebookStore {
     setNotebookWidth(width: string): void {
         this.store.update((state) => ({
             ...state,
-            notebookWidth: width,
+            notebookWidth: width
         }));
     }
 
@@ -388,7 +391,7 @@ class NotebookStore {
     setPinned(pinned: boolean): void {
         this.store.update((state) => ({
             ...state,
-            isPinned: pinned,
+            isPinned: pinned
         }));
     }
 

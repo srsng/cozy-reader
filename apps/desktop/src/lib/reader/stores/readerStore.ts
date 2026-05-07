@@ -13,7 +13,7 @@ import type {
     TOCItem,
     PageInfo,
     TimeInfo,
-    BookConfig,
+    BookConfig
 } from '../types';
 import { getDefaultReaderSettings } from '../constants';
 import { DocumentService } from '../services/DocumentService';
@@ -82,10 +82,9 @@ interface ReaderStoreState {
  * 创建初始状态
  */
 const InitialState: ReaderStoreState = {
-
     viewStates: {},
     bookKeys: [],
-    hoveredBookKey: null,
+    hoveredBookKey: null
 } as const;
 
 /**
@@ -116,7 +115,7 @@ class ReaderStore {
     setBookKeys(keys: string[]): void {
         this.store.update((state) => ({
             ...state,
-            bookKeys: keys,
+            bookKeys: keys
         }));
     }
 
@@ -146,12 +145,12 @@ class ReaderStore {
             section: {
                 current: progress.section.current,
                 next: progress.section.next,
-                total: progress.section.total,
+                total: progress.section.total
             },
             timeinfo: {
                 section: progress.timeinfo.section,
-                total: progress.timeinfo.total,
-            },
+                total: progress.timeinfo.total
+            }
         };
     }
 
@@ -168,11 +167,16 @@ class ReaderStore {
                 const readingProgress = this.convertToReadingProgress(progress);
                 const now = Math.floor(Date.now() / 1000); // Unix 时间戳（秒）
 
-                console.log('Saving progress to database:', { bookId, location: readingProgress.location, currentPage: readingProgress.currentPage, totalPages: readingProgress.totalPages });
+                console.log('Saving progress to database:', {
+                    bookId,
+                    location: readingProgress.location,
+                    currentPage: readingProgress.currentPage,
+                    totalPages: readingProgress.totalPages
+                });
 
                 await BookService.update(bookId, {
                     currentProgress: readingProgress,
-                    lastReadAt: now,
+                    lastReadAt: now
                 });
 
                 console.log('Progress saved successfully');
@@ -205,7 +209,7 @@ class ReaderStore {
         bookId: number,
         readerSettings: ReaderSettings,
         bookConfig: BookConfig,
-        globalReaderSettings?: ReaderSettings,
+        globalReaderSettings?: ReaderSettings
     ): Promise<void> {
         if (this.settingsSaveTimer) {
             clearTimeout(this.settingsSaveTimer);
@@ -214,7 +218,8 @@ class ReaderStore {
         this.settingsSaveTimer = setTimeout(async () => {
             try {
                 // 如果没有提供全局设置，使用默认设置
-                const finalGlobalReaderSettings = globalReaderSettings || getDefaultReaderSettings(false, false);
+                const finalGlobalReaderSettings =
+                    globalReaderSettings || getDefaultReaderSettings(false, false);
                 const bookIdStr = String(bookId);
 
                 // 计算差异：只保存与全局设置不同的字段
@@ -228,7 +233,7 @@ class ReaderStore {
                 const updatedConfig: BookConfig = {
                     ...bookConfig,
                     readerSettings: Object.keys(bookSpecific).length > 0 ? bookSpecific : undefined,
-                    updatedAt: Date.now(),
+                    updatedAt: Date.now()
                 };
 
                 // 更新 BookDataStore
@@ -239,7 +244,7 @@ class ReaderStore {
 
                 // 同时更新数据库中的 readerSettings 字段
                 await BookService.update(bookId, {
-                    readerSettings: Object.keys(bookSpecific).length > 0 ? bookSpecific : {},
+                    readerSettings: Object.keys(bookSpecific).length > 0 ? bookSpecific : {}
                 } as any);
             } catch (error) {
                 console.error('Failed to save settings to database:', error);
@@ -255,7 +260,7 @@ class ReaderStore {
     setHoveredBookKey(key: string | null): void {
         this.store.update((state) => ({
             ...state,
-            hoveredBookKey: key,
+            hoveredBookKey: key
         }));
     }
 
@@ -315,9 +320,9 @@ class ReaderStore {
                     ...state.viewStates,
                     [key]: {
                         ...viewState,
-                        view,
-                    },
-                },
+                        view
+                    }
+                }
             };
         });
     }
@@ -336,9 +341,9 @@ class ReaderStore {
                     ...state.viewStates,
                     [key]: {
                         ...viewState,
-                        inited,
-                    },
-                },
+                        inited
+                    }
+                }
             };
         });
     }
@@ -357,9 +362,9 @@ class ReaderStore {
                     ...state.viewStates,
                     [key]: {
                         ...viewState,
-                        ribbonVisible: visible,
-                    },
-                },
+                        ribbonVisible: visible
+                    }
+                }
             };
         });
     }
@@ -378,9 +383,9 @@ class ReaderStore {
                     ...state.viewStates,
                     [key]: {
                         ...viewState,
-                        ttsEnabled: enabled,
-                    },
-                },
+                        ttsEnabled: enabled
+                    }
+                }
             };
         });
     }
@@ -400,7 +405,11 @@ class ReaderStore {
      * @param readerSettings 阅读器设置
      * @param saveToDatabase 是否保存到数据库，默认 true
      */
-    setReaderSettings(key: string, readerSettings: ReaderSettings, saveToDatabase: boolean = true): void {
+    setReaderSettings(
+        key: string,
+        readerSettings: ReaderSettings,
+        saveToDatabase: boolean = true
+    ): void {
         this.store.update((state) => {
             const viewState = state.viewStates[key];
             if (!viewState) return state;
@@ -428,11 +437,14 @@ class ReaderStore {
                         } catch {
                             // 如果注入失败，使用默认设置
                         }
-                        this.saveSettingsToDatabase(bookId, readerSettings, bookConfig, globalReaderSettings).catch(
-                            (error) => {
-                                console.error('Failed to save settings:', error);
-                            },
-                        );
+                        this.saveSettingsToDatabase(
+                            bookId,
+                            readerSettings,
+                            bookConfig,
+                            globalReaderSettings
+                        ).catch((error) => {
+                            console.error('Failed to save settings:', error);
+                        });
                     }
                 }
             }
@@ -443,9 +455,9 @@ class ReaderStore {
                     ...state.viewStates,
                     [key]: {
                         ...viewState,
-                        readerSettings,
-                    },
-                },
+                        readerSettings
+                    }
+                }
             };
         });
     }
@@ -463,7 +475,7 @@ class ReaderStore {
         bookKey: string,
         settingKey: K,
         value: ReaderSettings[K],
-        globalReaderSettings?: ReaderSettings,
+        globalReaderSettings?: ReaderSettings
     ): Promise<void> {
         const viewState = this.getViewState(bookKey);
         if (!viewState || !viewState.isPrimary) return;
@@ -487,12 +499,13 @@ class ReaderStore {
                 const { [settingKey]: _, ...restSettings } = currentBookSettings;
 
                 // 如果删除后没有其他字段，则删除整个 readerSettings
-                const updatedBookSettings = Object.keys(restSettings).length > 0 ? restSettings : undefined;
+                const updatedBookSettings =
+                    Object.keys(restSettings).length > 0 ? restSettings : undefined;
 
                 const updatedConfig: BookConfig = {
                     ...bookConfig,
                     readerSettings: updatedBookSettings,
-                    updatedAt: Date.now(),
+                    updatedAt: Date.now()
                 };
 
                 // 更新 BookDataStore
@@ -507,7 +520,7 @@ class ReaderStore {
                     try {
                         await bookDataStore.saveConfig(bookIdStr, updatedConfig);
                         await BookService.update(bookId, {
-                            readerSettings: updatedBookSettings || {},
+                            readerSettings: updatedBookSettings || {}
                         } as any);
                     } catch (error) {
                         console.error('Failed to save book setting to database:', error);
@@ -519,7 +532,7 @@ class ReaderStore {
                 // 更新运行时状态（使用全局设置）
                 const updatedReaderSettings: ReaderSettings = {
                     ...viewState.readerSettings!,
-                    [settingKey]: value,
+                    [settingKey]: value
                 };
                 this.setReaderSettings(bookKey, updatedReaderSettings, false); // 不保存到数据库，因为已经保存了
                 return;
@@ -531,9 +544,9 @@ class ReaderStore {
             ...bookConfig,
             readerSettings: {
                 ...bookConfig.readerSettings,
-                [settingKey]: value,
+                [settingKey]: value
             },
-            updatedAt: Date.now(),
+            updatedAt: Date.now()
         };
 
         // 更新 BookDataStore
@@ -548,7 +561,7 @@ class ReaderStore {
             try {
                 await bookDataStore.saveConfig(bookIdStr, updatedConfig);
                 await BookService.update(bookId, {
-                    readerSettings: updatedConfig.readerSettings || {},
+                    readerSettings: updatedConfig.readerSettings || {}
                 } as any);
             } catch (error) {
                 console.error('Failed to save book setting to database:', error);
@@ -562,7 +575,7 @@ class ReaderStore {
         if (currentReaderSettings) {
             const updatedReaderSettings: ReaderSettings = {
                 ...currentReaderSettings,
-                [settingKey]: value,
+                [settingKey]: value
             };
             this.setReaderSettings(bookKey, updatedReaderSettings, false); // 不保存到数据库，因为已经保存了
         }
@@ -586,7 +599,7 @@ class ReaderStore {
         section: PageInfo,
         pageinfo: PageInfo,
         timeinfo: TimeInfo,
-        range?: Range,
+        range?: Range
     ): void {
         this.store.update((state) => {
             const viewState = state.viewStates[key];
@@ -600,7 +613,7 @@ class ReaderStore {
                 section,
                 pageinfo,
                 timeinfo,
-                range,
+                range
             };
 
             // 只在 isPrimary 时更新 bookData.config（参考 readest 架构）
@@ -612,7 +625,10 @@ class ReaderStore {
                         // 检查位置或进度是否真正变化，避免不必要的更新
                         const currentLocation = bookData.config?.location;
                         const currentProgress = bookData.config?.progress;
-                        const newProgress = pageinfo.total > 0 ? [pageinfo.current, pageinfo.total] as [number, number] : undefined;
+                        const newProgress =
+                            pageinfo.total > 0
+                                ? ([pageinfo.current, pageinfo.total] as [number, number])
+                                : undefined;
 
                         const locationChanged = currentLocation !== location;
                         const progressChanged =
@@ -627,7 +643,7 @@ class ReaderStore {
                                 ...(bookData.config || { updatedAt: Date.now() }),
                                 location: location,
                                 progress: newProgress,
-                                updatedAt: Date.now(),
+                                updatedAt: Date.now()
                             };
                             bookDataStore.setBookData(bookIdStr, { config: updatedConfig });
                             // 异步保存到数据库
@@ -654,9 +670,9 @@ class ReaderStore {
                     ...state.viewStates,
                     [key]: {
                         ...viewState,
-                        progress,
-                    },
-                },
+                        progress
+                    }
+                }
             };
         });
     }
@@ -672,7 +688,7 @@ class ReaderStore {
         isPrimary: boolean = true,
         globalReaderSettings?: ReaderSettings,
         bookConfig?: BookConfig,
-        maxRetries: number = 2,
+        maxRetries: number = 2
     ): Promise<void> {
         // 设置加载状态
         this.store.update((state) => ({
@@ -691,9 +707,9 @@ class ReaderStore {
                     ttsEnabled: false,
                     readerSettings: null,
                     bookDoc: null,
-                    gridInsets: null,
-                },
-            },
+                    gridInsets: null
+                }
+            }
         }));
 
         let lastError: Error | null = null;
@@ -710,7 +726,7 @@ class ReaderStore {
                         book,
                         file: null,
                         config: null,
-                        bookDoc: null,
+                        bookDoc: null
                     });
                     bookData = bookDataStore.getBookData(bookIdStr)!;
                 }
@@ -721,24 +737,32 @@ class ReaderStore {
                     try {
                         const bookResult = await BookService.getById(book.id);
                         if (bookResult.success && bookResult.data) {
-                            const currentProgress = bookResult.data.currentProgress as ReadingProgress | undefined;
+                            const currentProgress = bookResult.data.currentProgress as
+                                | ReadingProgress
+                                | undefined;
                             // 优先使用 location，如果没有则使用 progress
                             const location = currentProgress?.location as string | undefined;
-                            const progress = currentProgress?.currentPage && currentProgress?.totalPages
-                                ? [currentProgress.currentPage, currentProgress.totalPages] as [number, number]
-                                : undefined;
+                            const progress =
+                                currentProgress?.currentPage && currentProgress?.totalPages
+                                    ? ([
+                                          currentProgress.currentPage,
+                                          currentProgress.totalPages
+                                      ] as [number, number])
+                                    : undefined;
 
-                            const bookReaderSettings = (bookResult.data as any).readerSettings as Partial<ReaderSettings> | undefined;
+                            const bookReaderSettings = (bookResult.data as any).readerSettings as
+                                | Partial<ReaderSettings>
+                                | undefined;
                             if (bookReaderSettings || location || progress) {
                                 finalBookConfig = {
                                     location: location,
                                     progress: progress,
                                     readerSettings: bookReaderSettings,
-                                    updatedAt: bookResult.data.updatedAt * 1000, // 转换为毫秒
+                                    updatedAt: bookResult.data.updatedAt * 1000 // 转换为毫秒
                                 };
                             } else {
                                 finalBookConfig = {
-                                    updatedAt: bookResult.data.updatedAt * 1000,
+                                    updatedAt: bookResult.data.updatedAt * 1000
                                 };
                             }
                             // 保存到 BookDataStore
@@ -758,8 +782,8 @@ class ReaderStore {
                 bookDataStore.setBookData(bookIdStr, {
                     bookDoc,
                     config: finalBookConfig || {
-                        updatedAt: Date.now(),
-                    },
+                        updatedAt: Date.now()
+                    }
                 });
 
                 // 合并阅读器设置：全局 ReaderSettings + 书籍特定设置（参考 readest）
@@ -788,7 +812,10 @@ class ReaderStore {
                 const bookSpecificReaderSettings = finalBookConfig?.readerSettings || {};
                 // 参考 readest: { ...globalReaderSettings, ...bookSpecificReaderSettings }
                 // finalGlobalReaderSettings 此时已经确保不是 undefined
-                const mergedReaderSettings = this.mergeReaderSettings(finalGlobalReaderSettings!, bookSpecificReaderSettings);
+                const mergedReaderSettings = this.mergeReaderSettings(
+                    finalGlobalReaderSettings!,
+                    bookSpecificReaderSettings
+                );
 
                 // 更新视图状态
                 this.store.update((state) => {
@@ -808,9 +835,9 @@ class ReaderStore {
                                 error: null,
                                 readerSettings: mergedReaderSettings,
                                 bookDoc,
-                                gridInsets: viewState.gridInsets ?? null,
-                            },
-                        },
+                                gridInsets: viewState.gridInsets ?? null
+                            }
+                        }
                     };
                 });
 
@@ -822,7 +849,10 @@ class ReaderStore {
 
                 // 如果是最后一次尝试，设置错误状态
                 if (retryCount > maxRetries) {
-                    console.error(`Failed to initialize view state after ${maxRetries + 1} attempts:`, lastError);
+                    console.error(
+                        `Failed to initialize view state after ${maxRetries + 1} attempts:`,
+                        lastError
+                    );
                     const errorMessage = this.getErrorMessage(lastError, book);
                     this.store.update((state) => {
                         const viewState = state.viewStates[key];
@@ -836,9 +866,9 @@ class ReaderStore {
                                     ...viewState,
                                     loading: false,
                                     inited: false,
-                                    error: errorMessage,
-                                },
-                            },
+                                    error: errorMessage
+                                }
+                            }
                         };
                     });
                     return;
@@ -848,7 +878,7 @@ class ReaderStore {
                 const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000);
                 console.warn(
                     `Failed to load book (attempt ${retryCount}/${maxRetries + 1}), retrying in ${delay}ms...`,
-                    lastError,
+                    lastError
                 );
                 await new Promise((resolve) => setTimeout(resolve, delay));
             }
@@ -894,7 +924,7 @@ class ReaderStore {
             delete viewStates[key];
             return {
                 ...state,
-                viewStates,
+                viewStates
             };
         });
     }
@@ -921,9 +951,9 @@ class ReaderStore {
                     ...state.viewStates,
                     [key]: {
                         ...viewState,
-                        gridInsets: insets,
-                    },
-                },
+                        gridInsets: insets
+                    }
+                }
             };
         });
     }

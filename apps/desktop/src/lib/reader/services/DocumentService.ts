@@ -41,7 +41,7 @@ export class DocumentService {
 
         const blob = await response.blob();
         const file = new File([blob], book.path.split(/[\\/]/).pop() || 'book', {
-            type: fileInfo.mime_type || 'application/octet-stream',
+            type: fileInfo.mime_type || 'application/octet-stream'
         });
 
         // 使用 DocumentLoader 解析
@@ -66,7 +66,7 @@ export class DocumentService {
             }
             const blob = await response.blob();
             fileObj = new File([blob], file.split(/[\\/]/).pop() || 'book', {
-                type: blob.type || 'application/octet-stream',
+                type: blob.type || 'application/octet-stream'
             });
         } else {
             fileObj = file;

@@ -26,10 +26,7 @@ export interface BooksManagerOptions {
  * @returns 书籍管理方法
  */
 export function useBooksManager(options: BooksManagerOptions = {}) {
-    const {
-        saveProgressOnClose = true,
-        cleanupOnClose = true
-    } = options;
+    const { saveProgressOnClose = true, cleanupOnClose = true } = options;
 
     /**
      * 打开书籍
@@ -74,7 +71,7 @@ export function useBooksManager(options: BooksManagerOptions = {}) {
         if (cleanupOnClose) {
             // 从 bookKeys 列表中移除
             const currentBookKeys = readerStore.getBookKeys();
-            readerStore.setBookKeys(currentBookKeys.filter(key => key !== bookKey));
+            readerStore.setBookKeys(currentBookKeys.filter((key) => key !== bookKey));
 
             // 清理视图状态
             readerStore.clearViewState(bookKey);
@@ -109,7 +106,7 @@ export function useBooksManager(options: BooksManagerOptions = {}) {
      */
     const closeAllBooks = async (): Promise<void> => {
         const bookKeys = readerStore.getBookKeys();
-        await Promise.all(bookKeys.map(key => closeBook(key)));
+        await Promise.all(bookKeys.map((key) => closeBook(key)));
     };
 
     /**
@@ -126,7 +123,7 @@ export function useBooksManager(options: BooksManagerOptions = {}) {
      */
     const isBookOpen = (bookId: number): boolean => {
         const bookKeys = readerStore.getBookKeys();
-        return bookKeys.some(key => key.startsWith(`${bookId}-`));
+        return bookKeys.some((key) => key.startsWith(`${bookId}-`));
     };
 
     /**
@@ -136,7 +133,7 @@ export function useBooksManager(options: BooksManagerOptions = {}) {
      */
     const getBookViewKeys = (bookId: number): string[] => {
         const bookKeys = readerStore.getBookKeys();
-        return bookKeys.filter(key => key.startsWith(`${bookId}-`));
+        return bookKeys.filter((key) => key.startsWith(`${bookId}-`));
     };
 
     return {

@@ -4,24 +4,25 @@
  * 文件信息结构体
  * 包含文件的基本信息：路径、大小、格式、MIME类型和是否为文本文件
  */
-export type FileInfo = { 
-/**
- * 文件路径
- */
-path: string, 
-/**
- * 文件大小（字节）
- */
-size: bigint, 
-/**
- * 检测到的文件格式（epub, pdf, txt, md, html, mobi等）
- */
-format: string, 
-/**
- * MIME类型
- */
-mime_type: string, 
-/**
- * 是否为文本文件
- */
-is_text: boolean, };
+export type FileInfo = {
+    /**
+     * 文件路径
+     */
+    path: string;
+    /**
+     * 文件大小（字节）
+     */
+    size: bigint;
+    /**
+     * 检测到的文件格式（epub, pdf, txt, md, html, mobi等）
+     */
+    format: string;
+    /**
+     * MIME类型
+     */
+    mime_type: string;
+    /**
+     * 是否为文本文件
+     */
+    is_text: boolean;
+};

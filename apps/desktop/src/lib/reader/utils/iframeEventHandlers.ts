@@ -25,7 +25,7 @@ let keyboardState: KeyboardState = {
     ctrlKey: false,
     shiftKey: false,
     altKey: false,
-    metaKey: false,
+    metaKey: false
 };
 
 const getKeyStatus = (event?: MouseEvent | WheelEvent | TouchEvent): KeyboardState => {
@@ -36,7 +36,7 @@ const getKeyStatus = (event?: MouseEvent | WheelEvent | TouchEvent): KeyboardSta
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,
             altKey: event.altKey,
-            metaKey: event.metaKey,
+            metaKey: event.metaKey
         };
     }
     return { ...keyboardState };
@@ -52,7 +52,7 @@ export const handleKeydown = (bookKey: string, event: KeyboardEvent): void => {
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
         altKey: event.altKey,
-        metaKey: event.metaKey,
+        metaKey: event.metaKey
     };
 
     if (['Backspace'].includes(event.key)) {
@@ -68,7 +68,7 @@ export const handleKeydown = (bookKey: string, event: KeyboardEvent): void => {
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,
             altKey: event.altKey,
-            metaKey: event.metaKey,
+            metaKey: event.metaKey
         },
         '*'
     );
@@ -84,7 +84,7 @@ export const handleKeyup = (bookKey: string, event: KeyboardEvent): void => {
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
         altKey: event.altKey,
-        metaKey: event.metaKey,
+        metaKey: event.metaKey
     };
 
     window.postMessage(
@@ -96,7 +96,7 @@ export const handleKeyup = (bookKey: string, event: KeyboardEvent): void => {
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,
             altKey: event.altKey,
-            metaKey: event.metaKey,
+            metaKey: event.metaKey
         },
         '*'
     );
@@ -121,7 +121,7 @@ export const handleMousedown = (bookKey: string, event: MouseEvent): void => {
             clientY: event.clientY,
             offsetX: event.offsetX,
             offsetY: event.offsetY,
-            ...getKeyStatus(event),
+            ...getKeyStatus(event)
         },
         '*'
     );
@@ -152,7 +152,7 @@ export const handleMouseup = (bookKey: string, event: MouseEvent): void => {
             offsetX: event.offsetX,
             offsetY: event.offsetY,
             isDoubleClick,
-            ...getKeyStatus(event),
+            ...getKeyStatus(event)
         },
         '*'
     );
@@ -175,7 +175,7 @@ export const handleClick = (bookKey: string, event: MouseEvent): void => {
             clientX: event.clientX,
             clientY: event.clientY,
             isDoubleClick,
-            ...getKeyStatus(event),
+            ...getKeyStatus(event)
         },
         '*'
     );
@@ -193,7 +193,7 @@ export const handleWheel = (bookKey: string, event: WheelEvent): void => {
             deltaY: event.deltaY,
             deltaZ: event.deltaZ,
             deltaMode: event.deltaMode,
-            ...getKeyStatus(event),
+            ...getKeyStatus(event)
         },
         '*'
     );
@@ -212,14 +212,14 @@ export const handleTouchStart = (bookKey: string, event: TouchEvent): void => {
         screenX: touch.screenX,
         screenY: touch.screenY,
         clientX: touch.clientX,
-        clientY: touch.clientY,
+        clientY: touch.clientY
     }));
 
     window.postMessage(
         {
             type: 'iframe-touchstart',
             bookKey,
-            touches,
+            touches
         },
         '*'
     );
@@ -234,14 +234,14 @@ export const handleTouchMove = (bookKey: string, event: TouchEvent): void => {
         screenX: touch.screenX,
         screenY: touch.screenY,
         clientX: touch.clientX,
-        clientY: touch.clientY,
+        clientY: touch.clientY
     }));
 
     window.postMessage(
         {
             type: 'iframe-touchmove',
             bookKey,
-            touches,
+            touches
         },
         '*'
     );
@@ -261,14 +261,14 @@ export const handleTouchEnd = (bookKey: string, event: TouchEvent): void => {
         screenX: touch.screenX,
         screenY: touch.screenY,
         clientX: touch.clientX,
-        clientY: touch.clientY,
+        clientY: touch.clientY
     }));
 
     window.postMessage(
         {
             type: 'iframe-touchend',
             bookKey,
-            changedTouches,
+            changedTouches
         },
         '*'
     );

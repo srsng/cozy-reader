@@ -1,7 +1,7 @@
 /**
  * 进度自动保存 Hook
  * 使用节流机制自动保存阅读进度
- * 
+ *
  * 这是一个 Svelte 5 的 rune-based hook，使用 .svelte.ts 扩展名以支持 runes
  */
 
@@ -87,6 +87,5 @@ export function useProgressAutoSave(bookKey: string): () => void {
     });
 
     // 为了保持 API 兼容性，仍然返回一个清理函数（虽然 $effect 会自动清理）
-    return () => { };
+    return () => {};
 }
-

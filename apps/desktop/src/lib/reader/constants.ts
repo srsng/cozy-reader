@@ -11,7 +11,7 @@ import type {
     ViewConfig,
     TTSConfig,
     TranslatorConfig,
-    ScreenConfig,
+    ScreenConfig
 } from './types';
 import type { ReaderSettings } from './settings';
 
@@ -46,7 +46,7 @@ export const DEFAULT_BOOK_FONT: BookFont = {
     defaultCJKFont: 'SimSun',
     defaultFontSize: 16,
     minimumFontSize: 8,
-    fontWeight: 400,
+    fontWeight: 400
 };
 
 /**
@@ -74,7 +74,7 @@ export const DEFAULT_BOOK_LAYOUT: BookLayout = {
     vertical: false,
     rtl: false,
     scrollingOverlap: 0,
-    allowScript: false,
+    allowScript: false
 };
 
 /**
@@ -103,7 +103,7 @@ export const DEFAULT_BOOK_STYLE: BookStyle = {
     userUIStylesheet: '',
     zoomMode: 'fit-page',
     spreadMode: 'auto',
-    keepCoverSpread: true,
+    keepCoverSpread: true
 };
 
 /**
@@ -122,7 +122,7 @@ export const DEFAULT_VIEW_CONFIG: ViewConfig = {
     showProgressInfo: true,
     showBarsOnScroll: false,
     showMarginsOnScroll: false,
-    progressStyle: 'fraction',
+    progressStyle: 'fraction'
 };
 
 /**
@@ -133,7 +133,7 @@ export const DEFAULT_TTS_CONFIG: TTSConfig = {
     ttsVoice: '',
     ttsLocation: '',
     showTTSBar: false,
-    ttsHighlightOptions: { style: 'highlight', color: 'gray' },
+    ttsHighlightOptions: { style: 'highlight', color: 'gray' }
 };
 
 /**
@@ -144,14 +144,14 @@ export const DEFAULT_TRANSLATOR_CONFIG: TranslatorConfig = {
     translationProvider: 'deepl',
     translateTargetLang: '',
     showTranslateSource: true,
-    ttsReadAloudText: '',
+    ttsReadAloudText: ''
 };
 
 /**
  * 默认屏幕配置
  */
 export const DEFAULT_SCREEN_CONFIG: ScreenConfig = {
-    screenOrientation: 'auto',
+    screenOrientation: 'auto'
 };
 
 /**
@@ -159,7 +159,7 @@ export const DEFAULT_SCREEN_CONFIG: ScreenConfig = {
  */
 export const DEFAULT_BOOK_LANGUAGE: BookLanguage = {
     replaceQuotationMarks: false,
-    convertChineseVariant: 'none',
+    convertChineseVariant: 'none'
 };
 
 /**
@@ -170,7 +170,7 @@ export const DEFAULT_MOBILE_READER_SETTINGS: Partial<ReaderSettings> = {
     animated: true,
     defaultFont: 'Sans-serif',
     marginBottomPx: 16,
-    disableDoubleClick: true,
+    disableDoubleClick: true
 };
 
 /**
@@ -180,14 +180,14 @@ export const DEFAULT_CJK_READER_SETTINGS: Partial<ReaderSettings> = {
     fullJustification: true,
     textIndent: 2,
     paragraphMargin: 1,
-    lineHeight: 1.6,
+    lineHeight: 1.6
 };
 
 /**
  * 固定布局阅读器设置覆盖
  */
 export const DEFAULT_FIXED_LAYOUT_READER_SETTINGS: Partial<ReaderSettings> = {
-    overrideColor: false, // 保留原始 PDF/CBZ 颜色
+    overrideColor: false // 保留原始 PDF/CBZ 颜色
 };
 
 /**
@@ -199,7 +199,7 @@ export const SERIF_FONTS = [
     'Bitter',
     'Literata',
     'Merriweather',
-    'Vollkorn',
+    'Vollkorn'
 ];
 
 export const SANS_SERIF_FONTS = [
@@ -208,16 +208,10 @@ export const SANS_SERIF_FONTS = [
     'Roboto',
     'Noto Sans',
     'Open Sans',
-    'Segoe UI',
+    'Segoe UI'
 ];
 
-export const MONOSPACE_FONTS = [
-    'Consolas',
-    'Courier New',
-    'Fira Code',
-    'Lucida Console',
-    'Monaco',
-];
+export const MONOSPACE_FONTS = ['Consolas', 'Courier New', 'Fira Code', 'Lucida Console', 'Monaco'];
 
 export const CJK_SERIF_FONTS = [
     'SimSun',
@@ -225,7 +219,7 @@ export const CJK_SERIF_FONTS = [
     'KaiTi',
     'FangSong',
     'Microsoft YaHei',
-    'Source Han Serif CN',
+    'Source Han Serif CN'
 ];
 
 export const CJK_SANS_SERIF_FONTS = [
@@ -233,7 +227,7 @@ export const CJK_SANS_SERIF_FONTS = [
     'Microsoft YaHei',
     'Noto Sans SC',
     'Noto Sans TC',
-    'Source Han Sans CN',
+    'Source Han Sans CN'
 ];
 
 export const FALLBACK_FONTS = ['serif', 'sans-serif', 'monospace'];
@@ -242,7 +236,10 @@ export const FALLBACK_FONTS = ['serif', 'sans-serif', 'monospace'];
  * 获取默认阅读器设置
  * 合并所有默认设置，应用移动端和 CJK 覆盖
  */
-export function getDefaultReaderSettings(isMobile: boolean = false, isCJK: boolean = false): ReaderSettings {
+export function getDefaultReaderSettings(
+    isMobile: boolean = false,
+    isCJK: boolean = false
+): ReaderSettings {
     const base: ReaderSettings = {
         ...DEFAULT_BOOK_LAYOUT,
         ...DEFAULT_BOOK_STYLE,
@@ -251,7 +248,7 @@ export function getDefaultReaderSettings(isMobile: boolean = false, isCJK: boole
         ...DEFAULT_VIEW_CONFIG,
         ...DEFAULT_TTS_CONFIG,
         ...DEFAULT_TRANSLATOR_CONFIG,
-        ...DEFAULT_SCREEN_CONFIG,
+        ...DEFAULT_SCREEN_CONFIG
     };
 
     if (isMobile) {
