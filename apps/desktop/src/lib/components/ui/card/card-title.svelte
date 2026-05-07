@@ -15,7 +15,7 @@
     in:fade
     bind:this={ref}
     data-slot="card-title"
-    class={cn('font-semibold leading-none', className)}
+    class={cn('text-base font-medium leading-snug group-data-[size=sm]/card:text-sm', className)}
     {...restProps}
 >
     {@render children?.()}

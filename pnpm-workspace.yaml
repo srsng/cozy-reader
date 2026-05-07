@@ -13,23 +13,23 @@ catalog:
 
 catalogs:
     shadcn-ui:
-        '@internationalized/date': ^3.9.0
-        '@lucide/svelte': ^0.544.0
+        '@internationalized/date': ^3.12.1
+        '@lucide/svelte': ^1.14.0
         '@tailwindcss/forms': ^0.5.9
         '@tailwindcss/typography': ^0.5.15
         '@tailwindcss/vite': ^4.0.0
         '@tanstack/table-core': ^8.21.3
-        bits-ui: ^2.14.2
+        bits-ui: ^2.18.1
         clsx: ^2.1.1
         embla-carousel-svelte: ^8.6.0
         formsnap: ^2.0.1
-        layerchart: 2.0.0-next.27
+        layerchart: 2.0.0-next.48
         mode-watcher: ^1.1.0
         paneforge: ^1.0.2
-        svelte-sonner: ^1.0.5
-        sveltekit-superforms: ^2.27.1
+        svelte-sonner: ^1.1.1
+        sveltekit-superforms: ^2.30.1
         tailwind-merge: ^3.3.1
-        tailwind-variants: ^3.1.1
+        tailwind-variants: ^3.2.2
         tailwindcss: ^4.0.0
         tw-animate-css: ^1.3.6
         vaul-svelte: 1.0.0-next.7

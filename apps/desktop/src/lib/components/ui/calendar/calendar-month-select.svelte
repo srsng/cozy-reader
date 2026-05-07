@@ -14,11 +14,15 @@
 
 <span
     class={cn(
-        'has-focus:border-ring border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] relative flex rounded-md border',
+        'has-focus:border-ring border-input has-focus:ring-ring/50 shadow-xs has-focus:ring-[3px] relative flex rounded-md border',
         className
     )}
 >
-    <CalendarPrimitive.MonthSelect bind:ref class="absolute inset-0 opacity-0" {...restProps}>
+    <CalendarPrimitive.MonthSelect
+        bind:ref
+        class="bg-background dark:bg-popover dark:text-popover-foreground absolute inset-0 opacity-0"
+        {...restProps}
+    >
         {#snippet child({ props, monthItems, selectedMonthItem })}
             <select {...props} {value} {onchange}>
                 {#each monthItems as monthItem (monthItem.value)}
@@ -33,11 +37,11 @@
                 {/each}
             </select>
             <span
-                class="[&>svg]:text-muted-foreground flex h-8 select-none items-center gap-1 rounded-md pl-2 pr-1 text-sm font-medium [&>svg]:size-3.5"
+                class="[&>svg]:text-muted-foreground h-(--cell-size) flex select-none items-center gap-1 rounded-md pe-1 ps-2 text-sm font-medium [&>svg]:size-3.5"
                 aria-hidden="true"
             >
                 {monthItems.find((item) => item.value === value)?.label || selectedMonthItem.label}
-                <ChevronDownIcon class="size-4" />
+                <ChevronDownIcon class={cn('size-4', className)} />
             </span>
         {/snippet}
     </CalendarPrimitive.MonthSelect>

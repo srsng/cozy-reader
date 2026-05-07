@@ -17,7 +17,7 @@
         config: ChartConfig;
     } = $props();
 
-    const chartId = `chart-${id || uid.replace(/:/g, '')}`;
+    const chartId = $derived(`chart-${id || uid.replace(/:/g, '')}`);
 
     setChartContext({
         get config() {
@@ -35,7 +35,7 @@
         // Overrides
         //
         // Stroke around dots/marks when hovering
-        '[&_.stroke-white]:stroke-transparent',
+        '[&_.lc-highlight-point]:stroke-transparent',
         // override the default stroke color of lines
         '[&_.lc-line]:stroke-border/50',
 
