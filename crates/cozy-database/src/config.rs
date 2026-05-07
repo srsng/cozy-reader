@@ -11,7 +11,7 @@ use ts_rs::TS;
 pub enum DatabaseName {
     #[serde(rename = "books")]
     Books,
-    // 未来添加新数据库时，必须同时更新此枚举和 DATABASES 数组
+    // 未来添加新数据库时，必须同时更新此枚举、impl DatabaseName 和 DATABASES 数组
 }
 
 impl DatabaseName {
