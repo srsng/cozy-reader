@@ -882,25 +882,25 @@
         };
     });
 
-    // 快捷键处理
-    let shortcutsCleanup: (() => void) | null = null;
+    // 按键绑定处理
+    let keybindingsCleanup: (() => void) | null = null;
     $effect(() => {
-        if (shortcutsCleanup) {
-            shortcutsCleanup();
-            shortcutsCleanup = null;
+        if (keybindingsCleanup) {
+            keybindingsCleanup();
+            keybindingsCleanup = null;
         }
         if (viewState?.inited && viewElement) {
-            import('$lib/reader/hooks/useBookShortcuts').then(
-                ({ useBookShortcuts, createDefaultShortcutHandlers }) => {
-                    const handlers = createDefaultShortcutHandlers(bookKey);
-                    shortcutsCleanup = useBookShortcuts(bookKey, handlers);
+            import('$lib/reader/hooks/useBookKeybindings').then(
+                ({ useBookKeybindings, createDefaultKeybindingHandlers }) => {
+                    const handlers = createDefaultKeybindingHandlers(bookKey);
+                    keybindingsCleanup = useBookKeybindings(bookKey, handlers);
                 }
             );
         }
         return () => {
-            if (shortcutsCleanup) {
-                shortcutsCleanup();
-                shortcutsCleanup = null;
+            if (keybindingsCleanup) {
+                keybindingsCleanup();
+                keybindingsCleanup = null;
             }
         };
     });

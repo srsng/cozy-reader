@@ -1,6 +1,6 @@
 /**
- * useBookShortcuts - 书籍阅读器快捷键处理 Hook
- * 提供统一的快捷键处理功能
+ * useBookKeybindings - 书籍阅读器按键绑定处理 Hook
+ * 提供统一的按键绑定处理功能
  */
 
 import { readerStore } from '../stores/readerStore';
@@ -9,9 +9,9 @@ import { notebookStore } from '../stores/notebookStore';
 import type { FoliateViewElement } from '../types';
 
 /**
- * 快捷键配置
+ * 按键绑定配置
  */
-export interface ShortcutConfig {
+export interface BookKeybindingConfig {
     /** 上一页 */
     prevPage?: string[];
     /** 下一页 */
@@ -33,9 +33,9 @@ export interface ShortcutConfig {
 }
 
 /**
- * 默认快捷键配置
+ * 默认按键绑定配置
  */
-const DEFAULT_SHORTCUTS: ShortcutConfig = {
+const DEFAULT_BOOK_KEYBINDINGS: BookKeybindingConfig = {
     prevPage: ['ArrowLeft', 'h'],
     nextPage: ['ArrowRight', 'l'],
     prevSection: ['ArrowUp', 'k'],
@@ -48,9 +48,9 @@ const DEFAULT_SHORTCUTS: ShortcutConfig = {
 };
 
 /**
- * 快捷键动作处理器
+ * 按键绑定动作处理器
  */
-export interface ShortcutHandlers {
+export interface BookKeybindingHandlers {
     onPrevPage?: () => void;
     onNextPage?: () => void;
     onPrevSection?: () => void;
@@ -63,16 +63,16 @@ export interface ShortcutHandlers {
 }
 
 /**
- * 解析快捷键字符串
+ * 解析按键绑定字符串
  */
-function parseShortcut(shortcut: string): {
+function parseKeybinding(keybinding: string): {
     key: string;
     ctrlKey: boolean;
     altKey: boolean;
     metaKey: boolean;
     shiftKey: boolean;
 } {
-    const parts = shortcut
+    const parts = keybinding
         .toLowerCase()
         .split('+')
         .map((p) => p.trim());
@@ -86,10 +86,10 @@ function parseShortcut(shortcut: string): {
 }
 
 /**
- * 检查快捷键是否匹配
+ * 检查按键绑定是否匹配
  */
-function isShortcutMatch(shortcut: string, event: KeyboardEvent): boolean {
-    const parsed = parseShortcut(shortcut);
+function isKeybindingMatch(keybinding: string, event: KeyboardEvent): boolean {
+    const parsed = parseKeybinding(keybinding);
     const eventKey = event.key.toLowerCase();
 
     return (
@@ -102,16 +102,16 @@ function isShortcutMatch(shortcut: string, event: KeyboardEvent): boolean {
 }
 
 /**
- * 书籍快捷键 Hook
+ * 书籍按键绑定 Hook
  * @param bookKey 书籍键
- * @param handlers 快捷键处理器
- * @param shortcuts 自定义快捷键配置（可选）
+ * @param handlers 按键绑定处理器
+ * @param keybindings 自定义按键绑定配置（可选）
  * @returns 清理函数
  */
-export function useBookShortcuts(
+export function useBookKeybindings(
     bookKey: string,
-    handlers: ShortcutHandlers,
-    shortcuts: ShortcutConfig = DEFAULT_SHORTCUTS
+    handlers: BookKeybindingHandlers,
+    keybindings: BookKeybindingConfig = DEFAULT_BOOK_KEYBINDINGS
 ): () => void {
     const handleKeyDown = (event: KeyboardEvent) => {
         // 检查焦点是否在输入元素上
@@ -127,67 +127,67 @@ export function useBookShortcuts(
             return;
         }
 
-        // 检查快捷键匹配
+        // 检查按键绑定匹配
         const key = event.key;
 
         // 上一页
-        if (shortcuts.prevPage?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.prevPage?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onPrevPage?.();
             return;
         }
 
         // 下一页
-        if (shortcuts.nextPage?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.nextPage?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onNextPage?.();
             return;
         }
 
         // 上一章节
-        if (shortcuts.prevSection?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.prevSection?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onPrevSection?.();
             return;
         }
 
         // 下一章节
-        if (shortcuts.nextSection?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.nextSection?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onNextSection?.();
             return;
         }
 
         // 切换侧边栏
-        if (shortcuts.toggleSidebar?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.toggleSidebar?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onToggleSidebar?.();
             return;
         }
 
         // 切换笔记本
-        if (shortcuts.toggleNotebook?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.toggleNotebook?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onToggleNotebook?.();
             return;
         }
 
         // 打开设置
-        if (shortcuts.openSettings?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.openSettings?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onOpenSettings?.();
             return;
         }
 
         // 搜索
-        if (shortcuts.search?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.search?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onSearch?.();
             return;
         }
 
         // 退出全屏
-        if (shortcuts.exitFullscreen?.some((s) => isShortcutMatch(s, event))) {
+        if (keybindings.exitFullscreen?.some((s) => isKeybindingMatch(s, event))) {
             event.preventDefault();
             handlers.onExitFullscreen?.();
             return;
@@ -204,11 +204,11 @@ export function useBookShortcuts(
 }
 
 /**
- * 创建默认的快捷键处理器（基于当前书籍状态）
+ * 创建默认的按键绑定处理器（基于当前书籍状态）
  * @param bookKey 书籍键
- * @returns 快捷键处理器
+ * @returns 按键绑定处理器
  */
-export function createDefaultShortcutHandlers(bookKey: string): ShortcutHandlers {
+export function createDefaultKeybindingHandlers(bookKey: string): BookKeybindingHandlers {
     const view = readerStore.getView(bookKey);
 
     return {

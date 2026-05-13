@@ -19,12 +19,14 @@
 
     // services
     import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
+    
+    import { keybindingManager } from '$lib/keybindings/keybindingManager';
 
     // tool components
     import ThemeAction from '$lib/components/action/theme-action.svelte';
     import ZoomInOutMenuAction from '$lib/components/action/zoom-menu-action.svelte';
     import WindowAction from '$lib/components/action/window-action.svelte';
-    import HotkeysAction from '$lib/components/action/hotkeys-action.svelte';
+    import KeybindingsAction from '$lib/components/action/keybindings-action.svelte';
     import UIOpacityAction from '$lib/components/action/ui-opacity-action.svelte';
     import { Toaster } from '$ui/sonner';
 
@@ -69,7 +71,7 @@
 <ZoomInOutMenuAction />
 <WindowAction />
 <BackgroundAction />
-<HotkeysAction />
+<KeybindingsAction />
 <UIOpacityAction />
 
 <div class="app-layout" role="application">

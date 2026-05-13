@@ -1,4 +1,6 @@
-// 简化的快捷键系统类型定义
+import type { CommandId } from '$lib/commands';
+
+// 前端按键绑定系统类型定义
 
 /**
  * 修饰键枚举
@@ -11,7 +13,7 @@ export enum ModifierKey {
 }
 
 /**
- * 快捷键组合
+ * 按键组合
  */
 export interface KeyCombination {
     /** 主键 */
@@ -21,9 +23,9 @@ export interface KeyCombination {
 }
 
 /**
- * 快捷键分类
+ * 按键绑定分类
  */
-export enum ShortcutCategory {
+export enum KeybindingCategory {
     Window = 'window',
     Navigation = 'navigation',
     Zoom = 'zoom',
@@ -33,36 +35,40 @@ export enum ShortcutCategory {
 }
 
 /**
- * 简化的快捷键定义
+ * 按键绑定定义
  */
-export interface ShortcutDefinition {
-    /** 快捷键名称 */
+export interface KeybindingDefinition {
+    /** 按键绑定名称 */
     name: string;
-    /** 快捷键描述 */
+    /** 按键绑定描述 */
     description: string;
-    /** 快捷键分类 */
-    category: ShortcutCategory;
+    /** 按键绑定分类 */
+    category: KeybindingCategory;
     /** 键盘组合 */
     combination: KeyCombination;
 }
 
 /**
- * 静态快捷键
+ * 静态按键绑定
  */
-export interface StaticShortcut {
-    /** 快捷键ID */
+export interface StaticKeybinding {
+    /** 按键绑定ID */
     id: string;
-    /** 快捷键名称 */
+    /** 按键绑定名称 */
     name: string;
-    /** 快捷键描述 */
+    /** 按键绑定描述 */
     description: string;
     /** 键盘组合 */
     combination: KeyCombination;
     global?: boolean;
     /** 是否在输入框中禁用 */
     disableInInput?: boolean;
-    /** 处理函数 */
-    handler: () => void;
+    /** 关联命令 */
+    commandId?: CommandId;
+    /** 命令参数 */
+    payload?: unknown;
+    /** 兼容直接处理函数 */
+    handler?: () => void | Promise<void>;
 }
 
 /**

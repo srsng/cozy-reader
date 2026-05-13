@@ -132,5 +132,11 @@ export { useTextSelector } from './hooks/useTextSelector';
 export { useAutoSaveBookCover } from './hooks/useAutoSaveBookCover';
 export { useBooksManager } from './hooks/useBooksManager';
 export type { BooksManagerOptions } from './hooks/useBooksManager';
-export { useBookShortcuts, createDefaultShortcutHandlers } from './hooks/useBookShortcuts';
-export type { ShortcutConfig, ShortcutHandlers } from './hooks/useBookShortcuts';
+export {
+    useBookKeybindings,
+    createDefaultKeybindingHandlers
+} from './hooks/useBookKeybindings';
+export type {
+    BookKeybindingConfig,
+    BookKeybindingHandlers
+} from './hooks/useBookKeybindings';

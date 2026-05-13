@@ -1,12 +1,12 @@
-// 全局键盘事件监听器
+// 全局按键绑定事件监听器
 
 import type { KeyboardEventContext, KeyCombination } from './types';
 import { ModifierKey } from './types';
 
 /**
- * 键盘监听器类
+ * 按键绑定键盘监听器
  */
-export class KeyboardListener {
+export class KeybindingListener {
     private listeners: Set<(combination: KeyCombination, context: KeyboardEventContext) => void> =
         new Set();
     private isListening = false;
@@ -60,7 +60,7 @@ export class KeyboardListener {
             try {
                 listener(combination, context);
             } catch (error) {
-                console.error('快捷键监听器执行错误:', error);
+                console.error('按键绑定监听器执行错误:', error);
             }
         });
     };
@@ -157,11 +157,11 @@ export class KeyboardListener {
 }
 
 /**
- * 快捷键组合工具函数
+ * 按键绑定组合工具函数
  */
-export class ShortcutUtils {
+export class KeybindingUtils {
     /**
-     * 将快捷键组合转换为字符串
+     * 将按键组合转换为字符串
      */
     static combinationToString(combination: KeyCombination): string {
         const parts: string[] = [];
@@ -179,7 +179,7 @@ export class ShortcutUtils {
     }
 
     /**
-     * 从字符串解析快捷键组合
+     * 从字符串解析按键组合
      */
     static stringToCombination(str: string): KeyCombination | null {
         const parts = str.split('+').map((p) => p.trim());
@@ -209,7 +209,7 @@ export class ShortcutUtils {
     }
 
     /**
-     * 比较两个快捷键组合是否相等
+     * 比较两个按键组合是否相等
      */
     static combinationsEqual(a: KeyCombination, b: KeyCombination): boolean {
         if (a.key !== b.key) return false;
@@ -224,7 +224,7 @@ export class ShortcutUtils {
     }
 
     /**
-     * 验证快捷键组合是否有效
+     * 验证按键组合是否有效
      */
     static isValidCombination(combination: KeyCombination): boolean {
         // 必须有主键

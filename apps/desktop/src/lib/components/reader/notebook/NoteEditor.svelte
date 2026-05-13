@@ -63,7 +63,7 @@
         notebookStore.setEditAnnotation(null);
     };
 
-    // 处理快捷键
+    // 处理按键绑定
     $effect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
