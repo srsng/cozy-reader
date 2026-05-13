@@ -1,8 +1,3 @@
-.titlebar,
-#titlebar {
-    transition: background-color 0.3s ease;
-}
-
 @layer utilities {
     /* app布局 */
     .app-layout {
@@ -49,6 +44,21 @@
         grid-area: footer;
     }
 
+    /* 颜色变更过渡 */
+    #titlebar,
+    .header,
+    .footer,
+    .books-grid,
+    .foliate-view-container,
+    header,
+    footer,
+    foliate-view,
+    .background-container {
+        transition:
+            background-color 220ms ease-out,
+            border-color 220ms ease-out;
+    }
+
     /* 前景/上层遮罩层 - 应用到整个应用容器 */
     .app-layout::before {
         content: '';
@@ -74,7 +84,7 @@
         bottom: 0;
         z-index: -100;
         pointer-events: none;
-        background-color: hsl(var(--background));
+        background-color: var(--background);
     }
 
     /* 背景图片层 */
@@ -98,11 +108,12 @@
         transform: scale(var(--settings-bg-scale, 0)) rotate(var(--settings-bg-rotation, 0deg))
             translate(var(--settings-bg-offset-x, 0px), var(--settings-bg-offset-y, 0px));
         transition:
+            background-color 220ms ease-out,
             opacity var(--settings-bg-animation-duration, 300ms) ease-in-out,
             filter var(--settings-bg-animation-duration, 300ms) ease-in-out,
             transform var(--settings-bg-animation-duration, 300ms) ease-in-out;
         pointer-events: none;
-        background-color: hsl(var(--background));
+        background-color: var(--background);
     }
 
     /* 背景遮罩层 - 独立于UI不透明度 */

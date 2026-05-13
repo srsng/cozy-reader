@@ -1069,7 +1069,7 @@
         width: 100%;
         height: 100%;
         display: block;
-        background-color: hsl(var(--background));
+        background-color: var(--background);
     }
 
     /* 通过 part 选择器样式化 Shadow DOM 内部的 container */

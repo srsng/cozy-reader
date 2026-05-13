@@ -89,9 +89,23 @@
 @layer base {
     * {
         @apply border-border outline-ring/50;
+        /* transition-property: border-color, outline-color, box-shadow;
+        transition-duration: 220ms;
+        transition-timing-function: ease-out;
+        transition-delay: 0s; */
     }
+
+    *::before,
+    *::after {
+        transition-property: border-color, outline-color, box-shadow;
+        transition-duration: 220ms;
+        transition-timing-function: ease-out;
+        transition-delay: 0s;
+    }
+
     body {
         background-color: var(--color-body-background);
         color: var(--color-foreground);
+        transition: background-color 220ms ease-out;
     }
 }
