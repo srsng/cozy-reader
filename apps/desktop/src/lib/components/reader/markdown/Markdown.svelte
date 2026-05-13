@@ -1,29 +1,16 @@
 <script lang="ts" module>
     import MarkdownContent from './MarkdownContent.svelte';
-    import { Lexer } from 'marked';
+    import { lexMarkdown } from './math';
+
     interface Props {
         content: string | undefined;
     }
 </script>
 
 <script lang="ts">
-    const options = {
-        async: false,
-        breaks: true,
-        gfm: true,
-        pedantic: false,
-        renderer: null,
-        silent: false,
-        tokenizer: null,
-        walkTokens: null
-    };
-
     const { content }: Props = $props();
 
-    const tokens = $derived.by(() => {
-        const lexer = new Lexer(options);
-        return lexer.lex(content ?? '');
-    });
+    const tokens = $derived(lexMarkdown(content ?? ''));
 </script>
 
 <div class="markdown">

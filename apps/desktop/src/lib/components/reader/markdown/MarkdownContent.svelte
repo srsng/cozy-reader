@@ -1,11 +1,11 @@
 <script lang="ts">
     import Self from './MarkdownContent.svelte';
-    import type { Token } from 'marked';
+    import type { MarkdownToken } from './math';
     import type { Component } from 'svelte';
 
     import { renderers } from '$lib/components/typography';
 
-    type Props = { type: 'init'; tokens: Token[] } | Token;
+    type Props = { type: 'init'; tokens: MarkdownToken[] } | MarkdownToken;
 
     const { type, ...rest }: Props = $props();
 </script>

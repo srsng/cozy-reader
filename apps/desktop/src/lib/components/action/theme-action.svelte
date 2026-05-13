@@ -81,4 +81,8 @@
     });
 </script>
 
-<ModeWatcher defaultMode={$userSettings.theme.mode} defaultTheme={$userSettings.theme.type} />
+<ModeWatcher
+    defaultMode={$userSettings.theme.mode}
+    defaultTheme={$userSettings.theme.type}
+    disableTransitions={false}
+/>

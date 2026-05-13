@@ -11,7 +11,8 @@
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "format": "prettier --write .",
-        "lint": "prettier --check ."
+        "lint": "prettier --check .",
+        "test": "vitest run"
     },
     "devDependencies": {
         "@internationalized/date": "catalog:shadcn-ui",
@@ -41,7 +42,8 @@
         "tw-animate-css": "catalog:shadcn-ui",
         "typescript": "catalog:",
         "vaul-svelte": "catalog:shadcn-ui",
-        "vite": "catalog:"
+        "vite": "catalog:",
+        "vitest": "catalog:"
     },
     "dependencies": {
         "@cozy-reader/database": "workspace:*",

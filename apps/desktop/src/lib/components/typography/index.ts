@@ -13,6 +13,7 @@ import { Separator as Hr } from '$ui/separator';
 import ListItem from './list-item.svelte';
 import List from './list.svelte';
 import Codespan from './codespan.svelte';
+import Formula from './formula.svelte';
 
 const renderers = {
     blockquote: Blockquote,
@@ -29,7 +30,8 @@ const renderers = {
     em: Em,
     hr: Hr,
     list: List,
-    list_item: ListItem
+    list_item: ListItem,
+    math: Formula
 };
 
 export {
@@ -45,5 +47,6 @@ export {
     Em,
     Hr,
     Code,
+    Formula,
     renderers
 };

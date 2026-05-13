@@ -9,6 +9,9 @@ export default defineConfig({
         port: 13210,
         strictPort: true
     },
+    optimizeDeps: {
+        exclude: ['ratex-wasm', 'ratex-wasm/ratex-formula']
+    },
     plugins: [
         tailwindcss(),
         sveltekit(),
