@@ -36,8 +36,11 @@
 
     const { data, children }: { data: LayoutData; children: Snippet } = $props();
 
-    provide(APP_STATE, initAppState());
-    provide(USER_SETTINGS, data.userSettings);
+    const appState = initAppState();
+    const { userSettings } = data;
+
+    provide(APP_STATE, appState);
+    provide(USER_SETTINGS, userSettings);
     provide(READER_SETTINGS, data.readerSettings);
 
     // shortcut service
@@ -52,7 +55,7 @@
     });
 
     const { userSettings } = data;
-
+    
     onMount(() => {
         // 启动窗口入场动画
         startWindowTiltUpAnimation();
