@@ -1,45 +1,179 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { BaseSettingsForm, ReaderSettingsForm, ThemeSettingsForm } from '$lib/components/forms';
     import * as Tabs from '$ui/tabs';
+    import * as Empty from '$ui/empty';
     import { m } from '$lib/paraglide/messages.js';
     import { slide } from 'svelte/transition';
     import type { PageData } from './$types';
     import { saveUserSettingsManually } from '$lib/stores/userSettings';
-    import { onDestroy } from 'svelte';
+    import { onDestroy, tick } from 'svelte';
+    import SettingsGroup from '$lib/components/settings/SettingsGroup.svelte';
+    import SettingsSearch from '$lib/components/settings/SettingsSearch.svelte';
+    import {
+        getEntriesByTab,
+        getGroupsByTab,
+        getSearchResultCount,
+        searchEntries,
+        type SettingEntry,
+        type SettingsTab
+    } from '$lib/settings-registry';
 
     const { data }: { data: PageData } = $props();
 
-    // todo: state
+    const tabLabels: Record<SettingsTab, string> = {
+        base: m['settings.base'](),
+        theme: m['settings.theme'](),
+        reader: m['settings.reader']()
+    };
+    const tabOrder: SettingsTab[] = ['base', 'theme', 'reader'];
+    const userSettings = data.userSettings;
+
+    // SvelteKit page.state is app-defined; route helpers currently store `{ tab }` there.
     // @ts-ignore
-    const _tab = page.state.tab;
-    let tab = $state(_tab || 'base');
+    const stateTab = page.state.tab as SettingsTab | undefined;
+    const queryTab = page.url.searchParams.get('tab') as SettingsTab | null;
+    let tab = $state<SettingsTab>(stateTab ?? queryTab ?? 'base');
+    let searchText = $state('');
+    let debouncedSearchText = $state('');
+    let activeMatchIndex = $state(0);
+    let searchDebounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const searchResults = $derived(searchEntries(debouncedSearchText));
+    const resultCount = $derived(getSearchResultCount(searchResults));
+    const searchMode = $derived(Boolean(debouncedSearchText.trim()));
+    const highlightedIds = $derived(
+        searchMode ? new Set(getTabEntries(tab).map((entry) => entry.id)) : new Set<string>()
+    );
+    const activeEntries = $derived(getTabEntries(tab));
+
+    $effect(() => {
+        const nextSearchText = searchText;
+        if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            debouncedSearchText = nextSearchText;
+            activeMatchIndex = 0;
+        }, 300);
+    });
+
+    $effect(() => {
+        if (!searchMode || resultCount === 0) return;
+        if ((searchResults.get(tab)?.length ?? 0) > 0) return;
+
+        const firstMatchedTab = tabOrder.find((tabName) => (searchResults.get(tabName)?.length ?? 0) > 0);
+        if (firstMatchedTab && firstMatchedTab !== tab) {
+            tab = firstMatchedTab;
+            activeMatchIndex = 0;
+        }
+    });
+
+    $effect(() => {
+        if (!searchMode || resultCount === 0) return;
+        debouncedSearchText;
+        tab;
+        scrollToActiveMatch();
+    });
 
     onDestroy(async () => {
         await saveUserSettingsManually(data.userSettings);
     });
+
+    function getTabEntries(tabName: SettingsTab): SettingEntry[] {
+        if (searchMode) return searchResults.get(tabName) ?? [];
+        return getEntriesByTab(tabName, $userSettings);
+    }
+
+    function getTabGroups(tabName: SettingsTab) {
+        const entries = getTabEntries(tabName);
+        return getGroupsByTab(tabName).filter((group) =>
+            entries.some((entry) => entry.group === group.id)
+        );
+    }
+
+    async function scrollToActiveMatch() {
+        await tick();
+        const entries = getTabEntries(tab);
+        const activeEntry = entries[Math.min(activeMatchIndex, Math.max(entries.length - 1, 0))];
+        if (!activeEntry) return;
+
+        document
+            .querySelector(`[data-setting-id="${activeEntry.id}"]`)
+            ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+
+    function handleTabChange(value: string) {
+        tab = value as SettingsTab;
+    }
+
+    function clearSearch() {
+        searchText = '';
+        debouncedSearchText = '';
+        activeMatchIndex = 0;
+        if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+    }
+
+    function handleSearchKeydown(event: KeyboardEvent) {
+        if (!searchMode) return;
+
+        if (event.key === 'Enter') {
+            activeMatchIndex = 0;
+            scrollToActiveMatch();
+            event.preventDefault();
+            return;
+        }
+
+        if (event.key === 'Escape') {
+            clearSearch();
+            return;
+        }
+
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+
+        const entries = getTabEntries(tab);
+        if (entries.length === 0) return;
+
+        activeMatchIndex =
+            event.key === 'ArrowDown'
+                ? (activeMatchIndex + 1) % entries.length
+                : (activeMatchIndex - 1 + entries.length) % entries.length;
+        scrollToActiveMatch();
+        event.preventDefault();
+    }
 </script>
 
-<div transition:slide>
-    <Tabs.Root bind:value={tab} class="w-full">
+<div transition:slide class="space-y-4" role="presentation" onkeydown={handleSearchKeydown}>
+    <SettingsSearch
+        bind:value={searchText}
+        {resultCount}
+        onClear={clearSearch}
+    />
+
+    <Tabs.Root value={tab} onValueChange={handleTabChange} class="w-full">
         <Tabs.List class="grid w-full grid-cols-3">
-            <Tabs.Trigger value="base">{m['settings.base']()}</Tabs.Trigger>
-            <Tabs.Trigger value="theme">{m['settings.theme']()}</Tabs.Trigger>
-            <Tabs.Trigger value="reader">{m['settings.reader']()}</Tabs.Trigger>
+            {#each tabOrder as tabName}
+                <Tabs.Trigger value={tabName}>{tabLabels[tabName]}</Tabs.Trigger>
+            {/each}
         </Tabs.List>
-        <!-- 基础设置标签页 -->
-        <Tabs.Content value="base" class="space-y-6">
-            <BaseSettingsForm />
-        </Tabs.Content>
 
-        <!-- 主题设置标签页 -->
-        <Tabs.Content value="theme" class="space-y-6">
-            <ThemeSettingsForm />
-        </Tabs.Content>
-
-        <!-- 阅读器设置标签页 -->
-        <Tabs.Content value="reader" class="space-y-6">
-            <ReaderSettingsForm />
-        </Tabs.Content>
+        {#each tabOrder as tabName}
+            <Tabs.Content value={tabName} class="space-y-6">
+                {#if searchMode && resultCount === 0}
+                    <Empty.Root>
+                        <Empty.Title>{"未找到匹配的设置项"}</Empty.Title>
+                        <Empty.Description>{"换一个关键词再试。"}</Empty.Description>
+                    </Empty.Root>
+                {:else}
+                    {#each getTabGroups(tabName) as group (group.id)}
+                        <SettingsGroup
+                            {group}
+                            entries={getTabEntries(tabName).filter((entry) => entry.group === group.id)}
+                            settingsStore={userSettings}
+                            settings={$userSettings}
+                            {searchMode}
+                            {highlightedIds}
+                        />
+                    {/each}
+                {/if}
+            </Tabs.Content>
+        {/each}
     </Tabs.Root>
 </div>

@@ -3,11 +3,11 @@
     import { inject } from '$lib/utils/context';
     import { Switch } from '$ui/switch';
     import * as Card from '$ui/card';
-    import LanguageDropDown from './language.svelte';
+    import LanguageDropDown from '../language.svelte';
     import { m } from '$lib/paraglide/messages';
     import { Badge } from '$ui/badge';
     import { langCode2Name } from '$lib/settings/Base';
-    import { ZoomForm } from '$lib/components/forms';
+    import ZoomForm from '../zoom.svelte';
     import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
     import { Separator } from '$ui/separator';
     import { DEFAULT_OPACITY } from '$lib/settings/background';
