@@ -114,7 +114,7 @@
             <Plus class="h-3 w-3" />
         </Button>
 
-        <Button variant="outline" size="icon" class="hidden h-8 w-8 lg:flex" {disabled} onclick={reset}>
+        <Button variant="outline" size="icon" class="hidden h-8 w-8 md:flex" {disabled} onclick={reset}>
             <RotateCcw class="h-3 w-3" />
         </Button>
     </ButtonGroup.Root>
