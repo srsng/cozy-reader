@@ -1,9 +1,9 @@
 export enum LogLevel {
-    trace = 1,
-    debug = 2,
-    info = 3,
-    warn = 4,
-    error = 5
+    trace = 10,
+    debug = 20,
+    info = 30,
+    warn = 40,
+    error = 50
 }
 
 export const logLevels = [
