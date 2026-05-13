@@ -4,6 +4,7 @@
     import type { LayoutData } from './$types';
     import { type Snippet } from 'svelte';
     // tool funcs
+    import { afterNavigate } from '$app/navigation';
     import { provide } from '$lib/utils/context';
     import { onMount } from 'svelte';
     import { updatePageHistory } from '$lib/utils/route.svelte';
@@ -54,8 +55,12 @@
         updatePageHistory(currentPath);
     });
 
-    const { userSettings } = data;
-    
+    afterNavigate((navigation) => {
+        const nextUrl = navigation.to?.url ?? page.url;
+        contextKeys.set('route', nextUrl.pathname);
+        updatePageHistory(nextUrl, navigation);
+    });
+
     onMount(() => {
         // 启动窗口入场动画
         startWindowTiltUpAnimation();

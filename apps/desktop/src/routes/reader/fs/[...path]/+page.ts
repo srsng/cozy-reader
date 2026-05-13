@@ -1,15 +1,24 @@
 import { redirect } from '@sveltejs/kit';
 import { BookService, isSupportFormat, getFileFormat } from '@cozy-reader/database';
-import { getReadBookUrl, redirectBack } from '$lib/utils/route.svelte.js';
+import { getReadBookUrl, RouteMap } from '$lib/utils/route.svelte.js';
 import { page } from '$app/state';
 import { toast } from 'svelte-sonner';
 
 export const prerender = false;
 
+function getSafeReturnTo(value: string | null): string {
+    if (!value || !value.startsWith('/') || value.startsWith('//')) {
+        return RouteMap.reader_home;
+    }
+
+    return value;
+}
+
 export async function load({ params }) {
     // 重构路径参数
     const pathSegments = params.path || [];
     const filePath = Array.isArray(pathSegments) ? pathSegments.join('/') : pathSegments;
+    const returnTo = getSafeReturnTo(page.url.searchParams.get('returnTo'));
     console.log(filePath);
 
     if (!isSupportFormat(filePath)) {
@@ -48,7 +57,7 @@ export async function load({ params }) {
                 toast.info('书籍已存在', {
                     description: `书籍标题: ${existingBook.title}`
                 });
-                redirectBack();
+                throw redirect(302, returnTo);
             }
             return {
                 existingBook
@@ -85,7 +94,7 @@ export async function load({ params }) {
             toast.info('书籍添加成功', {
                 description: `书籍标题: ${title}`
             });
-            redirectBack();
+            throw redirect(302, returnTo);
         }
     } catch (error: any) {
         // 如果是重定向错误，直接抛出
