@@ -264,18 +264,25 @@
             <div class="space-y-2">
                 {#each $currentSettings.background.images.filter((img) => !img.internal) as image (image.id)}
                     <div
-                        class="flex items-center gap-3 rounded-lg border p-3 transition-colors"
+                        class="relative flex items-center gap-3 rounded-lg border p-3 transition-colors"
                         class:bg-accent={$currentSettings.background.activeImageId === image.id}
                         class:text-accent-foreground={$currentSettings.background.activeImageId ===
                             image.id}
                     >
-                        <div class="min-w-0 flex-1">
+                        <div
+                            class={editingImageId === image.id
+                                ? 'min-w-0 flex-1'
+                                : 'min-w-0 flex-1 pr-28'}
+                        >
                             {#if editingImageId === image.id}
-                                <div class="flex items-center gap-2" in:scale={{ duration: 300 }}>
+                                <div
+                                    class="flex min-w-0 items-center gap-2"
+                                    in:scale={{ duration: 300 }}
+                                >
                                     <Input
                                         bind:value={editingName}
                                         onkeydown={handleKeydown}
-                                        class="h-8 text-sm"
+                                        class="h-8 min-w-0 flex-1 text-sm"
                                         placeholder="输入图片名称"
                                     />
                                     <Button
@@ -294,8 +301,11 @@
                                     </Button>
                                 </div>
                             {:else}
-                                <div class="flex items-center gap-2" in:scale={{ duration: 300 }}>
-                                    <p class="flex-1 truncate font-medium">{image.name}</p>
+                                <div
+                                    class="flex min-w-0 items-center gap-2"
+                                    in:scale={{ duration: 300 }}
+                                >
+                                    <p class="min-w-0 flex-1 truncate font-medium">{image.name}</p>
                                     <Button
                                         variant="ghost"
                                         class="size-8 p-0"
@@ -307,9 +317,8 @@
                             {/if}
                         </div>
                         {#if editingImageId !== image.id}
-                            <!-- todo fix: 动画结束会卡顿一下 -->
                             <div
-                                class="flex items-center gap-1"
+                                class="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1"
                                 transition:slide={{ axis: 'x', duration: 300 }}
                             >
                                 <Button
