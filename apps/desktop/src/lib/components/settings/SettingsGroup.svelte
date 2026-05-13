@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Card from '$ui/card';
     import type { UserSettings } from '$lib/settings';
-    import type { SettingEntry, SettingGroup } from '$lib/settings-registry';
+    import type { SettingGroup, SettingViewModel } from '$lib/settings-registry';
     import SettingItemRenderer from './SettingItemRenderer.svelte';
     import type { Writable } from 'svelte/store';
 
@@ -14,7 +14,7 @@
         highlightedIds = new Set<string>()
     }: {
         group: SettingGroup;
-        entries: SettingEntry[];
+        entries: SettingViewModel[];
         settingsStore: Writable<UserSettings>;
         settings: UserSettings;
         searchMode?: boolean;

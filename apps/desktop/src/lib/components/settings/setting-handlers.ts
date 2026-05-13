@@ -7,45 +7,46 @@ import type { AppThemeMode, AppThemeType, StdTDName } from '$lib/settings/Theme'
 import { applyFourColorsHue, applyThemeType } from '$lib/theme/themeUtils';
 import { updateName } from '$lib/theme/standard';
 import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
-import { setNestedValue, type SettingEntry } from '$lib/settings-registry';
+import { setNestedValue, type SettingKey, type SettingViewModel } from '$lib/settings-registry';
 import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 
 export type SettingHandlerContext = {
     settings: UserSettings;
 };
 
-type SettingHandler = (entry: SettingEntry, value: unknown, context: SettingHandlerContext) => void;
+export type SettingActionKey = SettingKey | 'zoom.event' | 'theme.effects.event';
+type SettingHandler = (entry: SettingViewModel, value: unknown, context: SettingHandlerContext) => void;
 
-export const settingHandlers: Record<string, SettingHandler> = {
+export const settingHandlers: Partial<Record<SettingActionKey, SettingHandler>> = {
     'base.langCode': (entry, value, { settings }) => {
         const langCode = value as AppLanguageCode;
-        setNestedValue(settings as unknown as Record<string, unknown>, entry.path, langCode);
+        setNestedValue(settings as unknown as Record<string, unknown>, entry.key, langCode);
         setLocale(langCode);
     },
     'base.alwaysOnTop': (entry, value, { settings }) => {
-        setNestedValue(settings as unknown as Record<string, unknown>, entry.path, value);
+        setNestedValue(settings as unknown as Record<string, unknown>, entry.key, value);
         emitMainWindowEvent('toggle-always-on-top');
     },
     'theme.mode': (entry, value, { settings }) => {
         const nextMode = value as AppThemeMode;
-        setNestedValue(settings as unknown as Record<string, unknown>, entry.path, nextMode);
+        setNestedValue(settings as unknown as Record<string, unknown>, entry.key, nextMode);
 
         if (nextMode === 'system') resetMode();
         else setMode(nextMode);
     },
     'theme.type': (entry, value, { settings }) => {
         const themeType = value as AppThemeType;
-        setNestedValue(settings as unknown as Record<string, unknown>, entry.path, themeType);
+        setNestedValue(settings as unknown as Record<string, unknown>, entry.key, themeType);
         applyThemeType(themeType);
     },
     'theme.data.standard.name': (entry, value, { settings }) => {
         const themeName = value as StdTDName;
         updateName(themeName);
-        setNestedValue(settings as unknown as Record<string, unknown>, entry.path, themeName);
+        setNestedValue(settings as unknown as Record<string, unknown>, entry.key, themeName);
     },
     'theme.data.four_colors.hue': (entry, value, { settings }) => {
         const hue = Number(value);
-        setNestedValue(settings as unknown as Record<string, unknown>, entry.path, hue);
+        setNestedValue(settings as unknown as Record<string, unknown>, entry.key, hue);
         applyFourColorsHue(hue);
     },
     'zoom.event': (_entry, value) => {
@@ -56,7 +57,16 @@ export const settingHandlers: Record<string, SettingHandler> = {
     }
 };
 
-export function runSettingHandler(name: string, entry: SettingEntry, value: unknown, context: SettingHandlerContext) {
+export function hasSettingHandler(name: SettingActionKey): boolean {
+    return Boolean(settingHandlers[name]);
+}
+
+export function runSettingHandler(
+    name: SettingActionKey,
+    entry: SettingViewModel,
+    value: unknown,
+    context: SettingHandlerContext
+) {
     const handler = settingHandlers[name];
     if (!handler) {
         console.warn(`Missing setting handler: ${name}`);

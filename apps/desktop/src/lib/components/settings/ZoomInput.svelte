@@ -4,14 +4,14 @@
     import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-svelte';
     import { runSettingHandler } from './setting-handlers';
     import type { UserSettings } from '$lib/settings';
-    import type { SettingEntry } from '$lib/settings-registry';
+    import type { SettingViewModel } from '$lib/settings-registry';
 
     let {
         entry,
         settings,
         disabled = false
     }: {
-        entry: SettingEntry;
+        entry: SettingViewModel;
         settings: UserSettings;
         disabled?: boolean;
     } = $props();

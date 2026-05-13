@@ -3,7 +3,7 @@
     import { Button } from '$ui/button';
     import type { UserSettings } from '$lib/settings';
     import type { AppThemeEffects } from '$lib/settings/Theme';
-    import type { SettingEntry } from '$lib/settings-registry';
+    import type { SettingViewModel } from '$lib/settings-registry';
     import { runSettingHandler } from './setting-handlers';
     import type { Writable } from 'svelte/store';
 
@@ -14,7 +14,7 @@
         value,
         disabled = false
     }: {
-        entry: SettingEntry;
+        entry: SettingViewModel;
         settingsStore: Writable<UserSettings>;
         settings: UserSettings;
         value: AppThemeEffects;

@@ -14,7 +14,7 @@
         getGroupsByTab,
         getSearchResultCount,
         searchEntries,
-        type SettingEntry,
+        type SettingViewModel,
         type SettingsTab
     } from '$lib/settings-registry';
 
@@ -38,7 +38,7 @@
     let activeMatchIndex = $state(0);
     let searchDebounceTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const searchResults = $derived(searchEntries(debouncedSearchText));
+    const searchResults = $derived(searchEntries(debouncedSearchText, $userSettings));
     const resultCount = $derived(getSearchResultCount(searchResults));
     const searchMode = $derived(Boolean(debouncedSearchText.trim()));
     const highlightedIds = $derived(
@@ -77,7 +77,7 @@
         await saveUserSettingsManually(data.userSettings);
     });
 
-    function getTabEntries(tabName: SettingsTab): SettingEntry[] {
+    function getTabEntries(tabName: SettingsTab): SettingViewModel[] {
         if (searchMode) return searchResults.get(tabName) ?? [];
         return getEntriesByTab(tabName, $userSettings);
     }

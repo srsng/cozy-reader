@@ -8,14 +8,13 @@
     import { Info } from 'lucide-svelte';
     import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
     import type { UserSettings } from '$lib/settings';
-    import type { SettingEntry } from '$lib/settings-registry';
+    import type { SettingViewModel } from '$lib/settings-registry';
     import {
         formatSettingValue,
-        isSearchDisabled,
-        resolveNestedValue,
+        normalizeSettingValue,
         setNestedValue
     } from '$lib/settings-registry';
-    import { runSettingHandler, getCurrentThemeMode } from './setting-handlers';
+    import { hasSettingHandler, runSettingHandler, getCurrentThemeMode } from './setting-handlers';
     import FontFamilyInput from './FontFamilyInput.svelte';
     import ThemeEffectsInput from './ThemeEffectsInput.svelte';
     import ZoomInput from './ZoomInput.svelte';
@@ -28,21 +27,21 @@
         searchMode = false,
         highlighted = false
     }: {
-        entry: SettingEntry;
+        entry: SettingViewModel;
         settingsStore: Writable<UserSettings>;
         settings: UserSettings;
         searchMode?: boolean;
         highlighted?: boolean;
     } = $props();
 
-    const isDisabled = $derived(searchMode && isSearchDisabled(entry, settings));
+    const isDisabled = $derived(searchMode && entry.disabled);
     const currentValue = $derived.by(() => {
         if (entry.id === 'theme.mode') return getCurrentThemeMode();
-        return resolveNestedValue(settings, entry.path);
+        return entry.value;
     });
     const description = $derived(
-        entry.description && entry.props?.format
-            ? `${entry.description}: ${formatSettingValue(currentValue, entry.props.format)}`
+        entry.description && entry.format
+            ? `${entry.description}: ${formatSettingValue(currentValue, entry.format)}`
             : entry.description
     );
 
@@ -57,24 +56,22 @@
     function commit(value: unknown) {
         if (isDisabled) return;
 
-        const action = entry.onChangeAction ?? { kind: 'store' as const };
+        const normalizedValue = normalizeSettingValue(entry.schema, value);
 
-        if (action.kind === 'handler') {
+        if (hasSettingHandler(entry.key)) {
             updateSettings((nextSettings) => {
-                runSettingHandler(action.name, entry, value, { settings: nextSettings });
+                runSettingHandler(entry.key, entry, normalizedValue, { settings: nextSettings });
             });
             return;
         }
 
-        if (action.kind === 'store') {
-            updateSettings((nextSettings) => {
-                setNestedValue(nextSettings as unknown as Record<string, unknown>, entry.path, value);
-            });
-        }
+        updateSettings((nextSettings) => {
+            setNestedValue(nextSettings as unknown as Record<string, unknown>, entry.key, normalizedValue);
+        });
     }
 
     function optionRecord() {
-        return Object.fromEntries((entry.props?.options ?? []).map((option) => [option.value, option.label]));
+        return Object.fromEntries(entry.options.map((option) => [option.value, option.label]));
     }
 </script>
 
@@ -111,19 +108,19 @@
             <SliderWithControls
                 value={Number(currentValue)}
                 defaultValue={Number(entry.defaultValue ?? currentValue ?? 0)}
-                min={entry.props?.min ?? 0}
-                max={entry.props?.max ?? 100}
-                step={entry.props?.step ?? 1}
+                min={entry.min ?? 0}
+                max={entry.max ?? 100}
+                step={entry.step ?? 1}
                 disabled={isDisabled}
-                input={Boolean(entry.props?.inlineInput)}
-                formatValue={(value) => formatSettingValue(value, entry.props?.format)}
+                input={Boolean(entry.inlineInput)}
+                formatValue={(value) => formatSettingValue(value, entry.format)}
                 onValueChange={commit}
             />
         {:else if entry.type === 'input'}
             <Input
                 value={String(currentValue ?? '')}
-                type={entry.props?.inputType ?? 'text'}
-                placeholder={entry.props?.placeholder}
+                type={entry.inputType ?? 'text'}
+                placeholder={entry.placeholder}
                 disabled={isDisabled}
                 onchange={(event) => commit(event.currentTarget.value)}
             />
@@ -133,7 +130,7 @@
                 disabled={isDisabled}
                 onchange={(event) => commit(event.currentTarget.value)}
             >
-                {#each entry.props?.options ?? [] as option}
+                {#each entry.options as option}
                     <NativeSelect.NativeSelectOption value={option.value}>
                         {option.label}
                     </NativeSelect.NativeSelectOption>
@@ -143,15 +140,15 @@
             <div class={isDisabled ? 'pointer-events-none' : ''}>
                 <ButtonList Map2Str={optionRecord()} selected={currentValue} onclick={commit} />
             </div>
-        {:else if entry.type === 'custom' && entry.props?.component === 'fontFamily'}
+        {:else if entry.type === 'custom' && entry.component === 'fontFamily'}
             <FontFamilyInput
                 value={String(currentValue ?? '')}
                 defaultValue={String(entry.defaultValue ?? '')}
-                placeholder={entry.props?.placeholder}
+                placeholder={entry.placeholder}
                 disabled={isDisabled}
                 onSave={commit}
             />
-        {:else if entry.type === 'custom' && entry.props?.component === 'themeEffects'}
+        {:else if entry.type === 'custom' && entry.component === 'themeEffects'}
             <ThemeEffectsInput
                 {entry}
                 {settings}
@@ -159,7 +156,7 @@
                 value={currentValue as never}
                 disabled={isDisabled}
             />
-        {:else if entry.type === 'custom' && entry.props?.component === 'zoom'}
+        {:else if entry.type === 'custom' && entry.component === 'zoom'}
             <ZoomInput {entry} {settings} disabled={isDisabled} />
         {:else}
             <Button variant="outline" disabled>尚未支持</Button>
