@@ -59,6 +59,7 @@
         "highlight.js": "^11.11.1",
         "lucide-svelte": "catalog:",
         "marked": "catalog:",
+        "ratex-wasm": "0.1.5",
         "svelte-dnd-action": "^0.9.64"
     }
 }
