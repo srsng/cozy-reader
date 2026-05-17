@@ -128,6 +128,39 @@ describe('default actions', () => {
         ).toHaveLength(1);
     });
 
+    it('allows zoom keybindings while the command palette input is focused', () => {
+        const { keybindingManager, context } = createServices();
+        const zoomIn = { key: '=', modifiers: [ModifierKey.Ctrl] };
+        const zoomOut = { key: '-', modifiers: [ModifierKey.Ctrl] };
+        const zoomReset = { key: '0', modifiers: [ModifierKey.Ctrl] };
+
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        context.contextKeys.set(ContextKey.TextInputFocus, true);
+
+        expect(keybindingManager.inspect(zoomIn).matched?.commandId).toBe('zoom.in');
+        expect(keybindingManager.inspect(zoomOut).matched?.commandId).toBe('zoom.out');
+        expect(keybindingManager.inspect(zoomReset).matched?.commandId).toBe('zoom.reset');
+
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+
+        expect(keybindingManager.inspect(zoomIn).matched).toBeNull();
+        expect(keybindingManager.inspect(zoomOut).matched).toBeNull();
+        expect(keybindingManager.inspect(zoomReset).matched).toBeNull();
+    });
+
+    it('blocks ordinary keybindings while the command palette is open', () => {
+        const { keybindingManager, context } = createServices();
+        const openSettings = { key: ',', modifiers: [ModifierKey.Ctrl] };
+
+        expect(keybindingManager.inspect(openSettings).matched?.commandId).toBe(
+            'navigate.settings'
+        );
+
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+
+        expect(keybindingManager.inspect(openSettings).matched).toBeNull();
+    });
+
     it('registers navigation action through all contribution channels', async () => {
         const { commandService, menuService, keybindingManager, context } = createServices();
 
@@ -278,15 +311,50 @@ describe('default actions', () => {
         ).toBe(false);
     });
 
-    it('lets command palette keybindings work while text inputs or dialogs are active', () => {
-        const { keybindingManager, context } = createServices();
-        const showCommands = { key: 'p', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] };
+    it('toggles the command palette from text inputs, dialogs, and the open palette', async () => {
+        const { commandService, keybindingManager, context } = createServices();
+        const showCommands = { key: 'p', modifiers: [ModifierKey.Ctrl] };
+        const showCommandsF1 = { key: 'f1', modifiers: [] };
+        const closeCommands = { key: 'Esc', modifiers: [] };
+
+        expect(context.contextKeys.get(ContextKey.CommandPaletteOpen)).toBeUndefined();
+
+        expect(await commandService.execute('app.showCommands')).toBe(true);
+        expect(context.contextKeys.get(ContextKey.CommandPaletteOpen)).toBe(true);
+
+        expect(await commandService.execute('app.showCommands')).toBe(true);
+        expect(context.contextKeys.get(ContextKey.CommandPaletteOpen)).toBe(false);
 
         context.contextKeys.set(ContextKey.TextInputFocus, true);
         context.contextKeys.set(ContextKey.DialogOpen, true);
 
-        expect(keybindingManager.inspect(showCommands).matched?.commandId).toBe(
+        expect(keybindingManager.inspect(showCommands).matched?.commandId).toBe('app.showCommands');
+        expect(keybindingManager.inspect(showCommandsF1).matched?.commandId).toBe(
             'app.showCommands'
+        );
+
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+
+        expect(keybindingManager.inspect(showCommands).matched?.commandId).toBe('app.showCommands');
+        expect(keybindingManager.inspect(showCommandsF1).matched?.commandId).toBe(
+            'app.showCommands'
+        );
+        expect(keybindingManager.inspect(closeCommands).matched?.commandId).toBe(
+            'app.closeCommands'
+        );
+    });
+
+    it('lets command palette close keybindings work while text inputs or dialogs are active', () => {
+        const { keybindingManager, context } = createServices();
+        const closeCommands = { key: 'Esc', modifiers: [] };
+
+        context.contextKeys.set(ContextKey.TextInputFocus, true);
+        context.contextKeys.set(ContextKey.DialogOpen, true);
+
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+
+        expect(keybindingManager.inspect(closeCommands).matched?.commandId).toBe(
+            'app.closeCommands'
         );
     });
 

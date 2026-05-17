@@ -20,24 +20,40 @@
         searchMode?: boolean;
         highlightedIds?: Set<string>;
     } = $props();
+
+    const compactSingleItem = $derived(!searchMode && entries.length === 1);
 </script>
 
-<Card.Root>
-    <Card.Header>
-        <Card.Title>{group.label}</Card.Title>
-        {#if group.description}
-            <Card.Description>{group.description}</Card.Description>
-        {/if}
-    </Card.Header>
-    <Card.Content class="space-y-2">
-        {#each entries as entry (entry.id)}
+{#if compactSingleItem}
+    <Card.Root size="sm">
+        <Card.Content class="px-0">
             <SettingItemRenderer
-                {entry}
+                entry={entries[0]}
                 {settingsStore}
                 {settings}
                 {searchMode}
-                highlighted={highlightedIds.has(entry.id)}
+                highlighted={highlightedIds.has(entries[0].id)}
             />
-        {/each}
-    </Card.Content>
-</Card.Root>
+        </Card.Content>
+    </Card.Root>
+{:else}
+    <Card.Root>
+        <Card.Header>
+            <Card.Title>{group.label}</Card.Title>
+            {#if group.description}
+                <Card.Description>{group.description}</Card.Description>
+            {/if}
+        </Card.Header>
+        <Card.Content class="space-y-2">
+            {#each entries as entry (entry.id)}
+                <SettingItemRenderer
+                    {entry}
+                    {settingsStore}
+                    {settings}
+                    {searchMode}
+                    highlighted={highlightedIds.has(entry.id)}
+                />
+            {/each}
+        </Card.Content>
+    </Card.Root>
+{/if}

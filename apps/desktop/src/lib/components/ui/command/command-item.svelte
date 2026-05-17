@@ -22,6 +22,6 @@
 >
     {@render children?.()}
     <CheckIcon
-        class="cn-command-item-indicator ml-auto opacity-0 group-has-[[data-slot=command-shortcut]]/command-item:hidden group-data-[checked=true]/command-item:opacity-100"
+        class="cn-command-item-indicator ml-auto hidden opacity-0 group-has-[[data-slot=command-shortcut]]/command-item:hidden group-data-[checked=true]/command-item:opacity-100"
     />
 </CommandPrimitive.Item>

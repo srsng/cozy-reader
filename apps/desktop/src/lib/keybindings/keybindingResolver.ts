@@ -84,7 +84,8 @@ export class KeybindingResolver {
         }
 
         return this.contextKeyService.match(
-            keybinding.when ?? `!${ContextKey.TextInputFocus} && !${ContextKey.DialogOpen}`
+            keybinding.when ??
+                `!${ContextKey.TextInputFocus} && !${ContextKey.DialogOpen} && !${ContextKey.CommandPaletteOpen}`
         );
     }
 }

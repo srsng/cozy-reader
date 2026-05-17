@@ -62,29 +62,33 @@ const themeEffectArgsSchema = z.tuple([themeEffectPayloadSchema]);
 export const defaultActions = defineActions([
     defineKnownAction({
         id: 'app.showCommands',
-        title: '显示命令面板',
-        description: '打开命令面板',
+        title: '切换命令面板',
+        description: '打开或关闭命令面板',
         category: 'application',
         keywords: ['command', 'palette', '命令面板'],
         command: {
-            enablement: `!${ContextKey.CommandPaletteOpen}`,
             argsSchema: noArgsSchema,
             run: (context) => {
-                context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+                context.contextKeys.set(
+                    ContextKey.CommandPaletteOpen,
+                    !context.contextKeys.get(ContextKey.CommandPaletteOpen)
+                );
             }
         },
         keybindings: [
             {
                 id: 'app.show-commands',
-                combination: { key: 'p', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] },
+                combination: { key: 'p', modifiers: [ModifierKey.Ctrl] },
                 allowInTextInput: true,
-                allowWhenDialogOpen: true
+                allowWhenDialogOpen: true,
+                allowWhenCommandPaletteOpen: true
             },
             {
                 id: 'app.show-commands-f1',
                 combination: { key: 'f1', modifiers: [] },
                 allowInTextInput: true,
-                allowWhenDialogOpen: true
+                allowWhenDialogOpen: true,
+                allowWhenCommandPaletteOpen: true
             }
         ]
     }),
@@ -106,7 +110,8 @@ export const defaultActions = defineActions([
                 id: 'app.close-commands',
                 combination: { key: 'Esc', modifiers: [] },
                 allowInTextInput: true,
-                allowWhenDialogOpen: true
+                allowWhenDialogOpen: true,
+                allowWhenCommandPaletteOpen: true
             }
         ]
     }),
@@ -158,7 +163,8 @@ export const defaultActions = defineActions([
         ],
         keybindings: [
             {
-                combination: { key: '=', modifiers: [ModifierKey.Ctrl] }
+                combination: { key: '=', modifiers: [ModifierKey.Ctrl] },
+                allowWhenCommandPaletteOpen: true
             }
         ]
     }),
@@ -185,7 +191,8 @@ export const defaultActions = defineActions([
         ],
         keybindings: [
             {
-                combination: { key: '-', modifiers: [ModifierKey.Ctrl] }
+                combination: { key: '-', modifiers: [ModifierKey.Ctrl] },
+                allowWhenCommandPaletteOpen: true
             }
         ]
     }),
@@ -209,7 +216,8 @@ export const defaultActions = defineActions([
         ],
         keybindings: [
             {
-                combination: { key: '0', modifiers: [ModifierKey.Ctrl] }
+                combination: { key: '0', modifiers: [ModifierKey.Ctrl] },
+                allowWhenCommandPaletteOpen: true
             }
         ]
     }),
@@ -248,7 +256,8 @@ export const defaultActions = defineActions([
         keybindings: [
             {
                 id: 'window.toggle-always-on-top',
-                combination: { key: 't', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] }
+                combination: { key: 't', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] },
+                allowWhenCommandPaletteOpen: true
             }
         ]
     }),

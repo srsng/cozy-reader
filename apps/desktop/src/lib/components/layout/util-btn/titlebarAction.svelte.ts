@@ -1,33 +1,36 @@
 import { MenuId, type MenuContribution, type MenuService } from '$lib/menus';
 
-export function createTitleBarAction(
-    menuService: MenuService,
-    id: string,
-    fallbackTitle: string
-) {
-    let version = $state(0);
+export function createTitleBarAction(menuService: MenuService, id: string, fallbackTitle: string) {
+    let menuChangeVersion = $state(0);
 
     $effect(() => {
         const disposable = menuService.onDidChange(() => {
-            version += 1;
+            menuChangeVersion += 1;
         });
 
         return () => disposable.dispose();
     });
 
     const contribution = $derived.by((): MenuContribution | undefined => {
-        version;
+        menuChangeVersion;
         return menuService.getItem(MenuId.TitleBar, id);
     });
 
     const title = $derived.by(() => {
+        menuChangeVersion;
         if (!contribution) return fallbackTitle;
         return menuService.getDisplayTitle(contribution);
     });
 
-    const disabled = $derived.by(() => !contribution || !menuService.canExecute(contribution));
+    const disabled = $derived.by(() => {
+        menuChangeVersion;
+        return !contribution || !menuService.canExecute(contribution);
+    });
 
-    const toggled = $derived.by(() => Boolean(contribution && menuService.isToggled(contribution)));
+    const toggled = $derived.by(() => {
+        menuChangeVersion;
+        return Boolean(contribution && menuService.isToggled(contribution));
+    });
 
     async function execute(): Promise<boolean> {
         if (!contribution || !menuService.canExecute(contribution)) return false;

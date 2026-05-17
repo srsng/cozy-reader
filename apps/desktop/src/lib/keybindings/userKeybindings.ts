@@ -27,7 +27,8 @@ export function userKeybindingRuleToStaticKeybinding(
         combination,
         when: resolveKeybindingWhen(rule.when ?? fallback?.when, {
             allowInTextInput: rule.allowInTextInput,
-            allowWhenDialogOpen: rule.allowWhenDialogOpen
+            allowWhenDialogOpen: rule.allowWhenDialogOpen,
+            allowWhenCommandPaletteOpen: rule.allowWhenCommandPaletteOpen
         }),
         source: 'user',
         commandScope: rule.commandScope ?? fallback?.commandScope,
@@ -71,6 +72,10 @@ function parseUserKeybindingRule(value: unknown): UserKeybindingRule | undefined
 
     if (typeof record.allowWhenDialogOpen === 'boolean') {
         rule.allowWhenDialogOpen = record.allowWhenDialogOpen;
+    }
+
+    if (typeof record.allowWhenCommandPaletteOpen === 'boolean') {
+        rule.allowWhenCommandPaletteOpen = record.allowWhenCommandPaletteOpen;
     }
 
     if (Array.isArray(record.args) && record.args.every(isCommandPayload)) {

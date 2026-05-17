@@ -152,7 +152,8 @@ describe('KeybindingResolver', () => {
     it('skips keybindings without explicit when while a dialog is open', () => {
         const contextKeys = new ContextKeyService({
             [ContextKey.TextInputFocus]: false,
-            [ContextKey.DialogOpen]: false
+            [ContextKey.DialogOpen]: false,
+            [ContextKey.CommandPaletteOpen]: false
         });
         const resolver = new KeybindingResolver(contextKeys);
         const combination = { key: '=', modifiers: [ModifierKey.Ctrl] };
@@ -160,6 +161,22 @@ describe('KeybindingResolver', () => {
         expect(resolver.resolve([baseKeybinding], combination)?.id).toBe('default-zoom-in');
 
         contextKeys.set(ContextKey.DialogOpen, true);
+
+        expect(resolver.resolve([baseKeybinding], combination)).toBeNull();
+    });
+
+    it('skips keybindings without explicit when while the command palette is open', () => {
+        const contextKeys = new ContextKeyService({
+            [ContextKey.TextInputFocus]: false,
+            [ContextKey.DialogOpen]: false,
+            [ContextKey.CommandPaletteOpen]: false
+        });
+        const resolver = new KeybindingResolver(contextKeys);
+        const combination = { key: '=', modifiers: [ModifierKey.Ctrl] };
+
+        expect(resolver.resolve([baseKeybinding], combination)?.id).toBe('default-zoom-in');
+
+        contextKeys.set(ContextKey.CommandPaletteOpen, true);
 
         expect(resolver.resolve([baseKeybinding], combination)).toBeNull();
     });

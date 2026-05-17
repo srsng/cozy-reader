@@ -246,7 +246,7 @@ describe('default commands', () => {
         expect(context.contextKeys.get(ContextKey.WindowAlwaysOnTop)).toBe(false);
     });
 
-    it('filters commands by context key visibility', () => {
+    it('keeps command palette toggle executable while the palette is open', () => {
         const { context } = createContext();
         const commandService = new CommandService(context);
         const menuService = new MenuService(commandService, context.contextKeys);
@@ -255,7 +255,7 @@ describe('default commands', () => {
 
         context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
 
-        expect(commandService.canExecute('app.showCommands')).toBe(false);
+        expect(commandService.canExecute('app.showCommands')).toBe(true);
         expect(commandService.canExecute('app.closeCommands')).toBe(true);
     });
 

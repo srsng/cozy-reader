@@ -90,6 +90,7 @@ function resolveKeybindingWhen(
 ): string {
     return resolveGuardedKeybindingWhen(keybinding.when ?? commandEnablement, {
         allowInTextInput: keybinding.allowInTextInput,
-        allowWhenDialogOpen: keybinding.allowWhenDialogOpen
+        allowWhenDialogOpen: keybinding.allowWhenDialogOpen,
+        allowWhenCommandPaletteOpen: keybinding.allowWhenCommandPaletteOpen
     });
 }

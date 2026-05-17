@@ -15,6 +15,7 @@ export type UserKeybindingRule =
           when?: string;
           allowInTextInput?: boolean;
           allowWhenDialogOpen?: boolean;
+          allowWhenCommandPaletteOpen?: boolean;
           payload?: CommandPayload;
           args?: CommandPayload[];
           disabled?: false;

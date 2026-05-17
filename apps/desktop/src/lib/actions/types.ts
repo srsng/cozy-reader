@@ -31,6 +31,7 @@ export type ActionKeybindingContribution = {
     when?: string;
     allowInTextInput?: boolean;
     allowWhenDialogOpen?: boolean;
+    allowWhenCommandPaletteOpen?: boolean;
     source?: KeybindingSource;
     payload?: CommandPayload;
     args?: CommandPayload[];

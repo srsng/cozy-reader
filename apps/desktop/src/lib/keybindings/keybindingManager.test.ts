@@ -219,7 +219,7 @@ describe('KeybindingManager', () => {
         expect(manager.getKeybindingsForCommand('reader.page.next')).toHaveLength(1);
     });
 
-    it('adds text input and dialog guards to user keybindings unless explicitly allowed', () => {
+    it('adds text input, dialog, and command palette guards to user keybindings unless explicitly allowed', () => {
         const manager = new KeybindingManager();
         const contextKeys = new ContextKeyService();
         manager.setContextKeyService(contextKeys);
@@ -250,6 +250,35 @@ describe('KeybindingManager', () => {
 
         contextKeys.set(ContextKey.TextInputFocus, false);
         contextKeys.set(ContextKey.DialogOpen, true);
+        expect(manager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched).toBeNull();
+
+        contextKeys.set(ContextKey.DialogOpen, false);
+        contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        expect(manager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched).toBeNull();
+    });
+
+    it('allows user keybinding rules to opt into command palette execution', () => {
+        const manager = new KeybindingManager();
+        const contextKeys = new ContextKeyService();
+        manager.setContextKeyService(contextKeys);
+        manager.applyUserKeybindingRules([
+            {
+                id: 'user-zoom-in',
+                commandId: 'zoom.in',
+                key: 'Ctrl+=',
+                allowWhenCommandPaletteOpen: true
+            }
+        ]);
+
+        contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        contextKeys.set(ContextKey.TextInputFocus, true);
+
+        expect(manager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched?.id).toBe(
+            'user-zoom-in'
+        );
+
+        contextKeys.set(ContextKey.CommandPaletteOpen, false);
+
         expect(manager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched).toBeNull();
     });
 

@@ -185,7 +185,7 @@ describe('registerAction', () => {
         ).toHaveLength(0);
     });
 
-    it('adds text input and dialog guards to action keybindings by default', () => {
+    it('adds text input, dialog, and command palette guards to action keybindings by default', () => {
         const { commandService, menuService, keybindingManager, context } = createServices();
         keybindingManager.setContextKeyService(context.contextKeys);
         const action: ActionDefinition = {
@@ -207,6 +207,7 @@ describe('registerAction', () => {
         context.contextKeys.set(ContextKey.WindowDevtoolsAvailable, true);
         context.contextKeys.set(ContextKey.TextInputFocus, false);
         context.contextKeys.set(ContextKey.DialogOpen, false);
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
 
         const combination = { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] };
         expect(keybindingManager.inspect(combination).matched?.commandId).toBe(
@@ -219,6 +220,42 @@ describe('registerAction', () => {
         context.contextKeys.set(ContextKey.TextInputFocus, false);
         context.contextKeys.set(ContextKey.DialogOpen, true);
         expect(keybindingManager.inspect(combination).matched).toBeNull();
+
+        context.contextKeys.set(ContextKey.DialogOpen, false);
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        expect(keybindingManager.inspect(combination).matched).toBeNull();
+    });
+
+    it('can opt action keybindings into command palette execution', () => {
+        const { commandService, menuService, keybindingManager, context } = createServices();
+        keybindingManager.setContextKeyService(context.contextKeys);
+        const action: ActionDefinition = {
+            id: 'zoom.in',
+            title: '放大',
+            category: 'zoom',
+            command: { run: vi.fn() },
+            keybindings: [
+                {
+                    combination: { key: '=', modifiers: [ModifierKey.Ctrl] },
+                    allowWhenCommandPaletteOpen: true
+                }
+            ]
+        };
+
+        registerAction(action, { commandService, menuService, keybindingManager });
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        context.contextKeys.set(ContextKey.TextInputFocus, true);
+
+        expect(
+            keybindingManager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched
+                ?.commandId
+        ).toBe('zoom.in');
+
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+
+        expect(
+            keybindingManager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched
+        ).toBeNull();
     });
 
     it('adds command scope to menu and keybinding invocations', async () => {

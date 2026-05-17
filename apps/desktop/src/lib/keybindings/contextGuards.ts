@@ -3,6 +3,7 @@ import { ContextKey } from '$lib/context-keys';
 export type KeybindingGuardOptions = {
     allowInTextInput?: boolean;
     allowWhenDialogOpen?: boolean;
+    allowWhenCommandPaletteOpen?: boolean;
 };
 
 export function resolveKeybindingWhen(
@@ -11,8 +12,9 @@ export function resolveKeybindingWhen(
 ): string {
     return joinContextExpressions([
         expression,
-        options.allowInTextInput ? undefined : `!${ContextKey.TextInputFocus}`,
-        options.allowWhenDialogOpen ? undefined : `!${ContextKey.DialogOpen}`
+        resolveTextInputGuard(options),
+        options.allowWhenDialogOpen ? undefined : `!${ContextKey.DialogOpen}`,
+        options.allowWhenCommandPaletteOpen ? undefined : `!${ContextKey.CommandPaletteOpen}`
     ]);
 }
 
@@ -25,4 +27,13 @@ export function joinContextExpressions(expressions: readonly (string | undefined
 
 function parenthesizeExpression(expression: string): string {
     return `(${expression})`;
+}
+
+function resolveTextInputGuard(options: KeybindingGuardOptions): string | undefined {
+    if (options.allowInTextInput) return undefined;
+    if (options.allowWhenCommandPaletteOpen) {
+        return `!${ContextKey.TextInputFocus} || ${ContextKey.CommandPaletteOpen}`;
+    }
+
+    return `!${ContextKey.TextInputFocus}`;
 }
