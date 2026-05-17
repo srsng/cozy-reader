@@ -11,9 +11,7 @@
     import * as Tooltip from '$ui/tooltip';
     import { writeToClipBoard } from '$lib/utils/clip';
     import { scale, slide } from 'svelte/transition';
-    import { BACKGROUND_EVENTS } from '$lib/events/shortcut';
-    import { emit } from '@tauri-apps/api/event';
-    import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
+    import { applyBackgroundImageThemeBindingToSettings } from '$lib/theme/backgroundThemeBinding';
     import { toast } from 'svelte-sonner';
     import apis from '$lib/apis';
 </script>
@@ -39,9 +37,7 @@
                     ...$currentSettings.background.images,
                     newImage
                 ];
-                $currentSettings.background.activeImageId = newImage.id;
-                // 发送背景图片切换事件
-                emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
+                activateBackgroundImage(newImage);
             }
         } catch (error) {
             toast.error('选择图片失败', {
@@ -96,9 +92,7 @@
         }
 
         if (await apis.fs.exists({ path: image.filePath })) {
-            $currentSettings.background.activeImageId = imageId;
-            // 发送背景图片切换事件
-            emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
+            activateBackgroundImage(image);
         } else {
             toast.error('目标图片不存在', {
                 description: '请检查是否删除图片'
@@ -109,8 +103,6 @@
     // 禁用背景图片
     function disableBackground() {
         $currentSettings.background.activeImageId = null;
-        // 发送背景图片切换事件
-        emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
     }
 
     // 编辑状态管理
@@ -181,10 +173,7 @@
             ];
 
             // 设为活跃图片
-            $currentSettings.background.activeImageId = copiedImage.id;
-
-            // 发送背景图片切换事件
-            emit(SHORTCUT_EVENT, BACKGROUND_EVENTS.IMAGE_CHANGED);
+            activateBackgroundImage(copiedImage);
 
             toast.success('复制配置成功', {
                 description: `已复制 "${sourceImage.name}" 的配置`
@@ -195,6 +184,14 @@
             });
             console.error('复制配置失败:', error);
         }
+    }
+
+    function activateBackgroundImage(image: BackgroundImage) {
+        currentSettings.update((settings) => {
+            settings.background.activeImageId = image.id;
+            applyBackgroundImageThemeBindingToSettings(settings, image);
+            return settings;
+        });
     }
 </script>
 

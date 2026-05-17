@@ -2,7 +2,8 @@
     import type { Book } from '@cozy-reader/database';
     import { sidebarStore } from '$lib/reader/stores/sidebarStore';
     import { readerStore } from '$lib/reader/stores/readerStore';
-    import { Drawer, DrawerContent, DrawerHeader, DrawerClose } from '$ui/drawer';
+    import { DrawerContent, DrawerHeader, DrawerClose } from '$ui/drawer';
+    import { CommandAwareDrawerRoot } from '$lib/components/overlays';
     import { Button } from '$ui/button';
     import { Pin, PinOff, X } from '@lucide/svelte';
     import TabNavigation from './TabNavigation.svelte';
@@ -80,7 +81,12 @@
     };
 </script>
 
-<Drawer open={isVisible} onOpenChange={handleOpenChange} direction="left" modal={!isPinned}>
+<CommandAwareDrawerRoot
+    open={isVisible}
+    onOpenChange={handleOpenChange}
+    direction="left"
+    modal={!isPinned}
+>
     <DrawerContent
         noPortal={isPinned}
         class={cn(
@@ -153,4 +159,4 @@
             </div>
         </div>
     </DrawerContent>
-</Drawer>
+</CommandAwareDrawerRoot>

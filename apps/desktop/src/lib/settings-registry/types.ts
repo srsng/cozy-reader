@@ -1,4 +1,5 @@
 import type { UserSettings } from '$lib/settings';
+import { ContextKeyService, type ContextKeySnapshot } from '$lib/context-keys';
 
 export type SettingsTab = 'base' | 'theme' | 'reader';
 export type SettingPrimitiveType = 'boolean' | 'number' | 'string';
@@ -45,8 +46,7 @@ export type SettingUISchema = {
 };
 
 export type SettingWhen = {
-    key: SettingKey;
-    equals: unknown;
+    expression: string;
     disabledReason?: string;
 };
 
@@ -135,13 +135,24 @@ export function setNestedValue<T extends Record<string, unknown>>(obj: T, path: 
     return obj;
 }
 
+export function createSettingsContextSnapshot(settingsSnapshot: SettingsSnapshot): ContextKeySnapshot {
+    return Object.fromEntries(
+        settingsConfigurationKeys.map((key) => [
+            `config.${key}`,
+            resolveNestedValue(settingsSnapshot, key) as ContextKeySnapshot[string]
+        ])
+    );
+}
+
 export function isConditionMet(
     setting: SettingPropertySchema | SettingViewModel,
     settingsSnapshot: SettingsSnapshot
 ): boolean {
     const when = 'schema' in setting ? setting.condition : setting.when;
     if (!when) return true;
-    return resolveNestedValue(settingsSnapshot, when.key) === when.equals;
+    return new ContextKeyService(createSettingsContextSnapshot(settingsSnapshot)).match(
+        when.expression
+    );
 }
 
 export function inferPresentation(schema: SettingPropertySchema): SettingPresentation {
@@ -228,3 +239,28 @@ export function formatSettingValue(value: unknown, format?: SettingFormat): stri
     if (format === 'px') return `${value}px`;
     return String(value);
 }
+
+const settingsConfigurationKeys: SettingKey[] = [
+    'base.langCode',
+    'base.uiOpacity',
+    'base.bodyTransparent',
+    'base.layoutControlsOutline',
+    'base.zoom',
+    'base.alwaysOnTop',
+    'layout.titlebar',
+    'layout.header',
+    'layout.footer',
+    'theme.mode',
+    'theme.type',
+    'theme.data.standard.name',
+    'theme.data.four_colors.hue',
+    'theme.data.pony.name',
+    'theme.effects',
+    'reader.fontFamily',
+    'reader.fontSize',
+    'reader.lineHeight',
+    'reader.viewerWidth',
+    'reader.firstLineIndent',
+    'reader.zoomLongPic',
+    'reader.scrollBarVisable'
+];

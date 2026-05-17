@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
-    import { Drawer, DrawerContent, DrawerOverlay } from '$lib/components/ui/drawer';
+    import { DrawerContent, DrawerOverlay } from '$lib/components/ui/drawer';
+    import { CommandAwareDrawerRoot } from '$lib/components/overlays';
     import { Button } from '$lib/components/ui/button';
     import { Card, CardContent } from '$lib/components/ui/card';
     import { readerStore } from '$lib/reader/stores/readerStore';
@@ -166,7 +167,7 @@
     });
 </script>
 
-<Drawer
+<CommandAwareDrawerRoot
     open={isVisible}
     onOpenChange={(open) => !open && handleClose()}
     direction="right"
@@ -249,4 +250,4 @@
             </div>
         </div>
     </DrawerContent>
-</Drawer>
+</CommandAwareDrawerRoot>

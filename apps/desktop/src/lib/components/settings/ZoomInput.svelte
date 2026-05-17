@@ -2,23 +2,24 @@
     import { Button } from '$ui/button';
     import { Label } from '$ui/label';
     import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-svelte';
-    import { runSettingHandler } from './setting-handlers';
     import type { UserSettings } from '$lib/settings';
-    import type { SettingViewModel } from '$lib/settings-registry';
+    import { COMMAND_SERVICE } from '$lib/commands';
+    import { inject } from '$lib/utils/context';
 
     let {
-        entry,
         settings,
         disabled = false
     }: {
-        entry: SettingViewModel;
         settings: UserSettings;
         disabled?: boolean;
     } = $props();
 
-    function emitZoom(eventName: 'zoom-in' | 'zoom-out' | 'zoom-reset') {
+    const commandService = inject(COMMAND_SERVICE);
+    type ZoomCommandId = 'zoom.in' | 'zoom.out' | 'zoom.reset';
+
+    function executeZoom(commandId: ZoomCommandId) {
         if (disabled) return;
-        runSettingHandler('zoom.event', entry, eventName, { settings });
+        commandService.execute(commandId);
     }
 </script>
 
@@ -29,13 +30,13 @@
             {(settings.base.zoom * 100).toFixed(1)}%
         </Label>
     </Button>
-    <Button size="icon" title="缩小" {disabled} onclick={() => emitZoom('zoom-out')}>
+    <Button size="icon" title="缩小" {disabled} onclick={() => executeZoom('zoom.out')}>
         <ZoomOut />
     </Button>
-    <Button size="icon" title="放大" {disabled} onclick={() => emitZoom('zoom-in')}>
+    <Button size="icon" title="放大" {disabled} onclick={() => executeZoom('zoom.in')}>
         <ZoomIn />
     </Button>
-    <Button size="icon" title="重置缩放" {disabled} onclick={() => emitZoom('zoom-reset')}>
+    <Button size="icon" title="重置缩放" {disabled} onclick={() => executeZoom('zoom.reset')}>
         <RotateCcw />
     </Button>
 </div>

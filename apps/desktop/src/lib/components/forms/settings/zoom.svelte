@@ -2,17 +2,22 @@
     import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-svelte';
     import { Button } from '$ui/button';
     import { Label } from '$ui/label';
-    import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
-    import { emit } from '@tauri-apps/api/event';
     import { m } from '$lib/paraglide/messages';
     import { USER_SETTINGS } from '$lib/stores/userSettings';
     import { inject } from '$lib/utils/context';
+    import { COMMAND_SERVICE } from '$lib/commands';
 </script>
 
 <script lang="ts">
     const { label = false }: { label?: boolean } = $props();
 
     const userSettings = inject(USER_SETTINGS);
+    const commandService = inject(COMMAND_SERVICE);
+    type ZoomCommandId = 'zoom.in' | 'zoom.out' | 'zoom.reset';
+
+    function executeZoom(commandId: ZoomCommandId) {
+        commandService.execute(commandId);
+    }
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -20,7 +25,7 @@
     <Button
         size="icon"
         title={m['settings.zoom-out']()}
-        onclick={() => emit(SHORTCUT_EVENT, 'zoom-out')}
+        onclick={() => executeZoom('zoom.out')}
     >
         <ZoomOut />
     </Button>
@@ -34,7 +39,7 @@
     <Button
         size="icon"
         title={m['settings.zoom-in']()}
-        onclick={() => emit(SHORTCUT_EVENT, 'zoom-in')}
+        onclick={() => executeZoom('zoom.in')}
     >
         <ZoomIn />
     </Button>
@@ -42,7 +47,7 @@
     <Button
         size="icon"
         title={m['settings.zoom-reset']()}
-        onclick={() => emit(SHORTCUT_EVENT, 'zoom-reset')}
+        onclick={() => executeZoom('zoom.reset')}
     >
         <RotateCcw />
     </Button>

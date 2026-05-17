@@ -5,8 +5,15 @@
         shouldScaleBackground = true,
         open = $bindable(false),
         activeSnapPoint = $bindable(null),
+        modal = true,
         ...restProps
     }: DrawerPrimitive.RootProps = $props();
 </script>
 
-<DrawerPrimitive.Root {shouldScaleBackground} bind:open bind:activeSnapPoint {...restProps} />
+<DrawerPrimitive.Root
+    {shouldScaleBackground}
+    {modal}
+    bind:open
+    bind:activeSnapPoint
+    {...restProps}
+/>

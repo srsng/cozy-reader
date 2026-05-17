@@ -1,7 +1,10 @@
 <script lang="ts">
     import { Button } from '$lib/components/ui/button';
     import { Type } from 'lucide-svelte';
-    import { readerStore } from '$lib/reader/stores/readerStore';
+    import { COMMAND_ROUTER } from '$lib/commands';
+    import { executeReaderCommand, ReaderCommandId } from '$lib/reader/commands';
+    import { readerCommandState } from '$lib/reader/stores/readerCommandState';
+    import { inject } from '$lib/utils/context';
 
     interface Props {
         bookKey: string;
@@ -10,19 +13,28 @@
     }
 
     let { bookKey, open = $bindable(false), onOpenChange }: Props = $props();
+    const commandRouter = inject(COMMAND_ROUTER);
 
-    const handleToggleSettings = () => {
-        readerStore.setHoveredBookKey('');
-        // 触发设置对话框打开事件
-        window.dispatchEvent(
-            new CustomEvent('settings-open', {
-                detail: { bookKey },
-                bubbles: true
-            })
+    $effect(() => {
+        const unsubscribe = readerCommandState.subscribe(() => {
+            const nextOpen = readerCommandState.isSettingsOpen(bookKey);
+            if (open === nextOpen) return;
+
+            open = nextOpen;
+            onOpenChange?.(nextOpen);
+        });
+
+        return unsubscribe;
+    });
+
+    const handleToggleSettings = async () => {
+        const currentOpen = readerCommandState.isSettingsOpen(bookKey);
+        const executed = await executeReaderCommand(
+            commandRouter,
+            currentOpen ? ReaderCommandId.SettingsClose : ReaderCommandId.SettingsOpen,
+            { bookKey }
         );
-        // 更新本地状态
-        open = !open;
-        onOpenChange?.(open);
+        if (!executed) return;
     };
 </script>
 

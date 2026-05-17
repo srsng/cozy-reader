@@ -34,7 +34,7 @@
     {variant}
     {size}
     class={className}
-    onclick={onClick || goBack}
+    onclick={onClick || (() => goBack())}
     disabled={!canGoBack()}
     hidden={hiddenOnDisabled && !canGoBack()}
     {...others}

@@ -48,6 +48,7 @@
     "dependencies": {
         "@cozy-reader/database": "workspace:*",
         "@inlang/paraglide-js": "^2.0.0",
+        "@standard-schema/spec": "catalog:",
         "@sveltejs/adapter-static": "catalog:svelte",
         "@tauri-apps/api": "catalog:tauri",
         "@tauri-apps/plugin-clipboard-manager": "catalog:tauri",
@@ -62,6 +63,7 @@
         "lucide-svelte": "catalog:",
         "marked": "catalog:",
         "ratex-wasm": "0.1.5",
-        "svelte-dnd-action": "^0.9.64"
+        "svelte-dnd-action": "^0.9.64",
+        "zod": "catalog:"
     }
 }

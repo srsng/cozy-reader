@@ -35,6 +35,8 @@ pub fn run() {
             utils::fs::fs_exists,
             utils::database::get_database_configs,
             utils::fs::get_file_info,
+            utils::devtools::devtools_available,
+            utils::devtools::open_main_window_devtools,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

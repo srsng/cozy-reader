@@ -262,8 +262,7 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
         tags: ['theme', 'color'],
         keywords: ['标准', '主题色', '颜色'],
         when: {
-            key: 'theme.type',
-            equals: 'standard',
+            expression: 'config.theme.type == "standard"',
             disabledReason: '仅在标准主题下可用'
         },
         ui: { presentation: 'button-list' }
@@ -283,8 +282,7 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
         tags: ['theme', 'color', 'hue'],
         keywords: ['色相', '四色', 'hue'],
         when: {
-            key: 'theme.type',
-            equals: 'four_colors',
+            expression: 'config.theme.type == "four_colors"',
             disabledReason: '仅在四色主题下可用'
         },
         ui: { presentation: 'slider', format: 'number', inlineInput: true }
@@ -303,8 +301,7 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
         tags: ['theme', 'pony'],
         keywords: ['小马', '友谊是魔法', '角色', 'pony'],
         when: {
-            key: 'theme.type',
-            equals: 'pony',
+            expression: 'config.theme.type == "pony"',
             disabledReason: '仅在友谊是魔法主题下可用'
         },
         ui: { presentation: 'button-list' }

@@ -1,4 +1,28 @@
-import type { CommandId } from '$lib/commands';
+import type { CommandPayload, CommandReference, CommandScope } from '$lib/commands/types';
+
+export type KeybindingSource = 'default' | 'feature' | 'user' | 'legacy';
+
+export type UserKeybindingRule =
+    | {
+          id: string;
+          disabled: true;
+      }
+    | {
+          id: string;
+          commandScope?: CommandScope;
+          commandId: CommandReference;
+          key: string;
+          when?: string;
+          allowInTextInput?: boolean;
+          allowWhenDialogOpen?: boolean;
+          payload?: CommandPayload;
+          args?: CommandPayload[];
+          disabled?: false;
+      };
+
+export type KeybindingSettings = {
+    rules: UserKeybindingRule[];
+};
 
 // 前端按键绑定系统类型定义
 
@@ -60,13 +84,22 @@ export interface StaticKeybinding {
     description: string;
     /** 键盘组合 */
     combination: KeyCombination;
-    global?: boolean;
-    /** 是否在输入框中禁用 */
-    disableInInput?: boolean;
+    /** 预留给 VS Code 风格多段快捷键 */
+    sequence?: readonly KeyCombination[];
+    /** 生效条件 */
+    when?: string;
+    /** 来源优先级 */
+    source?: KeybindingSource;
     /** 关联命令 */
-    commandId?: CommandId;
+    commandId?: CommandReference;
+    /** 关联命令所在 scope */
+    commandScope?: CommandScope;
     /** 命令参数 */
-    payload?: unknown;
+    payload?: CommandPayload;
+    /** VS Code 风格命令参数列表 */
+    args?: CommandPayload[];
+    /** 注册顺序，越大越晚注册 */
+    registrationOrder?: number;
     /** 兼容直接处理函数 */
     handler?: () => void | Promise<void>;
 }
@@ -82,3 +115,18 @@ export interface KeyboardEventContext {
     /** 是否在输入框中 */
     isInInput: boolean;
 }
+
+export type KeybindingResolutionCandidate = {
+    keybinding: StaticKeybinding;
+    whenMatched: boolean;
+    sourcePriority: number;
+    registrationOrder: number;
+};
+
+export type KeybindingResolution = {
+    combination: KeyCombination;
+    matched: StaticKeybinding | null;
+    candidates: KeybindingResolutionCandidate[];
+    skipped: KeybindingResolutionCandidate[];
+    conflicts: StaticKeybinding[];
+};

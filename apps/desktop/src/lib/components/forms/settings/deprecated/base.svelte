@@ -8,14 +8,15 @@
     import { Badge } from '$ui/badge';
     import { langCode2Name } from '$lib/settings/Base';
     import ZoomForm from '../zoom.svelte';
-    import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
     import { Separator } from '$ui/separator';
     import { DEFAULT_OPACITY } from '$lib/settings/background';
     import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
+    import { COMMAND_SERVICE } from '$lib/commands';
 </script>
 
 <script lang="ts">
     const currentSettings = inject(USER_SETTINGS);
+    const commandService = inject(COMMAND_SERVICE);
 </script>
 
 <Card.Root>
@@ -82,7 +83,11 @@
         <Card.ContentItem label="始终置顶" description="让窗口始终保持在最前面">
             <Switch
                 checked={$currentSettings.base.alwaysOnTop}
-                onCheckedChange={() => emitMainWindowEvent('toggle-always-on-top')}
+                onCheckedChange={() => {
+                    void commandService.execute('window.toggleAlwaysOnTop').catch((error) => {
+                        console.error('Failed to toggle always-on-top:', error);
+                    });
+                }}
             />
         </Card.ContentItem>
         <Separator />

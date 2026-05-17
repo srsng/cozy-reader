@@ -1,10 +1,10 @@
 <script lang="ts" module>
     import { Pin } from 'lucide-svelte';
     import { Button, type ButtonVariant } from '$ui/button';
-    import { emit } from '@tauri-apps/api/event';
-    import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
-    import { USER_SETTINGS } from '$lib/stores/userSettings';
+    import { cn } from '$lib/utils';
     import { inject } from '$lib/utils/context';
+    import { MENU_SERVICE } from '$lib/menus';
+    import { createTitleBarAction } from './titlebarAction.svelte';
 
     interface Props {
         name?: string;
@@ -13,27 +13,29 @@
         size?: 'default' | 'sm' | 'lg' | 'icon';
         className?: string;
         iconClass?: string;
+        disabled?: boolean;
         onClick?: (() => void) | undefined;
     }
 </script>
 
 <script lang="ts">
+    const commandId = 'window.toggleAlwaysOnTop';
     const {
         name = 'always-on-top-button',
-        title = '始终置顶',
+        title: titleProp = undefined,
         variant = 'bar' as const,
         size = 'icon' as const,
         className = 'size-6',
         iconClass = 'size-4',
+        disabled = false,
         onClick = undefined,
         ...others
     }: Props = $props();
 
-    const currentSettings = inject(USER_SETTINGS);
-
-    function switchAlwaysOnTop() {
-        emit(SHORTCUT_EVENT, 'main-window-toggle-always-on-top');
-    }
+    const menuService = inject(MENU_SERVICE);
+    const action = createTitleBarAction(menuService, commandId, '始终置顶');
+    const title = $derived(titleProp ?? action.title);
+    const buttonDisabled = $derived(disabled || (!onClick && action.disabled));
 </script>
 
 <Button
@@ -42,12 +44,9 @@
     {variant}
     {size}
     class={className}
-    onclick={onClick || switchAlwaysOnTop}
+    disabled={buttonDisabled}
+    onclick={onClick || action.execute}
     {...others}
 >
-    <Pin
-        class="{iconClass} transition-transform {$currentSettings.base.alwaysOnTop
-            ? 'rotate-45'
-            : ''}"
-    />
+    <Pin class={cn(iconClass, 'transition-transform', action.toggled && 'rotate-45')} />
 </Button>

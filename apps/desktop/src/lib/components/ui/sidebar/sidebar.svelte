@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as Sheet from '$lib/components/ui/sheet/index.js';
+    import { CommandAwareSheetRoot } from '$lib/components/overlays';
     import { cn, type WithElementRef } from '$lib/utils.js';
     import type { HTMLAttributes } from 'svelte/elements';
     import { SIDEBAR_WIDTH_MOBILE } from './constants.js';
@@ -34,7 +35,7 @@
         {@render children?.()}
     </div>
 {:else if sidebar.isMobile}
-    <Sheet.Root
+    <CommandAwareSheetRoot
         bind:open={() => sidebar.openMobile, (v) => sidebar.setOpenMobile(v)}
         {...restProps}
     >
@@ -58,7 +59,7 @@
                 {@render children?.()}
             </div>
         </Sheet.Content>
-    </Sheet.Root>
+    </CommandAwareSheetRoot>
 {:else}
     <div
         bind:this={ref}

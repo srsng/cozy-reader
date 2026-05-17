@@ -1,11 +1,6 @@
 <script lang="ts">
-    import {
-        Dialog,
-        DialogContent,
-        DialogHeader,
-        DialogTitle,
-        DialogClose
-    } from '$lib/components/ui/dialog';
+    import { DialogContent, DialogClose } from '$lib/components/ui/dialog';
+    import { CommandAwareDialogRoot } from '$lib/components/overlays';
     import { Tabs, TabsList, TabsTrigger, TabsContent } from '$lib/components/ui/tabs';
     import { Type, LayoutDashboard, Palette, Hand, Languages, Settings } from 'lucide-svelte';
     import { readerStore } from '$lib/reader/stores/readerStore';
@@ -16,6 +11,10 @@
     import CustomPanel from './CustomPanel.svelte';
     import Label from '$components/ui/label/label.svelte';
     import { Button } from '$components/ui/button';
+    import { readerCommandState } from '$lib/reader/stores/readerCommandState';
+    import { COMMAND_ROUTER } from '$lib/commands';
+    import { executeReaderCommand, ReaderCommandId } from '$lib/reader/commands';
+    import { inject } from '$lib/utils/context';
 
     interface Props {
         bookKey: string;
@@ -25,28 +24,15 @@
 
     type SettingsPanelType = 'Font' | 'Layout' | 'Color' | 'Control' | 'Language' | 'Custom';
     let activePanel = $state<SettingsPanelType>('Font');
-    let open = $state(false);
+    let open = $state(readerCommandState.isSettingsOpen(bookKey));
+    const commandRouter = inject(COMMAND_ROUTER);
 
-    // 监听设置对话框打开事件
     $effect(() => {
-        const handleSettingsOpen = (event: Event) => {
-            const customEvent = event as CustomEvent;
-            if (customEvent.detail?.bookKey === bookKey) {
-                open = true;
-                // 确保对话框正确打开
-                setTimeout(() => {
-                    if (!open) {
-                        open = true;
-                    }
-                }, 0);
-            }
-        };
-        window.addEventListener('settings-open', handleSettingsOpen);
-        document.addEventListener('settings-open', handleSettingsOpen);
-        return () => {
-            window.removeEventListener('settings-open', handleSettingsOpen);
-            document.removeEventListener('settings-open', handleSettingsOpen);
-        };
+        const unsubscribe = readerCommandState.subscribe(() => {
+            open = readerCommandState.isSettingsOpen(bookKey);
+        });
+
+        return unsubscribe;
     });
 
     // 监听 open 变化，确保对话框正确打开
@@ -62,9 +48,32 @@
         }
     });
 
-    const handleClose = () => {
+    async function closeWithCommand() {
+        const executed = await executeReaderCommand(commandRouter, ReaderCommandId.SettingsClose, {
+            bookKey
+        });
+        if (!executed) return;
+
         open = false;
         readerStore.setHoveredBookKey(null);
+    }
+
+    const handleClose = () => {
+        void closeWithCommand();
+    };
+
+    const handleOpenChange = (nextOpen: boolean) => {
+        if (nextOpen) {
+            open = true;
+            return;
+        }
+
+        if (readerCommandState.isSettingsOpen(bookKey)) {
+            void closeWithCommand();
+            return;
+        }
+
+        open = false;
     };
 
     const tabConfig = [
@@ -81,7 +90,7 @@
     ];
 </script>
 
-<Dialog bind:open>
+<CommandAwareDialogRoot {open} onOpenChange={handleOpenChange}>
     <DialogContent
         showCloseButton={false}
         class="flex h-[80vh] w-[100vh] flex-col border-0 bg-transparent p-0 shadow-none"
@@ -112,4 +121,4 @@
             <Button onclick={handleClose}>Done</Button>
         </DialogClose>
     </DialogContent>
-</Dialog>
+</CommandAwareDialogRoot>

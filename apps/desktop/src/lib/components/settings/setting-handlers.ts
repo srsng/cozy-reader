@@ -1,4 +1,3 @@
-import { emit } from '@tauri-apps/api/event';
 import { mode, resetMode, setMode } from 'mode-watcher';
 import { setLocale } from '$lib/paraglide/runtime';
 import type { UserSettings } from '$lib/settings';
@@ -6,15 +5,13 @@ import type { AppLanguageCode } from '$lib/settings/Base';
 import type { AppThemeMode, AppThemeType, StdTDName } from '$lib/settings/Theme';
 import { applyFourColorsHue, applyThemeType } from '$lib/theme/themeUtils';
 import { updateName } from '$lib/theme/standard';
-import { emitMainWindowEvent } from '$lib/components/action/window-action.svelte';
 import { setNestedValue, type SettingKey, type SettingViewModel } from '$lib/settings-registry';
-import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
 
 export type SettingHandlerContext = {
     settings: UserSettings;
 };
 
-export type SettingActionKey = SettingKey | 'zoom.event' | 'theme.effects.event';
+export type SettingActionKey = SettingKey;
 type SettingHandler = (entry: SettingViewModel, value: unknown, context: SettingHandlerContext) => void;
 
 export const settingHandlers: Partial<Record<SettingActionKey, SettingHandler>> = {
@@ -22,10 +19,6 @@ export const settingHandlers: Partial<Record<SettingActionKey, SettingHandler>> 
         const langCode = value as AppLanguageCode;
         setNestedValue(settings as unknown as Record<string, unknown>, entry.key, langCode);
         setLocale(langCode);
-    },
-    'base.alwaysOnTop': (entry, value, { settings }) => {
-        setNestedValue(settings as unknown as Record<string, unknown>, entry.key, value);
-        emitMainWindowEvent('toggle-always-on-top');
     },
     'theme.mode': (entry, value, { settings }) => {
         const nextMode = value as AppThemeMode;
@@ -48,12 +41,6 @@ export const settingHandlers: Partial<Record<SettingActionKey, SettingHandler>> 
         const hue = Number(value);
         setNestedValue(settings as unknown as Record<string, unknown>, entry.key, hue);
         applyFourColorsHue(hue);
-    },
-    'zoom.event': (_entry, value) => {
-        emit(SHORTCUT_EVENT, value as string);
-    },
-    'theme.effects.event': (_entry, value) => {
-        emit(SHORTCUT_EVENT, `theme-effects-${value}`);
     }
 };
 

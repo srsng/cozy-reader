@@ -24,11 +24,11 @@
     import { updateName } from '$lib/theme/standard';
     import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
     import { Switch } from '$ui/switch';
-    import { emit } from '@tauri-apps/api/event';
-    import { SHORTCUT_EVENT } from '$lib/shortcuts/shortcutService';
     import { toast } from 'svelte-sonner';
+    import { COMMAND_SERVICE } from '$lib/commands';
 
     const currentSettings = inject(USER_SETTINGS);
+    const commandService = inject(COMMAND_SERVICE);
 
     // todo: 统一响应主题变化
     function handleThemeType(theme: AppThemeType) {
@@ -156,18 +156,18 @@
     </Card.Header>
     <!-- todo: 平台特定 -->
     <Card.Content>
-        <Button size="sm" onclick={() => emit(SHORTCUT_EVENT, 'theme-effects-none')}>无</Button>
+        <Button size="sm" onclick={() => commandService.execute('theme.effects.set', 'none')}>无</Button>
         <!-- **Windows 10/11** -->
-        <Button size="sm" onclick={() => emit(SHORTCUT_EVENT, 'theme-effects-acrylic')}
+        <Button size="sm" onclick={() => commandService.execute('theme.effects.set', 'acrylic')}
             >亚克力</Button
         >
         <!-- **Windows 11 Only** -->
-        <Button size="sm" onclick={() => emit(SHORTCUT_EVENT, 'theme-effects-mica')}>云母</Button>
+        <Button size="sm" onclick={() => commandService.execute('theme.effects.set', 'mica')}>云母</Button>
         <!-- **Windows 7/10/11(22H1) Only** -->
         <Button
             size="sm"
             onclick={() => {
-                emit(SHORTCUT_EVENT, 'theme-effects-blur');
+                commandService.execute('theme.effects.set', 'blur');
                 toast.warning('警告', {
                     description: '该效果在Win 10/11较新版本中表现较差，不建议对应系统用户使用'
                 });

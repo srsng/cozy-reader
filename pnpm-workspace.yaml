@@ -4,6 +4,7 @@ packages:
     - crates/*
 
 catalog:
+    '@standard-schema/spec': ^1.1.0
     '@types/node': ^22.18.11
     lucide-svelte: 0.543.0
     marked: ^16.2.1
@@ -12,6 +13,7 @@ catalog:
     vite: ^7.0.4
     vitest: ^4.1.6
     '@vitest/coverage-v8': ^4.1.6
+    zod: ^4.4.3
 
 catalogs:
     shadcn-ui:

@@ -130,7 +130,7 @@ export function usePagination(
                         const viewCenterX = viewStartX + viewRect.width / 2;
 
                         // TODO: 处理事件分发器（iframe-single-click）
-                        // const consumed = eventDispatcher.dispatchSync('iframe-single-click');
+                        // const consumed = eventRouter.dispatchSync('iframe-single-click');
                         // if (!consumed) {
                         const centerStartX = viewStartX + viewRect.width * 0.375;
                         const centerEndX = viewStartX + viewRect.width * 0.625;

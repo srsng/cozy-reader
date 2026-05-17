@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { LogLevel } from '$lib/types';
-import { getEntriesByTab, normalizeSettingValue, searchEntries } from './index';
+import {
+    createSettingsContextSnapshot,
+    getEntriesByTab,
+    normalizeSettingValue,
+    searchEntries
+} from './index';
 import type { SettingsSnapshot } from './types';
 
 vi.mock('mode-watcher', () => ({
@@ -47,7 +52,8 @@ function createSettings(): SettingsSnapshot {
             zoomLongPic: false,
             scrollBarVisable: false
         },
-        background: {} as SettingsSnapshot['background']
+        background: {} as SettingsSnapshot['background'],
+        keybindings: { rules: [] }
     };
 }
 
@@ -61,6 +67,7 @@ describe('settings registry schema adapter', () => {
 
         expect(hueEntry?.disabled).toBe(true);
         expect(hueEntry?.disabledReason).toBe('仅在四色主题下可用');
+        expect(hueEntry?.condition?.expression).toBe('config.theme.type == "four_colors"');
     });
 
     it('hides conditionally unavailable settings in normal tab mode', () => {
@@ -71,6 +78,14 @@ describe('settings registry schema adapter', () => {
 
         expect(entries.some((entry) => entry.key === 'theme.data.four_colors.hue')).toBe(false);
         expect(entries.some((entry) => entry.key === 'theme.data.standard.name')).toBe(true);
+    });
+
+    it('creates config-prefixed context keys for setting conditions', () => {
+        const settings = createSettings();
+        settings.theme.type = 'pony';
+
+        expect(createSettingsContextSnapshot(settings)['config.theme.type']).toBe('pony');
+        expect(createSettingsContextSnapshot(settings)['config.base.zoom']).toBe(1);
     });
 
     it('searches setting keys, tags, feature groups, and enum labels', () => {

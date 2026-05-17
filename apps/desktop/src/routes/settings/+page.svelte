@@ -28,14 +28,11 @@
     const tabOrder: SettingsTab[] = ['base', 'theme', 'reader'];
     const userSettings = data.userSettings;
 
-    // SvelteKit page.state is app-defined; route helpers currently store `{ tab }` there.
-    // @ts-ignore
-    const stateTab = page.state.tab as SettingsTab | undefined;
-    const queryTab = page.url.searchParams.get('tab') as SettingsTab | null;
-    let tab = $state<SettingsTab>(stateTab ?? queryTab ?? 'base');
+    let tab = $state<SettingsTab>(getRouteTab());
     let searchText = $state('');
     let debouncedSearchText = $state('');
     let activeMatchIndex = $state(0);
+    let previousRouteTab = $state<SettingsTab>(getRouteTab());
     let searchDebounceTimer: ReturnType<typeof setTimeout> | undefined;
 
     const searchResults = $derived(searchEntries(debouncedSearchText, $userSettings));
@@ -53,6 +50,14 @@
             debouncedSearchText = nextSearchText;
             activeMatchIndex = 0;
         }, 300);
+    });
+
+    $effect(() => {
+        const routeTab = getRouteTab();
+        if (routeTab !== previousRouteTab) {
+            previousRouteTab = routeTab;
+            if (!searchMode) tab = routeTab;
+        }
     });
 
     $effect(() => {
@@ -77,6 +82,21 @@
         await saveUserSettingsManually(data.userSettings);
     });
 
+    function isSettingsTab(value: unknown): value is SettingsTab {
+        return typeof value === 'string' && tabOrder.includes(value as SettingsTab);
+    }
+
+    function getRouteTab(): SettingsTab {
+        // SvelteKit page.state is app-defined; route helpers currently store `{ tab }` there.
+        // @ts-ignore
+        const stateTab = page.state.tab;
+        const queryTab = page.url.searchParams.get('tab');
+
+        if (isSettingsTab(stateTab)) return stateTab;
+        if (isSettingsTab(queryTab)) return queryTab;
+        return 'base';
+    }
+
     function getTabEntries(tabName: SettingsTab): SettingViewModel[] {
         if (searchMode) return searchResults.get(tabName) ?? [];
         return getEntriesByTab(tabName, $userSettings);
@@ -98,10 +118,6 @@
         document
             .querySelector(`[data-setting-id="${activeEntry.id}"]`)
             ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    }
-
-    function handleTabChange(value: string) {
-        tab = value as SettingsTab;
     }
 
     function clearSearch() {
@@ -147,7 +163,7 @@
         onClear={clearSearch}
     />
 
-    <Tabs.Root value={tab} onValueChange={handleTabChange} class="w-full">
+    <Tabs.Root bind:value={tab} class="w-full">
         <Tabs.List class="grid w-full grid-cols-3">
             {#each tabOrder as tabName}
                 <Tabs.Trigger value={tabName}>{tabLabels[tabName]}</Tabs.Trigger>

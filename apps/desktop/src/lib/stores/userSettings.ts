@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { DEFAULT_SETTINGS, type UserSettings } from '$lib/settings';
+import { DEFAULT_SETTINGS, mergeUserSettingsWithDefaults, type UserSettings } from '$lib/settings';
 import { InjectionToken } from '$lib/utils/context';
 
 export const USER_SETTINGS_KEY_STR = 'user-settings';
@@ -60,19 +60,7 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
     const cleanConfig = savedConfig ? clean(savedConfig) : null;
 
     if (cleanConfig) {
-        const mergedConfig = {
-            ...DEFAULT_SETTINGS,
-            ...cleanConfig,
-            background: {
-                ...DEFAULT_SETTINGS.background,
-                ...cleanConfig.background,
-                global: {
-                    ...DEFAULT_SETTINGS.background.global,
-                    ...cleanConfig.background?.global
-                }
-            }
-        };
-        store.set(mergedConfig);
+        store.set(mergeUserSettingsWithDefaults(cleanConfig));
     }
 
     // 订阅，自动保存

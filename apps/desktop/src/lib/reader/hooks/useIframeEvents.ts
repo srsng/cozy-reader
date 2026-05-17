@@ -54,7 +54,7 @@ export function useMouseEvent(
                 if (msg.data.type === 'iframe-wheel') {
                     if (msg.data.ctrlKey) {
                         // TODO: 处理 Ctrl+滚轮缩放（需要事件分发器）
-                        // eventDispatcher.dispatch('zoom-out/in', ...)
+                        // eventRouter.dispatch('zoom-out/in', ...)
                     } else {
                         debounceScroll('mouse', -msg.data.deltaY, 0);
                         debounceFlip(msg);

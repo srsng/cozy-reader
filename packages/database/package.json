@@ -27,6 +27,6 @@
         "@tauri-apps/plugin-sql": "catalog:tauri",
         "drizzle-kit": "^0.31.7",
         "drizzle-orm": "^0.44.7",
-        "zod": "^4.1.13"
+        "zod": "catalog:"
     }
 }

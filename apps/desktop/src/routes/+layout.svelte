@@ -6,7 +6,7 @@
     // tool funcs
     import { afterNavigate } from '$app/navigation';
     import { provide } from '$lib/utils/context';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import { updatePageHistory } from '$lib/utils/route.svelte';
     // stores
     import { USER_SETTINGS } from '$lib/stores/userSettings';
@@ -19,16 +19,27 @@
     import { startWindowTiltUpAnimation } from '$lib/animation';
 
     // services
-    import { ShortcutService, SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
-    
+    import {
+        CommandRouter,
+        COMMAND_ROUTER,
+        CommandService,
+        COMMAND_SERVICE,
+        createDefaultCommandContext,
+        registerDefaultCommands
+    } from '$lib/commands';
+    import { ContextKey, ContextKeyService, CONTEXT_KEY_SERVICE } from '$lib/context-keys';
     import { keybindingManager } from '$lib/keybindings/keybindingManager';
+    import { MenuService, MENU_SERVICE } from '$lib/menus';
+    import { registerDefaultActions } from '$lib/actions';
+    import { DisposableStore } from '$lib/utils/disposable';
 
     // tool components
-    import ThemeAction from '$lib/components/action/theme-action.svelte';
-    import ZoomInOutMenuAction from '$lib/components/action/zoom-menu-action.svelte';
-    import WindowAction from '$lib/components/action/window-action.svelte';
-    import KeybindingsAction from '$lib/components/action/keybindings-action.svelte';
+    import ThemeRuntime from '$lib/components/runtime/ThemeRuntime.svelte';
+    import ZoomRuntime from '$lib/components/runtime/ZoomRuntime.svelte';
+    import WindowRuntime from '$lib/components/runtime/WindowRuntime.svelte';
+    import KeybindingRuntime from '$lib/components/runtime/KeybindingRuntime.svelte';
     import UIOpacityAction from '$lib/components/action/ui-opacity-action.svelte';
+    import CommandPalette from '$lib/components/commands/CommandPalette.svelte';
     import { Toaster } from '$ui/sonner';
 
     // ui components
@@ -44,26 +55,76 @@
     provide(USER_SETTINGS, userSettings);
     provide(READER_SETTINGS, data.readerSettings);
 
-    // shortcut service
-    const shortcutService = new ShortcutService(data.tauri);
-    provide(SHORTCUT_SERVICE, shortcutService);
-    $effect(() => shortcutService.listen());
+    const contextKeys = new ContextKeyService({
+        [ContextKey.CommandPaletteOpen]: false,
+        [ContextKey.DialogOpen]: false,
+        [ContextKey.Route]: page.url.pathname,
+        [ContextKey.TextInputFocus]: false,
+        [ContextKey.ThemeEffects]: $userSettings.theme.effects,
+        [ContextKey.WindowAlwaysOnTop]: $userSettings.base.alwaysOnTop,
+        [ContextKey.WindowDevtoolsAvailable]: false,
+        [ContextKey.WindowFullscreen]:
+            typeof document !== 'undefined' ? Boolean(document.fullscreenElement) : false
+    });
+    const rootDisposables = new DisposableStore();
+    provide(CONTEXT_KEY_SERVICE, contextKeys);
 
-    // utils/route 监听路由
+    const createCommandServiceContext = () =>
+        createDefaultCommandContext({
+            appState,
+            contextKeys,
+            userSettings
+        });
+    const commandService = new CommandService(createCommandServiceContext());
+    const commandRouter = new CommandRouter();
+    rootDisposables.add(commandRouter.registerScope('app', commandService));
+    rootDisposables.add(registerDefaultCommands(commandService));
+    const menuService = new MenuService(commandRouter, contextKeys);
+    keybindingManager.setContextKeyService(contextKeys);
+    keybindingManager.setCommandExecutor(commandRouter);
+    rootDisposables.add(registerDefaultActions({ commandService, menuService, keybindingManager }));
+    provide(COMMAND_SERVICE, commandService);
+    provide(COMMAND_ROUTER, commandRouter);
+    provide(MENU_SERVICE, menuService);
+
+    onDestroy(() => {
+        rootDisposables.dispose();
+    });
+
     $effect(() => {
-        const currentPath = page.url.pathname;
-        updatePageHistory(currentPath);
+        contextKeys.set(ContextKey.WindowAlwaysOnTop, $userSettings.base.alwaysOnTop);
+        contextKeys.set(ContextKey.ThemeEffects, $userSettings.theme.effects);
     });
 
     afterNavigate((navigation) => {
         const nextUrl = navigation.to?.url ?? page.url;
-        contextKeys.set('route', nextUrl.pathname);
+        contextKeys.set(ContextKey.Route, nextUrl.pathname);
         updatePageHistory(nextUrl, navigation);
     });
 
     onMount(() => {
+        const isTextInput = (target: EventTarget | null): boolean => {
+            if (!(target instanceof HTMLElement)) return false;
+            return Boolean(target.closest('input, textarea, select, [contenteditable="true"]'));
+        };
+        const updateTextInputFocus = () => {
+            contextKeys.set(ContextKey.TextInputFocus, isTextInput(document.activeElement));
+        };
+        const handleFocusChange = () => {
+            updateTextInputFocus();
+            requestAnimationFrame(updateTextInputFocus);
+        };
+
         // 启动窗口入场动画
         startWindowTiltUpAnimation();
+        updateTextInputFocus();
+        document.addEventListener('focusin', handleFocusChange, true);
+        document.addEventListener('focusout', handleFocusChange, true);
+
+        return () => {
+            document.removeEventListener('focusin', handleFocusChange, true);
+            document.removeEventListener('focusout', handleFocusChange, true);
+        };
     });
 </script>
 
@@ -75,12 +136,13 @@
 <svelte:body />
 <!-- <svelte:document transition:scale /> -->
 
-<ThemeAction />
-<ZoomInOutMenuAction />
-<WindowAction />
+<ThemeRuntime />
+<ZoomRuntime />
+<WindowRuntime />
 <BackgroundAction />
-<KeybindingsAction />
+<KeybindingRuntime />
 <UIOpacityAction />
+<CommandPalette />
 
 <div class="app-layout" role="application">
     <AppTitleBar className="header" />

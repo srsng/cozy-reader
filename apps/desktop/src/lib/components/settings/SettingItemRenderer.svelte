@@ -19,6 +19,8 @@
     import ThemeEffectsInput from './ThemeEffectsInput.svelte';
     import ZoomInput from './ZoomInput.svelte';
     import type { Writable } from 'svelte/store';
+    import { COMMAND_SERVICE } from '$lib/commands';
+    import { inject } from '$lib/utils/context';
 
     let {
         entry,
@@ -34,6 +36,7 @@
         highlighted?: boolean;
     } = $props();
 
+    const commandService = inject(COMMAND_SERVICE);
     const isDisabled = $derived(searchMode && entry.disabled);
     const currentValue = $derived.by(() => {
         if (entry.id === 'theme.mode') return getCurrentThemeMode();
@@ -58,6 +61,18 @@
 
         const normalizedValue = normalizeSettingValue(entry.schema, value);
 
+        if (entry.key === 'base.alwaysOnTop') {
+            if (typeof normalizedValue !== 'boolean') {
+                console.error('Invalid always-on-top setting value:', normalizedValue);
+                return;
+            }
+
+            void commandService.execute('window.setAlwaysOnTop', normalizedValue).catch((error) => {
+                console.error('Failed to update always-on-top setting:', error);
+            });
+            return;
+        }
+
         if (hasSettingHandler(entry.key)) {
             updateSettings((nextSettings) => {
                 runSettingHandler(entry.key, entry, normalizedValue, { settings: nextSettings });
@@ -66,7 +81,11 @@
         }
 
         updateSettings((nextSettings) => {
-            setNestedValue(nextSettings as unknown as Record<string, unknown>, entry.key, normalizedValue);
+            setNestedValue(
+                nextSettings as unknown as Record<string, unknown>,
+                entry.key,
+                normalizedValue
+            );
         });
     }
 
@@ -103,7 +122,11 @@
     </div>
     <div class="ml-auto flex max-w-[60%] flex-1 items-center justify-end gap-2">
         {#if entry.type === 'switch'}
-            <Switch checked={Boolean(currentValue)} disabled={isDisabled} onCheckedChange={commit} />
+            <Switch
+                checked={Boolean(currentValue)}
+                disabled={isDisabled}
+                onCheckedChange={commit}
+            />
         {:else if entry.type === 'slider'}
             <SliderWithControls
                 value={Number(currentValue)}
@@ -149,15 +172,9 @@
                 onSave={commit}
             />
         {:else if entry.type === 'custom' && entry.component === 'themeEffects'}
-            <ThemeEffectsInput
-                {entry}
-                {settings}
-                {settingsStore}
-                value={currentValue as never}
-                disabled={isDisabled}
-            />
+            <ThemeEffectsInput value={currentValue as never} disabled={isDisabled} />
         {:else if entry.type === 'custom' && entry.component === 'zoom'}
-            <ZoomInput {entry} {settings} disabled={isDisabled} />
+            <ZoomInput {settings} disabled={isDisabled} />
         {:else}
             <Button variant="outline" disabled>尚未支持</Button>
         {/if}

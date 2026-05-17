@@ -106,6 +106,9 @@ export { sidebarStore } from './stores/sidebarStore';
 export type { SidebarTab } from './stores/sidebarStore';
 export { parallelViewStore } from './stores/parallelViewStore';
 
+// 子应用命令
+export * from './commands';
+
 // 转换工具
 export {
     commentToBookNote,
@@ -132,11 +135,3 @@ export { useTextSelector } from './hooks/useTextSelector';
 export { useAutoSaveBookCover } from './hooks/useAutoSaveBookCover';
 export { useBooksManager } from './hooks/useBooksManager';
 export type { BooksManagerOptions } from './hooks/useBooksManager';
-export {
-    useBookKeybindings,
-    createDefaultKeybindingHandlers
-} from './hooks/useBookKeybindings';
-export type {
-    BookKeybindingConfig,
-    BookKeybindingHandlers
-} from './hooks/useBookKeybindings';

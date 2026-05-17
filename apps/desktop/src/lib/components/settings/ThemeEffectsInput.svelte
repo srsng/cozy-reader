@@ -1,25 +1,19 @@
 <script lang="ts">
     import { toast } from 'svelte-sonner';
     import { Button } from '$ui/button';
-    import type { UserSettings } from '$lib/settings';
     import type { AppThemeEffects } from '$lib/settings/Theme';
-    import type { SettingViewModel } from '$lib/settings-registry';
-    import { runSettingHandler } from './setting-handlers';
-    import type { Writable } from 'svelte/store';
+    import { COMMAND_SERVICE } from '$lib/commands';
+    import { inject } from '$lib/utils/context';
 
     let {
-        entry,
-        settingsStore,
-        settings,
         value,
         disabled = false
     }: {
-        entry: SettingViewModel;
-        settingsStore: Writable<UserSettings>;
-        settings: UserSettings;
         value: AppThemeEffects;
         disabled?: boolean;
     } = $props();
+
+    const commandService = inject(COMMAND_SERVICE);
 
     const effects: { value: AppThemeEffects; label: string }[] = [
         { value: 'none', label: '无' },
@@ -28,15 +22,10 @@
         { value: 'blur', label: '模糊' }
     ];
 
-    function selectEffect(effect: AppThemeEffects) {
+    async function selectEffect(effect: AppThemeEffects) {
         if (disabled) return;
 
-        settingsStore.update((currentSettings) => {
-            const nextSettings = structuredClone(currentSettings);
-            nextSettings.theme.effects = effect;
-            runSettingHandler('theme.effects.event', entry, effect, { settings: nextSettings });
-            return nextSettings;
-        });
+        await commandService.execute('theme.effects.set', effect);
 
         if (effect === 'blur') {
             toast.warning('警告', {

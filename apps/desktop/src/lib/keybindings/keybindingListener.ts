@@ -46,7 +46,7 @@ export class KeybindingListener {
      */
     private handleKeyDown = (event: KeyboardEvent): void => {
         // 忽略单独的修饰键
-        if (this.isModifierKey(event.key)) return;
+        if (KeybindingUtils.isModifierKey(event.key)) return;
 
         // 解析键盘组合
         const combination = this.parseKeyCombination(event);
@@ -70,7 +70,7 @@ export class KeybindingListener {
      */
     private parseKeyCombination(event: KeyboardEvent): KeyCombination | null {
         const modifiers: ModifierKey[] = [];
-        const key = this.normalizeKey(event.key);
+        const key = KeybindingUtils.normalizeKey(event.key);
 
         // 收集修饰键
         if (event.ctrlKey) modifiers.push(ModifierKey.Ctrl);
@@ -79,36 +79,9 @@ export class KeybindingListener {
         if (event.metaKey) modifiers.push(ModifierKey.Meta);
 
         // 如果只有修饰键，不创建组合
-        if (!key || this.isModifierKey(key)) return null;
+        if (!key || KeybindingUtils.isModifierKey(key)) return null;
 
-        return { key, modifiers };
-    }
-
-    /**
-     * 标准化按键名称
-     */
-    private normalizeKey(key: string): string {
-        // 标准化特殊键名
-        const keyMap: Record<string, string> = {
-            ' ': 'Space',
-            ArrowUp: 'Up',
-            ArrowDown: 'Down',
-            ArrowLeft: 'Left',
-            ArrowRight: 'Right',
-            Escape: 'Esc',
-            Delete: 'Del',
-            Insert: 'Ins'
-        };
-
-        return keyMap[key] || key.toLowerCase();
-    }
-
-    /**
-     * 检查是否为修饰键
-     */
-    private isModifierKey(key: string): boolean {
-        const modifierKeys = ['Control', 'Shift', 'Alt', 'Meta', 'ctrl', 'shift', 'alt', 'meta'];
-        return modifierKeys.includes(key);
+        return { key, modifiers: KeybindingUtils.normalizeModifiers(modifiers) };
     }
 
     /**
@@ -160,6 +133,47 @@ export class KeybindingListener {
  * 按键绑定组合工具函数
  */
 export class KeybindingUtils {
+    static normalizeKey(key: string): string {
+        const trimmedKey = key.trim();
+        const keyMap: Record<string, string> = {
+            ' ': 'Space',
+            arrowdown: 'Down',
+            arrowleft: 'Left',
+            arrowright: 'Right',
+            arrowup: 'Up',
+            delete: 'Del',
+            del: 'Del',
+            down: 'Down',
+            escape: 'Esc',
+            esc: 'Esc',
+            insert: 'Ins',
+            ins: 'Ins',
+            left: 'Left',
+            right: 'Right',
+            space: 'Space',
+            up: 'Up'
+        };
+        const normalizedKey = keyMap[trimmedKey.toLowerCase()] ?? trimmedKey.toLowerCase();
+
+        return normalizedKey.length === 1 ? normalizedKey : normalizedKey;
+    }
+
+    static isModifierKey(key: string): boolean {
+        return ['control', 'shift', 'alt', 'meta', 'ctrl', 'cmd'].includes(key.toLowerCase());
+    }
+
+    static normalizeModifiers(modifiers: readonly ModifierKey[]): ModifierKey[] {
+        const uniqueModifiers = new Set(modifiers);
+        const orderedModifiers = [
+            ModifierKey.Ctrl,
+            ModifierKey.Shift,
+            ModifierKey.Alt,
+            ModifierKey.Meta
+        ];
+
+        return orderedModifiers.filter((modifier) => uniqueModifiers.has(modifier));
+    }
+
     /**
      * 将按键组合转换为字符串
      */
@@ -182,10 +196,13 @@ export class KeybindingUtils {
      * 从字符串解析按键组合
      */
     static stringToCombination(str: string): KeyCombination | null {
-        const parts = str.split('+').map((p) => p.trim());
+        const parts = str
+            .split('+')
+            .map((p) => p.trim())
+            .filter(Boolean);
         if (parts.length === 0) return null;
 
-        const key = parts.pop()!;
+        const key = this.normalizeKey(parts.pop()!);
         const modifiers: ModifierKey[] = [];
 
         for (const part of parts) {
@@ -200,12 +217,17 @@ export class KeybindingUtils {
                     modifiers.push(ModifierKey.Alt);
                     break;
                 case 'meta':
+                case 'cmd':
                     modifiers.push(ModifierKey.Meta);
                     break;
+                default:
+                    return null;
             }
         }
 
-        return { key, modifiers };
+        if (!key || this.isModifierKey(key)) return null;
+
+        return { key, modifiers: this.normalizeModifiers(modifiers) };
     }
 
     /**

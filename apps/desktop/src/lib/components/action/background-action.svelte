@@ -1,27 +1,16 @@
 <script lang="ts" module>
     import { inject } from '$lib/utils/context';
     import { USER_SETTINGS } from '$lib/stores/userSettings';
-    import { onMount, untrack } from 'svelte';
+    import { onMount } from 'svelte';
     import type {
         BackgroundImage,
         GlobalBackgroundConfig,
         BackgroundFilters,
-        BackgroundPosition,
-        ThemeBinding
+        BackgroundPosition
     } from '$lib/settings/background';
     import { getImageFullConfig, getOpacityForTheme } from '$lib/settings/background';
-    import { initializeTheme, hasThemeBinding, isValidThemeBinding } from '$lib/theme/themeUtils';
-    import type {
-        AppThemeType,
-        FourColorsThemeData,
-        PonyThemeData,
-        StandardThemeData
-    } from '$lib/settings/Theme';
-    import { SHORTCUT_SERVICE } from '$lib/shortcuts/shortcutService';
-    import { BACKGROUND_EVENTS } from '$lib/events/shortcut';
     import { convertFileSrc } from '@tauri-apps/api/core';
     import { mode } from 'mode-watcher';
-    import { mergeUnlisten } from '$lib/utils/mergeUnlisten';
 
     // 图片 URL 转换
     export function convertToTauriUrl(filePath: string): string {
@@ -246,7 +235,6 @@
 
 <script lang="ts">
     const userSettings = inject(USER_SETTINGS);
-    const shortcutService = inject(SHORTCUT_SERVICE);
 
     // 背景相关状态
     // svelte-ignore non_reactive_update
@@ -258,48 +246,6 @@
             (img) => img.id === $userSettings.background.activeImageId
         )
     );
-
-    /**
-     * 应用主题绑定
-     * @param themeBinding 主题绑定对象
-     */
-    export function applyThemeBinding(themeBinding: ThemeBinding<AppThemeType>): void {
-        if (!isValidThemeBinding(themeBinding)) {
-            console.warn('Invalid theme binding:', themeBinding);
-            return;
-        }
-
-        // 更新用户设置中的主题类型
-        $userSettings.theme.type = themeBinding.type;
-        // $userSettings.theme.data[themeBinding.type] = themeBinding.data; // ?
-
-        // 更新对应主题类型的数据
-        switch (themeBinding.type) {
-            case 'standard':
-                $userSettings.theme.data.standard = themeBinding.data as StandardThemeData;
-                break;
-            case 'four_colors':
-                $userSettings.theme.data.four_colors = themeBinding.data as FourColorsThemeData;
-                break;
-            case 'pony':
-                $userSettings.theme.data.pony = themeBinding.data as PonyThemeData;
-                break;
-        }
-
-        // 应用主题
-        initializeTheme(themeBinding.type, $userSettings.theme.data);
-    }
-
-    // 应用图片绑定的主题
-    function applyImageTheme(image: BackgroundImage | undefined) {
-        if (!image || !hasThemeBinding(image)) return;
-
-        const themeBinding = image.themeBinding!;
-        // 使用 untrack 避免在主题更新过程中触发响应式更新
-        untrack(() => {
-            applyThemeBinding(themeBinding);
-        });
-    }
 
     // 应用背景样式到独立背景容器
     function applyBackgroundToContainer() {
@@ -322,18 +268,6 @@
             applyBackgroundToContainer();
         }
     });
-
-    // 监听背景图片切换事件，只有通过事件触发的切换才应用主题
-    $effect(() =>
-        mergeUnlisten(
-            shortcutService.on(BACKGROUND_EVENTS.IMAGE_CHANGED, () => {
-                // 只有当新图片存在且有主题绑定时才应用主题
-                if (activeImage) {
-                    applyImageTheme(activeImage);
-                }
-            })
-        )
-    );
 
     onMount(() => {
         // 初始化背景

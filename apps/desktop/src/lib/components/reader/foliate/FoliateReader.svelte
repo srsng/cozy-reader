@@ -36,6 +36,7 @@
     import { inject } from '$lib/utils/context';
     import { untrack } from 'svelte';
     import { bookDataStore } from '$lib/reader';
+    import { readerCommandState } from '$lib/reader/stores/readerCommandState';
 
     // 获取全局 READER_SETTINGS（响应式）
     const globalReaderSettings = inject(READER_SETTINGS);
@@ -78,6 +79,10 @@
     // Header/Footer 显示状态（从 readerSettings 派生）
     const headerVisible = $derived.by(() => readerSettings?.showHeader ?? false);
     const footerVisible = $derived.by(() => readerSettings?.showFooter ?? false);
+
+    function activateReaderBook() {
+        readerCommandState.setActiveBookKey(bookKey);
+    }
 
     // 订阅 store 更新（不包含 bookConfig，从 bookDataStore 获取）
     const unsubscribe = readerStore.subscribe((state) => {
@@ -882,35 +887,13 @@
         };
     });
 
-    // 按键绑定处理
-    let keybindingsCleanup: (() => void) | null = null;
-    $effect(() => {
-        if (keybindingsCleanup) {
-            keybindingsCleanup();
-            keybindingsCleanup = null;
-        }
-        if (viewState?.inited && viewElement) {
-            import('$lib/reader/hooks/useBookKeybindings').then(
-                ({ useBookKeybindings, createDefaultKeybindingHandlers }) => {
-                    const handlers = createDefaultKeybindingHandlers(bookKey);
-                    keybindingsCleanup = useBookKeybindings(bookKey, handlers);
-                }
-            );
-        }
-        return () => {
-            if (keybindingsCleanup) {
-                keybindingsCleanup();
-                keybindingsCleanup = null;
-            }
-        };
-    });
-
     onMount(() => {
         // 将 bookKey 添加到 bookKeys 列表（如果还没有）
         const currentBookKeys = readerStore.getBookKeys();
         if (!currentBookKeys.includes(bookKey)) {
             readerStore.setBookKeys([...currentBookKeys, bookKey]);
         }
+        activateReaderBook();
 
         initView();
 
@@ -953,6 +936,9 @@
         const currentBookKeys = readerStore.getBookKeys();
         const updatedBookKeys = currentBookKeys.filter((key) => key !== bookKey);
         readerStore.setBookKeys(updatedBookKeys);
+        if (readerCommandState.getActiveBookKey() === bookKey) {
+            readerCommandState.setActiveBookKey(updatedBookKeys[0]);
+        }
 
         if (viewElement) {
             viewElement.removeEventListener('relocate', handleProgressRelocate);
@@ -989,7 +975,13 @@
     });
 </script>
 
-<div bind:this={containerRef} class="foliate-viewer flex h-full w-full flex-col overflow-hidden">
+<div
+    bind:this={containerRef}
+    class="foliate-viewer flex h-full w-full flex-col overflow-hidden"
+    role="presentation"
+    onfocusin={activateReaderBook}
+    onpointerdown={activateReaderBook}
+>
     {#if error}
         <div class="flex h-full items-center justify-center">
             <div class="text-center">
