@@ -46,6 +46,7 @@
 
     /* 颜色变更过渡 */
     #titlebar,
+    #titlebar *,
     .header,
     .footer,
     .books-grid,
@@ -84,7 +85,8 @@
         bottom: 0;
         z-index: -100;
         pointer-events: none;
-        background-color: var(--background);
+        /* TODO：不知名bug，以前负负得正了 */
+        /* background-color: var(--background); */
     }
 
     /* 背景图片层 */
