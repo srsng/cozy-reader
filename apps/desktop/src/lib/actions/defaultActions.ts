@@ -374,6 +374,22 @@ export const defaultActions = defineActions([
                 menu: MenuId.TitleBar,
                 order: 0
             }
+        ],
+        keybindings: [
+            {
+                id: 'window.refresh-ctrl-r',
+                combination: { key: 'r', modifiers: [ModifierKey.Ctrl] },
+                allowInTextInput: true,
+                allowWhenDialogOpen: true,
+                allowWhenCommandPaletteOpen: true
+            },
+            {
+                id: 'window.refresh-f5',
+                combination: { key: 'f5', modifiers: [] },
+                allowInTextInput: true,
+                allowWhenDialogOpen: true,
+                allowWhenCommandPaletteOpen: true
+            }
         ]
     }),
     defineKnownAction({

@@ -305,6 +305,28 @@ describe('KeybindingManager', () => {
         expect(event.stopPropagation).not.toHaveBeenCalled();
     });
 
+    it('blocks known browser shortcuts even when no command executes', () => {
+        const manager = new KeybindingManager();
+        const canExecute = vi.fn((_invocation: CommandInvocation) => false);
+        const execute = vi.fn();
+        manager.setCommandExecutor({ canExecute, execute });
+
+        const event = createKeyboardEvent('j', { ctrlKey: true });
+
+        try {
+            const { keydown } = startWithCapturedKeydown(manager);
+            keydown(event);
+        } finally {
+            manager.stopListening();
+            vi.unstubAllGlobals();
+        }
+
+        expect(canExecute).not.toHaveBeenCalled();
+        expect(execute).not.toHaveBeenCalled();
+        expect(event.preventDefault).toHaveBeenCalledOnce();
+        expect(event.stopPropagation).toHaveBeenCalledOnce();
+    });
+
     it('intercepts and executes command keybindings only after canExecute passes', () => {
         const manager = new KeybindingManager();
         const canExecute = vi.fn((_invocation: CommandInvocation) => true);

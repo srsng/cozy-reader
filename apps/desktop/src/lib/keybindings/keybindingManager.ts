@@ -13,6 +13,7 @@ import type {
 import { KeybindingListener } from './keybindingListener';
 import { KeybindingResolver } from './keybindingResolver';
 import { userKeybindingRuleToStaticKeybinding } from './userKeybindings';
+import { isBlockedBrowserShortcut } from './defaultBrowserShortcuts';
 
 type CommandExecutor = {
     canExecute: (invocation: CommandInvocation) => boolean;
@@ -190,11 +191,13 @@ export class KeybindingManager {
 
         const matchedKeybinding = this.findMatch(combination);
         if (!matchedKeybinding || !this.canExecuteKeybinding(matchedKeybinding)) {
+            if (isBlockedBrowserShortcut(combination)) {
+                this.preventBrowserDefault(context);
+            }
             return;
         }
 
-        context.originalEvent.preventDefault();
-        context.originalEvent.stopPropagation();
+        this.preventBrowserDefault(context);
 
         this.executeKeybinding(matchedKeybinding);
     }
@@ -204,6 +207,11 @@ export class KeybindingManager {
      */
     private findMatch(combination: KeyCombination): StaticKeybinding | null {
         return this.resolver.resolve(this.keybindings.values(), combination);
+    }
+
+    private preventBrowserDefault(context: KeyboardEventContext): void {
+        context.originalEvent.preventDefault();
+        context.originalEvent.stopPropagation();
     }
 
     private canExecuteKeybinding(keybinding: StaticKeybinding): boolean {

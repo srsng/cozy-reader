@@ -297,6 +297,25 @@ describe('default actions', () => {
         ).toBe(true);
     });
 
+    it('routes refresh keybindings through the window refresh command', () => {
+        const { keybindingManager, context } = createServices();
+        const ctrlR = { key: 'r', modifiers: [ModifierKey.Ctrl] };
+        const f5 = { key: 'f5', modifiers: [] };
+
+        expect(keybindingManager.inspect(ctrlR).matched?.commandId).toBe('window.refresh');
+        expect(keybindingManager.inspect(f5).matched?.commandId).toBe('window.refresh');
+        expect(
+            keybindingManager.getKeybindingsForInvocation({ commandId: 'window.refresh' })
+        ).toHaveLength(2);
+
+        context.contextKeys.set(ContextKey.TextInputFocus, true);
+        context.contextKeys.set(ContextKey.DialogOpen, true);
+        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+
+        expect(keybindingManager.inspect(ctrlR).matched?.commandId).toBe('window.refresh');
+        expect(keybindingManager.inspect(f5).matched?.commandId).toBe('window.refresh');
+    });
+
     it('hides and disables DevTools when the runtime capability is unavailable', async () => {
         const { commandService, menuService, context } = createServices();
         context.contextKeys.set(ContextKey.WindowDevtoolsAvailable, false);
