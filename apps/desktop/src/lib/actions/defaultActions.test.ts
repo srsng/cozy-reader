@@ -1,115 +1,21 @@
 import { describe, expect, it, vi } from 'vitest';
-import { writable, type Writable } from 'svelte/store';
-import type { UserSettings } from '$lib/settings';
-import { LogLevel } from '$lib/types';
-import { DEFAULT_APP_STATE, type AppState } from '$lib/state/app-state';
-import { CommandService } from '$lib/commands/commandService';
-import type { CommandContext } from '$lib/commands/types';
-import { ContextKey, ContextKeyService } from '$lib/context-keys';
-import { MenuId, MenuService } from '$lib/menus';
-import { KeybindingManager } from '$lib/keybindings/keybindingManager';
+import { ContextKey } from '$lib/context-keys';
+import { MenuId } from '$lib/menus';
 import { ModifierKey } from '$lib/keybindings/types';
+import { createAppCommandHarness, getStoreValue } from '$lib/testing';
 import { registerDefaultActions } from './defaultActions';
 
-function getStoreValue<T>(store: Writable<T>): T {
-    let value: T | undefined;
-    const unsubscribe = store.subscribe((currentValue) => {
-        value = currentValue;
-    });
-    unsubscribe();
-    return value as T;
-}
-
-function createSettings(): UserSettings {
-    return {
-        base: {
-            langCode: 'zh-cn',
-            logLevel: LogLevel.info,
-            zoom: 1,
-            alwaysOnTop: false,
-            uiOpacity: 0.88,
-            bodyTransparent: 1,
-            layoutControlsOutline: true
-        },
-        layout: {
-            titlebar: true,
-            header: true,
-            footer: true,
-            layoutConfigs: {
-                titlebar: { left: [], center: [], right: [] },
-                footbar: { left: [], center: [], right: [] },
-                sidebar: { left: [], center: [], right: [] }
-            }
-        },
-        theme: {
-            mode: 'system',
-            type: 'standard',
-            data: {
-                standard: { name: 'black' },
-                four_colors: { hue: 36 },
-                pony: { name: 'sg' }
-            },
-            effects: 'none'
-        },
-        reader: {
-            fontFamily: '',
-            viewerWidth: 60,
-            fontSize: 20,
-            lineHeight: 180,
-            firstLineIndent: false,
-            zoomLongPic: false,
-            scrollBarVisable: false
-        },
-        background: {} as UserSettings['background'],
-        keybindings: { rules: [] }
-    };
-}
-
 function createServices() {
-    const userSettings = writable(createSettings());
-    const appState = writable<AppState>(DEFAULT_APP_STATE);
-    const context: CommandContext = {
-        appState,
-        contextKeys: new ContextKeyService(),
-        navigation: {
-            back: vi.fn(),
-            backgroundSettings: vi.fn(),
-            canGoBack: vi.fn(() => true),
-            home: vi.fn(),
-            settings: vi.fn()
-        },
-        theme: { setEffect: vi.fn() },
-        userSettings,
-        window: {
-            close: vi.fn(),
-            maximize: vi.fn(),
-            minimize: vi.fn(),
-            refresh: vi.fn(),
-            requestUserAttention: vi.fn(),
-            restoreState: vi.fn(),
-            saveState: vi.fn(),
-            setAlwaysOnTop: vi.fn(),
-            toggleDevtools: vi.fn(),
-            toggleFullscreen: vi.fn()
-        }
-    };
-    const commandService = new CommandService(context);
-    const menuService = new MenuService(commandService, context.contextKeys);
-    const keybindingManager = new KeybindingManager();
-    keybindingManager.setContextKeyService(context.contextKeys);
+    const harness = createAppCommandHarness({ registerCommandExecutor: false });
 
     const defaultActionsDisposable = registerDefaultActions({
-        commandService,
-        menuService,
-        keybindingManager
+        commandService: harness.commandService,
+        menuService: harness.menuService,
+        keybindingManager: harness.keybindingManager
     });
 
     return {
-        commandService,
-        menuService,
-        keybindingManager,
-        context,
-        userSettings,
+        ...harness,
         defaultActionsDisposable
     };
 }

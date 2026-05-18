@@ -1,85 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
+import { ContextKey } from '$lib/context-keys';
+import { createTestCommandContext } from '$lib/testing';
 import { CommandService } from '$lib/commands/commandService';
-import type { CommandContext } from '$lib/commands/types';
-import { ContextKey, ContextKeyService } from '$lib/context-keys';
-import { writable } from 'svelte/store';
-import { DEFAULT_APP_STATE } from '$lib/state/app-state';
-import { LogLevel } from '$lib/types';
-import type { UserSettings } from '$lib/settings';
 import { MenuId, type MenuContribution } from './types';
 import { MenuService } from './menuService';
 
-function createSettings(): UserSettings {
-    return {
-        base: {
-            langCode: 'zh-cn',
-            logLevel: LogLevel.info,
-            zoom: 1,
-            alwaysOnTop: false,
-            uiOpacity: 0.88,
-            bodyTransparent: 1,
-            layoutControlsOutline: true
-        },
-        layout: {
-            titlebar: true,
-            header: true,
-            footer: true,
-            layoutConfigs: {
-                titlebar: { left: [], center: [], right: [] },
-                footbar: { left: [], center: [], right: [] },
-                sidebar: { left: [], center: [], right: [] }
-            }
-        },
-        theme: {
-            mode: 'system',
-            type: 'standard',
-            data: {
-                standard: { name: 'black' },
-                four_colors: { hue: 36 },
-                pony: { name: 'sg' }
-            },
-            effects: 'none'
-        },
-        reader: {
-            fontFamily: '',
-            viewerWidth: 60,
-            fontSize: 20,
-            lineHeight: 180,
-            firstLineIndent: false,
-            zoomLongPic: false,
-            scrollBarVisable: false
-        },
-        background: {} as UserSettings['background'],
-        keybindings: { rules: [] }
-    };
-}
-
 function createCommandService() {
-    const context: CommandContext = {
-        appState: writable(DEFAULT_APP_STATE),
-        contextKeys: new ContextKeyService(),
-        navigation: {
-            back: vi.fn(),
-            backgroundSettings: vi.fn(),
-            canGoBack: vi.fn(() => true),
-            home: vi.fn(),
-            settings: vi.fn()
-        },
-        theme: { setEffect: vi.fn() },
-        userSettings: writable(createSettings()),
-        window: {
-            close: vi.fn(),
-            maximize: vi.fn(),
-            minimize: vi.fn(),
-            refresh: vi.fn(),
-            requestUserAttention: vi.fn(),
-            restoreState: vi.fn(),
-            saveState: vi.fn(),
-            setAlwaysOnTop: vi.fn(),
-            toggleDevtools: vi.fn(),
-            toggleFullscreen: vi.fn()
-        }
-    };
+    const { context } = createTestCommandContext();
     const commandService = new CommandService(context);
     commandService.register({ id: 'zoom.in', run: vi.fn() });
 

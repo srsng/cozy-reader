@@ -1,69 +1,25 @@
 import { describe, expect, it, vi } from 'vitest';
-import { LogLevel } from '$lib/types';
+import { createTestSettings } from '$lib/testing';
 import {
     createSettingsContextSnapshot,
     getEntriesByTab,
     normalizeSettingValue,
     searchEntries
 } from './index';
-import type { SettingsSnapshot } from './types';
 
 vi.mock('mode-watcher', () => ({
     mode: { current: 'system' }
 }));
 
-function createSettings(): SettingsSnapshot {
-    return {
-        base: {
-            langCode: 'zh-cn',
-            logLevel: LogLevel.info,
-            zoom: 1,
-            alwaysOnTop: false,
-            uiOpacity: 0.88,
-            bodyTransparent: 1,
-            layoutControlsOutline: true
-        },
-        layout: {
-            titlebar: true,
-            header: true,
-            footer: true,
-            layoutConfigs: {
-                titlebar: { left: [], center: [], right: [] },
-                footbar: { left: [], center: [], right: [] },
-                sidebar: { left: [], center: [], right: [] }
-            }
-        },
-        theme: {
-            mode: 'system',
-            type: 'standard',
-            data: {
-                standard: { name: 'black' },
-                four_colors: { hue: 36 },
-                pony: { name: 'sg' }
-            },
-            effects: 'none'
-        },
-        reader: {
-            fontFamily: '',
-            viewerWidth: 60,
-            fontSize: 20,
-            lineHeight: 180,
-            firstLineIndent: false,
-            zoomLongPic: false,
-            scrollBarVisable: false
-        },
-        background: {} as SettingsSnapshot['background'],
-        keybindings: { rules: [] }
-    };
-}
-
 describe('settings registry schema adapter', () => {
     it('creates disabled search entries for settings hidden by conditions', () => {
-        const settings = createSettings();
+        const settings = createTestSettings();
         settings.theme.type = 'standard';
 
         const results = searchEntries('色相', settings);
-        const hueEntry = results.get('theme')?.find((entry) => entry.key === 'theme.data.four_colors.hue');
+        const hueEntry = results
+            .get('theme')
+            ?.find((entry) => entry.key === 'theme.data.four_colors.hue');
 
         expect(hueEntry?.disabled).toBe(true);
         expect(hueEntry?.disabledReason).toBe('仅在四色主题下可用');
@@ -71,7 +27,7 @@ describe('settings registry schema adapter', () => {
     });
 
     it('hides conditionally unavailable settings in normal tab mode', () => {
-        const settings = createSettings();
+        const settings = createTestSettings();
         settings.theme.type = 'standard';
 
         const entries = getEntriesByTab('theme', settings);
@@ -81,7 +37,7 @@ describe('settings registry schema adapter', () => {
     });
 
     it('creates config-prefixed context keys for setting conditions', () => {
-        const settings = createSettings();
+        const settings = createTestSettings();
         settings.theme.type = 'pony';
 
         expect(createSettingsContextSnapshot(settings)['config.theme.type']).toBe('pony');
@@ -89,24 +45,30 @@ describe('settings registry schema adapter', () => {
     });
 
     it('searches setting keys, tags, feature groups, and enum labels', () => {
-        const settings = createSettings();
+        const settings = createTestSettings();
 
         expect(searchEntries('@id:reader.fontSize', settings).get('reader')?.[0]?.key).toBe(
             'reader.fontSize'
         );
-        expect(searchEntries('@tag:opacity', settings).get('base')?.map((entry) => entry.key)).toContain(
-            'base.uiOpacity'
-        );
-        expect(searchEntries('@feature:字体', settings).get('reader')?.map((entry) => entry.key)).toContain(
-            'reader.fontFamily'
-        );
-        expect(searchEntries('跟随系统', settings).get('theme')?.map((entry) => entry.key)).toContain(
-            'theme.mode'
-        );
+        expect(
+            searchEntries('@tag:opacity', settings)
+                .get('base')
+                ?.map((entry) => entry.key)
+        ).toContain('base.uiOpacity');
+        expect(
+            searchEntries('@feature:字体', settings)
+                .get('reader')
+                ?.map((entry) => entry.key)
+        ).toContain('reader.fontFamily');
+        expect(
+            searchEntries('跟随系统', settings)
+                .get('theme')
+                ?.map((entry) => entry.key)
+        ).toContain('theme.mode');
     });
 
     it('supports @modified based on schema defaults', () => {
-        const settings = createSettings();
+        const settings = createTestSettings();
         settings.reader.fontSize = 24;
 
         const modifiedKeys = searchEntries('@modified', settings)
@@ -117,7 +79,7 @@ describe('settings registry schema adapter', () => {
     });
 
     it('normalizes number bounds and enum values before committing', () => {
-        const settings = createSettings();
+        const settings = createTestSettings();
         const fontSizeSchema = getEntriesByTab('reader', settings).find(
             (entry) => entry.key === 'reader.fontSize'
         )?.schema;
@@ -126,6 +88,8 @@ describe('settings registry schema adapter', () => {
         )?.schema;
 
         expect(fontSizeSchema && normalizeSettingValue(fontSizeSchema, 999)).toBe(48);
-        expect(themeTypeSchema && normalizeSettingValue(themeTypeSchema, 'unknown')).toBe('standard');
+        expect(themeTypeSchema && normalizeSettingValue(themeTypeSchema, 'unknown')).toBe(
+            'standard'
+        );
     });
 });
