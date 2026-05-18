@@ -19,7 +19,7 @@
     data-slot="menubar-sub-trigger"
     data-inset={inset}
     class={cn(
-        "focus:bg-accent focus:text-accent-foreground data-open:bg-accent data-open:text-accent-foreground data-inset:pl-7 flex cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-none [&_svg:not([class*='size-'])]:size-4",
+        "focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground data-inset:pl-7 flex cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-none [&_svg:not([class*='size-'])]:size-4",
         className
     )}
     {...restProps}

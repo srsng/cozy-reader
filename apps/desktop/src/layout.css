@@ -29,6 +29,9 @@
         position: relative;
         /* grid区域定义 */
         grid-area: main;
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
     }
 
     /* grid区域定义 */
