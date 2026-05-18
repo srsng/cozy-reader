@@ -231,7 +231,7 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
         order: 100,
         tags: ['theme', 'appearance'],
         keywords: ['浅色', '深色', '跟随系统', 'light', 'dark', 'system'],
-        ui: { presentation: 'button-list' }
+        ui: { presentation: 'button-group' }
     },
     {
         key: 'theme.type',
@@ -245,15 +245,15 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
         enumItemLabels: enumLabelsFromRecord(AppThemeType2Str),
         order: 110,
         tags: ['theme', 'appearance'],
-        keywords: ['标准主题', '四色', '友谊是魔法'],
-        ui: { presentation: 'button-list' }
+        keywords: ['标准', '四色', '友谊是魔法'],
+        ui: { presentation: 'button-group' }
     },
     {
         key: 'theme.data.standard.name',
         category: 'theme',
         group: 'theme.config',
-        title: '标准主题色',
-        description: '选择标准主题的颜色',
+        title: '主题色',
+        description: '选择标准主题的主题色',
         type: 'string',
         default: DefaultThemeData.standard.name,
         enum: ALL_Std_TD_NAMES,
@@ -265,7 +265,7 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
             expression: 'config.theme.type == "standard"',
             disabledReason: '仅在标准主题下可用'
         },
-        ui: { presentation: 'button-list' }
+        ui: { presentation: 'button-group' }
     },
     {
         key: 'theme.data.four_colors.hue',
@@ -304,7 +304,7 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
             expression: 'config.theme.type == "pony"',
             disabledReason: '仅在友谊是魔法主题下可用'
         },
-        ui: { presentation: 'button-list' }
+        ui: { presentation: 'button-group' }
     },
     {
         key: 'theme.effects',

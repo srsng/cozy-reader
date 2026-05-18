@@ -3,7 +3,7 @@ import { ContextKeyService, type ContextKeySnapshot } from '$lib/context-keys';
 
 export type SettingsTab = 'base' | 'theme' | 'reader';
 export type SettingPrimitiveType = 'boolean' | 'number' | 'string';
-export type SettingPresentation = 'switch' | 'slider' | 'input' | 'select' | 'button-list' | 'custom';
+export type SettingPresentation = 'switch' | 'slider' | 'input' | 'select' | 'button-list' | 'button-group' | 'custom';
 export type SettingFormat = 'ratio-percentage' | 'percentage' | 'px' | 'number';
 export type SettingCustomComponent = 'zoom' | 'fontFamily' | 'themeEffects';
 

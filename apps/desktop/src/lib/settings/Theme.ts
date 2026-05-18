@@ -79,8 +79,8 @@ export const DefaultThemeData: AppThemeData = {
 };
 
 export const AppThemeMode2Str: Record<AppThemeMode, string> = {
-    light: '浅色|light',
-    dark: '深色|dark',
+    light: '浅色',
+    dark: '深色',
     system: '跟随系统'
 };
 

@@ -5,6 +5,7 @@
     import { Switch } from '$ui/switch';
     import * as Tooltip from '$ui/tooltip';
     import { ButtonList } from '$ui/button-list';
+    import { ButtonGroup } from '$ui/button-group';
     import { Info } from 'lucide-svelte';
     import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
     import type { UserSettings } from '$lib/settings';
@@ -163,6 +164,25 @@
             <div class={isDisabled ? 'pointer-events-none' : ''}>
                 <ButtonList Map2Str={optionRecord()} selected={currentValue} onclick={commit} />
             </div>
+        {:else if entry.type === 'button-group'}
+            {#if entry.options.length}
+                <ButtonGroup class="max-w-full">
+                    {#each entry.options as option}
+                        {@const selected = String(currentValue ?? '') === option.value}
+                        <Button
+                            variant={selected ? 'default' : 'outline'}
+                            size="sm"
+                            disabled={isDisabled}
+                            aria-pressed={selected}
+                            onclick={() => commit(option.value)}
+                        >
+                            {option.label}
+                        </Button>
+                    {/each}
+                </ButtonGroup>
+            {:else}
+                <Button variant="outline" size="sm" disabled>暂无选项</Button>
+            {/if}
         {:else if entry.type === 'custom' && entry.component === 'fontFamily'}
             <FontFamilyInput
                 value={String(currentValue ?? '')}
