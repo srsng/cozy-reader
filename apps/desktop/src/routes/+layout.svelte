@@ -8,6 +8,9 @@
     import { provide } from '$lib/utils/context';
     import { onDestroy, onMount } from 'svelte';
     import { updatePageHistory } from '$lib/utils/route.svelte';
+    import { tiltUp } from '$lib/animation';
+    import { scale } from 'svelte/transition';
+
     // stores
     import { USER_SETTINGS } from '$lib/stores/userSettings';
     import { APP_STATE, initAppState } from '$lib/stores/appState';
@@ -15,8 +18,6 @@
     import { page } from '$app/state';
     // background functions
     import BackgroundAction from '$lib/components/action/background-action.svelte';
-    // animation func
-    import { startWindowTiltUpAnimation } from '$lib/animation';
 
     // services
     import {
@@ -115,8 +116,6 @@
             requestAnimationFrame(updateTextInputFocus);
         };
 
-        // 启动窗口入场动画
-        startWindowTiltUpAnimation();
         updateTextInputFocus();
         document.addEventListener('focusin', handleFocusChange, true);
         document.addEventListener('focusout', handleFocusChange, true);
@@ -143,19 +142,21 @@
 <UIOpacityAction />
 <CommandPalette />
 
-<div class="app-layout" role="application">
-    <AppTitleBar className="header" />
-    <main class="main-area">
-        <BackgroundAction />
-        <ScrollArea class="main-area-content">
-            {@render children?.()}
-        </ScrollArea>
-    </main>
+<div class="app-viewport">
+    <div class="app-layout" role="application" in:tiltUp out:scale>
+        <AppTitleBar className="header" />
+        <main class="main-area">
+            <BackgroundAction />
+            <ScrollArea class="main-area-content">
+                {@render children?.()}
+            </ScrollArea>
+        </main>
 
-    <!-- 侧栏通过aside-l aside-r设定 -->
-    <!-- <div class="aside-l"></div> -->
-    <!-- <div class="aside-r"></div> -->
-    <div class="footer"></div>
+        <!-- 侧栏通过aside-l aside-r设定 -->
+        <!-- <div class="aside-l"></div> -->
+        <!-- <div class="aside-r"></div> -->
+        <div class="footer"></div>
+    </div>
 </div>
 
 <Toaster />

@@ -1,8 +1,20 @@
 @layer utilities {
+    .app-viewport {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        overscroll-behavior: none;
+        contain: layout paint;
+        background-color: transparent;
+    }
+
     /* app布局 */
     .app-layout {
         /* 确保布局占满整个视口 */
-        height: 100vh !important;
+        width: 100%;
+        height: 100%;
         overflow: hidden;
         position: relative;
         isolation: isolate;
