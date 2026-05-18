@@ -139,16 +139,18 @@
 <ThemeRuntime />
 <ZoomRuntime />
 <WindowRuntime />
-<BackgroundAction />
 <KeybindingRuntime />
 <UIOpacityAction />
 <CommandPalette />
 
 <div class="app-layout" role="application">
     <AppTitleBar className="header" />
-    <ScrollArea class="main-area">
-        {@render children?.()}
-    </ScrollArea>
+    <main class="main-area">
+        <BackgroundAction />
+        <ScrollArea class="main-area-content">
+            {@render children?.()}
+        </ScrollArea>
+    </main>
 
     <!-- 侧栏通过aside-l aside-r设定 -->
     <!-- <div class="aside-l"></div> -->

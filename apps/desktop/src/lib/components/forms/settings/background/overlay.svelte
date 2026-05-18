@@ -8,7 +8,7 @@
     import { RotateCcw } from 'lucide-svelte';
     import { Input } from '$ui/input';
     import { Separator } from '$ui/separator';
-    import { DEFAULT_LIGHT_OPACITY, DEFAULT_DARK_OPACITY } from '$lib/settings/background';
+    import { DEFAULT_LIGHT_OPACITY, DEFAULT_DARK_OPACITY, DEFAULT_LIGHT_OVERLAY_OPACITY, DEFAULT_DARK_OVERLAY_OPACITY } from '$lib/settings/background';
     import { Label } from '$ui/label';
     import SliderWithControls from '$lib/components/common/slider-with-controls.svelte';
 </script>
@@ -308,13 +308,13 @@
                 <!-- 亮色模式上层遮罩不透明度 -->
                 <Card.ContentItem
                     label="亮色模式上层遮罩不透明度"
-                    description="调整亮色主题下的上层遮罩层不透明度: 0~100%"
+                    description="调整亮色主题下的上层遮罩层不透明度: 0~90%"
                 >
                     <SliderWithControls
                         bind:value={$currentSettings.background.global.topOverlay.opacity.light}
-                        defaultValue={DEFAULT_LIGHT_OPACITY}
+                        defaultValue={DEFAULT_LIGHT_OVERLAY_OPACITY}
                         min={0}
-                        max={1}
+                        max={0.9}
                         step={0.01}
                     >
                         {#snippet valueLabel()}
@@ -331,13 +331,13 @@
                 <!-- 暗色模式上层遮罩不透明度 -->
                 <Card.ContentItem
                     label="暗色模式上层遮罩不透明度"
-                    description="调整暗色主题下的上层遮罩层不透明度: 0~100%"
+                    description="调整暗色主题下的上层遮罩层不透明度: 0~90%"
                 >
                     <SliderWithControls
                         bind:value={$currentSettings.background.global.topOverlay.opacity.dark}
-                        defaultValue={DEFAULT_DARK_OPACITY}
+                        defaultValue={DEFAULT_DARK_OVERLAY_OPACITY}
                         min={0}
-                        max={1}
+                        max={0.9}
                         step={0.01}
                     >
                         {#snippet valueLabel()}

@@ -244,7 +244,7 @@
         <Card.Root>
             <Card.Header>
                 <Card.Title>图片独立配置</Card.Title>
-                <Card.Description>优先与全局的配置，只作用于当前图片</Card.Description>
+                <Card.Description>优先于全局的配置，只作用于当前图片</Card.Description>
                 <Card.Description class="min-w-0 overflow-hidden">
                     <div class="space-y-1">
                         <p class="line-clamp-2 break-all font-medium">
@@ -804,7 +804,7 @@
         <Card.Root>
             <Card.Header>
                 <Card.Title>图片独立配置</Card.Title>
-                <Card.Description>优先与全局的配置，只作用于当前图片</Card.Description>
+                <Card.Description>优先于全局的配置，只作用于当前图片</Card.Description>
             </Card.Header>
             <Card.Content class="py-8">
                 <div class="text-muted-foreground text-center">

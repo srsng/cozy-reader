@@ -1,7 +1,7 @@
 <script lang="ts" module>
     import { inject } from '$lib/utils/context';
     import { USER_SETTINGS } from '$lib/stores/userSettings';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import type {
         BackgroundImage,
         GlobalBackgroundConfig,
@@ -24,9 +24,6 @@
         globalConfig: GlobalBackgroundConfig
     ): Record<string, string> {
         if (!image) {
-            // 获取当前主题模式
-            const currentTheme = mode.current === 'dark' ? 'dark' : 'light';
-
             return {
                 '--settings-bg-image': 'none',
                 '--settings-bg-opacity': '0',
@@ -36,18 +33,7 @@
                 '--settings-bg-filters': 'none',
                 '--settings-bg-background-overlay-enabled': 'hidden',
                 '--settings-bg-background-overlay-color': 'transparent',
-                '--settings-bg-background-overlay-opacity': '0',
-                '--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled
-                    ? 'visible'
-                    : 'hidden',
-                '--settings-bg-top-overlay-color': globalConfig.topOverlay.color,
-                '--settings-bg-top-overlay-opacity': getOpacityForTheme(
-                    globalConfig.topOverlay.opacity,
-                    currentTheme
-                ).toString(),
-                '--settings-bg-top-overlay-filters': generateFiltersString(
-                    globalConfig.topOverlay.filters
-                )
+                '--settings-bg-background-overlay-opacity': '0'
             };
         }
 
@@ -81,7 +67,6 @@
         const backgroundOverlayFiltersString = generateFiltersString(
             globalConfig.backgroundOverlay.filters
         );
-        const topOverlayFiltersString = generateFiltersString(globalConfig.topOverlay.filters);
 
         return {
             '--settings-bg-image': `url("${imageUrl}")`,
@@ -103,6 +88,17 @@
                 currentTheme
             ).toString(),
             '--settings-bg-background-overlay-filters': backgroundOverlayFiltersString,
+            '--settings-bg-animation-duration': `${globalConfig.animationDuration}ms`
+        };
+    }
+
+    // 生成前景/上层遮罩层样式对象
+    export function generateTopOverlayStyles(
+        globalConfig: GlobalBackgroundConfig
+    ): Record<string, string> {
+        const currentTheme = mode.current === 'dark' ? 'dark' : 'light';
+
+        return {
             '--settings-bg-top-overlay-enabled': globalConfig.topOverlay.enabled
                 ? 'visible'
                 : 'hidden',
@@ -111,8 +107,9 @@
                 globalConfig.topOverlay.opacity,
                 currentTheme
             ).toString(),
-            '--settings-bg-top-overlay-filters': topOverlayFiltersString,
-            '--settings-bg-animation-duration': `${globalConfig.animationDuration}ms`
+            '--settings-bg-top-overlay-filters': generateFiltersString(
+                globalConfig.topOverlay.filters
+            )
         };
     }
 
@@ -220,15 +217,19 @@
             '--settings-bg-background-overlay-color',
             '--settings-bg-background-overlay-opacity',
             '--settings-bg-background-overlay-filters',
-            '--settings-bg-top-overlay-enabled',
-            '--settings-bg-top-overlay-filters',
             '--settings-bg-animation-duration'
         ];
 
+        removeStyleProperties(element, properties);
+    }
+
+    export function removeStyleProperties(
+        element: HTMLElement | null,
+        properties: string[]
+    ): void {
+        if (!element || !element.style) return;
         properties.forEach((property) => {
-            if (element && element.style) {
-                element.style.removeProperty(property);
-            }
+            element.style.removeProperty(property);
         });
     }
 </script>
@@ -259,11 +260,30 @@
         }
     }
 
+    function applyTopOverlayToRoot() {
+        if (typeof document === 'undefined') return;
+        applyBackgroundStyles(
+            document.documentElement,
+            generateTopOverlayStyles($userSettings.background.global)
+        );
+    }
+
+    function removeTopOverlayFromRoot() {
+        if (typeof document === 'undefined') return;
+        removeStyleProperties(document.documentElement, [
+            '--settings-bg-top-overlay-enabled',
+            '--settings-bg-top-overlay-color',
+            '--settings-bg-top-overlay-opacity',
+            '--settings-bg-top-overlay-filters'
+        ]);
+    }
+
     // 监听背景设置变化和主题变化
     $effect(() => {
         // 当背景设置发生变化或主题变化时重新应用样式
         // 通过访问mode.current来建立对主题变化的响应性
-        // const currentMode = mode.current;
+        mode.current;
+        applyTopOverlayToRoot();
         if (activeImage || $userSettings.background.activeImageId === null) {
             applyBackgroundToContainer();
         }
@@ -271,7 +291,12 @@
 
     onMount(() => {
         // 初始化背景
+        applyTopOverlayToRoot();
         applyBackgroundToContainer();
+    });
+
+    onDestroy(() => {
+        removeTopOverlayFromRoot();
     });
 </script>
 

@@ -4,6 +4,8 @@
         /* 确保布局占满整个视口 */
         height: 100vh !important;
         overflow: hidden;
+        position: relative;
+        isolation: isolate;
         /* 透明背景，让独立背景容器显示 */
         background-color: transparent;
         /* grid布局 */
@@ -32,6 +34,14 @@
         min-width: 0;
         min-height: 0;
         overflow: hidden;
+    }
+
+    .main-area-content {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
     }
 
     /* grid区域定义 */
@@ -67,10 +77,7 @@
     .app-layout::before {
         content: '';
         position: fixed;
-        top: 2rem;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: -20px;
         z-index: 1000;
         pointer-events: none;
         background-color: var(--settings-bg-top-overlay-color, transparent);
@@ -81,15 +88,11 @@
 
     /* 独立背景容器 */
     .background-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -100;
+        position: absolute;
+        inset: 0;
+        z-index: 0;
         pointer-events: none;
-        /* TODO：不知名bug，以前负负得正了 */
-        /* background-color: var(--background); */
+        overflow: hidden;
     }
 
     /* 背景图片层 */
@@ -106,29 +109,23 @@
         background-size: var(--settings-bg-size, cover);
         background-position: var(--settings-bg-position, center);
         background-repeat: no-repeat;
-        background-attachment: fixed;
         background-blend-mode: var(--settings-bg-blend-mode, normal);
         filter: var(--settings-bg-filters, none);
         opacity: var(--settings-bg-opacity, 0);
         transform: scale(var(--settings-bg-scale, 0)) rotate(var(--settings-bg-rotation, 0deg))
             translate(var(--settings-bg-offset-x, 0px), var(--settings-bg-offset-y, 0px));
         transition:
-            background-color 220ms ease-out,
             opacity var(--settings-bg-animation-duration, 300ms) ease-in-out,
             filter var(--settings-bg-animation-duration, 300ms) ease-in-out,
             transform var(--settings-bg-animation-duration, 300ms) ease-in-out;
         pointer-events: none;
-        background-color: var(--background);
     }
 
     /* 背景遮罩层 - 独立于UI不透明度 */
     .background-container::after {
         content: '';
         position: absolute;
-        top: 2rem;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         background-color: var(--settings-bg-background-overlay-color, transparent);
         opacity: var(--settings-bg-background-overlay-opacity, 0);
         filter: var(--settings-bg-background-overlay-filters, none);

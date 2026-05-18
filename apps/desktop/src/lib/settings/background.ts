@@ -1,6 +1,8 @@
 export const DEFAULT_OPACITY = 0.88;
 export const DEFAULT_DARK_OPACITY = 0.1;
 export const DEFAULT_LIGHT_OPACITY = 0.96;
+export const DEFAULT_LIGHT_OVERLAY_OPACITY = 1 - DEFAULT_LIGHT_OPACITY;  // 太高会直接导致前景被纯色覆盖，导致应用无法使用
+export const DEFAULT_DARK_OVERLAY_OPACITY = DEFAULT_DARK_OPACITY;
 export const DEFAULT_ANIMATION_DURATION = 300;
 
 import { mode } from 'mode-watcher';
