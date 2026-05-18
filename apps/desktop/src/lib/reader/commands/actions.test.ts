@@ -91,7 +91,13 @@ function createServices(runtime: ReaderCommandRuntime) {
     const context: CommandContext = {
         appState,
         contextKeys: new ContextKeyService(),
-        navigation: { settings: vi.fn() },
+        navigation: {
+            back: vi.fn(),
+            backgroundSettings: vi.fn(),
+            canGoBack: vi.fn(() => true),
+            home: vi.fn(),
+            settings: vi.fn()
+        },
         theme: { setEffect: vi.fn() },
         userSettings,
         window: {

@@ -1,4 +1,4 @@
-import { goSettings } from '$lib/utils/route.svelte';
+import { canGoBack, goBack, goBgSettings, goHome, goSettings } from '$lib/utils/route.svelte';
 import { saveUserSettingsManually } from '$lib/stores/userSettings';
 import type { UserSettings } from '$lib/settings';
 import type { AppState } from '$lib/state/app-state';
@@ -37,6 +37,10 @@ export function createDefaultCommandContext({
         appState,
         contextKeys,
         navigation: {
+            back: goBack,
+            backgroundSettings: goBgSettings,
+            canGoBack,
+            home: goHome,
             settings: goSettings
         },
         theme: {

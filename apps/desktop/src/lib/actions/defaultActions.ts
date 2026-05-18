@@ -14,7 +14,7 @@ import { MenuId } from '$lib/menus';
 import { ModifierKey } from '$lib/keybindings/types';
 import type { AppThemeEffects } from '$lib/settings/Theme';
 import type { CommandSpec } from '$lib/commands/types';
-import type { SettingsTab } from '$lib/utils/route.svelte';
+import type { BgSettingsTab, SettingsTab } from '$lib/utils/route.svelte';
 import type { Disposable } from '$lib/utils/disposable';
 import { defineActions, defineKnownAction, type RegisterActionServices } from './types';
 import { registerActions } from './actionRegistry';
@@ -23,7 +23,10 @@ declare module '$lib/commands/types' {
     interface CommandRegistry {
         'app.showCommands': CommandSpec<[], void>;
         'app.closeCommands': CommandSpec<[], void>;
+        'navigate.home': CommandSpec<[], void>;
+        'navigate.back': CommandSpec<[], void>;
         'navigate.settings': CommandSpec<[SettingsTab?], void>;
+        'navigate.backgroundSettings': CommandSpec<[BgSettingsTab?], void>;
         'zoom.in': CommandSpec<[], void>;
         'zoom.out': CommandSpec<[], void>;
         'zoom.reset': CommandSpec<[], void>;
@@ -40,6 +43,7 @@ declare module '$lib/commands/types' {
 
 const noArgsSchema = z.tuple([]);
 const settingsTabSchema = z.enum(['base', 'theme', 'reader']);
+const backgroundSettingsTabSchema = z.enum(['golbal', 'overlay', 'custom']);
 const settingsNavigationArgsSchema = z
     .union([
         z.tuple([]),
@@ -51,6 +55,17 @@ const settingsNavigationArgsSchema = z
         if (typeof payload === 'string') return [payload];
         return [payload?.tab];
     }) as StandardSchemaV1<unknown, [SettingsTab?]>;
+const backgroundSettingsNavigationArgsSchema = z
+    .union([
+        z.tuple([]),
+        z.tuple([backgroundSettingsTabSchema]),
+        z.tuple([z.object({ tab: backgroundSettingsTabSchema.optional() }).optional()])
+    ])
+    .transform((args): [BgSettingsTab?] => {
+        const payload = args[0];
+        if (typeof payload === 'string') return [payload];
+        return [payload?.tab];
+    }) as StandardSchemaV1<unknown, [BgSettingsTab?]>;
 const themeEffectSchema = z.enum(['none', 'mica', 'acrylic', 'blur']);
 const themeEffectPayloadSchema = z
     .union([themeEffectSchema, z.object({ effect: themeEffectSchema })])
@@ -116,6 +131,53 @@ export const defaultActions = defineActions([
         ]
     }),
     defineKnownAction({
+        id: 'navigate.home',
+        title: '返回主页',
+        description: '导航到主页',
+        category: 'navigation',
+        keywords: ['home', '主页'],
+        command: {
+            argsSchema: noArgsSchema,
+            run: (context) => {
+                context.navigation.home();
+            }
+        },
+        menus: [
+            {
+                menu: MenuId.CommandPalette,
+                order: 90
+            },
+            {
+                menu: MenuId.TitleBar,
+                order: 0
+            }
+        ]
+    }),
+    defineKnownAction({
+        id: 'navigate.back',
+        title: '返回上一页',
+        description: '返回历史记录中的上一页',
+        category: 'navigation',
+        keywords: ['back', '返回'],
+        command: {
+            argsSchema: noArgsSchema,
+            canRun: (context) => context.navigation.canGoBack(),
+            run: (context) => {
+                context.navigation.back();
+            }
+        },
+        menus: [
+            {
+                menu: MenuId.CommandPalette,
+                order: 91
+            },
+            {
+                menu: MenuId.TitleBar,
+                order: 99
+            }
+        ]
+    }),
+    defineKnownAction({
         id: 'navigate.settings',
         title: '打开设置',
         description: '导航到设置页面',
@@ -132,11 +194,38 @@ export const defaultActions = defineActions([
                 menu: MenuId.CommandPalette,
                 order: 100,
                 defaultShortcut: 'Ctrl+,'
+            },
+            {
+                menu: MenuId.TitleBar,
+                order: 1
             }
         ],
         keybindings: [
             {
                 combination: { key: ',', modifiers: [ModifierKey.Ctrl] }
+            }
+        ]
+    }),
+    defineKnownAction({
+        id: 'navigate.backgroundSettings',
+        title: '打开背景设置',
+        description: '导航到背景设置页面',
+        category: 'navigation',
+        keywords: ['background', '背景设置'],
+        command: {
+            argsSchema: backgroundSettingsNavigationArgsSchema,
+            run: (context, tab?: BgSettingsTab) => {
+                context.navigation.backgroundSettings(tab);
+            }
+        },
+        menus: [
+            {
+                menu: MenuId.CommandPalette,
+                order: 101
+            },
+            {
+                menu: MenuId.TitleBar,
+                order: 2
             }
         ]
     }),

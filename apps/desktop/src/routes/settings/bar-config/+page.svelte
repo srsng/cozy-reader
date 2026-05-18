@@ -1,129 +1,181 @@
-<!-- todo -->
 <script lang="ts" module>
+    import { Button } from '$ui/button';
     import {
         Card,
         CardContent,
         CardDescription,
+        CardFooter,
         CardHeader,
-        CardTitle,
-        CardAction
+        CardTitle
     } from '$ui/card';
-    import { Tabs, TabsContent, TabsList, TabsTrigger } from '$ui/tabs';
-    import { Separator } from '$ui/separator';
-    import * as Alert from '$ui/alert';
-    import { ButtonType } from '$lib/settings/Layout';
-    import type { ButtonConfig } from '$lib/settings/Layout';
-    import { DefaultTitleBarConfig } from '$lib/settings/Layout';
+    import { Badge } from '$ui/badge';
     import {
-        ButtonSelectorForm,
-        ConfigPreviewForm,
-        ActionButtonsForm
-    } from '$lib/components/forms/bar';
-    import { Info, Settings2 } from 'lucide-svelte';
+        cloneBarConfig,
+        completeTitleBarConfig,
+        DefaultTitleBarConfig,
+        normalizeTitleBarConfig,
+        type BarConfig,
+        type BarSection,
+        type TitleBarItemConfig
+    } from '$lib/settings/Layout';
+    import TitleBarPreview from '$lib/components/forms/bar/TitleBarPreview.svelte';
+    import TitleBarSelectedItemPanel from '$lib/components/forms/bar/TitleBarSelectedItemPanel.svelte';
+    import { MENU_SERVICE } from '$lib/menus';
+    import { getAvailableTitleBarContributions } from '$lib/components/layout/titlebarContributions';
     import { inject } from '$lib/utils/context';
-    import { USER_SETTINGS, saveUserSettingsManually } from '$lib/stores/userSettings';
+    import { forceSaveUserSettings, USER_SETTINGS } from '$lib/stores/userSettings';
+    import { Pencil, RotateCcw, Save, Undo2 } from 'lucide-svelte';
     import { onDestroy } from 'svelte';
+    import { fade, slide } from 'svelte/transition';
 </script>
 
 <script lang="ts">
-    // 注入用户设置store
     const userSettings = inject(USER_SETTINGS);
+    const menuService = inject(MENU_SERVICE);
 
-    let activeTab = $state('titlebar');
-
-    function addButton(type: ButtonType, section: 'left' | 'center' | 'right') {
-        const newButton: ButtonConfig = {
-            name: `${type}-${Date.now()}`,
-            type,
-            enabled: true,
-            order: $userSettings.layout.layoutConfigs.titlebar[section].length
-        };
-
-        $userSettings.layout.layoutConfigs.titlebar = {
-            ...$userSettings.layout.layoutConfigs.titlebar,
-            [section]: [...$userSettings.layout.layoutConfigs.titlebar[section], newButton]
-        };
-    }
-
-    function resetToDefault() {
-        $userSettings.layout.layoutConfigs.titlebar = structuredClone(DefaultTitleBarConfig);
-    }
-
-    onDestroy(async () => {
-        await saveUserSettingsManually(userSettings);
+    let menuChangeVersion = $state(0);
+    const disposable = menuService.onDidChange(() => {
+        menuChangeVersion += 1;
     });
+
+    onDestroy(() => disposable.dispose());
+
+    const contributions = $derived.by(() => {
+        menuChangeVersion;
+        return getAvailableTitleBarContributions(menuService);
+    });
+    const appliedConfig = $derived(
+        completeTitleBarConfig($userSettings.layout.layoutConfigs.titlebar, contributions)
+    );
+
+    let draftConfig: BarConfig = $state({ left: [], center: [], right: [] });
+    let editing = $state(false);
+    let selectedItemId: string | null = $state(null);
+    let completedContributionsKey = $state('');
+    let draftInitialized = $state(false);
+
+    const appliedConfigJson = $derived(JSON.stringify(normalizeTitleBarConfig(appliedConfig)));
+    const draftConfigJson = $derived(JSON.stringify(normalizeTitleBarConfig(draftConfig)));
+    const dirty = $derived(draftConfigJson !== appliedConfigJson);
+    const totalItems = $derived(flatItems(draftConfig).length);
+    const enabledItems = $derived(flatItems(draftConfig).filter((item) => item.enabled).length);
+    const contributionsKey = $derived(
+        contributions.map((contribution) => contribution.id).join('|')
+    );
+
+    $effect(() => {
+        if (!draftInitialized) {
+            draftConfig = cloneBarConfig(appliedConfig);
+            completedContributionsKey = contributionsKey;
+            draftInitialized = true;
+            return;
+        }
+
+        if (contributionsKey === completedContributionsKey) return;
+        draftConfig = cloneBarConfig(completeTitleBarConfig(draftConfig, contributions));
+        completedContributionsKey = contributionsKey;
+        ensureSelectedItem();
+    });
+
+    function flatItems(config: BarConfig) {
+        const sections: BarSection[] = ['left', 'center', 'right'];
+        return sections.flatMap((section) =>
+            [...config[section]].sort((left, right) => left.order - right.order)
+        );
+    }
+
+    function firstItem(config: BarConfig) {
+        return flatItems(config)[0] ?? null;
+    }
+
+    function selectItem(item: TitleBarItemConfig) {
+        selectedItemId = item.id;
+    }
+
+    function ensureSelectedItem() {
+        if (!editing) return;
+        const items = flatItems(draftConfig);
+        if (selectedItemId && items.some((item) => item.id === selectedItemId)) return;
+        selectedItemId = items[0]?.id ?? null;
+    }
+
+    function startEditing() {
+        editing = true;
+        ensureSelectedItem();
+    }
+
+    function resetToDefaultDraft() {
+        draftConfig = cloneBarConfig(completeTitleBarConfig(DefaultTitleBarConfig, contributions));
+        selectedItemId = firstItem(draftConfig)?.id ?? null;
+    }
+
+    function cancelEditing() {
+        draftConfig = cloneBarConfig(appliedConfig);
+        selectedItemId = null;
+        editing = false;
+    }
+
+    async function saveDraft() {
+        const nextConfig = cloneBarConfig(completeTitleBarConfig(draftConfig, contributions));
+        userSettings.update((settings) => ({
+            ...settings,
+            layout: {
+                ...settings.layout,
+                layoutConfigs: {
+                    ...settings.layout.layoutConfigs,
+                    titlebar: nextConfig
+                }
+            }
+        }));
+        await forceSaveUserSettings(userSettings);
+        editing = false;
+        selectedItemId = null;
+    }
 </script>
 
-<div class="container mx-auto space-y-6 p-6">
-    <!-- 信息提示 -->
-    <Alert.Root>
-        <Info class="h-4 w-4" />
-        <Alert.Title>栏配置说明</Alert.Title>
-        <Alert.Description>
-            使用拖拽、点击和删除操作来自定义您的工具栏布局。所有更改会自动保存。
-        </Alert.Description>
-    </Alert.Root>
+<Card>
+    <CardHeader>
+        <CardTitle>标题栏配置</CardTitle>
+        <CardDescription>
+            在预览中选择按钮，调整启用状态和同区域顺序后应用到实际标题栏。
+        </CardDescription>
+    </CardHeader>
 
-    <!-- 页面头部 -->
-    <div>
-        <h1 class="text-3xl font-bold tracking-tight">栏配置</h1>
-        <p class="text-muted-foreground mt-2">直接在预览中拖拽、添加和删除按钮来配置工具栏</p>
-    </div>
+    <CardContent class="space-y-3">
+        <TitleBarPreview config={draftConfig} {editing} {selectedItemId} onSelect={selectItem} />
+        <TitleBarSelectedItemPanel bind:config={draftConfig} bind:selectedItemId {editing} />
+    </CardContent>
 
-    <Separator />
-
-    <!-- 主要内容 -->
-    <Card>
-        <CardHeader>
-            <CardTitle>交互式配置</CardTitle>
-            <CardDescription>直接在预览中操作按钮配置，支持拖拽、点击切换状态和删除</CardDescription
+    <CardFooter
+        class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between"
+    >
+        <div class="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
+            <Badge variant={dirty ? 'default' : 'outline'}
+                >{dirty ? '有未应用更改' : '已应用'}</Badge
             >
-            <CardAction>
-                <ButtonSelectorForm
-                    onAddButton={addButton}
-                    onReset={resetToDefault}
-                    onSave={() => {}}
-                    section="left"
-                />
-            </CardAction>
-        </CardHeader>
-        <Separator />
-        <CardContent>
-            <Tabs bind:value={activeTab}>
-                <TabsList class="mb-6 grid w-full grid-cols-3">
-                    <TabsTrigger value="titlebar">标题栏</TabsTrigger>
-                    <TabsTrigger value="footbar">页脚栏</TabsTrigger>
-                    <TabsTrigger value="sidebar">侧边栏</TabsTrigger>
-                </TabsList>
+            <span>{enabledItems} / {totalItems} 个按钮已启用</span>
+        </div>
 
-                <TabsContent value="titlebar">
-                    <div class="space-y-6">
-                        <!-- 交互式标题栏预览 -->
-                        <ConfigPreviewForm
-                            bind:config={$userSettings.layout.layoutConfigs.titlebar}
-                        />
-
-                        <!-- 操作说明 -->
-                        <ActionButtonsForm />
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="footbar">
-                    <div class="text-muted-foreground py-16 text-center">
-                        <Settings2 class="mx-auto mb-4 h-12 w-12 opacity-50" />
-                        <p class="text-lg font-medium">页脚栏配置即将推出</p>
-                        <p class="mt-2 text-sm">敬请期待更多自定义选项</p>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="sidebar">
-                    <div class="text-muted-foreground py-16 text-center">
-                        <Settings2 class="mx-auto mb-4 h-12 w-12 opacity-50" />
-                        <p class="text-lg font-medium">侧边栏配置即将推出</p>
-                        <p class="mt-2 text-sm">敬请期待更多自定义选项</p>
-                    </div>
-                </TabsContent>
-            </Tabs>
-        </CardContent>
-    </Card>
-</div>
+        <div class="flex flex-wrap items-center gap-2">
+            {#if editing}
+                <Button variant="default" onclick={saveDraft} disabled={!dirty}>
+                    <Save class="size-4" />
+                    保存
+                </Button>
+                <Button variant="outline" onclick={cancelEditing}>
+                    <Undo2 class="size-4" />
+                    取消
+                </Button>
+                <Button variant="outline" onclick={resetToDefaultDraft}>
+                    <RotateCcw class="size-4" />
+                    恢复默认
+                </Button>
+            {:else}
+                <Button variant="outline" onclick={startEditing}>
+                    <Pencil class="size-4" />
+                    编辑
+                </Button>
+            {/if}
+        </div>
+    </CardFooter>
+</Card>

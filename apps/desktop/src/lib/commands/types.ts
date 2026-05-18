@@ -1,7 +1,7 @@
 import type { UserSettings } from '$lib/settings';
 import type { AppThemeEffects } from '$lib/settings/Theme';
 import type { AppState } from '$lib/state/app-state';
-import type { SettingsTab } from '$lib/utils/route.svelte';
+import type { BgSettingsTab, SettingsTab } from '$lib/utils/route.svelte';
 import type { Writable } from 'svelte/store';
 import type { ContextKeyService } from '$lib/context-keys';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
@@ -89,6 +89,10 @@ export type ThemeCommandActions = {
 };
 
 export type NavigationCommandActions = {
+    back: () => void;
+    backgroundSettings: (tab?: BgSettingsTab) => void;
+    canGoBack: () => boolean;
+    home: () => void;
     settings: (tab?: SettingsTab) => void;
 };
 

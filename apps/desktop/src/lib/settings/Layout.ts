@@ -11,26 +11,54 @@ export interface LayoutConfigs {
     sidebar: BarConfig;
 }
 
-export interface ButtonConfig {
-    name: string;
-    type: ButtonType;
+export type BarSection = 'left' | 'center' | 'right';
+export type TitleBarContributionId = string;
+
+export interface TitleBarItemConfig {
+    id: string;
+    contributionId: TitleBarContributionId;
     enabled: boolean;
-    // 排序
     order: number;
-    // 区别文本与icon, 默认icon
-    mode?: undefined | 'icon' | 'text';
-    // 自定义属性参数
-    customProps?: Record<string, any>;
 }
 
 export interface BarConfig {
-    // left or up
-    left: ButtonConfig[];
-    // center or middle
-    center: ButtonConfig[];
-    // right or down
-    right: ButtonConfig[];
+    left: TitleBarItemConfig[];
+    center: TitleBarItemConfig[];
+    right: TitleBarItemConfig[];
 }
+
+export type ButtonConfig = TitleBarItemConfig;
+
+export type LegacyButtonConfig = {
+    name?: string;
+    type?: ButtonType;
+    enabled?: boolean;
+    order?: number;
+    mode?: undefined | 'icon' | 'text';
+    customProps?: Record<string, any>;
+    contributionId?: string;
+    id?: string;
+};
+
+export type LegacyBarConfig = {
+    left?: LegacyButtonConfig[];
+    center?: LegacyButtonConfig[];
+    right?: LegacyButtonConfig[];
+};
+
+export type TitleBarItemMoveTarget = {
+    section: BarSection;
+    index: number;
+};
+
+export type TitleBarContributionLayoutDescriptor = {
+    id: TitleBarContributionId;
+    order?: number;
+    category?: string;
+    defaultSection?: BarSection;
+};
+
+const BAR_SECTIONS: BarSection[] = ['left', 'center', 'right'];
 
 // 定义 enum
 export enum ButtonTypeEnum {
@@ -81,6 +109,25 @@ export const buttonTypeLabels: Record<ButtonType, string> = {
     'background-settings': '背景设置'
 };
 
+export const legacyButtonTypeToContributionId: Record<ButtonType, TitleBarContributionId> = {
+    home: 'navigate.home',
+    back: 'navigate.back',
+    settings: 'navigate.settings',
+    'background-settings': 'navigate.backgroundSettings',
+    refresh: 'window.refresh',
+    zoom: 'app.zoom',
+    'app-icon': 'app.icon',
+    'app-title': 'app.title',
+    'always-on-top': 'window.toggleAlwaysOnTop',
+    drag: 'window.dragRegion',
+    minimize: 'window.minimize',
+    maximize: 'window.maximize',
+    fullscreen: 'window.toggleFullscreen',
+    close: 'window.close',
+    'theme-toggle': 'app.themeToggle',
+    custom: 'legacy.custom'
+};
+
 const NULLBarConfig: BarConfig = {
     left: [],
     center: [],
@@ -90,88 +137,84 @@ const NULLBarConfig: BarConfig = {
 export const DefaultTitleBarConfig: BarConfig = {
     left: [
         {
-            name: 'home',
-            type: 'home',
+            id: 'navigate.home',
+            contributionId: 'navigate.home',
             enabled: true,
             order: 0
         },
         {
-            name: 'settings',
-            type: 'settings',
+            id: 'navigate.settings',
+            contributionId: 'navigate.settings',
             enabled: true,
             order: 1
         },
         {
-            name: 'background-settings',
-            type: 'background-settings',
+            id: 'navigate.backgroundSettings',
+            contributionId: 'navigate.backgroundSettings',
             enabled: true,
             order: 2
         },
         {
-            name: 'refresh',
-            type: 'refresh',
+            id: 'window.refresh',
+            contributionId: 'window.refresh',
             enabled: true,
             order: 3
         },
         {
-            name: 'zoom',
-            type: 'zoom',
+            id: 'app.zoom',
+            contributionId: 'app.zoom',
             enabled: true,
             order: 4
         },
         {
-            name: 'back',
-            type: 'back',
+            id: 'navigate.back',
+            contributionId: 'navigate.back',
             enabled: true,
-            order: 999,
-            customProps: {
-                hiddenOnDisabled: true
-            }
+            order: 999
         }
     ],
     center: [
         {
-            name: 'app-icon',
-            type: 'app-icon',
+            id: 'app.icon',
+            contributionId: 'app.icon',
             enabled: true,
             order: 0
         },
         {
-            name: 'app-title',
-            type: 'app-title',
+            id: 'app.title',
+            contributionId: 'app.title',
             enabled: true,
-            order: 1,
-            mode: 'text'
+            order: 1
         }
     ],
     right: [
         {
-            name: 'theme-toggle',
-            type: 'theme-toggle',
+            id: 'app.themeToggle',
+            contributionId: 'app.themeToggle',
             enabled: true,
             order: 0
         },
         {
-            name: 'always-on-top',
-            type: 'always-on-top',
+            id: 'window.toggleAlwaysOnTop',
+            contributionId: 'window.toggleAlwaysOnTop',
             enabled: true,
             order: 1
         },
         {
-            name: 'minimize',
-            type: 'minimize',
+            id: 'window.minimize',
+            contributionId: 'window.minimize',
             enabled: true,
             order: 2
         },
         {
-            name: 'maximize',
-            type: 'maximize',
+            id: 'window.maximize',
+            contributionId: 'window.maximize',
             enabled: true,
             order: 3
         },
         {
-            name: 'close',
-            type: 'close',
+            id: 'window.close',
+            contributionId: 'window.close',
             enabled: true,
             order: 4
         }
@@ -193,3 +236,255 @@ export const DefaultLayoutSettings: LayoutSettings = {
     footer: true,
     layoutConfigs: DefaultLayoutConfigs
 };
+
+export function createTitleBarItem(
+    contributionId: TitleBarContributionId,
+    order: number,
+    options: { id?: string; enabled?: boolean } = {}
+): TitleBarItemConfig {
+    return {
+        id: options.id ?? contributionId,
+        contributionId,
+        enabled: options.enabled ?? true,
+        order
+    };
+}
+
+export function cloneBarConfig(config: BarConfig): BarConfig {
+    return {
+        left: config.left.map((item) => ({ ...item })),
+        center: config.center.map((item) => ({ ...item })),
+        right: config.right.map((item) => ({ ...item }))
+    };
+}
+
+export function normalizeTitleBarConfig(config?: LegacyBarConfig | BarConfig | null): BarConfig {
+    const source = config ?? DefaultTitleBarConfig;
+    const normalized: BarConfig = { left: [], center: [], right: [] };
+    const usedIds = new Set<string>();
+
+    for (const section of BAR_SECTIONS) {
+        const items = Array.isArray(source[section]) ? source[section] : [];
+        normalized[section] = items
+            .map((item, index) => migrateTitleBarItem(item, index, usedIds))
+            .filter((item): item is TitleBarItemConfig => Boolean(item))
+            .sort((left, right) => left.order - right.order)
+            .map((item, index) => ({ ...item, order: index }));
+    }
+
+    return normalized;
+}
+
+export function migrateTitleBarConfig(config?: LegacyBarConfig | BarConfig | null): BarConfig {
+    return normalizeTitleBarConfig(config);
+}
+
+export function moveTitleBarItem(
+    config: BarConfig,
+    from: TitleBarItemMoveTarget,
+    to: TitleBarItemMoveTarget
+): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    const source = [...next[from.section]];
+    const [item] = source.splice(from.index, 1);
+    if (!item) return next;
+
+    next[from.section] = source;
+    const target = from.section === to.section ? source : [...next[to.section]];
+    const adjustedIndex =
+        from.section === to.section && to.index > from.index ? to.index - 1 : to.index;
+    const targetIndex = Math.max(0, Math.min(adjustedIndex, target.length));
+    target.splice(targetIndex, 0, item);
+    next[to.section] = target;
+
+    return normalizeTitleBarConfig(next);
+}
+
+export function setTitleBarItemEnabled(
+    config: BarConfig,
+    itemId: string,
+    enabled: boolean
+): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    for (const section of BAR_SECTIONS) {
+        next[section] = next[section].map((item) =>
+            item.id === itemId ? { ...item, enabled } : item
+        );
+    }
+
+    return next;
+}
+
+export function swapTitleBarItemOrder(
+    config: BarConfig,
+    section: BarSection,
+    index: number,
+    offset: -1 | 1
+): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    const items = [...next[section]];
+    const targetIndex = index + offset;
+    if (index < 0 || index >= items.length || targetIndex < 0 || targetIndex >= items.length) {
+        return next;
+    }
+
+    [items[index], items[targetIndex]] = [items[targetIndex], items[index]];
+    next[section] = items.map((item, order) => ({ ...item, order }));
+
+    return normalizeTitleBarConfig(next);
+}
+
+export function moveTitleBarItemByDirection(
+    config: BarConfig,
+    section: BarSection,
+    index: number,
+    direction: -1 | 1
+): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    const sectionIndex = BAR_SECTIONS.indexOf(section);
+    const items = [...next[section]];
+    const targetIndex = index + direction;
+
+    if (targetIndex >= 0 && targetIndex < items.length) {
+        return swapTitleBarItemOrder(next, section, index, direction);
+    }
+
+    const nextSection = BAR_SECTIONS[sectionIndex + direction];
+    if (!nextSection) return next;
+
+    const [item] = items.splice(index, 1);
+    if (!item) return next;
+
+    const targetItems = [...next[nextSection]];
+    const insertIndex = direction < 0 ? targetItems.length : 0;
+    targetItems.splice(insertIndex, 0, item);
+
+    next[section] = items.map((item, order) => ({ ...item, order }));
+    next[nextSection] = targetItems.map((item, order) => ({ ...item, order }));
+
+    return normalizeTitleBarConfig(next);
+}
+
+export function toggleTitleBarItem(config: BarConfig, itemId: string): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    for (const section of BAR_SECTIONS) {
+        next[section] = next[section].map((item) =>
+            item.id === itemId ? { ...item, enabled: !item.enabled } : item
+        );
+    }
+
+    return next;
+}
+
+export function removeTitleBarItem(config: BarConfig, itemId: string): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    for (const section of BAR_SECTIONS) {
+        next[section] = next[section].filter((item) => item.id !== itemId);
+    }
+
+    return normalizeTitleBarConfig(next);
+}
+
+export function completeTitleBarConfig(
+    config: LegacyBarConfig | BarConfig | undefined | null,
+    contributions: TitleBarContributionLayoutDescriptor[]
+): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    const existingContributionIds = new Set(
+        BAR_SECTIONS.flatMap((section) => next[section].map((item) => item.contributionId))
+    );
+
+    for (const contribution of contributions) {
+        if (existingContributionIds.has(contribution.id)) continue;
+
+        const section = getDefaultTitleBarSection(contribution);
+        next[section] = [
+            ...next[section],
+            createTitleBarItem(contribution.id, next[section].length, {
+                id: createUniqueTitleBarItemId(contribution.id, next),
+                enabled: false
+            })
+        ];
+        existingContributionIds.add(contribution.id);
+    }
+
+    return normalizeTitleBarConfig(next);
+}
+
+export function addTitleBarItem(
+    config: BarConfig,
+    section: BarSection,
+    contributionId: TitleBarContributionId
+): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    next[section] = [
+        ...next[section],
+        createTitleBarItem(contributionId, next[section].length, {
+            id: createUniqueTitleBarItemId(contributionId, next)
+        })
+    ];
+
+    return normalizeTitleBarConfig(next);
+}
+
+function getDefaultTitleBarSection(
+    contribution: TitleBarContributionLayoutDescriptor
+): BarSection {
+    if (contribution.defaultSection) return contribution.defaultSection;
+
+    for (const section of BAR_SECTIONS) {
+        if (DefaultTitleBarConfig[section].some((item) => item.contributionId === contribution.id)) {
+            return section;
+        }
+    }
+
+    if (contribution.id === 'app.icon' || contribution.id === 'app.title') return 'center';
+    if (contribution.id === 'window.dragRegion') return 'center';
+    if (contribution.category === 'window' || contribution.category === 'theme') return 'right';
+
+    return 'left';
+}
+
+function migrateTitleBarItem(
+    item: LegacyButtonConfig | TitleBarItemConfig | undefined,
+    index: number,
+    usedIds: Set<string>
+): TitleBarItemConfig | null {
+    if (!item) return null;
+    const legacyType = 'type' in item ? item.type : undefined;
+    const contributionId =
+        item.contributionId ??
+        (legacyType ? legacyButtonTypeToContributionId[legacyType] : undefined) ??
+        item.id;
+
+    if (!contributionId) return null;
+
+    const legacyName = 'name' in item ? item.name : undefined;
+    const baseId = item.id ?? legacyName ?? contributionId;
+    const id = makeUniqueId(baseId, usedIds);
+
+    return {
+        id,
+        contributionId,
+        enabled: item.enabled ?? true,
+        order: typeof item.order === 'number' ? item.order : index
+    };
+}
+
+function createUniqueTitleBarItemId(contributionId: string, config: BarConfig): string {
+    const usedIds = new Set(
+        BAR_SECTIONS.flatMap((section) => config[section].map((item) => item.id))
+    );
+    return makeUniqueId(contributionId, usedIds);
+}
+
+function makeUniqueId(baseId: string, usedIds: Set<string>): string {
+    let id = baseId;
+    let index = 2;
+    while (usedIds.has(id)) {
+        id = `${baseId}-${index}`;
+        index += 1;
+    }
+    usedIds.add(id);
+    return id;
+}

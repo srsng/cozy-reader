@@ -62,7 +62,13 @@ function createServices() {
     const context: CommandContext = {
         appState: writable(DEFAULT_APP_STATE),
         contextKeys: new ContextKeyService(),
-        navigation: { settings: vi.fn() },
+        navigation: {
+            back: vi.fn(),
+            backgroundSettings: vi.fn(),
+            canGoBack: vi.fn(() => true),
+            home: vi.fn(),
+            settings: vi.fn()
+        },
         theme: { setEffect: vi.fn() },
         userSettings: writable(createSettings()),
         window: {

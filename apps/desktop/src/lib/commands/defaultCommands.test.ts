@@ -73,6 +73,10 @@ function createContext() {
         appState,
         contextKeys: new ContextKeyService(),
         navigation: {
+            back: vi.fn(),
+            backgroundSettings: vi.fn(),
+            canGoBack: vi.fn(() => true),
+            home: vi.fn(),
             settings: vi.fn()
         },
         theme: {

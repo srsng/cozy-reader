@@ -89,14 +89,14 @@
         <!-- 路由导航演示 -->
         <Card.Root
             class="cursor-pointer transition-shadow hover:shadow-lg"
-            onclick={() => goto('/demo/route-demo')}
+            onclick={() => goto('/settings/bar-config')}
         >
             <Card.Header>
                 <div class="flex items-center gap-3">
                     <Navigation class="text-primary h-6 w-6" />
-                    <Card.Title>路由导航演示</Card.Title>
+                    <Card.Title>bar-config</Card.Title>
                 </div>
-                <Card.Description>路由导航功能测试，包含返回功能和历史记录管理</Card.Description>
+                <Card.Description>xxx</Card.Description>
             </Card.Header>
         </Card.Root>
     </div>

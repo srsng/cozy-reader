@@ -1,5 +1,9 @@
 import { DefaultBaseSettings, type BaseSettings } from './Base';
-import { DefaultLayoutSettings, type LayoutSettings } from './Layout';
+import {
+    DefaultLayoutSettings,
+    migrateTitleBarConfig,
+    type LayoutSettings
+} from './Layout';
 import { DefaultReaderSettings, type ReaderSettings } from './Reader';
 import { DefaultThemeSettings, type ThemeSettings } from './Theme';
 import { DefaultBackgroundSettings, type BackgroundSettings } from './background';
@@ -28,6 +32,15 @@ export function mergeUserSettingsWithDefaults(savedConfig?: Partial<UserSettings
     return {
         ...DEFAULT_SETTINGS,
         ...savedConfig,
+        layout: {
+            ...DEFAULT_SETTINGS.layout,
+            ...savedConfig?.layout,
+            layoutConfigs: {
+                ...DEFAULT_SETTINGS.layout.layoutConfigs,
+                ...savedConfig?.layout?.layoutConfigs,
+                titlebar: migrateTitleBarConfig(savedConfig?.layout?.layoutConfigs?.titlebar)
+            }
+        },
         background: {
             ...DEFAULT_SETTINGS.background,
             ...savedConfig?.background,

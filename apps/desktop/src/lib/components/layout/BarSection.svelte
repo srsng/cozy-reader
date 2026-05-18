@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { ButtonConfig } from '$lib/settings/Layout';
+    import type { TitleBarItemConfig } from '$lib/settings/Layout';
     import BarButton from './BarButton.svelte';
 </script>
 
@@ -14,7 +14,7 @@
         ...others
     }: {
         appTitle: string;
-        buttons: ButtonConfig[];
+        buttons: TitleBarItemConfig[];
         className?: string;
         btnClass?: string;
         btnDisabled?: boolean;
@@ -27,7 +27,7 @@
 </script>
 
 <div class={className} {...others}>
-    {#each sortedButtons as button (button.name)}
+    {#each sortedButtons as button (button.id)}
         <BarButton config={button} className={btnClass} {appTitle} {btnDisabled} {iconClass} />
     {/each}
 </div>

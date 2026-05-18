@@ -1,77 +1,89 @@
 <script lang="ts" module>
-    import type { ButtonConfig } from '$lib/settings/Layout';
+    import type { TitleBarItemConfig } from '$lib/settings/Layout';
     import { cn } from '$lib/utils';
-    import type { Component } from 'svelte';
-    import UtilButton from './util-btn';
+    import { Button } from '$ui/button';
+    import { MENU_SERVICE } from '$lib/menus';
+    import { inject } from '$lib/utils/context';
+    import { getTitleBarContribution } from './titlebarContributions';
+    import { onDestroy } from 'svelte';
 </script>
 
 <script lang="ts">
+    const menuService = inject(MENU_SERVICE);
+
     const {
         appTitle,
         config,
         className = 'size-6',
         btnDisabled = false,
         iconClass = 'size-4',
-        ...others
+        variant = 'bar-no-bg' as const
     }: {
         appTitle: string;
-        config: ButtonConfig;
+        config: TitleBarItemConfig;
         className?: string;
         btnDisabled?: boolean;
         iconClass?: string;
+        variant?: 'bar' | 'bar-no-bg';
     } = $props();
 
-    function getButtonProps() {
-        const _props: Record<string, any> = {
-            ...others,
-            ...config.customProps,
-            name: config.name,
-            className: cn(config.customProps?.className, className),
-            iconClass: cn(config.customProps?.iconClass, iconClass),
-            disabled: btnDisabled
-        };
+    let menuChangeVersion = $state(0);
+    const disposable = menuService.onDidChange(() => {
+        menuChangeVersion += 1;
+    });
 
-        // console.log(_props);
-        return _props;
+    onDestroy(() => disposable.dispose());
+
+    const contribution = $derived.by(() => {
+        menuChangeVersion;
+        return getTitleBarContribution(config.contributionId, menuService);
+    });
+
+    const menuContribution = $derived(contribution?.menuContribution);
+    const title = $derived.by(() => {
+        menuChangeVersion;
+        if (!menuContribution) return contribution?.title ?? config.contributionId;
+        return menuService.getDisplayTitle(menuContribution);
+    });
+    const disabled = $derived.by(() => {
+        menuChangeVersion;
+        return btnDisabled || (menuContribution ? !menuService.canExecute(menuContribution) : false);
+    });
+    const hidden = $derived(Boolean(contribution?.hideWhenDisabled && disabled));
+    const ComponentButton = $derived(contribution?.component);
+    const Icon = $derived(contribution?.icon);
+
+    async function execute() {
+        if (!menuContribution || disabled) return;
+        await menuService.execute(menuContribution);
     }
-
-    function getTextProps() {
-        const _props: Record<string, any> = {
-            ...others,
-            ...config.customProps,
-            name: config.name,
-            disabled: btnDisabled,
-            appTitle
-            // className: config.customProps?.className || className,
-            // iconClass: config.customProps?.iconClass || iconClass
-        };
-
-        return _props;
-    }
-
-    function getProps() {
-        const _props = (() => {
-            if (config.mode === 'text') {
-                return getTextProps();
-            } else if (config.mode === 'icon') {
-                return getButtonProps();
-            } else {
-                // 默认作为 icon mode
-                return getButtonProps();
-            }
-        })(); // rust 后遗症犯了
-
-        const needsAppTitle = config.type.startsWith('app');
-        if (needsAppTitle) {
-            _props.appTitle = appTitle;
-        }
-
-        return _props;
-    }
-
-    const Btn: Component = UtilButton[config.type];
 </script>
 
-{#if config.enabled}
-    <Btn {appTitle} {...getProps()} variant="bar-no-bg" />
+{#if config.enabled && contribution && !hidden}
+    {#if contribution.kind === 'component' && ComponentButton}
+        <ComponentButton
+            name={config.id}
+            {appTitle}
+            className={cn(contribution.text ? 'app-title truncate' : className)}
+            {iconClass}
+            disabled={btnDisabled}
+            {variant}
+        />
+    {:else if contribution.kind === 'menu'}
+        <Button
+            id={config.id}
+            {title}
+            {variant}
+            size="icon"
+            class={cn(contribution.destructive && 'hover:bg-destructive hover:text-destructive-foreground', className)}
+            {disabled}
+            onclick={execute}
+        >
+            {#if Icon}
+                <Icon class={iconClass} />
+            {:else}
+                <span class="text-xs">{title.slice(0, 1)}</span>
+            {/if}
+        </Button>
+    {/if}
 {/if}

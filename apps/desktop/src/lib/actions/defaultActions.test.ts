@@ -71,7 +71,13 @@ function createServices() {
     const context: CommandContext = {
         appState,
         contextKeys: new ContextKeyService(),
-        navigation: { settings: vi.fn() },
+        navigation: {
+            back: vi.fn(),
+            backgroundSettings: vi.fn(),
+            canGoBack: vi.fn(() => true),
+            home: vi.fn(),
+            settings: vi.fn()
+        },
         theme: { setEffect: vi.fn() },
         userSettings,
         window: {
@@ -164,10 +170,14 @@ describe('default actions', () => {
     it('registers navigation action through all contribution channels', async () => {
         const { commandService, menuService, keybindingManager, context } = createServices();
 
+        expect(await commandService.execute('navigate.home')).toBe(true);
+        expect(context.navigation.home).toHaveBeenCalledOnce();
         expect(await commandService.execute('navigate.settings')).toBe(true);
         expect(context.navigation.settings).toHaveBeenCalledWith(undefined);
         expect(await commandService.execute('navigate.settings', 'theme')).toBe(true);
         expect(context.navigation.settings).toHaveBeenLastCalledWith('theme');
+        expect(await commandService.execute('navigate.backgroundSettings', 'overlay')).toBe(true);
+        expect(context.navigation.backgroundSettings).toHaveBeenLastCalledWith('overlay');
         expect(
             await commandService.executeInvocation({
                 commandId: 'navigate.settings',
@@ -186,6 +196,9 @@ describe('default actions', () => {
                 .getVisibleItems(MenuId.CommandPalette)
                 .some((item) => item.id === 'navigate.settings')
         ).toBe(true);
+        expect(menuService.getItem(MenuId.TitleBar, 'navigate.home')).toBeDefined();
+        expect(menuService.getItem(MenuId.TitleBar, 'navigate.settings')).toBeDefined();
+        expect(menuService.getItem(MenuId.TitleBar, 'navigate.backgroundSettings')).toBeDefined();
         expect(menuService.getItem(MenuId.CommandPalette, 'navigate.settings')?.keepOpen).toBe(
             undefined
         );
