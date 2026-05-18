@@ -4,6 +4,7 @@
     import { USER_SETTINGS } from '$lib/stores/userSettings';
     import { slide } from 'svelte/transition';
     import { cn } from '$utils';
+    import { titleBarSurfaceClass } from './titlebarLayout';
 </script>
 
 <script lang="ts">
@@ -24,14 +25,13 @@
     class:hidden={!$currentSettings.layout.titlebar}
     class:border-b={$currentSettings.base.layoutControlsOutline}
     class:border-muted={$currentSettings.base.layoutControlsOutline}
-    class={cn('bg-card flex h-full w-full select-none items-center justify-between ', className)}
+    class={cn(titleBarSurfaceClass, className)}
     {...others}
     transition:slide={{ axis: 'y' }}
 >
     <ConfigurableBar
         data-tauri-drag-region
         config={$currentSettings.layout.layoutConfigs.titlebar}
-        className="flex w-full items-center justify-between px-2"
     />
 </div>
 

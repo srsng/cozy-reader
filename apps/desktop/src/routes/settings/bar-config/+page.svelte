@@ -1,5 +1,6 @@
 <script lang="ts" module>
     import { Button } from '$ui/button';
+    import * as NativeSelect from '$ui/native-select';
     import {
         Card,
         CardContent,
@@ -10,6 +11,7 @@
     } from '$ui/card';
     import { Badge } from '$ui/badge';
     import {
+        addTitleBarItem,
         cloneBarConfig,
         completeTitleBarConfig,
         DefaultTitleBarConfig,
@@ -21,10 +23,14 @@
     import TitleBarPreview from '$lib/components/forms/bar/TitleBarPreview.svelte';
     import TitleBarSelectedItemPanel from '$lib/components/forms/bar/TitleBarSelectedItemPanel.svelte';
     import { MENU_SERVICE } from '$lib/menus';
-    import { getAvailableTitleBarContributions } from '$lib/components/layout/titlebarContributions';
+    import {
+        getAvailableTitleBarContributions,
+        getTitleBarCommandCandidates,
+        type TitleBarContribution
+    } from '$lib/components/layout/titlebarContributions';
     import { inject } from '$lib/utils/context';
     import { forceSaveUserSettings, USER_SETTINGS } from '$lib/stores/userSettings';
-    import { Pencil, RotateCcw, Save, Undo2 } from 'lucide-svelte';
+    import { Pencil, Plus, RotateCcw, Save, Undo2 } from 'lucide-svelte';
     import { onDestroy } from 'svelte';
     import { fade, slide } from 'svelte/transition';
 </script>
@@ -44,6 +50,10 @@
         menuChangeVersion;
         return getAvailableTitleBarContributions(menuService);
     });
+    const commandCandidates = $derived.by(() => {
+        menuChangeVersion;
+        return getTitleBarCommandCandidates(menuService);
+    });
     const appliedConfig = $derived(
         completeTitleBarConfig($userSettings.layout.layoutConfigs.titlebar, contributions)
     );
@@ -53,6 +63,8 @@
     let selectedItemId: string | null = $state(null);
     let completedContributionsKey = $state('');
     let draftInitialized = $state(false);
+    let addSection: BarSection = $state('left');
+    let addContributionId = $state('');
 
     const appliedConfigJson = $derived(JSON.stringify(normalizeTitleBarConfig(appliedConfig)));
     const draftConfigJson = $derived(JSON.stringify(normalizeTitleBarConfig(draftConfig)));
@@ -61,6 +73,9 @@
     const enabledItems = $derived(flatItems(draftConfig).filter((item) => item.enabled).length);
     const contributionsKey = $derived(
         contributions.map((contribution) => contribution.id).join('|')
+    );
+    const commandContributions = $derived(
+        commandCandidates.filter((contribution) => contribution.kind === 'menu')
     );
 
     $effect(() => {
@@ -74,7 +89,12 @@
         if (contributionsKey === completedContributionsKey) return;
         draftConfig = cloneBarConfig(completeTitleBarConfig(draftConfig, contributions));
         completedContributionsKey = contributionsKey;
+        ensureAddContribution();
         ensureSelectedItem();
+    });
+
+    $effect(() => {
+        ensureAddContribution();
     });
 
     function flatItems(config: BarConfig) {
@@ -92,6 +112,17 @@
         selectedItemId = item.id;
     }
 
+    function ensureAddContribution() {
+        if (
+            addContributionId &&
+            commandContributions.some((item) => item.id === addContributionId)
+        ) {
+            return;
+        }
+
+        addContributionId = commandContributions[0]?.id ?? '';
+    }
+
     function ensureSelectedItem() {
         if (!editing) return;
         const items = flatItems(draftConfig);
@@ -107,6 +138,28 @@
     function resetToDefaultDraft() {
         draftConfig = cloneBarConfig(completeTitleBarConfig(DefaultTitleBarConfig, contributions));
         selectedItemId = firstItem(draftConfig)?.id ?? null;
+    }
+
+    function addCommandButton() {
+        if (!editing || !addContributionId) return;
+        draftConfig = addTitleBarItem(draftConfig, addSection, addContributionId);
+        const added = [...draftConfig[addSection]]
+            .sort((left, right) => left.order - right.order)
+            .at(-1);
+        selectedItemId = added?.id ?? selectedItemId;
+    }
+
+    function contributionLabel(contribution: TitleBarContribution) {
+        return `${contribution.title} (${categoryLabel(contribution.category)})`;
+    }
+
+    function categoryLabel(category: TitleBarContribution['category']) {
+        if (category === 'application') return '应用';
+        if (category === 'navigation') return '导航';
+        if (category === 'window') return '窗口';
+        if (category === 'zoom') return '缩放';
+        if (category === 'theme') return '主题';
+        return '旧项';
     }
 
     function cancelEditing() {
@@ -142,6 +195,41 @@
     </CardHeader>
 
     <CardContent class="space-y-3">
+        {#if editing}
+            <div
+                transition:slide
+                class="border-border bg-muted/30 flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-center"
+            >
+                <NativeSelect.Root bind:value={addSection}>
+                    <NativeSelect.NativeSelectOption value="left"
+                        >左侧</NativeSelect.NativeSelectOption
+                    >
+                    <NativeSelect.NativeSelectOption value="center"
+                        >中间</NativeSelect.NativeSelectOption
+                    >
+                    <NativeSelect.NativeSelectOption value="right"
+                        >右侧</NativeSelect.NativeSelectOption
+                    >
+                </NativeSelect.Root>
+
+                <NativeSelect.Root
+                    bind:value={addContributionId}
+                    disabled={!commandContributions.length}
+                >
+                    {#each commandContributions as contribution}
+                        <NativeSelect.NativeSelectOption value={contribution.id}>
+                            {contributionLabel(contribution)}
+                        </NativeSelect.NativeSelectOption>
+                    {/each}
+                </NativeSelect.Root>
+
+                <Button variant="outline" onclick={addCommandButton} disabled={!addContributionId}>
+                    <Plus class="size-4" />
+                    添加按钮
+                </Button>
+            </div>
+        {/if}
+
         <TitleBarPreview config={draftConfig} {editing} {selectedItemId} onSelect={selectItem} />
         <TitleBarSelectedItemPanel bind:config={draftConfig} bind:selectedItemId {editing} />
     </CardContent>

@@ -3,17 +3,21 @@
     import { Badge } from '$ui/badge';
     import { Switch } from '$ui/switch';
     import * as Tooltip from '$ui/tooltip';
+    import * as NativeSelect from '$ui/native-select';
     import { MENU_SERVICE } from '$lib/menus';
     import { inject } from '$lib/utils/context';
     import {
         moveTitleBarItemByDirection,
+        removeTitleBarItem,
         setTitleBarItemEnabled,
+        updateTitleBarItem,
         type BarConfig,
         type BarSection,
         type TitleBarItemConfig
     } from '$lib/settings/Layout';
     import { getTitleBarContribution } from '$lib/components/layout/titlebarContributions';
-    import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-svelte';
+    import { titleBarIconDefinitions } from '$lib/components/layout/titlebarIcons';
+    import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Trash2 } from 'lucide-svelte';
 
     type FlatTitleBarItem = {
         item: TitleBarItemConfig;
@@ -82,9 +86,13 @@
             getFallbackDescription(selectedContribution?.category)
     );
     const canSelectPrevious = $derived(editing && selectedIndex > 0);
-    const canSelectNext = $derived(editing && selectedIndex >= 0 && selectedIndex < flatItems.length - 1);
+    const canSelectNext = $derived(
+        editing && selectedIndex >= 0 && selectedIndex < flatItems.length - 1
+    );
     const canMoveLeft = $derived(Boolean(editing && selectedIndex > 0));
-    const canMoveRight = $derived(editing && selectedIndex >= 0 && selectedIndex < flatItems.length - 1);
+    const canMoveRight = $derived(
+        editing && selectedIndex >= 0 && selectedIndex < flatItems.length - 1
+    );
 
     function getFallbackDescription(category?: string) {
         if (category === 'navigation') return '用于访问应用中的常用页面。';
@@ -106,6 +114,14 @@
         config = setTitleBarItemEnabled(config, selectedEntry.item.id, enabled);
     }
 
+    function setIcon(iconId: string) {
+        if (!editing || !selectedEntry) return;
+        config = updateTitleBarItem(config, selectedEntry.item.id, (item) => ({
+            ...item,
+            iconId: iconId ? (iconId as TitleBarItemConfig['iconId']) : undefined
+        }));
+    }
+
     function move(offset: number) {
         if (!editing || !selectedEntry) return;
         config = moveTitleBarItemByDirection(
@@ -114,6 +130,15 @@
             selectedEntry.index,
             offset as -1 | 1
         );
+    }
+
+    function removeSelected() {
+        if (!editing || !selectedEntry) return;
+        const nextSelection =
+            flatItems[selectedIndex + 1]?.item.id ?? flatItems[selectedIndex - 1]?.item.id ?? null;
+
+        config = removeTitleBarItem(config, selectedEntry.item.id);
+        selectedItemId = nextSelection;
     }
 </script>
 
@@ -124,7 +149,10 @@
         {:else if !selectedEntry}
             <p class="text-muted-foreground text-sm" transition:slide>没有可配置的标题栏按钮</p>
         {:else}
-            <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between" transition:slide>
+            <div
+                class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"
+                transition:slide
+            >
                 <div class="min-w-0 space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
                         <h3 class="truncate text-sm font-medium">{selectedTitle}</h3>
@@ -147,6 +175,22 @@
                         />
                         启用
                     </label>
+
+                    {#if !selectedContribution?.text}
+                        <NativeSelect.Root
+                            value={selectedEntry.item.iconId ?? selectedContribution?.iconId ?? ''}
+                            onchange={(event) => setIcon(event.currentTarget.value)}
+                        >
+                            <NativeSelect.NativeSelectOption value="">
+                                默认图标
+                            </NativeSelect.NativeSelectOption>
+                            {#each titleBarIconDefinitions as icon}
+                                <NativeSelect.NativeSelectOption value={icon.id}>
+                                    {icon.label}
+                                </NativeSelect.NativeSelectOption>
+                            {/each}
+                        </NativeSelect.Root>
+                    {/if}
 
                     <div class="flex items-center gap-1">
                         <Tooltip.Root>
@@ -211,6 +255,20 @@
                             <Tooltip.Content>右移</Tooltip.Content>
                         </Tooltip.Root>
                     </div>
+
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                variant="outline"
+                                size="icon-sm"
+                                onclick={removeSelected}
+                                aria-label="删除按钮"
+                            >
+                                <Trash2 class="size-4" />
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>删除按钮</Tooltip.Content>
+                    </Tooltip.Root>
                 </div>
             </div>
         {/if}

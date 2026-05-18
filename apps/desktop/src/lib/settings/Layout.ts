@@ -13,12 +13,32 @@ export interface LayoutConfigs {
 
 export type BarSection = 'left' | 'center' | 'right';
 export type TitleBarContributionId = string;
+export type TitleBarIconId =
+    | 'app'
+    | 'arrow-left'
+    | 'chevron-left'
+    | 'chevron-right'
+    | 'close'
+    | 'command'
+    | 'fullscreen'
+    | 'home'
+    | 'max'
+    | 'min'
+    | 'move'
+    | 'pin'
+    | 'refresh'
+    | 'settings'
+    | 'theme'
+    | 'wallpaper'
+    | 'zoom';
 
 export interface TitleBarItemConfig {
     id: string;
     contributionId: TitleBarContributionId;
     enabled: boolean;
     order: number;
+    iconId?: TitleBarIconId;
+    titleOverride?: string;
 }
 
 export interface BarConfig {
@@ -38,6 +58,8 @@ export type LegacyButtonConfig = {
     customProps?: Record<string, any>;
     contributionId?: string;
     id?: string;
+    iconId?: TitleBarIconId;
+    titleOverride?: string;
 };
 
 export type LegacyBarConfig = {
@@ -240,13 +262,20 @@ export const DefaultLayoutSettings: LayoutSettings = {
 export function createTitleBarItem(
     contributionId: TitleBarContributionId,
     order: number,
-    options: { id?: string; enabled?: boolean } = {}
+    options: {
+        id?: string;
+        enabled?: boolean;
+        iconId?: TitleBarIconId;
+        titleOverride?: string;
+    } = {}
 ): TitleBarItemConfig {
     return {
         id: options.id ?? contributionId,
         contributionId,
         enabled: options.enabled ?? true,
-        order
+        order,
+        iconId: options.iconId,
+        titleOverride: options.titleOverride
     };
 }
 
@@ -313,6 +342,19 @@ export function setTitleBarItemEnabled(
     }
 
     return next;
+}
+
+export function updateTitleBarItem(
+    config: BarConfig,
+    itemId: string,
+    updater: (item: TitleBarItemConfig) => TitleBarItemConfig
+): BarConfig {
+    const next = normalizeTitleBarConfig(config);
+    for (const section of BAR_SECTIONS) {
+        next[section] = next[section].map((item) => (item.id === itemId ? updater(item) : item));
+    }
+
+    return normalizeTitleBarConfig(next);
 }
 
 export function swapTitleBarItemOrder(
@@ -414,26 +456,29 @@ export function completeTitleBarConfig(
 export function addTitleBarItem(
     config: BarConfig,
     section: BarSection,
-    contributionId: TitleBarContributionId
+    contributionId: TitleBarContributionId,
+    options: { iconId?: TitleBarIconId; titleOverride?: string } = {}
 ): BarConfig {
     const next = normalizeTitleBarConfig(config);
     next[section] = [
         ...next[section],
         createTitleBarItem(contributionId, next[section].length, {
-            id: createUniqueTitleBarItemId(contributionId, next)
+            id: createUniqueTitleBarItemId(contributionId, next),
+            iconId: options.iconId,
+            titleOverride: options.titleOverride
         })
     ];
 
     return normalizeTitleBarConfig(next);
 }
 
-function getDefaultTitleBarSection(
-    contribution: TitleBarContributionLayoutDescriptor
-): BarSection {
+function getDefaultTitleBarSection(contribution: TitleBarContributionLayoutDescriptor): BarSection {
     if (contribution.defaultSection) return contribution.defaultSection;
 
     for (const section of BAR_SECTIONS) {
-        if (DefaultTitleBarConfig[section].some((item) => item.contributionId === contribution.id)) {
+        if (
+            DefaultTitleBarConfig[section].some((item) => item.contributionId === contribution.id)
+        ) {
             return section;
         }
     }
@@ -467,7 +512,9 @@ function migrateTitleBarItem(
         id,
         contributionId,
         enabled: item.enabled ?? true,
-        order: typeof item.order === 'number' ? item.order : index
+        order: typeof item.order === 'number' ? item.order : index,
+        iconId: item.iconId,
+        titleOverride: item.titleOverride
     };
 }
 

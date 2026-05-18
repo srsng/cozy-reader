@@ -5,23 +5,9 @@ import AppTitleButton from './util-btn/app-title.svelte';
 import AppDragButton from './util-btn/app-drag.svelte';
 import ThemeToggleButton from './util-btn/theme-toggle.svelte';
 import ZoomButton from './util-btn/zoom-popover.svelte';
-import AppIcon from '$lib/components/common/app-icon.svelte';
 import { getCommandInvocationKey } from '$lib/commands/invocation';
-import {
-    ArrowLeft,
-    Fullscreen,
-    Home,
-    Maximize2,
-    Minus,
-    Moon,
-    Move,
-    Pin,
-    RefreshCcw,
-    Settings,
-    Wallpaper,
-    X,
-    ZoomIn
-} from 'lucide-svelte';
+import type { TitleBarIconId } from '$lib/settings/Layout';
+import { getDefaultTitleBarIconId, getTitleBarIcon } from './titlebarIcons';
 
 export type TitleBarContributionKind = 'menu' | 'component';
 
@@ -34,6 +20,7 @@ export type TitleBarContribution = {
     category: 'application' | 'navigation' | 'window' | 'zoom' | 'theme' | 'legacy';
     component?: any;
     icon?: any;
+    iconId?: TitleBarIconId;
     menuContribution?: MenuContribution;
     destructive?: boolean;
     hideWhenDisabled?: boolean;
@@ -57,7 +44,8 @@ export const staticTitleBarContributions: TitleBarContribution[] = [
         order: 0,
         category: 'application',
         component: AppIconButton,
-        icon: AppIcon
+        iconId: 'app',
+        icon: getTitleBarIcon('app')
     },
     {
         id: 'app.title',
@@ -75,7 +63,8 @@ export const staticTitleBarContributions: TitleBarContribution[] = [
         order: 20,
         category: 'zoom',
         component: ZoomButton,
-        icon: ZoomIn
+        iconId: 'zoom',
+        icon: getTitleBarIcon('zoom')
     },
     {
         id: 'app.themeToggle',
@@ -84,7 +73,8 @@ export const staticTitleBarContributions: TitleBarContribution[] = [
         order: 30,
         category: 'theme',
         component: ThemeToggleButton,
-        icon: Moon
+        iconId: 'theme',
+        icon: getTitleBarIcon('theme')
     },
     {
         id: 'window.dragRegion',
@@ -93,22 +83,10 @@ export const staticTitleBarContributions: TitleBarContribution[] = [
         order: 40,
         category: 'window',
         component: AppDragButton,
-        icon: Move
+        iconId: 'move',
+        icon: getTitleBarIcon('move')
     }
 ];
-
-const titleBarActionIcons = new Map<string, any>([
-    ['navigate.home', Home],
-    ['navigate.back', ArrowLeft],
-    ['navigate.settings', Settings],
-    ['navigate.backgroundSettings', Wallpaper],
-    ['window.refresh', RefreshCcw],
-    ['window.toggleAlwaysOnTop', Pin],
-    ['window.toggleFullscreen', Fullscreen],
-    ['window.minimize', Minus],
-    ['window.maximize', Maximize2],
-    ['window.close', X]
-]);
 
 export const staticTitleBarContributionMap = new Map(
     staticTitleBarContributions.map((contribution) => [contribution.id, contribution])
@@ -121,7 +99,8 @@ export function getTitleBarContribution(
     const staticContribution = staticTitleBarContributionMap.get(id);
     if (staticContribution) return staticContribution;
 
-    const menuContribution = menuService.getItem(MenuId.TitleBar, id);
+    const menuContribution =
+        menuService.getItem(MenuId.TitleBar, id) ?? getMenuContributionById(menuService, id);
     if (!menuContribution) return undefined;
 
     return menuContributionToTitleBarContribution(menuContribution);
@@ -136,9 +115,24 @@ export function getAvailableTitleBarContributions(
     ].sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
 }
 
+export function getTitleBarCommandCandidates(menuService: MenuService): TitleBarContribution[] {
+    const byId = new Map<string, TitleBarContribution>();
+
+    for (const menuContribution of getMenuContributions(menuService)) {
+        if (byId.has(menuContribution.id)) continue;
+        byId.set(menuContribution.id, menuContributionToTitleBarContribution(menuContribution));
+    }
+
+    return Array.from(byId.values()).sort(
+        (left, right) => left.order - right.order || left.title.localeCompare(right.title)
+    );
+}
+
 function menuContributionToTitleBarContribution(
     contribution: MenuContribution
 ): TitleBarContribution {
+    const iconId = getDefaultTitleBarIconId(contribution.id);
+
     return {
         id: contribution.id,
         title: contribution.title,
@@ -146,7 +140,8 @@ function menuContributionToTitleBarContribution(
         kind: 'menu',
         order: contribution.order ?? 0,
         category: contribution.category === 'reader' ? 'application' : contribution.category,
-        icon: titleBarActionIcons.get(contribution.id),
+        iconId,
+        icon: getTitleBarIcon(iconId),
         menuContribution: contribution,
         destructive: contribution.id === 'window.close',
         hideWhenDisabled: shouldHideWhenDisabled(contribution)
@@ -155,4 +150,17 @@ function menuContributionToTitleBarContribution(
 
 function shouldHideWhenDisabled(contribution: MenuContribution): boolean {
     return getCommandInvocationKey(contribution.invocation) === 'navigate.back';
+}
+
+function getMenuContributions(menuService: MenuService): MenuContribution[] {
+    return [MenuId.TitleBar, MenuId.CommandPalette, MenuId.Reader, MenuId.Settings].flatMap(
+        (menu) => menuService.getItems(menu)
+    );
+}
+
+function getMenuContributionById(
+    menuService: MenuService,
+    id: string
+): MenuContribution | undefined {
+    return getMenuContributions(menuService).find((contribution) => contribution.id === id);
 }

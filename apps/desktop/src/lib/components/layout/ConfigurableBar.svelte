@@ -5,6 +5,12 @@
     import BarSection from './BarSection.svelte';
     import { inject } from '$lib/utils/context';
     import { APP_STATE } from '$lib/stores/appState';
+    import {
+        titleBarButtonClass,
+        titleBarButtonGroupClass,
+        titleBarContentClass,
+        titleBarSectionClasses
+    } from './titlebarLayout';
 
     export const barVariants = tv({
         base: '',
@@ -40,63 +46,77 @@
         config,
         className = '',
         sectionClass = '',
-        btnClass = 'size-6',
+        groupClass = '',
+        btnClass = titleBarButtonClass,
         btnDisabled = false,
         iconClass = 'size-4',
+        mode = 'runtime',
+        editing = false,
+        selectedItemId = null,
+        onSelect,
         ...others
     }: {
         config: BarConfig;
         className?: string;
         sectionClass?: string;
+        groupClass?: string;
         btnClass?: string;
         btnDisabled?: boolean;
         iconClass?: string;
+        mode?: 'runtime' | 'preview';
+        editing?: boolean;
+        selectedItemId?: string | null;
+        onSelect?: (item: BarConfig['left'][number]) => void;
         'data-tauri-drag-region'?: boolean;
     } = $props();
 
-    const lr_class = cn(sectionClass, 'flex items-center gap-1');
-    const md_class = cn(sectionClass, 'flex flex-1 items-center justify-center overflow-hidden');
+    const leftClass = cn(sectionClass, titleBarSectionClasses.left);
+    const centerClass = cn(sectionClass, titleBarSectionClasses.center);
+    const rightClass = cn(sectionClass, titleBarSectionClasses.right);
+    const mergedGroupClass = cn(titleBarButtonGroupClass, groupClass);
 </script>
 
-<!-- <a
-		bind:this={ref}
-		data-slot="button"
-		class={cn(buttonVariants({ variant, size }), className)}
-		href={disabled ? undefined : href}
-		aria-disabled={disabled}
-		role={disabled ? 'link' : undefined}
-		tabindex={disabled ? -1 : undefined}
-		{...restProps}
-	>
-		{@render children?.()}
-	</a> -->
-
-<div class={className}>
+<div class={cn(titleBarContentClass, className)}>
     <BarSection
         appTitle={$appState.appTitle}
         buttons={config.left}
-        className={lr_class}
+        className={leftClass}
+        groupClass={mergedGroupClass}
         {btnClass}
         {btnDisabled}
         {iconClass}
+        {mode}
+        {editing}
+        {selectedItemId}
+        {onSelect}
         {...others}
     />
     <BarSection
         appTitle={$appState.appTitle}
         buttons={config.center}
-        className={md_class}
+        className={centerClass}
+        groupClass={mergedGroupClass}
         {btnClass}
         {btnDisabled}
         {iconClass}
+        {mode}
+        {editing}
+        {selectedItemId}
+        {onSelect}
         {...others}
     />
     <BarSection
         appTitle={$appState.appTitle}
         buttons={config.right}
-        className={lr_class}
+        className={rightClass}
+        groupClass={mergedGroupClass}
         {btnClass}
         {btnDisabled}
         {iconClass}
+        {mode}
+        {editing}
+        {selectedItemId}
+        {onSelect}
         {...others}
     />
 </div>
