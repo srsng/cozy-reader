@@ -24,7 +24,7 @@
         <Search class="text-muted-foreground pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2" />
         <Input
             bind:value
-            class="px-8"
+            class="px-8 bg-card"
             placeholder="搜索设置"
             aria-label="搜索设置"
             onkeydown={(event) => {
