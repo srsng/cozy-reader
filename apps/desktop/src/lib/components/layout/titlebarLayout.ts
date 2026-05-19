@@ -26,3 +26,12 @@ export const titleBarButtonClass =
 
 export const titleBarTextButtonClass =
     'text-card-foreground app-title flex h-full max-w-48 items-center truncate rounded-none! border-0 bg-transparent px-2 text-sm font-medium transition-colors outline-none select-none';
+
+export const titleBarCenterButtonGroupClass =
+    'h-full w-fit items-center gap-1 rounded-none [&>[data-slot]]:rounded-md! [&>[data-slot]:not(:has(~[data-slot]))]:rounded-md!';
+
+export const titleBarCenterButtonClass =
+    'size-6 rounded-md! border-0 p-0 hover:bg-accent-foreground/20 aria-expanded:bg-accent-foreground/20';
+
+export const titleBarCenterTextButtonClass =
+    'text-card-foreground app-title flex h-6 max-w-48 items-center truncate rounded-md! border-0 bg-transparent px-2 text-sm font-medium transition-colors outline-none select-none hover:bg-accent-foreground/20';

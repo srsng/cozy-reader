@@ -11,6 +11,7 @@
         className = '',
         groupClass = '',
         btnClass = '',
+        textBtnClass = '',
         btnDisabled = false,
         iconClass = 'size-4',
         mode = 'runtime',
@@ -24,6 +25,7 @@
         className?: string;
         groupClass?: string;
         btnClass?: string;
+        textBtnClass?: string;
         btnDisabled?: boolean;
         iconClass?: string;
         mode?: 'runtime' | 'preview';
@@ -43,6 +45,7 @@
             <BarButton
                 config={button}
                 className={btnClass}
+                textClassName={textBtnClass}
                 {appTitle}
                 {btnDisabled}
                 {iconClass}

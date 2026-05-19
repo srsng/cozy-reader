@@ -8,8 +8,12 @@
     import {
         titleBarButtonClass,
         titleBarButtonGroupClass,
+        titleBarCenterButtonClass,
+        titleBarCenterButtonGroupClass,
+        titleBarCenterTextButtonClass,
         titleBarContentClass,
-        titleBarSectionClasses
+        titleBarSectionClasses,
+        titleBarTextButtonClass
     } from './titlebarLayout';
 
     export const barVariants = tv({
@@ -48,6 +52,7 @@
         sectionClass = '',
         groupClass = '',
         btnClass = titleBarButtonClass,
+        textBtnClass = titleBarTextButtonClass,
         btnDisabled = false,
         iconClass = 'size-4',
         mode = 'runtime',
@@ -61,6 +66,7 @@
         sectionClass?: string;
         groupClass?: string;
         btnClass?: string;
+        textBtnClass?: string;
         btnDisabled?: boolean;
         iconClass?: string;
         mode?: 'runtime' | 'preview';
@@ -74,6 +80,7 @@
     const centerClass = cn(sectionClass, titleBarSectionClasses.center);
     const rightClass = cn(sectionClass, titleBarSectionClasses.right);
     const mergedGroupClass = cn(titleBarButtonGroupClass, groupClass);
+    const mergedCenterGroupClass = cn(titleBarCenterButtonGroupClass, groupClass);
 </script>
 
 <div class={cn(titleBarContentClass, className)}>
@@ -83,6 +90,7 @@
         className={leftClass}
         groupClass={mergedGroupClass}
         {btnClass}
+        {textBtnClass}
         {btnDisabled}
         {iconClass}
         {mode}
@@ -95,8 +103,9 @@
         appTitle={$appState.appTitle}
         buttons={config.center}
         className={centerClass}
-        groupClass={mergedGroupClass}
-        {btnClass}
+        groupClass={mergedCenterGroupClass}
+        btnClass={titleBarCenterButtonClass}
+        textBtnClass={titleBarCenterTextButtonClass}
         {btnDisabled}
         {iconClass}
         {mode}
@@ -111,6 +120,7 @@
         className={rightClass}
         groupClass={mergedGroupClass}
         {btnClass}
+        {textBtnClass}
         {btnDisabled}
         {iconClass}
         {mode}
