@@ -58,6 +58,7 @@
         "@tauri-apps/plugin-sql": "catalog:tauri",
         "@tauri-apps/plugin-store": "catalog:tauri",
         "@tauri-apps/plugin-window-state": "catalog:tauri",
+        "@tauri-apps/plugin-os": "catalog:tauri",
         "gsap": "^3.13.0",
         "highlight.js": "^11.11.1",
         "lucide-svelte": "catalog:",

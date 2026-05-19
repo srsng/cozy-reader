@@ -154,6 +154,9 @@ catalogs:
     '@tauri-apps/plugin-log':
       specifier: ~2.6.0
       version: 2.6.0
+    '@tauri-apps/plugin-os':
+      specifier: ~2.3.2
+      version: 2.3.2
     '@tauri-apps/plugin-sql':
       specifier: ^2.3.0
       version: 2.3.0
@@ -216,6 +219,9 @@ importers:
       '@tauri-apps/plugin-log':
         specifier: catalog:tauri
         version: 2.6.0
+      '@tauri-apps/plugin-os':
+        specifier: catalog:tauri
+        version: 2.3.2
       '@tauri-apps/plugin-sql':
         specifier: catalog:tauri
         version: 2.3.0
@@ -347,8 +353,8 @@ importers:
         specifier: ^0.44.7
         version: 0.44.7(kysely@0.27.6)
       zod:
-        specifier: ^4.1.13
-        version: 4.1.13
+        specifier: 'catalog:'
+        version: 4.4.3
     devDependencies:
       '@tauri-apps/api':
         specifier: catalog:tauri
@@ -531,7 +537,7 @@ importers:
         version: 2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4))
       '@sveltejs/package':
         specifier: catalog:svelte
-        version: 2.4.0(svelte@5.38.10)(typescript@5.9.2)
+        version: 2.4.0(svelte@5.38.10)(typescript@5.9.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: catalog:svelte
         version: 6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4))
@@ -567,7 +573,7 @@ importers:
         version: 8.6.0(svelte@5.38.10)
       formsnap:
         specifier: ^2.0.1
-        version: 2.0.1(svelte@5.38.10)(sveltekit-superforms@2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.2))
+        version: 2.0.1(svelte@5.38.10)(sveltekit-superforms@2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.3))
       layerchart:
         specifier: 2.0.0-next.27
         version: 2.0.0-next.27(svelte@5.38.10)
@@ -591,13 +597,13 @@ importers:
         version: 5.38.10
       svelte-check:
         specifier: catalog:svelte
-        version: 4.3.1(picomatch@4.0.4)(svelte@5.38.10)(typescript@5.9.2)
+        version: 4.3.1(picomatch@4.0.4)(svelte@5.38.10)(typescript@5.9.3)
       svelte-sonner:
         specifier: ^1.0.5
         version: 1.0.5(svelte@5.38.10)
       sveltekit-superforms:
         specifier: ^2.27.1
-        version: 2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.2)
+        version: 2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.3)
       tailwind-merge:
         specifier: catalog:shadcn-ui
         version: 3.3.1
@@ -1948,6 +1954,9 @@ packages:
 
   '@tauri-apps/plugin-log@2.6.0':
     resolution: {integrity: sha512-gVp3l31akA1Jk2bZsTA0hMFD5/gLe49Nw1btu5lViau0QqgC2XyT79LSwvy7a44ewtQbSexchqIg7oTJKMIbXQ==}
+
+  '@tauri-apps/plugin-os@2.3.2':
+    resolution: {integrity: sha512-n+nXWeuSeF9wcEsSPmRnBEGrRgOy6jjkSU+UVCOV8YUGKb2erhDOxis7IqRXiRVHhY8XMKks00BJ0OAdkpf6+A==}
 
   '@tauri-apps/plugin-sql@2.3.0':
     resolution: {integrity: sha512-JYwIocfsLaDWa41LMiZWuzts7yCJR+EpZPRmgpO7Gd7XiAS9S67dKz306j/k/d9XntB0YopMRBol2OIWMschuA==}
@@ -4104,9 +4113,6 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.1.13:
-    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
-
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
@@ -4550,9 +4556,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@gcornut/valibot-json-schema@0.42.0(esbuild@0.25.9)(typescript@5.9.2)':
+  '@gcornut/valibot-json-schema@0.42.0(esbuild@0.25.9)(typescript@5.9.3)':
     dependencies:
-      valibot: 0.42.1(typescript@5.9.2)
+      valibot: 0.42.1(typescript@5.9.3)
     optionalDependencies:
       '@types/json-schema': 7.0.15
       esbuild-runner: 2.2.2(esbuild@0.25.9)
@@ -5290,14 +5296,14 @@ snapshots:
       svelte: 5.38.10
       vite: 7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)
 
-  '@sveltejs/package@2.4.0(svelte@5.38.10)(typescript@5.9.2)':
+  '@sveltejs/package@2.4.0(svelte@5.38.10)(typescript@5.9.3)':
     dependencies:
       chokidar: 4.0.3
       kleur: 4.1.5
       sade: 1.8.1
       semver: 7.7.2
       svelte: 5.38.10
-      svelte2tsx: 0.7.43(svelte@5.38.10)(typescript@5.9.2)
+      svelte2tsx: 0.7.43(svelte@5.38.10)(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
 
@@ -5502,6 +5508,10 @@ snapshots:
       '@tauri-apps/api': 2.8.0
 
   '@tauri-apps/plugin-log@2.6.0':
+    dependencies:
+      '@tauri-apps/api': 2.8.0
+
+  '@tauri-apps/plugin-os@2.3.2':
     dependencies:
       '@tauri-apps/api': 2.8.0
 
@@ -6397,11 +6407,11 @@ snapshots:
 
   find-root@1.1.0: {}
 
-  formsnap@2.0.1(svelte@5.38.10)(sveltekit-superforms@2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.2)):
+  formsnap@2.0.1(svelte@5.38.10)(sveltekit-superforms@2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.3)):
     dependencies:
       svelte: 5.38.10
       svelte-toolbelt: 0.5.0(svelte@5.38.10)
-      sveltekit-superforms: 2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.2)
+      sveltekit-superforms: 2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.3)
 
   formsnap@2.0.1(svelte@5.38.10)(sveltekit-superforms@2.30.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(svelte@5.38.10)(typescript@5.9.2)):
     dependencies:
@@ -7183,7 +7193,7 @@ snapshots:
     transitivePeerDependencies:
       - picomatch
 
-  svelte-check@4.3.1(picomatch@4.0.4)(svelte@5.38.10)(typescript@5.9.2):
+  svelte-check@4.3.1(picomatch@4.0.4)(svelte@5.38.10)(typescript@5.9.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       chokidar: 4.0.3
@@ -7191,7 +7201,7 @@ snapshots:
       picocolors: 1.1.1
       sade: 1.8.1
       svelte: 5.38.10
-      typescript: 5.9.2
+      typescript: 5.9.3
     transitivePeerDependencies:
       - picomatch
 
@@ -7268,13 +7278,6 @@ snapshots:
       style-to-object: 1.0.9
       svelte: 5.38.10
 
-  svelte2tsx@0.7.43(svelte@5.38.10)(typescript@5.9.2):
-    dependencies:
-      dedent-js: 1.0.1
-      pascal-case: 3.1.2
-      svelte: 5.38.10
-      typescript: 5.9.2
-
   svelte2tsx@0.7.43(svelte@5.38.10)(typescript@5.9.3):
     dependencies:
       dedent-js: 1.0.1
@@ -7299,7 +7302,7 @@ snapshots:
       magic-string: 0.30.19
       zimmerframe: 1.1.4
 
-  sveltekit-superforms@2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.2):
+  sveltekit-superforms@2.27.1(@sveltejs/kit@2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(@types/json-schema@7.0.15)(esbuild@0.25.9)(svelte@5.38.10)(typescript@5.9.3):
     dependencies:
       '@sveltejs/kit': 2.39.0(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4)))(svelte@5.38.10)(vite@7.1.5(@types/node@22.18.11)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.4))
       devalue: 5.3.2
@@ -7308,7 +7311,7 @@ snapshots:
       ts-deepmerge: 7.0.3
     optionalDependencies:
       '@exodus/schemasafe': 1.3.0
-      '@gcornut/valibot-json-schema': 0.42.0(esbuild@0.25.9)(typescript@5.9.2)
+      '@gcornut/valibot-json-schema': 0.42.0(esbuild@0.25.9)(typescript@5.9.3)
       '@sinclair/typebox': 0.34.41
       '@typeschema/class-validator': 0.3.0(@types/json-schema@7.0.15)(class-validator@0.14.2)
       '@vinejs/vine': 3.0.1
@@ -7318,7 +7321,7 @@ snapshots:
       joi: 17.13.3
       json-schema-to-ts: 3.1.1
       superstruct: 2.0.2
-      valibot: 1.1.0(typescript@5.9.2)
+      valibot: 1.1.0(typescript@5.9.3)
       yup: 1.7.0
       zod: 3.25.76
       zod-to-json-schema: 3.24.6(zod@3.25.76)
@@ -7502,14 +7505,14 @@ snapshots:
 
   uuid@9.0.1: {}
 
-  valibot@0.42.1(typescript@5.9.2):
+  valibot@0.42.1(typescript@5.9.3):
     optionalDependencies:
-      typescript: 5.9.2
+      typescript: 5.9.3
     optional: true
 
-  valibot@1.1.0(typescript@5.9.2):
+  valibot@1.1.0(typescript@5.9.3):
     optionalDependencies:
-      typescript: 5.9.2
+      typescript: 5.9.3
     optional: true
 
   valibot@1.4.0(typescript@5.9.2):
@@ -7719,7 +7722,5 @@ snapshots:
 
   zod@3.25.76:
     optional: true
-
-  zod@4.1.13: {}
 
   zod@4.4.3: {}

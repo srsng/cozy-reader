@@ -63,3 +63,4 @@ catalogs:
         '@tauri-apps/plugin-sql': ^2.3.0
         '@tauri-apps/plugin-store': ~2.3.0
         '@tauri-apps/plugin-window-state': ~2.4.0
+        '@tauri-apps/plugin-os': ~2.3.2

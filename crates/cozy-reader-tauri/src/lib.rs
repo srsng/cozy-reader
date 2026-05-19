@@ -26,6 +26,7 @@ pub fn run() {
     builder
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(utils::database::build_database_sql_plugin())
         .plugin(tauri_plugin_clipboard_manager::init())
