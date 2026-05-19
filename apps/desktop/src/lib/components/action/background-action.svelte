@@ -4,6 +4,7 @@
     import { onDestroy, onMount } from 'svelte';
     import type {
         BackgroundImage,
+        BackgroundDisplayMode,
         GlobalBackgroundConfig,
         BackgroundFilters,
         BackgroundPosition
@@ -21,13 +22,15 @@
     // 生成背景样式对象
     export function generateBackgroundStyles(
         image: BackgroundImage | null,
-        globalConfig: GlobalBackgroundConfig
+        globalConfig: GlobalBackgroundConfig,
+        renderMetrics?: BackgroundRenderMetrics
     ): Record<string, string> {
         if (!image) {
             return {
                 '--settings-bg-image': 'none',
                 '--settings-bg-opacity': '0',
                 '--settings-bg-size': 'cover',
+                '--settings-bg-render-size': 'cover',
                 '--settings-bg-position': 'center',
                 '--settings-bg-blend-mode': 'normal',
                 '--settings-bg-filters': 'none',
@@ -58,6 +61,11 @@
 
         // 转换显示模式为 CSS background-size 值
         const backgroundSize = convertDisplayModeToCSS(displayMode);
+        const backgroundRenderSize = calculateBackgroundRenderSize(
+            displayMode,
+            scale,
+            renderMetrics
+        );
 
         // 转换位置为 CSS background-position 值
         const backgroundPosition = convertPositionToCSS(position);
@@ -72,6 +80,7 @@
             '--settings-bg-image': `url("${imageUrl}")`,
             '--settings-bg-opacity': opacity.toString(),
             '--settings-bg-size': backgroundSize,
+            '--settings-bg-render-size': backgroundRenderSize,
             '--settings-bg-position': backgroundPosition,
             '--settings-bg-blend-mode': blendMode,
             '--settings-bg-filters': filtersString,
@@ -90,6 +99,64 @@
             '--settings-bg-background-overlay-filters': backgroundOverlayFiltersString,
             '--settings-bg-animation-duration': `${globalConfig.animationDuration}ms`
         };
+    }
+
+    type BackgroundRenderMetrics = {
+        containerWidth: number;
+        containerHeight: number;
+        imageNaturalWidth: number | null;
+        imageNaturalHeight: number | null;
+    };
+
+    const BACKGROUND_EDGE_BLEED_PX = 20;
+
+    function calculateBackgroundRenderSize(
+        displayMode: BackgroundDisplayMode,
+        scale: number,
+        metrics?: BackgroundRenderMetrics
+    ): string {
+        const safeScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
+        const paintWidth = (metrics?.containerWidth ?? 0) + BACKGROUND_EDGE_BLEED_PX * 2;
+        const paintHeight = (metrics?.containerHeight ?? 0) + BACKGROUND_EDGE_BLEED_PX * 2;
+        const naturalWidth = metrics?.imageNaturalWidth ?? 0;
+        const naturalHeight = metrics?.imageNaturalHeight ?? 0;
+
+        if (paintWidth <= 0 || paintHeight <= 0) {
+            return convertDisplayModeToCSS(displayMode);
+        }
+
+        if (displayMode === 'stretch') {
+            return `${paintWidth * safeScale}px ${paintHeight * safeScale}px`;
+        }
+
+        if (naturalWidth <= 0 || naturalHeight <= 0) {
+            return convertDisplayModeToCSS(displayMode);
+        }
+
+        let baseWidth = naturalWidth;
+        let baseHeight = naturalHeight;
+
+        switch (displayMode) {
+            case 'cover': {
+                const baseScale = Math.max(paintWidth / naturalWidth, paintHeight / naturalHeight);
+                baseWidth = naturalWidth * baseScale;
+                baseHeight = naturalHeight * baseScale;
+                break;
+            }
+            case 'contain': {
+                const baseScale = Math.min(paintWidth / naturalWidth, paintHeight / naturalHeight);
+                baseWidth = naturalWidth * baseScale;
+                baseHeight = naturalHeight * baseScale;
+                break;
+            }
+            case 'center':
+            case 'tile':
+                break;
+            default:
+                return convertDisplayModeToCSS(displayMode);
+        }
+
+        return `${Math.max(1, baseWidth * safeScale)}px ${Math.max(1, baseHeight * safeScale)}px`;
     }
 
     // 生成前景/上层遮罩层样式对象
@@ -240,6 +307,10 @@
     // 背景相关状态
     // svelte-ignore non_reactive_update
     let backgroundContainerElement: HTMLDivElement | null = null;
+    let backgroundContainerWidth = $state(0);
+    let backgroundContainerHeight = $state(0);
+    let imageNaturalWidth = $state<number | null>(null);
+    let imageNaturalHeight = $state<number | null>(null);
 
     // 获取当前激活的背景图片
     const activeImage = $derived(
@@ -253,7 +324,12 @@
         if (!backgroundContainerElement) return;
 
         if (activeImage) {
-            const styles = generateBackgroundStyles(activeImage, $userSettings.background.global);
+            const styles = generateBackgroundStyles(activeImage, $userSettings.background.global, {
+                containerWidth: backgroundContainerWidth,
+                containerHeight: backgroundContainerHeight,
+                imageNaturalWidth,
+                imageNaturalHeight
+            });
             applyBackgroundStyles(backgroundContainerElement, styles);
         } else {
             removeBackgroundStyles(backgroundContainerElement);
@@ -289,10 +365,56 @@
         }
     });
 
+    $effect(() => {
+        let cancelled = false;
+
+        imageNaturalWidth = null;
+        imageNaturalHeight = null;
+
+        if (!activeImage?.filePath) return;
+
+        const image = new Image();
+        image.onload = () => {
+            if (cancelled) return;
+            imageNaturalWidth = image.naturalWidth;
+            imageNaturalHeight = image.naturalHeight;
+        };
+        image.onerror = () => {
+            if (cancelled) return;
+            imageNaturalWidth = null;
+            imageNaturalHeight = null;
+        };
+        image.src = convertToTauriUrl(activeImage.filePath);
+
+        return () => {
+            cancelled = true;
+        };
+    });
+
     onMount(() => {
+        let resizeObserver: ResizeObserver | undefined;
+
+        const updateContainerSize = () => {
+            if (!backgroundContainerElement) return;
+            const rect = backgroundContainerElement.getBoundingClientRect();
+            backgroundContainerWidth = rect.width;
+            backgroundContainerHeight = rect.height;
+        };
+
+        if (backgroundContainerElement && typeof ResizeObserver !== 'undefined') {
+            resizeObserver = new ResizeObserver(updateContainerSize);
+            resizeObserver.observe(backgroundContainerElement);
+        }
+
+        updateContainerSize();
+
         // 初始化背景
         applyTopOverlayToRoot();
         applyBackgroundToContainer();
+
+        return () => {
+            resizeObserver?.disconnect();
+        };
     });
 
     onDestroy(() => {
