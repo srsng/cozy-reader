@@ -1,4 +1,4 @@
-import type { ContextKeyService } from '$lib/context-keys';
+import type { ContextKeyService, ContextKeySnapshot } from '$lib/context-keys';
 import type { RegisterActionServices } from '$lib/actions/types';
 import { CommandService, type CommandRouter } from '$lib/commands';
 import { DisposableStore, toDisposable, type Disposable } from '$lib/utils/disposable';
@@ -39,8 +39,6 @@ export function activateReaderCommands(host: ReaderCommandContributionHost): Dis
 }
 
 function registerReaderContextSync(contextKeys: ContextKeyService): Disposable {
-    const disposables = new DisposableStore();
-
     const syncReaderContext = () => {
         const bookKeys = readerStore.getBookKeys();
         const activeBookKey = readerCommandState.getActiveBookKey();
@@ -50,37 +48,46 @@ function registerReaderContextSync(contextKeys: ContextKeyService): Disposable {
         if (nextActiveBookKey !== activeBookKey) {
             readerCommandState.setActiveBookKey(nextActiveBookKey);
         }
-
-        contextKeys.set(ReaderContextKey.BookOpen, bookKeys.length > 0);
-        contextKeys.set(ReaderContextKey.ActiveBookKey, nextActiveBookKey);
-        contextKeys.set(ReaderContextKey.SidebarVisible, sidebarStore.getVisible());
-        contextKeys.set(ReaderContextKey.NotebookVisible, notebookStore.getVisible());
-        contextKeys.set(ReaderContextKey.SettingsOpen, readerCommandState.isAnySettingsOpen());
     };
 
-    contextKeys.set(ReaderContextKey.BookOpen, false);
-    contextKeys.set(ReaderContextKey.ActiveBookKey, undefined);
-    contextKeys.set(ReaderContextKey.SidebarVisible, false);
-    contextKeys.set(ReaderContextKey.NotebookVisible, false);
-    contextKeys.set(ReaderContextKey.SettingsOpen, false);
+    const projection = contextKeys.registerProjection({
+        id: 'reader',
+        getSnapshot: createReaderContextSnapshot,
+        subscribe: (emit) => {
+            const disposables = new DisposableStore();
+            const syncAndEmit = () => {
+                syncReaderContext();
+                emit();
+            };
 
-    disposables.add(toDisposable(readerStore.subscribe(syncReaderContext)));
-    disposables.add(toDisposable(sidebarStore.subscribe(syncReaderContext)));
-    disposables.add(toDisposable(notebookStore.subscribe(syncReaderContext)));
-    disposables.add(toDisposable(readerCommandState.subscribe(syncReaderContext)));
-    syncReaderContext();
+            disposables.add(toDisposable(readerStore.subscribe(syncAndEmit)));
+            disposables.add(toDisposable(sidebarStore.subscribe(syncAndEmit)));
+            disposables.add(toDisposable(notebookStore.subscribe(syncAndEmit)));
+            disposables.add(toDisposable(readerCommandState.subscribe(syncAndEmit)));
+            syncAndEmit();
 
-    disposables.add(
-        toDisposable(() => {
-            readerCommandState.setActiveBookKey(undefined);
-            readerCommandState.closeAllSettings();
-            contextKeys.set(ReaderContextKey.BookOpen, false);
-            contextKeys.set(ReaderContextKey.ActiveBookKey, undefined);
-            contextKeys.set(ReaderContextKey.SidebarVisible, false);
-            contextKeys.set(ReaderContextKey.NotebookVisible, false);
-            contextKeys.set(ReaderContextKey.SettingsOpen, false);
-        })
-    );
+            return () => disposables.dispose();
+        }
+    });
 
-    return disposables;
+    return toDisposable(() => {
+        projection.dispose();
+        readerCommandState.setActiveBookKey(undefined);
+        readerCommandState.closeAllSettings();
+    });
+}
+
+function createReaderContextSnapshot(): ContextKeySnapshot {
+    const bookKeys = readerStore.getBookKeys();
+    const activeBookKey = readerCommandState.getActiveBookKey();
+    const nextActiveBookKey =
+        activeBookKey && bookKeys.includes(activeBookKey) ? activeBookKey : bookKeys[0];
+
+    return {
+        [ReaderContextKey.BookOpen]: bookKeys.length > 0,
+        [ReaderContextKey.ActiveBookKey]: nextActiveBookKey,
+        [ReaderContextKey.SidebarVisible]: sidebarStore.getVisible(),
+        [ReaderContextKey.NotebookVisible]: notebookStore.getVisible(),
+        [ReaderContextKey.SettingsOpen]: readerCommandState.isAnySettingsOpen()
+    };
 }

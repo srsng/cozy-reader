@@ -3,6 +3,7 @@
     import { Button } from '$ui/button';
     import type { AppThemeEffects } from '$lib/settings/Theme';
     import { COMMAND_SERVICE } from '$lib/commands';
+    import { APP_STATE } from '$lib/stores/appState';
     import { inject } from '$lib/utils/context';
 
     let {
@@ -14,6 +15,7 @@
     } = $props();
 
     const commandService = inject(COMMAND_SERVICE);
+    const appState = inject(APP_STATE);
 
     const effects: { value: AppThemeEffects; label: string }[] = [
         { value: 'none', label: '无' },
@@ -22,10 +24,26 @@
         { value: 'blur', label: '模糊' }
     ];
 
-    async function selectEffect(effect: AppThemeEffects) {
-        if (disabled) return;
+    function canSelectEffect(effect: AppThemeEffects): boolean {
+        $appState.theme.effectAvailability;
+        return !disabled && commandService.canExecute('theme.effects.set', effect);
+    }
 
-        await commandService.execute('theme.effects.set', effect);
+    async function selectEffect(effect: AppThemeEffects) {
+        if (!canSelectEffect(effect)) {
+            toast.warning('窗口效果不可用', {
+                description: '当前平台或系统版本不支持该窗口效果'
+            });
+            return;
+        }
+
+        const executed = await commandService.execute('theme.effects.set', effect);
+        if (!executed) {
+            toast.warning('窗口效果不可用', {
+                description: '当前平台或系统版本不支持该窗口效果'
+            });
+            return;
+        }
 
         if (effect === 'blur') {
             toast.warning('警告', {
@@ -40,7 +58,7 @@
         <Button
             size="sm"
             variant={value === effect.value ? 'default' : 'outline'}
-            {disabled}
+            disabled={!canSelectEffect(effect.value)}
             onclick={() => selectEffect(effect.value)}
         >
             {effect.label}

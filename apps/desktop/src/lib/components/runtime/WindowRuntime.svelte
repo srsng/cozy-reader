@@ -6,9 +6,12 @@
         saveWindowState,
         StateFlags
     } from '@tauri-apps/plugin-window-state';
-    import { APP_STATE } from '$lib/stores/appState';
+    import {
+        APP_STATE,
+        setAppWindowDevtoolsAvailable,
+        setAppWindowFullscreen
+    } from '$lib/stores/appState';
     import { USER_SETTINGS } from '$lib/stores/userSettings';
-    import { ContextKey, CONTEXT_KEY_SERVICE } from '$lib/context-keys';
     import { inject } from '$lib/utils/context';
     import { devtoolsAvailable } from '$lib/apis/devtools';
 
@@ -24,13 +27,11 @@
 <script lang="ts">
     const userSettings = inject(USER_SETTINGS);
     const appState = inject(APP_STATE);
-    const contextKeys = inject(CONTEXT_KEY_SERVICE);
     const appWindow = new Window('main');
 
     function syncFullscreenContext() {
         const fullscreen = Boolean(document.fullscreenElement);
-        appState.update((state) => ({ ...state, fullscreen }));
-        contextKeys.set(ContextKey.WindowFullscreen, fullscreen);
+        setAppWindowFullscreen(appState, fullscreen);
     }
 
     onMount(() => {
@@ -40,12 +41,12 @@
         void restoreAppWindowState();
         void appWindow.setAlwaysOnTop($userSettings.base.alwaysOnTop);
         void devtoolsAvailable()
-            .then((available) => {
-                contextKeys.set(ContextKey.WindowDevtoolsAvailable, available);
+            .then((canOpenDevtools) => {
+                setAppWindowDevtoolsAvailable(appState, canOpenDevtools);
             })
             .catch((error) => {
-                console.error('Failed to detect DevTools availability:', error);
-                contextKeys.set(ContextKey.WindowDevtoolsAvailable, false);
+                console.error('Failed to detect devtools availability:', error);
+                setAppWindowDevtoolsAvailable(appState, false);
             });
         syncFullscreenContext();
         document.addEventListener('fullscreenchange', syncFullscreenContext);

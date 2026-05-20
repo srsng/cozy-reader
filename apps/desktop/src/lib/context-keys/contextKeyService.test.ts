@@ -137,4 +137,93 @@ describe('ContextKeyService', () => {
 
         warn.mockRestore();
     });
+
+    it('reads projected context keys from snapshots', () => {
+        const contextKeys = new ContextKeyService({ route: '/settings' });
+
+        contextKeys.registerProjection({
+            id: 'test',
+            getSnapshot: () => ({
+                commandPaletteOpen: true
+            })
+        });
+
+        expect(contextKeys.get('commandPaletteOpen')).toBe(true);
+        expect(contextKeys.match('commandPaletteOpen && route == "/settings"')).toBe(true);
+        expect(contextKeys.inspect('commandPaletteOpen').snapshot.commandPaletteOpen).toBe(true);
+    });
+
+    it('emits changes when a projection source changes', () => {
+        let open = false;
+        let emitChange: (() => void) | undefined;
+        const listener = vi.fn();
+        const contextKeys = new ContextKeyService();
+
+        contextKeys.registerProjection({
+            id: 'test',
+            getSnapshot: () => ({
+                commandPaletteOpen: open
+            }),
+            subscribe: (emit) => {
+                emitChange = emit;
+                return () => undefined;
+            }
+        });
+        contextKeys.onDidChange(listener);
+
+        open = true;
+        emitChange?.();
+
+        expect(listener).toHaveBeenCalledWith({ commandPaletteOpen: true });
+    });
+
+    it('removes projected keys when a projection is disposed', () => {
+        const contextKeys = new ContextKeyService();
+        const disposable = contextKeys.registerProjection({
+            id: 'test',
+            getSnapshot: () => ({
+                commandPaletteOpen: true
+            })
+        });
+
+        expect(contextKeys.get('commandPaletteOpen')).toBe(true);
+
+        disposable.dispose();
+
+        expect(contextKeys.get('commandPaletteOpen')).toBeUndefined();
+    });
+
+    it('rejects duplicate projection ids and duplicate keys', () => {
+        const contextKeys = new ContextKeyService({ route: '/settings' });
+
+        contextKeys.registerProjection({
+            id: 'first',
+            getSnapshot: () => ({ commandPaletteOpen: true })
+        });
+
+        expect(() =>
+            contextKeys.registerProjection({
+                id: 'first',
+                getSnapshot: () => ({ textInputFocus: true })
+            })
+        ).toThrow('Overwriting context key projection: first');
+
+        expect(() =>
+            contextKeys.registerProjection({
+                id: 'second',
+                getSnapshot: () => ({ commandPaletteOpen: false })
+            })
+        ).toThrow('Duplicate context key "commandPaletteOpen"');
+
+        expect(() => contextKeys.set('commandPaletteOpen', false)).toThrow(
+            'Cannot set projected context key "commandPaletteOpen" manually'
+        );
+        expect(contextKeys.get('commandPaletteOpen')).toBe(true);
+        expect(() =>
+            contextKeys.registerProjection({
+                id: 'third',
+                getSnapshot: () => ({ route: '/reader' })
+            })
+        ).toThrow('Duplicate context key "route"');
+    });
 });

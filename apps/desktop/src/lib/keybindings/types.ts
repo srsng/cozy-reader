@@ -1,4 +1,5 @@
 import type { CommandPayload, CommandReference, CommandScope } from '$lib/commands/types';
+import type { PlatformName } from '$lib/platform/types';
 
 export type KeybindingSource = 'default' | 'feature' | 'user' | 'legacy';
 
@@ -46,6 +47,8 @@ export interface KeyCombination {
     /** 修饰键 */
     modifiers: ModifierKey[];
 }
+
+export type PlatformKeybindingMap = Partial<Record<PlatformName, KeyCombination | false>>;
 
 /**
  * 按键绑定分类

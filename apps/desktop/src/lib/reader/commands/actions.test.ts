@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { CommandService } from '$lib/commands/commandService';
 import { ContextKey } from '$lib/context-keys';
 import { MenuId } from '$lib/menus';
-import { createAppCommandHarness } from '$lib/testing';
+import { createAppCommandHarness, setAppContextState } from '$lib/testing';
 import { registerDefaultActions } from '$lib/actions';
 import { ReaderContextKey } from './contextKeys';
 import {
@@ -69,7 +69,7 @@ describe('reader command actions', () => {
         context.contextKeys.set(ReaderContextKey.BookOpen, true);
         context.contextKeys.set(ReaderContextKey.ActiveBookKey, 'book-1');
         context.contextKeys.set(ReaderContextKey.SettingsOpen, false);
-        context.contextKeys.set(ContextKey.TextInputFocus, false);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, false);
 
         expect(await executeReaderCommand(commandRouter, ReaderCommandId.PageNext)).toBe(true);
         expect(runtime.nextPage).toHaveBeenCalledWith('book-1');
@@ -137,15 +137,15 @@ describe('reader command actions', () => {
         context.contextKeys.set(ReaderContextKey.BookOpen, true);
         context.contextKeys.set(ReaderContextKey.ActiveBookKey, 'book-1');
         context.contextKeys.set(ReaderContextKey.SettingsOpen, false);
-        context.contextKeys.set(ContextKey.TextInputFocus, false);
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, false);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, false);
 
         expect(canExecuteReaderCommand(commandRouter, ReaderCommandId.PageNext)).toBe(true);
         expect(keybindingManager.inspect({ key: 'Right', modifiers: [] }).matched?.commandId).toBe(
             'reader.page.next'
         );
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, true);
 
         expect(canExecuteReaderCommand(commandRouter, ReaderCommandId.PageNext)).toBe(true);
         expect(keybindingManager.inspect({ key: 'Right', modifiers: [] }).matched).toBeNull();
@@ -161,7 +161,7 @@ describe('reader command actions', () => {
         context.contextKeys.set(ReaderContextKey.BookOpen, true);
         context.contextKeys.set(ReaderContextKey.ActiveBookKey, 'book-1');
         context.contextKeys.set(ReaderContextKey.SettingsOpen, true);
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, false);
 
         expect(await executeReaderCommand(commandRouter, ReaderCommandId.SettingsClose)).toBe(true);
         expect(runtime.closeSettings).toHaveBeenCalledWith('book-1');
@@ -169,14 +169,14 @@ describe('reader command actions', () => {
             'reader.settings.close'
         );
 
-        context.contextKeys.set(ContextKey.TextInputFocus, true);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, true);
 
         expect(keybindingManager.inspect({ key: 'Esc', modifiers: [] }).matched?.commandId).toBe(
             'reader.settings.close'
         );
-        context.contextKeys.set(ContextKey.TextInputFocus, false);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, false);
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, true);
 
         expect(canExecuteReaderCommand(commandRouter, ReaderCommandId.SettingsClose)).toBe(true);
         expect(keybindingManager.inspect({ key: 'Esc', modifiers: [] }).matched?.commandId).toBe(

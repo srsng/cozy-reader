@@ -25,10 +25,6 @@ export function getPlatformInfoSnapshot(): PlatformInfo {
     };
 }
 
-export function getPlatformInfo(): Promise<PlatformInfo> {
-    return Promise.resolve(getPlatformInfoSnapshot());
-}
-
 export function getSystemLocale(): Promise<string | null> {
     return Promise.resolve()
         .then(() => locale())

@@ -4,5 +4,6 @@ export * from './commandService';
 export * from './defaultCommands';
 export * from './invocation';
 export * from './runtime';
+export * from './appServices';
 export * from './schema';
 export * from './types';

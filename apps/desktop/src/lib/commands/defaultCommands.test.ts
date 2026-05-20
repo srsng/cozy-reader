@@ -2,16 +2,30 @@ import { describe, expect, it, vi } from 'vitest';
 import { ContextKey } from '$lib/context-keys';
 import { MenuId } from '$lib/menus';
 import { registerDefaultActions } from '$lib/actions';
-import { createAppCommandHarness, createTestCommandContext, getStoreValue } from '$lib/testing';
+import {
+    createAppCommandHarness,
+    createTestCommandContext,
+    getStoreValue,
+    setAppContextState,
+    setSettingsContextState
+} from '$lib/testing';
 import { CommandService } from './commandService';
 import { registerDefaultCommands } from './defaultCommands';
 
 function createContext() {
-    return createTestCommandContext();
+    return createTestCommandContext({ projectAppContext: true });
 }
 
 function createActionHarness() {
-    const harness = createAppCommandHarness({ registerCommandExecutor: false });
+    const harness = createAppCommandHarness({
+        registerCommandExecutor: false,
+        contextKeys: {
+            [ContextKey.WindowDevtoolsAvailable]: true,
+            [ContextKey.ThemeEffectBlurAvailable]: true,
+            [ContextKey.ThemeEffectMicaAvailable]: true,
+            [ContextKey.ThemeEffectAcrylicAvailable]: true
+        }
+    });
     registerDefaultActions({
         commandService: harness.commandService,
         menuService: harness.menuService,
@@ -52,7 +66,7 @@ describe('default commands', () => {
 
     it('does not update theme effect settings when the platform command fails', async () => {
         const { commandService, context, userSettings } = createActionHarness();
-        context.contextKeys.set(ContextKey.ThemeEffects, 'none');
+        setSettingsContextState(userSettings, ContextKey.ThemeEffects, 'none');
         vi.mocked(context.theme.setEffect).mockRejectedValue(new Error('platform failed'));
 
         await expect(commandService.execute('theme.effects.set', 'blur')).rejects.toThrow(
@@ -135,7 +149,7 @@ describe('default commands', () => {
         const { context, userSettings } = createContext();
         const commandService = new CommandService(context);
         registerDefaultCommands(commandService);
-        context.contextKeys.set(ContextKey.WindowAlwaysOnTop, false);
+        setSettingsContextState(userSettings, ContextKey.WindowAlwaysOnTop, false);
         vi.mocked(context.window.setAlwaysOnTop).mockRejectedValue(new Error('platform failed'));
 
         await expect(commandService.execute('window.setAlwaysOnTop', true)).rejects.toThrow(
@@ -147,18 +161,18 @@ describe('default commands', () => {
     });
 
     it('keeps command palette toggle executable while the palette is open', () => {
-        const { commandService, context } = createActionHarness();
+        const { commandService, context, appState } = createActionHarness();
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(appState, ContextKey.CommandPaletteOpen, true);
 
         expect(commandService.canExecute('app.showCommands')).toBe(true);
         expect(commandService.canExecute('app.closeCommands')).toBe(true);
     });
 
     it('requires the DevTools runtime capability for the DevTools command', async () => {
-        const { commandService, context, menuService } = createActionHarness();
+        const { commandService, context, menuService, appState } = createActionHarness();
 
-        context.contextKeys.set(ContextKey.WindowDevtoolsAvailable, false);
+        setAppContextState(appState, ContextKey.WindowDevtoolsAvailable, false);
         expect(commandService.canExecute('window.toggleDevtools')).toBe(false);
         expect(await commandService.execute('window.toggleDevtools')).toBe(false);
         expect(
@@ -167,7 +181,7 @@ describe('default commands', () => {
                 .some((contribution) => contribution.id === 'window.toggleDevtools')
         ).toBe(false);
 
-        context.contextKeys.set(ContextKey.WindowDevtoolsAvailable, true);
+        setAppContextState(appState, ContextKey.WindowDevtoolsAvailable, true);
         expect(commandService.canExecute('window.toggleDevtools')).toBe(true);
         expect(
             menuService

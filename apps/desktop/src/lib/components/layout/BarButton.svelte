@@ -40,11 +40,14 @@
     } = $props();
 
     let menuChangeVersion = $state(0);
+    let buttonElement: HTMLButtonElement | null = $state(null);
     const disposable = menuService.onDidChange(() => {
         menuChangeVersion += 1;
     });
 
-    onDestroy(() => disposable.dispose());
+    onDestroy(() => {
+        disposable.dispose();
+    });
 
     const contribution = $derived.by(() => {
         menuChangeVersion;
@@ -141,6 +144,7 @@
         />
     {:else if contribution?.kind === 'menu'}
         <Button
+            bind:ref={buttonElement}
             id={config.id}
             {title}
             {variant}

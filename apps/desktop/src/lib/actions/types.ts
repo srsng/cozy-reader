@@ -8,7 +8,14 @@ import type {
     KnownCommandId
 } from '$lib/commands/types';
 import type { MenuCategory, MenuContribution, MenuId } from '$lib/menus/types';
-import type { KeyCombination, KeybindingSource, StaticKeybinding } from '$lib/keybindings/types';
+import type {
+    KeyCombination,
+    KeybindingSource,
+    PlatformKeybindingMap,
+    StaticKeybinding
+} from '$lib/keybindings/types';
+import type { ContextKeyExpression } from '$lib/context-keys';
+import type { PlatformName } from '$lib/platform/types';
 import type { Disposable } from '$lib/utils/disposable';
 
 export type ActionMenuContribution = Omit<
@@ -28,6 +35,7 @@ export type ActionKeybindingContribution = {
     name?: string;
     description?: string;
     combination: KeyCombination;
+    platforms?: PlatformKeybindingMap;
     when?: string;
     allowInTextInput?: boolean;
     allowWhenDialogOpen?: boolean;
@@ -47,6 +55,7 @@ export type ActionDefinition<
     description?: string;
     category: MenuCategory;
     keywords?: readonly string[];
+    requires?: ContextKeyExpression;
     command: Omit<CommandDefinition<Args, Result, Id>, 'id'>;
     menus?: readonly ActionMenuContribution[];
     keybindings?: readonly ActionKeybindingContribution[];
@@ -62,6 +71,7 @@ export type KnownActionDefinition<Id extends KnownCommandId> = ActionDefinition<
 
 export type RegisterActionServices = {
     commandScope?: CommandScope;
+    platform?: PlatformName;
     commandService: {
         register(command: CommandDefinition<any[], any>): Disposable;
     };

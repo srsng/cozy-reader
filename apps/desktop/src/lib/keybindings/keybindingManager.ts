@@ -1,7 +1,7 @@
 // 前端按键绑定管理服务
 
 import type { CommandInvocation, CommandReference } from '$lib/commands/types';
-import { ContextKey, type ContextKeyService } from '$lib/context-keys';
+import type { ContextKeyService } from '$lib/context-keys';
 import { DisposableStore, toDisposable, type Disposable } from '$lib/utils/disposable';
 import type {
     KeybindingResolution,
@@ -28,6 +28,7 @@ export class KeybindingManager {
     private keybindings = new Map<string, StaticKeybinding>();
     private commandExecutor: CommandExecutor | undefined;
     private contextKeyService: ContextKeyService | undefined;
+    private textInputFocusUpdater: ((focused: boolean) => void) | undefined;
     private nextRegistrationOrder = 0;
     private resolver = new KeybindingResolver();
 
@@ -61,13 +62,36 @@ export class KeybindingManager {
         });
     }
 
-    setCommandExecutor(commandExecutor: CommandExecutor): void {
+    setCommandExecutor(commandExecutor: CommandExecutor): Disposable {
         this.commandExecutor = commandExecutor;
+
+        return toDisposable(() => {
+            if (this.commandExecutor === commandExecutor) {
+                this.commandExecutor = undefined;
+            }
+        });
     }
 
-    setContextKeyService(contextKeyService: ContextKeyService): void {
+    setContextKeyService(contextKeyService: ContextKeyService): Disposable {
         this.contextKeyService = contextKeyService;
         this.resolver = new KeybindingResolver(contextKeyService);
+
+        return toDisposable(() => {
+            if (this.contextKeyService === contextKeyService) {
+                this.contextKeyService = undefined;
+                this.resolver = new KeybindingResolver();
+            }
+        });
+    }
+
+    setTextInputFocusUpdater(updater: (focused: boolean) => void): Disposable {
+        this.textInputFocusUpdater = updater;
+
+        return toDisposable(() => {
+            if (this.textInputFocusUpdater === updater) {
+                this.textInputFocusUpdater = undefined;
+            }
+        });
     }
 
     /**
@@ -187,7 +211,7 @@ export class KeybindingManager {
      * 处理键盘事件
      */
     private handleKeyboardEvent(combination: KeyCombination, context: KeyboardEventContext): void {
-        this.contextKeyService?.set(ContextKey.TextInputFocus, context.isInInput);
+        this.textInputFocusUpdater?.(context.isInInput);
 
         const matchedKeybinding = this.findMatch(combination);
         if (!matchedKeybinding || !this.canExecuteKeybinding(matchedKeybinding)) {

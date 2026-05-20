@@ -1,7 +1,6 @@
 import type { UserSettings } from '$lib/settings';
-import type { AppState } from '$lib/state/app-state';
+import { setAppWindowFullscreen } from '$lib/stores/appState';
 import type { Writable } from 'svelte/store';
-import { ContextKey } from '$lib/context-keys';
 import type { CommandContext } from './types';
 
 export const MIN_ZOOM = 0.375;
@@ -33,10 +32,6 @@ export function updateSettings(
     updateStore(context.userSettings, mutator);
 }
 
-export function updateAppState(context: CommandContext, mutator: (state: AppState) => void): void {
-    updateStore(context.appState, mutator);
-}
-
 export function clampZoom(value: number): number {
     return Math.min(Math.max(value, MIN_ZOOM), MAX_ZOOM);
 }
@@ -59,16 +54,11 @@ export async function setAlwaysOnTop(context: CommandContext, value: boolean): P
     updateSettings(context, (settings) => {
         settings.base.alwaysOnTop = value;
     });
-    context.contextKeys.set(ContextKey.WindowAlwaysOnTop, value);
 }
 
 export async function toggleFullscreen(context: CommandContext): Promise<void> {
     await context.window.toggleFullscreen();
     await context.window.saveState();
-    updateAppState(context, (state) => {
-        const fullscreen =
-            typeof document !== 'undefined' ? Boolean(document.fullscreenElement) : state.fullscreen;
-        state.fullscreen = fullscreen;
-        context.contextKeys.set(ContextKey.WindowFullscreen, fullscreen);
-    });
+    const fullscreen = typeof document !== 'undefined' && Boolean(document.fullscreenElement);
+    setAppWindowFullscreen(context.appState, fullscreen);
 }

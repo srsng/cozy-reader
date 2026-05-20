@@ -9,13 +9,9 @@ const testAddCommand = asDynamicCommandId('test.add');
 const testBooleanCommand = asDynamicCommandId('test.boolean');
 const testResultCommand = asDynamicCommandId('test.result');
 
-function createService() {
-    return new CommandService(createTestCommandContext().context);
-}
-
 describe('CommandService', () => {
     it('disposes registered commands', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const run = vi.fn();
         const disposable = service.register({ id: 'zoom.in', run });
 
@@ -28,7 +24,7 @@ describe('CommandService', () => {
     });
 
     it('throws when registering duplicate commands in development', () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const firstRun = vi.fn();
         const secondRun = vi.fn();
         service.register({ id: 'zoom.in', run: firstRun });
@@ -39,7 +35,7 @@ describe('CommandService', () => {
     });
 
     it('rolls back registerAll when one command registration fails', () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const existingRun = vi.fn();
         service.register({ id: 'zoom.in', run: existingRun });
 
@@ -55,7 +51,7 @@ describe('CommandService', () => {
     });
 
     it('returns command results and passes multiple arguments through executeCommand', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const testSumCommand = asDynamicCommandId('test.sum');
         const run = vi.fn((_context: CommandContext, ...args: unknown[]) => {
             return Number(args[0]) + Number(args[1]);
@@ -67,7 +63,7 @@ describe('CommandService', () => {
     });
 
     it('validates and parses command arguments before canRun and run', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const run = vi.fn((_context: CommandContext, left: number, right: number) => {
             return left + right;
         });
@@ -84,7 +80,7 @@ describe('CommandService', () => {
     });
 
     it('does not execute commands with invalid arguments', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const run = vi.fn();
         service.register({
             id: testBooleanCommand,
@@ -98,7 +94,7 @@ describe('CommandService', () => {
     });
 
     it('throws when command result validation fails', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         service.register({
             id: testResultCommand,
             argsSchema: z.tuple([]),
@@ -112,7 +108,7 @@ describe('CommandService', () => {
     });
 
     it('keeps execute as a boolean wrapper around command execution', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const run = vi.fn(() => 'ignored-result');
         service.register({ id: 'zoom.in', run });
 
@@ -121,7 +117,7 @@ describe('CommandService', () => {
     });
 
     it('does not execute missing or disabled commands through executeCommand', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
         const run = vi.fn();
         service.register({
             id: 'window.toggleDevtools',
@@ -135,7 +131,7 @@ describe('CommandService', () => {
     });
 
     it('requires dynamic command ids to be explicitly branded for direct execution APIs', async () => {
-        const service = createService();
+        const service = new CommandService(createTestCommandContext().context);
 
         // @ts-expect-error direct APIs reject unbranded dynamic command strings
         service.execute('plugin.unbranded');

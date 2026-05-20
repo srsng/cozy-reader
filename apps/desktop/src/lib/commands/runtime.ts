@@ -1,5 +1,6 @@
 import { canGoBack, goBack, goBgSettings, goHome, goSettings } from '$lib/utils/route.svelte';
 import { saveUserSettingsManually } from '$lib/stores/userSettings';
+import { setAppWindowFullscreen } from '$lib/stores/appState';
 import type { UserSettings } from '$lib/settings';
 import type { AppState } from '$lib/state/app-state';
 import type { Writable } from 'svelte/store';
@@ -68,13 +69,13 @@ export function createDefaultCommandContext({
             toggleDevtools: openMainWindowDevtools,
             toggleFullscreen: async () => {
                 if (document.fullscreenElement) {
-                    appState.update((state) => ({ ...state, fullscreen: false }));
                     await document.exitFullscreen();
+                    setAppWindowFullscreen(appState, false);
                     return;
                 }
 
-                appState.update((state) => ({ ...state, fullscreen: true }));
                 await document.documentElement.requestFullscreen();
+                setAppWindowFullscreen(appState, true);
             }
         }
     };

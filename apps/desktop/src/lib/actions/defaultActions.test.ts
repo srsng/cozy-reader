@@ -2,11 +2,24 @@ import { describe, expect, it, vi } from 'vitest';
 import { ContextKey } from '$lib/context-keys';
 import { MenuId } from '$lib/menus';
 import { ModifierKey } from '$lib/keybindings/types';
-import { createAppCommandHarness, getStoreValue } from '$lib/testing';
+import {
+    createAppCommandHarness,
+    getStoreValue,
+    setAppContextState,
+    setSettingsContextState
+} from '$lib/testing';
 import { registerDefaultActions } from './defaultActions';
 
 function createServices() {
-    const harness = createAppCommandHarness({ registerCommandExecutor: false });
+    const harness = createAppCommandHarness({
+        registerCommandExecutor: false,
+        contextKeys: {
+            [ContextKey.WindowDevtoolsAvailable]: true,
+            [ContextKey.ThemeEffectBlurAvailable]: true,
+            [ContextKey.ThemeEffectMicaAvailable]: true,
+            [ContextKey.ThemeEffectAcrylicAvailable]: true
+        }
+    });
 
     const defaultActionsDisposable = registerDefaultActions({
         commandService: harness.commandService,
@@ -41,19 +54,19 @@ describe('default actions', () => {
     });
 
     it('allows zoom keybindings while the command palette input is focused', () => {
-        const { keybindingManager, context } = createServices();
+        const { keybindingManager, appState } = createServices();
         const zoomIn = { key: '=', modifiers: [ModifierKey.Ctrl] };
         const zoomOut = { key: '-', modifiers: [ModifierKey.Ctrl] };
         const zoomReset = { key: '0', modifiers: [ModifierKey.Ctrl] };
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
-        context.contextKeys.set(ContextKey.TextInputFocus, true);
+        setAppContextState(appState, ContextKey.CommandPaletteOpen, true);
+        setAppContextState(appState, ContextKey.TextInputFocus, true);
 
         expect(keybindingManager.inspect(zoomIn).matched?.commandId).toBe('zoom.in');
         expect(keybindingManager.inspect(zoomOut).matched?.commandId).toBe('zoom.out');
         expect(keybindingManager.inspect(zoomReset).matched?.commandId).toBe('zoom.reset');
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+        setAppContextState(appState, ContextKey.CommandPaletteOpen, false);
 
         expect(keybindingManager.inspect(zoomIn).matched).toBeNull();
         expect(keybindingManager.inspect(zoomOut).matched).toBeNull();
@@ -61,14 +74,14 @@ describe('default actions', () => {
     });
 
     it('blocks ordinary keybindings while the command palette is open', () => {
-        const { keybindingManager, context } = createServices();
+        const { keybindingManager, appState } = createServices();
         const openSettings = { key: ',', modifiers: [ModifierKey.Ctrl] };
 
         expect(keybindingManager.inspect(openSettings).matched?.commandId).toBe(
             'navigate.settings'
         );
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(appState, ContextKey.CommandPaletteOpen, true);
 
         expect(keybindingManager.inspect(openSettings).matched).toBeNull();
     });
@@ -147,7 +160,7 @@ describe('default actions', () => {
 
     it('does not update always-on-top state when toggling fails', async () => {
         const { commandService, context, userSettings } = createServices();
-        context.contextKeys.set(ContextKey.WindowAlwaysOnTop, false);
+        setSettingsContextState(userSettings, ContextKey.WindowAlwaysOnTop, false);
         vi.mocked(context.window.setAlwaysOnTop).mockRejectedValue(new Error('platform failed'));
 
         await expect(commandService.execute('window.toggleAlwaysOnTop')).rejects.toThrow(
@@ -189,7 +202,7 @@ describe('default actions', () => {
 
     it('does not update theme effect state when the platform command fails', async () => {
         const { commandService, context, userSettings } = createServices();
-        context.contextKeys.set(ContextKey.ThemeEffects, 'none');
+        setSettingsContextState(userSettings, ContextKey.ThemeEffects, 'none');
         vi.mocked(context.theme.setEffect).mockRejectedValue(new Error('platform failed'));
 
         await expect(commandService.execute('theme.effects.set', 'blur')).rejects.toThrow(
@@ -201,8 +214,8 @@ describe('default actions', () => {
     });
 
     it('registers window chrome actions in the command palette', async () => {
-        const { commandService, menuService, context } = createServices();
-        context.contextKeys.set(ContextKey.WindowDevtoolsAvailable, true);
+        const { commandService, menuService, context, appState } = createServices();
+        setAppContextState(appState, ContextKey.WindowDevtoolsAvailable, true);
 
         expect(await commandService.execute('window.maximize')).toBe(true);
         expect(context.window.maximize).toHaveBeenCalledOnce();
@@ -217,7 +230,7 @@ describe('default actions', () => {
     });
 
     it('routes refresh keybindings through the window refresh command', () => {
-        const { keybindingManager, context } = createServices();
+        const { keybindingManager, context, appState } = createServices();
         const ctrlR = { key: 'r', modifiers: [ModifierKey.Ctrl] };
         const f5 = { key: 'f5', modifiers: [] };
 
@@ -227,17 +240,17 @@ describe('default actions', () => {
             keybindingManager.getKeybindingsForInvocation({ commandId: 'window.refresh' })
         ).toHaveLength(2);
 
-        context.contextKeys.set(ContextKey.TextInputFocus, true);
-        context.contextKeys.set(ContextKey.DialogOpen, true);
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(appState, ContextKey.TextInputFocus, true);
+        setAppContextState(appState, ContextKey.DialogOpen, true);
+        setAppContextState(appState, ContextKey.CommandPaletteOpen, true);
 
         expect(keybindingManager.inspect(ctrlR).matched?.commandId).toBe('window.refresh');
         expect(keybindingManager.inspect(f5).matched?.commandId).toBe('window.refresh');
     });
 
     it('hides and disables DevTools when the runtime capability is unavailable', async () => {
-        const { commandService, menuService, context } = createServices();
-        context.contextKeys.set(ContextKey.WindowDevtoolsAvailable, false);
+        const { commandService, menuService, context, appState } = createServices();
+        setAppContextState(appState, ContextKey.WindowDevtoolsAvailable, false);
 
         expect(commandService.canExecute('window.toggleDevtools')).toBe(false);
         expect(await commandService.execute('window.toggleDevtools')).toBe(false);
@@ -249,13 +262,27 @@ describe('default actions', () => {
         ).toBe(false);
     });
 
+    it('hides and disables unavailable concrete theme effects', async () => {
+        const { commandService, menuService, context, appState } = createServices();
+        setAppContextState(appState, ContextKey.ThemeEffectBlurAvailable, false);
+
+        expect(
+            menuService
+                .getVisibleItems(MenuId.CommandPalette)
+                .some((item) => item.id === 'theme.effects.blur')
+        ).toBe(false);
+        expect(commandService.canExecute('theme.effects.set', 'blur')).toBe(false);
+        expect(await commandService.execute('theme.effects.set', 'blur')).toBe(false);
+        expect(commandService.canExecute('theme.effects.set', 'none')).toBe(true);
+    });
+
     it('toggles the command palette from text inputs, dialogs, and the open palette', async () => {
-        const { commandService, keybindingManager, context } = createServices();
+        const { commandService, keybindingManager, context, appState } = createServices();
         const showCommands = { key: 'p', modifiers: [ModifierKey.Ctrl] };
         const showCommandsF1 = { key: 'f1', modifiers: [] };
         const closeCommands = { key: 'Esc', modifiers: [] };
 
-        expect(context.contextKeys.get(ContextKey.CommandPaletteOpen)).toBeUndefined();
+        expect(context.contextKeys.get(ContextKey.CommandPaletteOpen)).toBe(false);
 
         expect(await commandService.execute('app.showCommands')).toBe(true);
         expect(context.contextKeys.get(ContextKey.CommandPaletteOpen)).toBe(true);
@@ -263,15 +290,15 @@ describe('default actions', () => {
         expect(await commandService.execute('app.showCommands')).toBe(true);
         expect(context.contextKeys.get(ContextKey.CommandPaletteOpen)).toBe(false);
 
-        context.contextKeys.set(ContextKey.TextInputFocus, true);
-        context.contextKeys.set(ContextKey.DialogOpen, true);
+        setAppContextState(appState, ContextKey.TextInputFocus, true);
+        setAppContextState(appState, ContextKey.DialogOpen, true);
 
         expect(keybindingManager.inspect(showCommands).matched?.commandId).toBe('app.showCommands');
         expect(keybindingManager.inspect(showCommandsF1).matched?.commandId).toBe(
             'app.showCommands'
         );
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(appState, ContextKey.CommandPaletteOpen, true);
 
         expect(keybindingManager.inspect(showCommands).matched?.commandId).toBe('app.showCommands');
         expect(keybindingManager.inspect(showCommandsF1).matched?.commandId).toBe(
@@ -283,13 +310,13 @@ describe('default actions', () => {
     });
 
     it('lets command palette close keybindings work while text inputs or dialogs are active', () => {
-        const { keybindingManager, context } = createServices();
+        const { keybindingManager, appState } = createServices();
         const closeCommands = { key: 'Esc', modifiers: [] };
 
-        context.contextKeys.set(ContextKey.TextInputFocus, true);
-        context.contextKeys.set(ContextKey.DialogOpen, true);
+        setAppContextState(appState, ContextKey.TextInputFocus, true);
+        setAppContextState(appState, ContextKey.DialogOpen, true);
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(appState, ContextKey.CommandPaletteOpen, true);
 
         expect(keybindingManager.inspect(closeCommands).matched?.commandId).toBe(
             'app.closeCommands'
@@ -316,7 +343,7 @@ describe('default actions', () => {
     });
 
     it('reflects toggled state for window and theme contributions', async () => {
-        const { commandService, menuService, context } = createServices();
+        const { commandService, menuService, context, appState, userSettings } = createServices();
 
         const alwaysOnTopContribution = menuService.getItem(
             MenuId.TitleBar,
@@ -335,9 +362,9 @@ describe('default actions', () => {
         expect(menuService.isToggled(fullscreenContribution)).toBe(false);
         expect(menuService.isToggled(micaThemeContribution)).toBe(false);
 
-        context.contextKeys.set(ContextKey.WindowAlwaysOnTop, true);
-        context.contextKeys.set(ContextKey.WindowFullscreen, true);
-        context.contextKeys.set(ContextKey.ThemeEffects, 'mica');
+        setSettingsContextState(userSettings, ContextKey.WindowAlwaysOnTop, true);
+        setAppContextState(appState, ContextKey.WindowFullscreen, true);
+        setSettingsContextState(userSettings, ContextKey.ThemeEffects, 'mica');
 
         expect(menuService.isToggled(alwaysOnTopContribution)).toBe(true);
         expect(menuService.getDisplayTitle(alwaysOnTopContribution)).toBe('取消置顶');

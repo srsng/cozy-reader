@@ -14,6 +14,7 @@ import { MenuId } from '$lib/menus';
 import { ModifierKey } from '$lib/keybindings/types';
 import type { AppThemeEffects } from '$lib/settings/Theme';
 import type { CommandSpec } from '$lib/commands/types';
+import { setAppCommandPaletteOpen, toggleAppCommandPaletteOpen } from '$lib/stores/appState';
 import type { BgSettingsTab, SettingsTab } from '$lib/utils/route.svelte';
 import type { Disposable } from '$lib/utils/disposable';
 import { defineActions, defineKnownAction, type RegisterActionServices } from './types';
@@ -74,6 +75,22 @@ const themeEffectPayloadSchema = z
     );
 const themeEffectArgsSchema = z.tuple([themeEffectPayloadSchema]);
 
+function canUseThemeEffect(
+    context: { contextKeys: { match: (expression: string | undefined) => boolean } },
+    effect: AppThemeEffects
+): boolean {
+    switch (effect) {
+        case 'none':
+            return true;
+        case 'blur':
+            return context.contextKeys.match(ContextKey.ThemeEffectBlurAvailable);
+        case 'mica':
+            return context.contextKeys.match(ContextKey.ThemeEffectMicaAvailable);
+        case 'acrylic':
+            return context.contextKeys.match(ContextKey.ThemeEffectAcrylicAvailable);
+    }
+}
+
 export const defaultActions = defineActions([
     defineKnownAction({
         id: 'app.showCommands',
@@ -84,10 +101,7 @@ export const defaultActions = defineActions([
         command: {
             argsSchema: noArgsSchema,
             run: (context) => {
-                context.contextKeys.set(
-                    ContextKey.CommandPaletteOpen,
-                    !context.contextKeys.get(ContextKey.CommandPaletteOpen)
-                );
+                toggleAppCommandPaletteOpen(context.appState);
             }
         },
         keybindings: [
@@ -117,7 +131,7 @@ export const defaultActions = defineActions([
             enablement: ContextKey.CommandPaletteOpen,
             argsSchema: noArgsSchema,
             run: (context) => {
-                context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+                setAppCommandPaletteOpen(context.appState, false);
             }
         },
         keybindings: [
@@ -505,13 +519,13 @@ export const defaultActions = defineActions([
         category: 'theme',
         keywords: ['theme', 'effects', '窗口效果'],
         command: {
+            canRun: canUseThemeEffect,
             argsSchema: themeEffectArgsSchema,
             run: async (context, effect) => {
                 await context.theme.setEffect(effect);
                 updateSettings(context, (settings) => {
                     settings.theme.effects = effect;
                 });
-                context.contextKeys.set(ContextKey.ThemeEffects, effect);
             }
         },
         menus: [
@@ -530,6 +544,7 @@ export const defaultActions = defineActions([
             {
                 id: 'theme.effects.blur',
                 menu: MenuId.CommandPalette,
+                when: ContextKey.ThemeEffectBlurAvailable,
                 title: '窗口效果：模糊',
                 description: '设置窗口背景层为模糊效果',
                 keywords: ['theme', 'effects', 'blur', '窗口效果'],
@@ -542,6 +557,7 @@ export const defaultActions = defineActions([
             {
                 id: 'theme.effects.mica',
                 menu: MenuId.CommandPalette,
+                when: ContextKey.ThemeEffectMicaAvailable,
                 title: '窗口效果：云母',
                 description: '设置窗口背景层为云母效果',
                 keywords: ['theme', 'effects', 'mica', '窗口效果'],
@@ -554,6 +570,7 @@ export const defaultActions = defineActions([
             {
                 id: 'theme.effects.acrylic',
                 menu: MenuId.CommandPalette,
+                when: ContextKey.ThemeEffectAcrylicAvailable,
                 title: '窗口效果：亚克力',
                 description: '设置窗口背景层为亚克力效果',
                 keywords: ['theme', 'effects', 'acrylic', '窗口效果'],

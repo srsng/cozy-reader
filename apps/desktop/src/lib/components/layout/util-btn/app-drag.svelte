@@ -36,7 +36,7 @@
     {...others}
     class={className}
     data-tauri-drag-region
-    disabled={disabled ? true : $appState.fullscreen}
+    disabled={disabled ? true : $appState.window.fullscreen}
 >
     <Move class={iconClass} />
 </Button>

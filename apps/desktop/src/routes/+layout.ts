@@ -12,6 +12,9 @@ import { loadReaderSettings } from '$lib/reader/stores/readerSettings';
 import type { ReaderSettings } from '$lib/reader/settings';
 
 import type { Writable } from 'svelte/store';
+import { createInitialAppStateSnapshot } from '$lib/state/app-state';
+import { initAppState } from '$lib/stores/appState';
+import { createAppServices } from '$lib/commands';
 // import { loadFastLinks } from "$lib/stores/Links.js";
 // import { Tauri } from "$lib/backend/tauri.js";
 
@@ -31,8 +34,12 @@ export type pageMetaData = {
 // 	metaData: pageMetaData;
 // };
 
-// eslint-disable-next-line
 export async function load({ params }) {
+
+    // appState
+    const initialAppState = createInitialAppStateSnapshot();
+    const appState = initAppState(initialAppState);
+
     try {
         // 初始化数据库（包含一致性检查）
         await initializeDatabases();
@@ -44,12 +51,15 @@ export async function load({ params }) {
 
     const tauri = new Tauri();
     const userSettings = await loadUserSettings();
+    // todo: remove this
     const readerSettings = await loadReaderSettings();
     // const appData = {
     // 	resources: await getResources(),
     // 	 fastLinks: await loadFastLinks()
     // };
 
+    const appServices = createAppServices({ appState, userSettings });
+    
     // // Awaited and will block initial render, but it is necessary in order to respect the user
     // // settings on telemetry.
     // const posthog = new PostHogWrapper();
@@ -85,6 +95,8 @@ export async function load({ params }) {
     return {
         tauri,
         // appData,
+        appState,
+        appServices,
         userSettings,
         readerSettings,
         metaData

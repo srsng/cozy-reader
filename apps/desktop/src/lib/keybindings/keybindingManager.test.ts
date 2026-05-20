@@ -362,6 +362,30 @@ describe('KeybindingManager', () => {
         expect(execute).not.toHaveBeenCalled();
     });
 
+    it('disposes runtime service wiring without clearing keybindings', () => {
+        const manager = new KeybindingManager();
+        const contextKeys = new ContextKeyService({ textInputFocus: false });
+        const canExecute = vi.fn((_invocation: CommandInvocation) => true);
+        const execute = vi.fn(() => true);
+        const focusUpdater = vi.fn();
+        const contextDisposable = manager.setContextKeyService(contextKeys);
+        const executorDisposable = manager.setCommandExecutor({ canExecute, execute });
+        const focusDisposable = manager.setTextInputFocusUpdater(focusUpdater);
+        manager.register(baseKeybinding);
+
+        expect(manager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched?.id).toBe(
+            'zoom.in'
+        );
+        expect(manager.trigger('zoom.in')).toBe(true);
+
+        contextDisposable.dispose();
+        executorDisposable.dispose();
+        focusDisposable.dispose();
+
+        expect(manager.getKeybindingsForCommand('zoom.in')).toHaveLength(1);
+        expect(manager.trigger('zoom.in')).toBe(false);
+    });
+
     it('stops listening without clearing registered keybindings', () => {
         const documentMock = {
             addEventListener: vi.fn(),

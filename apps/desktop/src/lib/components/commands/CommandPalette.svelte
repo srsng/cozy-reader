@@ -2,17 +2,18 @@
     import * as Command from '$ui/command';
     import { Check } from 'lucide-svelte';
     import { MENU_SERVICE, MenuId, type MenuContribution } from '$lib/menus';
-    import { ContextKey, CONTEXT_KEY_SERVICE } from '$lib/context-keys';
+    import { CONTEXT_KEY_SERVICE } from '$lib/context-keys';
     import { keybindingManager } from '$lib/keybindings/keybindingManager';
     import { KeybindingUtils } from '$lib/keybindings/keybindingListener';
     import { inject } from '$lib/utils/context';
     import { ScrollArea } from '$components/ui/scroll-area';
     import { toast } from 'svelte-sonner';
+    import { APP_STATE, setAppCommandPaletteOpen } from '$lib/stores/appState';
 
     const menuService = inject(MENU_SERVICE);
     const contextKeys = inject(CONTEXT_KEY_SERVICE);
+    const appState = inject(APP_STATE);
 
-    let open = $state(Boolean(contextKeys.get(ContextKey.CommandPaletteOpen)));
     let value = $state('');
     let version = $state(0);
 
@@ -35,7 +36,7 @@
 
     $effect(() => {
         const contextDisposable = contextKeys.onDidChange((snapshot) => {
-            open = Boolean(snapshot[ContextKey.CommandPaletteOpen]);
+            snapshot;
             version += 1;
         });
         const menuDisposable = menuService.onDidChange(() => {
@@ -49,9 +50,12 @@
     });
 
     $effect(() => {
-        contextKeys.set(ContextKey.CommandPaletteOpen, open);
-        if (!open) value = '';
+        if (!$appState.ui.commandPaletteOpen) value = '';
     });
+
+    function setCommandPaletteOpen(open: boolean): void {
+        setAppCommandPaletteOpen(appState, open);
+    }
 
     async function execute(command: MenuContribution) {
         if (!menuService.canExecute(command)) return;
@@ -59,7 +63,7 @@
         try {
             const executed = await menuService.execute(command);
             if (executed && !command.keepOpen) {
-                contextKeys.set(ContextKey.CommandPaletteOpen, false);
+                setCommandPaletteOpen(false);
             }
         } catch (error) {
             console.error(`Failed to execute menu contribution ${command.id}:`, error);
@@ -90,7 +94,7 @@
 </script>
 
 <Command.Dialog
-    bind:open
+    bind:open={() => $appState.ui.commandPaletteOpen, setCommandPaletteOpen}
     bind:value
     title="命令面板"
     description="搜索并执行命令"
@@ -101,7 +105,7 @@
     <Command.List>
         <!-- todo: Command.List 的 no-scrollbar 无效 -->
         <ScrollArea class="h-full w-full">
-            <Command.Empty>{"没有找到命令"}</Command.Empty>
+            <Command.Empty>{'没有找到命令'}</Command.Empty>
             {#each groupedCommands as [category, categoryCommands] (category)}
                 <Command.Group heading={categoryLabel(category)}>
                     {#each categoryCommands as command (command.id)}

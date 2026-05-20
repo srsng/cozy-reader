@@ -5,6 +5,7 @@
     import { inject } from '$lib/utils/context';
     import { MENU_SERVICE } from '$lib/menus';
     import { createTitleBarAction } from './titlebarAction.svelte';
+    import { USER_SETTINGS } from '$lib/stores/userSettings';
 
     interface Props {
         name?: string;
@@ -34,6 +35,9 @@
 
     const menuService = inject(MENU_SERVICE);
     const action = createTitleBarAction(menuService, commandId, '始终置顶');
+
+    const userSettings = inject(USER_SETTINGS);
+
     const title = $derived(titleProp ?? action.title);
     const buttonDisabled = $derived(disabled || (!onClick && action.disabled));
 </script>
@@ -48,5 +52,5 @@
     onclick={onClick || action.execute}
     {...others}
 >
-    <Pin class={cn(iconClass, 'transition-transform', action.toggled && 'rotate-45')} />
+    <Pin class={cn(iconClass, 'transition-transform', $userSettings.base.alwaysOnTop && 'rotate-45')} />
 </Button>

@@ -84,7 +84,7 @@
 </script>
 
 <div class={cn(titleBarContentClass, className)}>
-    <BarSection
+    <BarSection        
         appTitle={$appState.appTitle}
         buttons={config.left}
         className={leftClass}

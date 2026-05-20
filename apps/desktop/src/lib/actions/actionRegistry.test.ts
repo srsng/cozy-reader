@@ -3,7 +3,7 @@ import { CommandService } from '$lib/commands/commandService';
 import { ContextKey } from '$lib/context-keys';
 import { MenuId } from '$lib/menus';
 import { ModifierKey } from '$lib/keybindings/types';
-import { createAppCommandHarness } from '$lib/testing';
+import { createAppCommandHarness, setAppContextState } from '$lib/testing';
 import { registerAction } from './actionRegistry';
 import type { ActionDefinition } from './types';
 
@@ -128,25 +128,25 @@ describe('registerAction', () => {
         };
 
         registerAction(action, { commandService, menuService, keybindingManager });
-        context.contextKeys.set(ContextKey.WindowDevtoolsAvailable, true);
-        context.contextKeys.set(ContextKey.TextInputFocus, false);
-        context.contextKeys.set(ContextKey.DialogOpen, false);
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+        setAppContextState(context.appState, ContextKey.WindowDevtoolsAvailable, true);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, false);
+        setAppContextState(context.appState, ContextKey.DialogOpen, false);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, false);
 
         const combination = { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] };
         expect(keybindingManager.inspect(combination).matched?.commandId).toBe(
             'window.toggleDevtools'
         );
 
-        context.contextKeys.set(ContextKey.TextInputFocus, true);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, true);
         expect(keybindingManager.inspect(combination).matched).toBeNull();
 
-        context.contextKeys.set(ContextKey.TextInputFocus, false);
-        context.contextKeys.set(ContextKey.DialogOpen, true);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, false);
+        setAppContextState(context.appState, ContextKey.DialogOpen, true);
         expect(keybindingManager.inspect(combination).matched).toBeNull();
 
-        context.contextKeys.set(ContextKey.DialogOpen, false);
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
+        setAppContextState(context.appState, ContextKey.DialogOpen, false);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, true);
         expect(keybindingManager.inspect(combination).matched).toBeNull();
     });
 
@@ -167,15 +167,15 @@ describe('registerAction', () => {
         };
 
         registerAction(action, { commandService, menuService, keybindingManager });
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, true);
-        context.contextKeys.set(ContextKey.TextInputFocus, true);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, true);
+        setAppContextState(context.appState, ContextKey.TextInputFocus, true);
 
         expect(
             keybindingManager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched
                 ?.commandId
         ).toBe('zoom.in');
 
-        context.contextKeys.set(ContextKey.CommandPaletteOpen, false);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, false);
 
         expect(
             keybindingManager.inspect({ key: '=', modifiers: [ModifierKey.Ctrl] }).matched
@@ -223,5 +223,129 @@ describe('registerAction', () => {
             await commandRouter.executeInvocation({ scope: 'reader', commandId: action.id })
         ).toBe(true);
         expect(run).toHaveBeenCalledOnce();
+    });
+
+    it('merges action requirements into command, menu, and keybinding conditions', async () => {
+        const { commandService, menuService, keybindingManager, context } = createServices();
+        const action: ActionDefinition = {
+            id: 'window.toggleDevtools',
+            title: '打开开发者工具',
+            category: 'window',
+            requires: ContextKey.WindowDevtoolsAvailable,
+            command: { run: vi.fn() },
+            menus: [{ menu: MenuId.CommandPalette }],
+            keybindings: [
+                {
+                    combination: { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] },
+                    allowWhenCommandPaletteOpen: true
+                }
+            ]
+        };
+
+        registerAction(action, { commandService, menuService, keybindingManager });
+        const combination = { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] };
+
+        setAppContextState(context.appState, ContextKey.WindowDevtoolsAvailable, false);
+        expect(await commandService.execute('window.toggleDevtools')).toBe(false);
+        expect(menuService.getVisibleItems(MenuId.CommandPalette)).toHaveLength(0);
+        expect(keybindingManager.inspect(combination).matched).toBeNull();
+
+        setAppContextState(context.appState, ContextKey.WindowDevtoolsAvailable, true);
+        expect(await commandService.execute('window.toggleDevtools')).toBe(true);
+        expect(menuService.getVisibleItems(MenuId.CommandPalette)).toHaveLength(1);
+        expect(keybindingManager.inspect(combination).matched?.commandId).toBe(
+            'window.toggleDevtools'
+        );
+    });
+
+    it('keeps action requirements when keybindings define their own conditions', () => {
+        const { commandService, menuService, keybindingManager, context } = createServices();
+        keybindingManager.setContextKeyService(context.contextKeys);
+        const action: ActionDefinition = {
+            id: 'window.toggleDevtools',
+            title: '打开开发者工具',
+            category: 'window',
+            requires: ContextKey.WindowDevtoolsAvailable,
+            command: { run: vi.fn() },
+            keybindings: [
+                {
+                    combination: { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] },
+                    when: ContextKey.CommandPaletteOpen,
+                    allowWhenCommandPaletteOpen: true
+                }
+            ]
+        };
+
+        registerAction(action, { commandService, menuService, keybindingManager });
+        const combination = { key: 'i', modifiers: [ModifierKey.Ctrl, ModifierKey.Shift] };
+
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, true);
+        setAppContextState(context.appState, ContextKey.WindowDevtoolsAvailable, false);
+        expect(keybindingManager.inspect(combination).matched).toBeNull();
+
+        setAppContextState(context.appState, ContextKey.WindowDevtoolsAvailable, true);
+        expect(keybindingManager.inspect(combination).matched?.commandId).toBe(
+            'window.toggleDevtools'
+        );
+    });
+
+    it('selects platform-specific keybinding combinations', () => {
+        const { commandService, menuService, keybindingManager } = createServices();
+        const action: ActionDefinition = {
+            id: 'navigate.settings',
+            title: '打开设置',
+            category: 'navigation',
+            command: { run: vi.fn() },
+            keybindings: [
+                {
+                    combination: { key: ',', modifiers: [ModifierKey.Ctrl] },
+                    platforms: {
+                        macos: { key: ',', modifiers: [ModifierKey.Meta] }
+                    }
+                }
+            ]
+        };
+
+        registerAction(action, {
+            commandService,
+            menuService,
+            keybindingManager,
+            platform: 'macos'
+        });
+
+        expect(
+            keybindingManager.inspect({ key: ',', modifiers: [ModifierKey.Ctrl] }).matched
+        ).toBeNull();
+        expect(
+            keybindingManager.inspect({ key: ',', modifiers: [ModifierKey.Meta] }).matched
+                ?.commandId
+        ).toBe('navigate.settings');
+    });
+
+    it('skips platform-disabled keybindings', () => {
+        const { commandService, menuService, keybindingManager } = createServices();
+        const action: ActionDefinition = {
+            id: 'navigate.settings',
+            title: '打开设置',
+            category: 'navigation',
+            command: { run: vi.fn() },
+            keybindings: [
+                {
+                    combination: { key: ',', modifiers: [ModifierKey.Ctrl] },
+                    platforms: { linux: false }
+                }
+            ]
+        };
+
+        registerAction(action, {
+            commandService,
+            menuService,
+            keybindingManager,
+            platform: 'linux'
+        });
+
+        expect(
+            keybindingManager.getKeybindingsForInvocation({ commandId: 'navigate.settings' })
+        ).toHaveLength(0);
     });
 });

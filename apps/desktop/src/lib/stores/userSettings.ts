@@ -1,6 +1,13 @@
 import { writable, type Writable } from 'svelte/store';
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { DEFAULT_SETTINGS, mergeUserSettingsWithDefaults, type UserSettings } from '$lib/settings';
+import { getSystemLocale } from '$lib/apis/platform';
+import {
+    appLanguageCodeFromSystemLocale,
+    createDefaultUserSettings,
+    DEFAULT_SETTINGS,
+    mergeUserSettingsWithDefaults,
+    type UserSettings
+} from '$lib/settings';
 import { InjectionToken } from '$lib/utils/context';
 
 export const USER_SETTINGS_KEY_STR = 'user-settings';
@@ -61,6 +68,10 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
 
     if (cleanConfig) {
         store.set(mergeUserSettingsWithDefaults(cleanConfig));
+    } else {
+        const systemLocale = await getSystemLocale();
+        // OS locale is only a first-run default source; settings.base.langCode is the app UI language.
+        store.set(createDefaultUserSettings(appLanguageCodeFromSystemLocale(systemLocale)));
     }
 
     // 订阅，自动保存

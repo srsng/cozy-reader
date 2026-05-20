@@ -29,13 +29,13 @@ Settings store 管理持久化的用户配置，会自动保存到文件系统�
 
 State store 管理运行时临时状态，不持久化：
 
-- `appState.ts` - 应用全局状态 store
+- `appState.ts` - 应用运行时状态，例如标题栏标题、平台信息、路由、UI、窗口和主题能力
 
 **特点**：
 
 - 不持久化
 - 应用关闭后清除
-- 用于管理 UI 状态和运行时数据
+- 用于管理响应式、可修改的运行时状态；需要参与命令、菜单、快捷键判断时，由 projection 映射到 `ContextKeyService`
 
 ## 使用方式
 
@@ -63,3 +63,4 @@ readerStore.setViewSettings(bookKey, newSettings); // 不持久化
 - Settings store 会自动保存，State store 不会
 - 区分 settings 和 state 的关键：是否需要持久化
 - 所有 store 都通过 context 或单例模式提供
+- UI 应读取 settings/state/reader store；`ContextKeyService` 只服务 command/menu/keybinding 的条件判断
