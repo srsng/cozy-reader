@@ -28,9 +28,9 @@ async function saveConfigStore(value: UserSettings) {
 }
 
 // 延时保存
-let timer: ReturnType<typeof setTimeout>;
+let timer: ReturnType<typeof setTimeout> | undefined;
 // timer状态
-let wattingToSave: boolean = false;
+let waitingToSave: boolean = false;
 
 function clean(value: any) {
     return JSON.parse(JSON.stringify(value));
@@ -42,12 +42,16 @@ function clean(value: any) {
  */
 export async function saveUserSettingsManually(store: Writable<UserSettings>): Promise<void> {
     console.log('try to save UserSettings Manually');
-    if (wattingToSave) {
+    if (!waitingToSave) return;
+
+    if (timer) {
         clearTimeout(timer);
-        wattingToSave = false;
-        forceSaveUserSettings(store);
-        console.log('saveUserSettingsManually success');
+        timer = undefined;
     }
+
+    waitingToSave = false;
+    await forceSaveUserSettings(store);
+    console.log('saveUserSettingsManually success');
 }
 
 /** 强制立即保存用户设置 */
@@ -77,9 +81,10 @@ export async function loadUserSettings(): Promise<Writable<UserSettings>> {
     // 订阅，自动保存
     store.subscribe((value) => {
         if (timer) clearTimeout(timer);
-        wattingToSave = true;
+        waitingToSave = true;
         timer = setTimeout(() => {
-            wattingToSave = false;
+            waitingToSave = false;
+            timer = undefined;
             saveConfigStore(value);
         }, 10000); // 防抖
     });
