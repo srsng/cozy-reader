@@ -61,20 +61,19 @@ describe('default commands', () => {
         await commandService.execute('theme.effects.set', 'blur');
 
         expect(getStoreValue(userSettings).theme.effects).toBe('blur');
-        expect(context.theme.setEffect).toHaveBeenCalledWith('blur');
+        expect(context.theme.setEffect).not.toHaveBeenCalled();
     });
 
-    it('does not update theme effect settings when the platform command fails', async () => {
+    it('updates theme effect intent without applying platform effects directly', async () => {
         const { commandService, context, userSettings } = createActionHarness();
         setSettingsContextState(userSettings, ContextKey.ThemeEffects, 'none');
         vi.mocked(context.theme.setEffect).mockRejectedValue(new Error('platform failed'));
 
-        await expect(commandService.execute('theme.effects.set', 'blur')).rejects.toThrow(
-            'platform failed'
-        );
+        await expect(commandService.execute('theme.effects.set', 'blur')).resolves.toBe(true);
 
-        expect(getStoreValue(userSettings).theme.effects).toBe('none');
-        expect(context.contextKeys.get(ContextKey.ThemeEffects)).toBe('none');
+        expect(getStoreValue(userSettings).theme.effects).toBe('blur');
+        expect(context.contextKeys.get(ContextKey.ThemeEffects)).toBe('blur');
+        expect(context.theme.setEffect).not.toHaveBeenCalled();
     });
 
     it('rejects parameterized commands without valid payloads', async () => {
@@ -133,7 +132,7 @@ describe('default commands', () => {
         expect(menuService.canExecute(blurThemeContribution!)).toBe(true);
         expect(await menuService.execute(blurThemeContribution!)).toBe(true);
         expect(getStoreValue(userSettings).theme.effects).toBe('blur');
-        expect(context.theme.setEffect).toHaveBeenCalledWith('blur');
+        expect(context.theme.setEffect).not.toHaveBeenCalled();
     });
 
     it('toggles always-on-top through the command service', async () => {
@@ -188,5 +187,17 @@ describe('default commands', () => {
                 .getVisibleItems(MenuId.CommandPalette)
                 .some((contribution) => contribution.id === 'window.toggleDevtools')
         ).toBe(true);
+    });
+
+    it('delegates fullscreen state synchronization to the window runtime', async () => {
+        const { commandService, context, appState } = createActionHarness();
+        setAppContextState(appState, ContextKey.WindowFullscreen, false);
+
+        await commandService.execute('window.toggleFullscreen');
+
+        expect(context.window.toggleFullscreen).toHaveBeenCalledOnce();
+        expect(context.window.saveState).toHaveBeenCalledOnce();
+        expect(getStoreValue(appState).window.fullscreen).toBe(false);
+        expect(context.contextKeys.get(ContextKey.WindowFullscreen)).toBe(false);
     });
 });

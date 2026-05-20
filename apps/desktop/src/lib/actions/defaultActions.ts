@@ -522,7 +522,6 @@ export const defaultActions = defineActions([
             canRun: canUseThemeEffect,
             argsSchema: themeEffectArgsSchema,
             run: async (context, effect) => {
-                await context.theme.setEffect(effect);
                 updateSettings(context, (settings) => {
                     settings.theme.effects = effect;
                 });

@@ -1,6 +1,7 @@
 import type { ContextKeyService, ContextKeySnapshot } from '$lib/context-keys';
 import type { RegisterActionServices } from '$lib/actions/types';
-import { CommandService, type CommandRouter } from '$lib/commands';
+import { CommandService } from '$lib/commands/commandService';
+import type { CommandRouter } from '$lib/commands/commandRouter';
 import { DisposableStore, toDisposable, type Disposable } from '$lib/utils/disposable';
 import { notebookStore } from '$lib/reader/stores/notebookStore';
 import { readerCommandState } from '$lib/reader/stores/readerCommandState';
@@ -55,18 +56,33 @@ function registerReaderContextSync(contextKeys: ContextKeyService): Disposable {
         getSnapshot: createReaderContextSnapshot,
         subscribe: (emit) => {
             const disposables = new DisposableStore();
+            let disposed = false;
+            let initialized = false;
+            let emitQueued = false;
+            const queueEmit = () => {
+                if (disposed || emitQueued) return;
+                emitQueued = true;
+                queueMicrotask(() => {
+                    emitQueued = false;
+                    if (!disposed) emit();
+                });
+            };
             const syncAndEmit = () => {
                 syncReaderContext();
-                emit();
+                if (initialized) queueEmit();
             };
 
             disposables.add(toDisposable(readerStore.subscribe(syncAndEmit)));
             disposables.add(toDisposable(sidebarStore.subscribe(syncAndEmit)));
             disposables.add(toDisposable(notebookStore.subscribe(syncAndEmit)));
             disposables.add(toDisposable(readerCommandState.subscribe(syncAndEmit)));
-            syncAndEmit();
+            syncReaderContext();
+            initialized = true;
 
-            return () => disposables.dispose();
+            return () => {
+                disposed = true;
+                disposables.dispose();
+            };
         }
     });
 

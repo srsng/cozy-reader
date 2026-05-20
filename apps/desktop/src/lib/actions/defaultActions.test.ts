@@ -197,20 +197,19 @@ describe('default actions', () => {
         expect(blurThemeContribution).toBeDefined();
         expect(await menuService.execute(blurThemeContribution!)).toBe(true);
         expect(getStoreValue(userSettings).theme.effects).toBe('blur');
-        expect(context.theme.setEffect).toHaveBeenCalledWith('blur');
+        expect(context.theme.setEffect).not.toHaveBeenCalled();
     });
 
-    it('does not update theme effect state when the platform command fails', async () => {
+    it('updates theme effect intent without applying platform effects directly', async () => {
         const { commandService, context, userSettings } = createServices();
         setSettingsContextState(userSettings, ContextKey.ThemeEffects, 'none');
         vi.mocked(context.theme.setEffect).mockRejectedValue(new Error('platform failed'));
 
-        await expect(commandService.execute('theme.effects.set', 'blur')).rejects.toThrow(
-            'platform failed'
-        );
+        await expect(commandService.execute('theme.effects.set', 'blur')).resolves.toBe(true);
 
-        expect(getStoreValue(userSettings).theme.effects).toBe('none');
-        expect(context.contextKeys.get(ContextKey.ThemeEffects)).toBe('none');
+        expect(getStoreValue(userSettings).theme.effects).toBe('blur');
+        expect(context.contextKeys.get(ContextKey.ThemeEffects)).toBe('blur');
+        expect(context.theme.setEffect).not.toHaveBeenCalled();
     });
 
     it('registers window chrome actions in the command palette', async () => {

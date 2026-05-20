@@ -19,6 +19,12 @@
         return w.setEffects(effects);
     }
 
+    async function applyWindowEffect(effect: AppThemeEffects): Promise<void> {
+        await w.clearEffects();
+        if (effect === 'none') return;
+        await setEffects({ effects: toEffects[effect] });
+    }
+
     function canUseEffect(effect: AppThemeEffects): boolean {
         switch (effect) {
             case 'none':
@@ -48,24 +54,22 @@
         applyFourColorsHue($userSettings.theme.data.four_colors.hue);
     });
 
+    $effect(() => {
+        const requestedEffect = $userSettings.theme.effects;
+        $appState.theme.effectAvailability;
+        const effect = canUseEffect(requestedEffect) ? requestedEffect : 'none';
+
+        applyWindowEffect(effect).catch((error) => {
+            console.error(`Failed to apply window effect "${effect}":`, error);
+        });
+    });
+
     onMount(() => {
         // 初始化 app web主题
         initializeTheme($userSettings.theme.type, $userSettings.theme.data);
 
         // 初始化窗口 theme
         w.setTheme(mode.current as WindowTheme).catch((e) => console.error(e));
-
-        // 初始化窗口 effects
-        if (!canUseEffect($userSettings.theme.effects)) {
-            setEffects({ effects: [] }).catch((error) => {
-                console.error('Failed to clear unavailable window effects:', error);
-            });
-            return;
-        }
-
-        setEffects({ effects: toEffects[$userSettings.theme.effects] }).catch((error) => {
-            console.error('Failed to initialize window effects:', error);
-        });
     });
 </script>
 

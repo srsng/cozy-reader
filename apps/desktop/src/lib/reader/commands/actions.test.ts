@@ -4,6 +4,10 @@ import { ContextKey } from '$lib/context-keys';
 import { MenuId } from '$lib/menus';
 import { createAppCommandHarness, setAppContextState } from '$lib/testing';
 import { registerDefaultActions } from '$lib/actions';
+import { activateReaderCommands } from './activation';
+import { readerCommandState } from '$lib/reader/stores/readerCommandState';
+import { readerStore } from '$lib/reader/stores/readerStore';
+import { sidebarStore } from '$lib/reader/stores/sidebarStore';
 import { ReaderContextKey } from './contextKeys';
 import {
     canExecuteReaderCommand,
@@ -63,6 +67,44 @@ function createServices(runtime: ReaderCommandRuntime) {
 }
 
 describe('reader command actions', () => {
+    it('projects reader state through activation and stops emitting after disposal', async () => {
+        const harness = createAppCommandHarness();
+        const listener = vi.fn();
+        const disposable = activateReaderCommands({
+            commandRouter: harness.commandRouter,
+            contextKeys: harness.context.contextKeys,
+            createCommandServiceContext: () => harness.context,
+            keybindingManager: harness.keybindingManager,
+            menuService: harness.menuService
+        });
+        const unlisten = harness.context.contextKeys.onDidChange(listener);
+
+        readerStore.setBookKeys(['book-1']);
+        sidebarStore.setVisible(true);
+        await Promise.resolve();
+
+        expect(harness.context.contextKeys.get(ReaderContextKey.BookOpen)).toBe(true);
+        expect(harness.context.contextKeys.get(ReaderContextKey.ActiveBookKey)).toBe('book-1');
+        expect(harness.context.contextKeys.get(ReaderContextKey.SidebarVisible)).toBe(true);
+        expect(listener).toHaveBeenCalled();
+
+        listener.mockClear();
+        disposable.dispose();
+        expect(listener).toHaveBeenCalledOnce();
+        listener.mockClear();
+
+        readerStore.setBookKeys(['book-2']);
+        await Promise.resolve();
+
+        expect(listener).not.toHaveBeenCalled();
+        expect(harness.context.contextKeys.get(ReaderContextKey.BookOpen)).toBeUndefined();
+
+        unlisten();
+        readerStore.setBookKeys([]);
+        sidebarStore.setVisible(false);
+        readerCommandState.setActiveBookKey(undefined);
+    });
+
     it('registers reader commands through palette and keybindings when a book is active', async () => {
         const runtime = createReaderRuntime({ activeBookKey: 'book-1', hasBook: true });
         const { commandRouter, menuService, keybindingManager, context } = createServices(runtime);

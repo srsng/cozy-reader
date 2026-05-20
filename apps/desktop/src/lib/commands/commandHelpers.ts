@@ -1,5 +1,4 @@
 import type { UserSettings } from '$lib/settings';
-import { setAppWindowFullscreen } from '$lib/stores/appState';
 import type { Writable } from 'svelte/store';
 import type { CommandContext } from './types';
 
@@ -59,6 +58,4 @@ export async function setAlwaysOnTop(context: CommandContext, value: boolean): P
 export async function toggleFullscreen(context: CommandContext): Promise<void> {
     await context.window.toggleFullscreen();
     await context.window.saveState();
-    const fullscreen = typeof document !== 'undefined' && Boolean(document.fullscreenElement);
-    setAppWindowFullscreen(context.appState, fullscreen);
 }
