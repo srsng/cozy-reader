@@ -48,7 +48,7 @@
             message={'没有给出有效书籍\n\n你是不小心来到这的吗？来了也没有奖励哦'}
         >
             {#snippet footer()}
-                <Button variant="secondary" onclick={goReaderHome}>返回书库</Button>
+                <Button variant="secondary" onclick={goReaderHome}>返回书架</Button>
             {/snippet}
         </View.Info>
     {:else}
@@ -75,7 +75,7 @@
             {/snippet}
 
             {#snippet footer()}
-                <Button variant="secondary" onclick={goReaderHome}>返回书库</Button>
+                <Button variant="secondary" onclick={goReaderHome}>返回书架</Button>
             {/snippet}
         </InfoCard>
     {/if}
@@ -83,7 +83,7 @@
     <View.Error
         title="添加失败"
         message={error.message}
-        footerBtnText="返回书库"
+        footerBtnText="返回书架"
         footerBtnOnclick={goReaderHome}
     />
 {/await}

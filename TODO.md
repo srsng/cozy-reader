@@ -110,7 +110,7 @@
 - [ ] 升级tauri等rust依赖，并排除可能的错误
 - [x] md支持渲染数学公式
 - [ ] 增强md：table等组件 [参考](node_modules.pnpm\marked@16.2.1\node_modules\marked\lib\marked.d.ts)
-- [x] 书籍drag添加到书库
+- [x] 书籍drag添加到书架
   - [x] 支持批量添加
 - [x] 找出dev时老是莫名无响应 ( 似乎是 最大化就触发)
 - [x] 给背景图添加：internal标注字段，创建时间

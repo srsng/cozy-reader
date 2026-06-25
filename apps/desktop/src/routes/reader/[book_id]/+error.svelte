@@ -14,6 +14,6 @@
 <View.Error
     title="错误"
     message={errorMessage}
-    footerBtnText="返回书库"
+    footerBtnText="返回书架"
     footerBtnOnclick={goReaderHome}
 />

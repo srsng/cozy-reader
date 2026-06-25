@@ -34,7 +34,7 @@
                     });
             }
 
-            // 延迟跳转回书库
+            // 延迟跳转回书架
             setTimeout(() => {
                 goReaderHome();
             }, 3000);
@@ -56,7 +56,7 @@
         ></div>
         <div class="space-y-2">
             <h2 class="text-foreground text-2xl font-bold">正在处理文件路径...</h2>
-            <p class="text-muted-foreground">正在检查文件并添加到书库中，请稍候。</p>
+            <p class="text-muted-foreground">正在检查文件并添加到书架中，请稍候。</p>
         </div>
 
         {#if page.params.path}

@@ -1,9 +1,9 @@
 <script lang="ts" module>
     import { confirm } from '@tauri-apps/plugin-dialog';
     import FileDrop from '$lib/components/common/file-drop.svelte';
+    import BookThumbnail from '$lib/components/common/BookThumbnail.svelte';
     import { Button } from '$ui/button';
-    import { Card, CardContent, CardHeader, CardTitle } from '$ui/card';
-    import { Trash2, Plus, BookOpen, FileText, Upload } from 'lucide-svelte';
+    import { Plus, BookOpen, FileText, Upload } from 'lucide-svelte';
     import type { Book } from '@cozy-reader/database';
     import { BookFormatNames } from '$lib/database/book/book.js';
     import { toast } from 'svelte-sonner';
@@ -22,15 +22,28 @@
     let books: Book[] = $state([]);
     const currentSettings = inject(USER_SETTINGS);
 
-    async function loadBooksUnsafe() {
+    async function loadBooks() {
         const result = await BookService.list();
+
         if (!result.success) {
-            toast.error('加载书籍列表失败', {
-                description: result.error || '加载书籍列表失败'
-            });
+            throw new Error(result.error || '加载书籍列表失败');
         }
+
         books = result.data || [];
     }
+
+    async function refreshBooks() {
+        try {
+            await loadBooks();
+        } catch (error) {
+            const message = error instanceof Error ? error.message : '加载书籍列表失败';
+            toast.error('加载书籍列表失败', {
+                description: message
+            });
+        }
+    }
+
+    const booksPromise = loadBooks();
 
     async function handleAddBook() {
         const selected = await open({
@@ -43,26 +56,30 @@
             ]
         });
 
-        if (selected) {
-            const result = await BookService.getInstance().addBookByFsPath(selected);
-
-            if (result.success) {
-                toast.success('书籍添加成功');
-            } else {
-                toast.error('添加书籍失败: ', {
-                    description: result.error
-                });
-            }
+        if (!selected) {
+            return;
         }
-        await loadBooksUnsafe();
+
+        const result = await BookService.getInstance().addBookByFsPath(selected);
+
+        if (result.success) {
+            toast.success('书籍添加成功');
+        } else {
+            toast.error('添加书籍失败', {
+                description: result.error
+            });
+        }
+
+        await refreshBooks();
     }
 
     async function handleDeleteBook(book: Book) {
         if (await confirm(`确定要删除书籍 "${book.title}" 吗？`)) {
             const result = await BookService.getInstance().softDelete(book.id);
+
             if (result.success) {
                 toast.success('书籍删除成功');
-                await loadBooksUnsafe();
+                await refreshBooks();
             } else {
                 toast.error('删除书籍失败', {
                     description: result.error
@@ -86,9 +103,9 @@
     }
 </script>
 
-{#await loadBooksUnsafe()}
+{#await booksPromise}
     <View.Loading />
-{:then _res}
+{:then}
     <FileDrop
         extensions={BookFormatNames}
         handleFiles={handleDrop}
@@ -97,105 +114,47 @@
         overlay
     >
         {#snippet children({ files, isDragOver })}
-            <div class="container mx-auto p-6" transition:slide>
-                <div class="mb-6 flex items-center justify-between">
-                    <h1 class="text-3xl font-bold">我的书库 files:</h1>
-                    <Button onclick={handleAddBook} class="flex items-center gap-2">
+            <div class="container mx-auto flex h-full min-h-0 flex-col px-6 py-6" transition:slide>
+                <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <h1 class="text-2xl font-semibold tracking-tight">我的书架</h1>
+                    </div>
+
+                    <Button onclick={handleAddBook} class="shrink-0 gap-2">
                         <Plus class="h-4 w-4" />
                         添加书籍
                     </Button>
                 </div>
 
-                {#if books.length === 0}
-                    <div class="flex h-64 flex-col items-center justify-center text-center">
-                        <BookOpen class="text-muted-foreground mb-4 h-16 w-16" />
-                        <h2 class="mb-2 text-xl font-semibold">还没有添加任何书籍</h2>
-                        <p class="text-muted-foreground mb-4">
-                            点击上方的"添加书籍"按钮开始添加您的第一本书
-                        </p>
-                        <Button onclick={handleAddBook} class="flex items-center gap-2">
-                            <Plus class="h-4 w-4" />
-                            添加书籍
-                        </Button>
-                    </div>
-                {:else}
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {#each books as book (book.id)}
-                            <!-- todo animate:flip -->
-                            <Card class="cursor-pointer transition-shadow hover:shadow-lg">
-                                <CardHeader class="pb-3">
-                                    <div class="flex items-start justify-between">
-                                        <CardTitle class="line-clamp-2 text-lg"
-                                            >{book.title}</CardTitle
-                                        >
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onclick={(e) => {
-                                                e.stopPropagation();
-                                                handleDeleteBook(book);
-                                            }}
-                                            class="text-destructive hover:text-destructive"
-                                        >
-                                            <Trash2 class="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                    {#if book.author}
-                                        <p class="text-muted-foreground text-sm">
-                                            作者: {book.author}
-                                        </p>
-                                    {/if}
-                                </CardHeader>
-                                <CardContent>
-                                    <div class="space-y-3">
-                                        <Button onclick={() => goReadBook(book.id)}>Read</Button>
-                                        <!-- 阅读进度 -->
-                                        <!-- <div class="flex items-center gap-2">
-								<Clock class="text-muted-foreground h-4 w-4" />
-								<span class="text-muted-foreground text-sm">
-								progress: {formatProgress(book.current_progress)}%
-							</span>
-							</div> -->
-
-                                        <!-- 状态 -->
-                                        <!-- <div class="flex items-center gap-2">
-								<Badge
-									variant={book.status === 'reading'
-										? 'default'
-										: book.status === 'completed'
-											? 'secondary'
-											: 'outline'}
-								>
-									{book.status === 'reading'
-										? '阅读中'
-										: book.status === 'completed'
-											? '已完成'
-											: '未开始'}
-								</Badge>
-							</div> -->
-
-                                        <!-- 标签 -->
-                                        <!-- {#if book.tags && book.tags.length > 0}
-								<div class="flex flex-wrap gap-1">
-									{#each book.tags as tag}
-										<Badge variant="outline" class="text-xs">{tag}</Badge>
-									{/each}
-								</div>
-							{/if} -->
-
-                                        <!-- 添加时间 -->
-                                        <div
-                                            class="text-muted-foreground flex items-center gap-2 text-xs"
-                                        >
-                                            <FileText class="h-3 w-3" />
-                                            <span>添加于 {formatDate(book.addedAt)}</span>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        {/each}
-                    </div>
-                {/if}
+                <div class="min-h-0 flex-1 overflow-y-auto pb-2 pr-1">
+                    {#if books.length === 0}
+                        <div
+                            class="flex min-h-full flex-col items-center justify-center text-center"
+                        >
+                            <BookOpen class="text-muted-foreground mb-4 h-16 w-16" />
+                            <h2 class="text-xl font-semibold">还没有添加任何书籍</h2>
+                            <p class="text-muted-foreground mt-2 max-w-sm text-sm">
+                                点击右上角按钮添加书籍，或者直接拖放文件到页面中。
+                            </p>
+                            <Button onclick={handleAddBook} class="mt-5 gap-2">
+                                <Plus class="h-4 w-4" />
+                                添加书籍
+                            </Button>
+                        </div>
+                    {:else}
+                        <div
+                            class="grid grid-cols-2 gap-4 py-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
+                        >
+                            {#each books as book (book.id)}
+                                <BookThumbnail
+                                    {book}
+                                    onOpen={() => goReadBook(book.id)}
+                                    onDelete={() => handleDeleteBook(book)}
+                                />
+                            {/each}
+                        </div>
+                    {/if}
+                </div>
             </div>
         {/snippet}
 
@@ -237,8 +196,7 @@
                                     {#each invalidFiles as file}
                                         <div class="flex items-center gap-2 text-sm">
                                             <FileText class="text-primary h-4 w-4 flex-shrink-0" />
-                                            <span class="truncate">{file.split(/[\\/]/).pop()}</span
-                                            >
+                                            <span class="truncate">{file.split(/[\\/]/).pop()}</span>
                                         </div>
                                     {/each}
                                 </div>
@@ -251,7 +209,7 @@
     </FileDrop>
 {:catch error}
     <View.Error
-        title="加载书库失败"
+        title="加载书架失败"
         message={error.message}
         footerBtnText="返回主页"
         footerBtnOnclick={goHome}

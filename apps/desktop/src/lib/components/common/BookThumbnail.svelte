@@ -1,73 +1,133 @@
 <script lang="ts">
-    import { Trash2Icon } from 'lucide-svelte';
-    import { goto } from '$app/navigation';
-    const { book } = $props();
-    const onOpen = () => {
-        console.log(book);
-        goto(`/reader/${book.fileName}`);
-        // $emit('open-book', book.fileName);
-    };
-    const onDelete = () => {
-        // $emit('delete-book', book.fileName);
-    };
+    import type { Book } from '@cozy-reader/database';
+    import { Trash2 } from 'lucide-svelte';
+    import { cn } from '$lib/utils.js';
 
-    const truncatedTitle = $derived.by(() => {
-        if (book.title) {
-            const colonIndex = book.title.indexOf(':');
-            return colonIndex !== -1 ? book.title.slice(0, colonIndex).trim() : book.title;
+    interface Props {
+        book: Book;
+        onOpen: () => void;
+        onDelete?: () => void;
+        class?: string;
+    }
+
+    const coverPalette = [
+        '#BC5377',
+        '#B04C63',
+        '#B25564',
+        '#C15859',
+        '#BF6150',
+        '#C76849',
+        '#C57140',
+        '#C68245',
+        '#D0953E',
+        '#DAB062',
+        '#D9AB60',
+        '#C4AC58',
+        '#B6AC56',
+        '#B0BB6D',
+        '#969F68',
+        '#83A86B',
+        '#69A076',
+        '#5CA58A',
+        '#47938F',
+        '#3C8585',
+        '#6B7096'
+    ] as const;
+
+    let { book, onOpen, onDelete, class: className = '' }: Props = $props();
+
+    const displayTitle = $derived.by(() => formatTitle(book.title));
+    const displayAuthor = $derived.by(() => formatAuthor(book.author));
+    const coverColor = $derived.by(() => pickCoverColor(book));
+
+    function formatTitle(title: string | null | undefined): string {
+        const normalized = title?.trim();
+
+        if (!normalized) {
+            return 'Untitled';
         }
-        return 'Untitled';
-    });
+
+        const colonIndex = normalized.search(/[:：]/);
+        if (colonIndex === -1) {
+            return normalized;
+        }
+
+        return normalized.slice(0, colonIndex).trim() || normalized;
+    }
+
+    function formatAuthor(author: string | null | undefined): string | null {
+        const normalized = author?.trim();
+
+        if (!normalized || normalized === 'Unknown Author') {
+            return null;
+        }
+
+        return normalized;
+    }
+
+    function hashString(value: string): number {
+        let hash = 0;
+
+        for (let index = 0; index < value.length; index += 1) {
+            hash = (hash * 31 + value.charCodeAt(index)) | 0;
+        }
+
+        return Math.abs(hash);
+    }
+
+    function pickCoverColor(book: Book): string {
+        const seed = hashString(`${book.id}:${book.path}:${book.title}`);
+        return coverPalette[seed % coverPalette.length];
+    }
 </script>
 
-<!-- todo -->
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-    class="book-item group relative mb-0 h-fit select-none rounded-r-lg hover:cursor-pointer"
+    class={cn(
+        'book-item group relative overflow-hidden rounded-r-lg transition-shadow hover:cursor-pointer hover:shadow-lg hover:bg-black/30',
+        className
+    )}
+    style:background-color={coverColor}
+    role="button"
+    tabindex="0"
+    aria-label={`打开《${displayTitle}》`}
+    title={displayTitle}
     onclick={onOpen}
-    style:backgroundColor={book.color}
+    onkeydown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onOpen();
+        }
+    }}
 >
-    <div class="transition duration-200 hover:bg-black/20">
-        <div class="default-cover flex aspect-[3/4.5] w-full flex-col overflow-hidden rounded-r-lg">
-            {#if book.coverUrl}
-                <div>
-                    <img
-                        src={book.coverUrl}
-                        loading="lazy"
-                        alt="thumbnail"
-                        class=" from-transparent to-black/20 transition-shadow hover:bg-black/30 hover:shadow-lg"
-                    />
-                    <div class="truncate p-1">
-                        {truncatedTitle}
-                    </div>
-                </div>
-            {:else}
-                <div class=" p-4">
-                    <h2
-                        class="md:text-md tracking-snug text-base-content from-transparent to-black/20 text-xl font-semibold leading-snug hover:bg-black/30"
-                    >
-                        {truncatedTitle}
-                    </h2>
-                    {#if book.author && book.author !== 'Unknown Author'}
-                        <p
-                            class="md:text-md tracking-snug text-base-content text-xl font-semibold leading-snug"
-                        >
-                            {book.author}
-                        </p>
-                    {/if}
-                </div>
-            {/if}
+    <div class="transition duration-200 group-hover:bg-black/20">
+        <div
+            class="default-cover flex aspect-[3/4.5] w-full flex-col overflow-hidden rounded-r-lg bg-gradient-to-b from-transparent to-black/20"
+        >
+            <div class="p-4">
+                <h2 class="text-xl font-semibold leading-snug tracking-snug text-white md:text-sm">
+                    {displayTitle}
+                </h2>
+                {#if displayAuthor}
+                    <p class="text-xl font-semibold leading-snug tracking-snug text-black md:text-sm">
+                        {displayAuthor}
+                    </p>
+                {/if}
+            </div>
         </div>
 
-        <button
-            onclick={onDelete}
-            class="delete-icon bg-base-300 hover:bg-error hover:text-error-content absolute bottom-2 right-2 rounded-full p-2 opacity-0 transition duration-200 hover:opacity-100 group-hover:opacity-60"
-        >
-            <Trash2Icon></Trash2Icon>
-        </button>
+        {#if onDelete}
+            <button
+                type="button"
+                class="delete-icon absolute bottom-2 right-2 rounded-full bg-white p-2 opacity-0 transition duration-200 hover:bg-white/50 group-hover:opacity-100 group-focus-within:opacity-100"
+                aria-label={`删除《${displayTitle}》`}
+                title="删除书籍"
+                onclick={(event) => {
+                    event.stopPropagation();
+                    onDelete?.();
+                }}
+            >
+                <Trash2 class="h-4 w-4 text-black" />
+            </button>
+        {/if}
     </div>
 </div>
-
-<style>
-</style>
