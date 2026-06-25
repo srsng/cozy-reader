@@ -7,7 +7,6 @@
     import { getTitleBarContribution } from './titlebarContributions';
     import { getTitleBarIcon } from './titlebarIcons';
     import { titleBarButtonClass, titleBarTextButtonClass } from './titlebarLayout';
-    import { onDestroy } from 'svelte';
 </script>
 
 <script lang="ts">
@@ -41,12 +40,12 @@
 
     let menuChangeVersion = $state(0);
     let buttonElement: HTMLButtonElement | null = $state(null);
-    const disposable = menuService.onDidChange(() => {
-        menuChangeVersion += 1;
-    });
+    $effect(() => {
+        const disposable = menuService.onDidChange(() => {
+            menuChangeVersion += 1;
+        });
 
-    onDestroy(() => {
-        disposable.dispose();
+        return () => disposable.dispose();
     });
 
     const contribution = $derived.by(() => {

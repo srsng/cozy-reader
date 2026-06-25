@@ -27,7 +27,6 @@
 </script>
 
 <script lang="ts">
-    import { onDestroy } from 'svelte';
     import { fade, scale, slide } from 'svelte/transition';
 
     const menuService = inject(MENU_SERVICE);
@@ -43,11 +42,13 @@
     } = $props();
 
     let menuChangeVersion = $state(0);
-    const disposable = menuService.onDidChange(() => {
-        menuChangeVersion += 1;
-    });
+    $effect(() => {
+        const disposable = menuService.onDidChange(() => {
+            menuChangeVersion += 1;
+        });
 
-    onDestroy(() => disposable.dispose());
+        return () => disposable.dispose();
+    });
 
     const sections: BarSection[] = ['left', 'center', 'right'];
     const sectionLabels: Record<BarSection, string> = {
