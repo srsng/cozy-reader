@@ -5,6 +5,7 @@ import AppTitleButton from './util-btn/app-title.svelte';
 import AppDragButton from './util-btn/app-drag.svelte';
 import ThemeToggleButton from './util-btn/theme-toggle.svelte';
 import ZoomButton from './util-btn/zoom-popover.svelte';
+import AlwaysOnTopButton from './util-btn/main-window-alway-on-top.svelte';
 import { getCommandInvocationKey } from '$lib/commands/invocation';
 import type { TitleBarIconId } from '$lib/settings/Layout';
 import { getDefaultTitleBarIconId, getTitleBarIcon } from './titlebarIcons';
@@ -77,6 +78,16 @@ export const staticTitleBarContributions: TitleBarContribution[] = [
         icon: getTitleBarIcon('theme')
     },
     {
+        id: 'window.toggleAlwaysOnTop',
+        title: '始终置顶',
+        kind: 'component',
+        order: 35,
+        category: 'window',
+        component: AlwaysOnTopButton,
+        iconId: 'pin',
+        icon: getTitleBarIcon('pin')
+    },
+    {
         id: 'window.dragRegion',
         title: '拖拽区域',
         kind: 'component',
@@ -109,16 +120,27 @@ export function getTitleBarContribution(
 export function getAvailableTitleBarContributions(
     menuService: MenuService
 ): TitleBarContribution[] {
-    return [
-        ...staticTitleBarContributions,
-        ...menuService.getItems(MenuId.TitleBar).map(menuContributionToTitleBarContribution)
-    ].sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
+    const byId = new Map<string, TitleBarContribution>();
+
+    for (const contribution of staticTitleBarContributions) {
+        byId.set(contribution.id, contribution);
+    }
+
+    for (const contribution of menuService.getItems(MenuId.TitleBar)) {
+        if (byId.has(contribution.id)) continue;
+        byId.set(contribution.id, menuContributionToTitleBarContribution(contribution));
+    }
+
+    return Array.from(byId.values()).sort(
+        (left, right) => left.order - right.order || left.title.localeCompare(right.title)
+    );
 }
 
 export function getTitleBarCommandCandidates(menuService: MenuService): TitleBarContribution[] {
     const byId = new Map<string, TitleBarContribution>();
 
     for (const menuContribution of getMenuContributions(menuService)) {
+        if (staticTitleBarContributionMap.has(menuContribution.id)) continue;
         if (byId.has(menuContribution.id)) continue;
         byId.set(menuContribution.id, menuContributionToTitleBarContribution(menuContribution));
     }
