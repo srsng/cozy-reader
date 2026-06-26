@@ -39,6 +39,8 @@
                 </ChildComponent>
             {/each}
         </CurrentComponent>
+    {:else if type === 'hr'}
+        <CurrentComponent />
     {:else}
         <CurrentComponent {...rest} {mdSrcPath}>
             {#if 'tokens' in rest && rest.tokens}
