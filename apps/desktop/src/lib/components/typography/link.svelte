@@ -6,6 +6,7 @@
     import { Link as LinkIcon } from 'lucide-svelte';
     import type { Snippet } from 'svelte';
     import type { HTMLAnchorAttributes } from 'svelte/elements';
+    import { MARKDOWN_RAW_TEXT_ATTRIBUTE } from '$components/reader/markdown/markdown-copy';
 
     function handleClick(e: MouseEvent, href: string) {
         e.stopPropagation();
@@ -47,6 +48,7 @@
         rel: 'noopener noreferrer',
         class: cn('text-primary leading-[inherit] underline-offset-4 hover:underline', className),
         onclick: (e: MouseEvent) => handleClick(e, href),
+        [MARKDOWN_RAW_TEXT_ATTRIBUTE]: _raw,
         ...restProps
     });
 </script>
@@ -56,7 +58,7 @@
         <Tooltip.Trigger>
             {#snippet child({ props })}
                 {@const { type: _type, ...tooltipProps } = props}
-                <a {...mergeProps(anchorProps, tooltipProps)} data-markdown-raw-text={_raw}>
+                <a {...mergeProps(anchorProps, tooltipProps)}>
                     <LinkIcon
                         aria-hidden="true"
                         class="text-muted-foreground pointer-events-none mr-1 inline size-3 align-[0.1em]"

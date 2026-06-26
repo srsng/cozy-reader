@@ -1,5 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vitest';
+import { MARKDOWN_RAW_TEXT_ATTRIBUTE } from './markdown-copy';
 import Markdown from './Markdown.svelte';
 
 function withoutSvelteComments(html: string): string {
@@ -110,16 +111,19 @@ describe('Markdown rendering', () => {
         expect(body).toContain('data-markdown-copy-text="$a+b$"');
     });
 
-    it('does not render markdown link token internals as anchor attributes', () => {
+    it('renders links with copy metadata without leaking token internals as anchor attributes', () => {
         const { body } = renderMarkdown('[Visible](https://example.com "Official")');
 
         expect(body).toContain('href="https://example.com"');
         expect(body).toContain('title="Official"');
         expect(body).toContain('Visible');
+        expect(body).toContain(
+            `${MARKDOWN_RAW_TEXT_ATTRIBUTE}="[Visible](https://example.com &quot;Official&quot;)"`
+        );
         expect(body).not.toContain('D:\\books\\README.md');
-        expect(body).not.toContain('[Visible](https://example.com &quot;Official&quot;)');
         expect(body).not.toContain('raw=');
-        expect(body).not.toContain('text=');
+        expect(body).not.toContain(' text="');
+        expect(body).not.toContain('data-text=');
         expect(body).not.toContain('tokens=');
         expect(body).not.toContain('mdSrcPath');
         expect(body).not.toContain('mdsrcpath');
