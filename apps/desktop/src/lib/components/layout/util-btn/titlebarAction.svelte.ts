@@ -1,14 +1,21 @@
 import { MenuId, type MenuContribution, type MenuService } from '$lib/menus';
+import { createDeferredInvalidation } from '$lib/utils/deferredInvalidation';
 
 export function createTitleBarAction(menuService: MenuService, id: string, fallbackTitle: string) {
     let menuChangeVersion = $state(0);
+    const invalidate = createDeferredInvalidation(() => {
+        menuChangeVersion += 1;
+    });
 
     $effect(() => {
         const disposable = menuService.onDidChange(() => {
-            menuChangeVersion += 1;
+            invalidate.schedule();
         });
 
-        return () => disposable.dispose();
+        return () => {
+            disposable.dispose();
+            invalidate.dispose();
+        };
     });
 
     const contribution = $derived.by((): MenuContribution | undefined => {

@@ -1,4 +1,4 @@
-import { writable, type Writable } from 'svelte/store';
+import { get, writable, type Writable } from 'svelte/store';
 import {
     createDefaultAppState,
     DEFAULT_APP_STATE,
@@ -22,6 +22,8 @@ export function resetAppTitle(appState: Writable<AppState>): void {
 }
 
 export function setAppTextInputFocus(appState: Writable<AppState>, focused: boolean): void {
+    if (get(appState).ui.textInputFocus === focused) return;
+
     appState.update((state) => ({
         ...state,
         ui: {

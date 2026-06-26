@@ -41,4 +41,20 @@ describe('AppState store', () => {
             }
         });
     });
+
+    it('does not notify subscribers when text input focus is unchanged', () => {
+        const appState = initAppState();
+        let notificationCount = 0;
+        const unsubscribe = appState.subscribe(() => {
+            notificationCount += 1;
+        });
+
+        setAppTextInputFocus(appState, false);
+        expect(notificationCount).toBe(1);
+
+        setAppTextInputFocus(appState, true);
+        expect(notificationCount).toBe(2);
+
+        unsubscribe();
+    });
 });

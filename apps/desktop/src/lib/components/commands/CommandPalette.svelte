@@ -9,6 +9,7 @@
     import { ScrollArea } from '$components/ui/scroll-area';
     import { toast } from 'svelte-sonner';
     import { APP_STATE, setAppCommandPaletteOpen } from '$lib/stores/appState';
+    import { createDeferredInvalidation } from '$lib/utils/deferredInvalidation';
 
     const menuService = inject(MENU_SERVICE);
     const contextKeys = inject(CONTEXT_KEY_SERVICE);
@@ -16,6 +17,9 @@
 
     let value = $state('');
     let version = $state(0);
+    const invalidate = createDeferredInvalidation(() => {
+        version += 1;
+    });
 
     const commands = $derived.by(() => {
         version;
@@ -37,15 +41,16 @@
     $effect(() => {
         const contextDisposable = contextKeys.onDidChange((snapshot) => {
             snapshot;
-            version += 1;
+            invalidate.schedule();
         });
         const menuDisposable = menuService.onDidChange(() => {
-            version += 1;
+            invalidate.schedule();
         });
 
         return () => {
             contextDisposable();
             menuDisposable.dispose();
+            invalidate.dispose();
         };
     });
 

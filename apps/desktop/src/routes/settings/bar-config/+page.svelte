@@ -29,6 +29,7 @@
         type TitleBarContribution
     } from '$lib/components/layout/titlebarContributions';
     import { inject } from '$lib/utils/context';
+    import { createDeferredInvalidation } from '$lib/utils/deferredInvalidation';
     import { forceSaveUserSettings, USER_SETTINGS } from '$lib/stores/userSettings';
     import { Pencil, Plus, RotateCcw, Save, Undo2 } from 'lucide-svelte';
     import { onDestroy } from 'svelte';
@@ -40,11 +41,17 @@
     const menuService = inject(MENU_SERVICE);
 
     let menuChangeVersion = $state(0);
-    const disposable = menuService.onDidChange(() => {
+    const invalidate = createDeferredInvalidation(() => {
         menuChangeVersion += 1;
     });
+    const disposable = menuService.onDidChange(() => {
+        invalidate.schedule();
+    });
 
-    onDestroy(() => disposable.dispose());
+    onDestroy(() => {
+        disposable.dispose();
+        invalidate.dispose();
+    });
 
     const contributions = $derived.by(() => {
         menuChangeVersion;

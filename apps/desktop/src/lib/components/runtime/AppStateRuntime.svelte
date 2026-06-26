@@ -6,6 +6,7 @@
     import { createRouteContextProjection } from '$lib/state/contextSnapshot';
     import { APP_STATE, setAppTextInputFocus } from '$lib/stores/appState';
     import { inject } from '$lib/utils/context';
+    import { createDeferredInvalidation } from '$lib/utils/deferredInvalidation';
     import { updatePageHistory } from '$lib/utils/route.svelte';
     import { onDestroy, onMount } from 'svelte';
 </script>
@@ -37,15 +38,21 @@
     onDestroy(() => routeProjection.dispose());
 
     onMount(() => {
-        const textInputUpdater = keybindingManager.setTextInputFocusUpdater((focused) => {
-            setAppTextInputFocus(appState, focused);
+        let nextTextInputFocus = false;
+        const textInputFocusInvalidation = createDeferredInvalidation(() => {
+            setAppTextInputFocus(appState, nextTextInputFocus);
         });
+        const scheduleTextInputFocus = (focused: boolean) => {
+            nextTextInputFocus = focused;
+            textInputFocusInvalidation.schedule();
+        };
+        const textInputUpdater = keybindingManager.setTextInputFocusUpdater(scheduleTextInputFocus);
         const isTextInput = (target: EventTarget | null): boolean => {
             if (!(target instanceof HTMLElement)) return false;
             return Boolean(target.closest('input, textarea, select, [contenteditable="true"]'));
         };
         const updateTextInputFocus = () => {
-            setAppTextInputFocus(appState, isTextInput(document.activeElement));
+            scheduleTextInputFocus(isTextInput(document.activeElement));
         };
         const handleFocusChange = () => {
             updateTextInputFocus();
@@ -57,6 +64,7 @@
         document.addEventListener('focusout', handleFocusChange, true);
 
         return () => {
+            textInputFocusInvalidation.dispose();
             textInputUpdater.dispose();
             document.removeEventListener('focusin', handleFocusChange, true);
             document.removeEventListener('focusout', handleFocusChange, true);

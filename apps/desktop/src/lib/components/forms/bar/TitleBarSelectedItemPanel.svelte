@@ -17,6 +17,7 @@
     } from '$lib/settings/Layout';
     import { getTitleBarContribution } from '$lib/components/layout/titlebarContributions';
     import { titleBarIconDefinitions } from '$lib/components/layout/titlebarIcons';
+    import { createDeferredInvalidation } from '$lib/utils/deferredInvalidation';
     import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Trash2 } from 'lucide-svelte';
 
     type FlatTitleBarItem = {
@@ -42,12 +43,18 @@
     } = $props();
 
     let menuChangeVersion = $state(0);
+    const invalidate = createDeferredInvalidation(() => {
+        menuChangeVersion += 1;
+    });
     $effect(() => {
         const disposable = menuService.onDidChange(() => {
-            menuChangeVersion += 1;
+            invalidate.schedule();
         });
 
-        return () => disposable.dispose();
+        return () => {
+            disposable.dispose();
+            invalidate.dispose();
+        };
     });
 
     const sections: BarSection[] = ['left', 'center', 'right'];

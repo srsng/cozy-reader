@@ -7,6 +7,7 @@
     import { getTitleBarContribution } from './titlebarContributions';
     import { getTitleBarIcon } from './titlebarIcons';
     import { titleBarButtonClass, titleBarTextButtonClass } from './titlebarLayout';
+    import { createDeferredInvalidation } from '$lib/utils/deferredInvalidation';
 </script>
 
 <script lang="ts">
@@ -40,12 +41,18 @@
 
     let menuChangeVersion = $state(0);
     let buttonElement: HTMLButtonElement | null = $state(null);
+    const invalidate = createDeferredInvalidation(() => {
+        menuChangeVersion += 1;
+    });
     $effect(() => {
         const disposable = menuService.onDidChange(() => {
-            menuChangeVersion += 1;
+            invalidate.schedule();
         });
 
-        return () => disposable.dispose();
+        return () => {
+            disposable.dispose();
+            invalidate.dispose();
+        };
     });
 
     const contribution = $derived.by(() => {
