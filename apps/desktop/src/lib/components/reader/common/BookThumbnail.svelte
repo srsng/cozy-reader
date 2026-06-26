@@ -1,7 +1,8 @@
-<script lang="ts">
+<script lang="ts" module>
     import type { Book } from '@cozy-reader/database';
     import { Trash2 } from 'lucide-svelte';
     import { cn } from '$lib/utils.js';
+    import { Button } from '$components/ui/button';
 
     interface Props {
         book: Book;
@@ -34,20 +35,7 @@
         '#6B7096'
     ] as const;
 
-    let { book, onOpen, onDelete, class: className = '' }: Props = $props();
-
-    let coverLoadFailed = $state(false);
-
-    const displayTitle = $derived.by(() => formatTitle(book.title));
-    const displayAuthor = $derived.by(() => formatAuthor(book.author));
-    const coverColor = $derived.by(() => pickCoverColor(book));
-    const coverSrc = $derived.by(() => book.cover?.trim() || null);
-
-    $effect(() => {
-        if (coverSrc) {
-            coverLoadFailed = false;
-        }
-    });
+    const coverBaseClass = 'aspect-[3/4.5] w-full select-none overflow-hidden rounded-r-lg';
 
     function formatTitle(title: string | null | undefined): string {
         const normalized = title?.trim();
@@ -84,21 +72,69 @@
         return Math.abs(hash);
     }
 
+    // todo: 考虑优化
     function pickCoverColor(book: Book): string {
         const seed = hashString(`${book.id}:${book.path}:${book.title}`);
         return coverPalette[seed % coverPalette.length];
     }
 </script>
 
+<script lang="ts">
+    let { book, onOpen, onDelete, class: className = '' }: Props = $props();
+
+    let coverLoadFailed = $state(false);
+
+    const displayTitle = $derived.by(() => formatTitle(book.title));
+    const displayAuthor = $derived.by(() => formatAuthor(book.author));
+    const coverColor = $derived.by(() => pickCoverColor(book));
+    const coverSrc = $derived.by(() => book.cover?.trim() || null);
+
+    $effect(() => {
+        if (coverSrc) {
+            coverLoadFailed = false;
+        }
+    });
+</script>
+
+{#snippet oriCover()}
+    <div class={cn(coverBaseClass)}>
+        <img
+            src={coverSrc}
+            alt={displayTitle}
+            class="h-full w-full object-cover"
+            loading="lazy"
+            draggable="false"
+            onerror={() => {
+                coverLoadFailed = true;
+            }}
+        />
+    </div>
+{/snippet}
+
+{#snippet customCover()}
+    <div class={cn(coverBaseClass, 'flex flex-col bg-gradient-to-b from-transparent to-black/20')}>
+        <div class="p-4">
+            <h2 class="tracking-snug text-xl font-semibold leading-snug text-white md:text-sm">
+                {displayTitle}
+            </h2>
+            {#if displayAuthor}
+                <p class="tracking-snug text-xl font-semibold leading-snug text-black md:text-sm">
+                    {displayAuthor}
+                </p>
+            {/if}
+        </div>
+    </div>
+{/snippet}
+
 <div
     class={cn(
-        'book-item group relative overflow-hidden rounded-r-lg transition-shadow hover:cursor-pointer hover:shadow-lg hover:bg-black/30',
+        'book-item group relative overflow-hidden rounded-r-lg transition-shadow hover:cursor-pointer hover:bg-black/30 hover:shadow-lg',
         className
     )}
     style:background-color={coverColor}
     role="button"
     tabindex="0"
-    aria-label={`打开《${displayTitle}》`}
+    aria-label={`书籍《${displayTitle}》`}
     title={displayTitle}
     onclick={onOpen}
     onkeydown={(event) => {
@@ -110,50 +146,15 @@
 >
     <div class="transition duration-200 group-hover:bg-black/20">
         {#if coverSrc && !coverLoadFailed}
-            <div class="default-cover relative aspect-[3/4.5] w-full overflow-hidden rounded-r-lg">
-                <img
-                    src={coverSrc}
-                    alt={displayTitle}
-                    class="h-full w-full object-cover"
-                    loading="lazy"
-                    draggable="false"
-                    onerror={() => {
-                        coverLoadFailed = true;
-                    }}
-                />
-
-                <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent p-4">
-                    <h2 class="text-xl font-semibold leading-snug tracking-snug text-white md:text-sm">
-                        {displayTitle}
-                    </h2>
-                    {#if displayAuthor}
-                        <p class="text-xl font-semibold leading-snug tracking-snug text-white/85 md:text-sm">
-                            {displayAuthor}
-                        </p>
-                    {/if}
-                </div>
-            </div>
+            {@render oriCover()}
         {:else}
-            <div
-                class="default-cover flex aspect-[3/4.5] w-full flex-col overflow-hidden rounded-r-lg bg-gradient-to-b from-transparent to-black/20"
-            >
-                <div class="p-4">
-                    <h2 class="text-xl font-semibold leading-snug tracking-snug text-white md:text-sm">
-                        {displayTitle}
-                    </h2>
-                    {#if displayAuthor}
-                        <p class="text-xl font-semibold leading-snug tracking-snug text-black md:text-sm">
-                            {displayAuthor}
-                        </p>
-                    {/if}
-                </div>
-            </div>
+            {@render customCover()}
         {/if}
 
         {#if onDelete}
             <button
                 type="button"
-                class="delete-icon absolute bottom-2 right-2 rounded-full bg-white p-2 opacity-0 transition duration-200 hover:bg-white/50 group-hover:opacity-100 group-focus-within:opacity-100"
+                class="delete-icon absolute bottom-2 right-2 rounded-full bg-white p-2 opacity-0 transition duration-200 hover:bg-white/50 group-focus-within:opacity-100 group-hover:opacity-100"
                 aria-label={`删除《${displayTitle}》`}
                 title="删除书籍"
                 onclick={(event) => {

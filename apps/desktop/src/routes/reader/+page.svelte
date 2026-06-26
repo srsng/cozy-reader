@@ -1,7 +1,7 @@
 <script lang="ts" module>
     import { confirm } from '@tauri-apps/plugin-dialog';
     import FileDrop from '$lib/components/common/file-drop.svelte';
-    import BookThumbnail from '$lib/components/common/BookThumbnail.svelte';
+    import BookThumbnail from '$components/reader/common/BookThumbnail.svelte';
     import { Button } from '$ui/button';
     import { Plus, BookOpen, FileText, Upload } from 'lucide-svelte';
     import type { Book } from '@cozy-reader/database';
