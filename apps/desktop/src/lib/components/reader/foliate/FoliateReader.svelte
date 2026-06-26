@@ -208,13 +208,13 @@
 
     const handleProgressRelocate = (event: Event) => {
         const detail = (event as CustomEvent).detail;
-        // foliate-js 的 relocate 事件 detail 包含: { cfi, tocItem, pageItem, range, ...progress }
-        // progress 包含: section, pageinfo, timeinfo 等
+        // foliate-js 的 relocate 事件 detail 包含: { cfi, tocItem, pageItem, location, time, range, ...progress }
+        // progress 包含: section, location, time 等
         const location = detail.cfi || '';
         const tocItem = detail.tocItem || null;
         const section = detail.section || { current: 0, total: 0 };
-        const pageinfo = detail.pageinfo || detail.pageItem || { current: 0, total: 0 };
-        const timeinfo = detail.timeinfo || detail.time || { section: 0, total: 0 };
+        const pageinfo = detail.location || { current: 0, next: 0, total: 0 };
+        const timeinfo = detail.time || { section: 0, total: 0 };
 
         const now = Date.now();
 
