@@ -93,6 +93,31 @@
         return formatDateWithLangCode(dateInput, $currentSettings.base.langCode);
     }
 
+    function formatBookTitle(title: string | null | undefined): string {
+        const normalized = title?.trim();
+
+        if (!normalized) {
+            return 'Untitled';
+        }
+
+        const colonIndex = normalized.search(/[:：]/);
+        if (colonIndex === -1) {
+            return normalized;
+        }
+
+        return normalized.slice(0, colonIndex).trim() || normalized;
+    }
+
+    function formatBookAuthor(author: string | null | undefined): string | null {
+        const normalized = author?.trim();
+
+        if (!normalized || normalized === 'Unknown Author') {
+            return null;
+        }
+
+        return normalized;
+    }
+
     function handleDrop(files: string[]) {
         goReaderBatchAddPaths(files);
     }
@@ -145,11 +170,26 @@
                             class="grid grid-cols-2 gap-4 py-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
                         >
                             {#each books as book (book.id)}
-                                <BookThumbnail
-                                    {book}
-                                    onOpen={() => goReadBook(book.id)}
-                                    onDelete={() => handleDeleteBook(book)}
-                                />
+                                {@const displayTitle = formatBookTitle(book.title)}
+                                {@const displayAuthor = formatBookAuthor(book.author)}
+                                <div class="flex min-w-0 flex-col gap-2">
+                                    <BookThumbnail
+                                        class="w-full"
+                                        {book}
+                                        onOpen={() => goReadBook(book.id)}
+                                        onDelete={() => handleDeleteBook(book)}
+                                    />
+                                    <div class="min-w-0 px-1">
+                                        <h2 class="line-clamp-2 text-sm font-medium leading-snug text-foreground" title={displayTitle}>
+                                            {displayTitle}
+                                        </h2>
+                                        {#if displayAuthor}
+                                            <p class="line-clamp-1 text-xs leading-snug text-muted-foreground" title={displayAuthor}>
+                                                {displayAuthor}
+                                            </p>
+                                        {/if}
+                                    </div>
+                                </div>
                             {/each}
                         </div>
                     {/if}

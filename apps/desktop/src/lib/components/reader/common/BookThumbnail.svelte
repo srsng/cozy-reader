@@ -34,7 +34,6 @@
         '#3C8585',
         '#6B7096'
     ] as const;
-
     const coverBaseClass = 'aspect-[3/4.5] w-full select-none overflow-hidden rounded-r-lg';
 
     function formatTitle(title: string | null | undefined): string {
@@ -88,6 +87,9 @@
     const displayAuthor = $derived.by(() => formatAuthor(book.author));
     const coverColor = $derived.by(() => pickCoverColor(book));
     const coverSrc = $derived.by(() => book.cover?.trim() || null);
+    const ariaLabel = $derived.by(() =>
+        displayAuthor ? `书籍《${displayTitle}》，作者 ${displayAuthor}` : `书籍《${displayTitle}》`
+    );
 
     $effect(() => {
         if (coverSrc) {
@@ -97,7 +99,7 @@
 </script>
 
 {#snippet oriCover()}
-    <div class={cn(coverBaseClass)}>
+    <div class={cn(coverBaseClass)} style:background-color={coverColor}>
         <img
             src={coverSrc}
             alt={displayTitle}
@@ -112,13 +114,13 @@
 {/snippet}
 
 {#snippet customCover()}
-    <div class={cn(coverBaseClass, 'flex flex-col bg-gradient-to-b from-transparent to-black/20')}>
+    <div class={cn(coverBaseClass, 'flex flex-col bg-gradient-to-b from-transparent to-black/20')} style:background-color={coverColor}>
         <div class="p-4">
-            <h2 class="tracking-snug text-xl font-semibold leading-snug text-white md:text-sm">
+            <h2 class="text-xl font-semibold leading-snug text-white md:text-sm">
                 {displayTitle}
             </h2>
             {#if displayAuthor}
-                <p class="tracking-snug text-xl font-semibold leading-snug text-black md:text-sm">
+                <p class="text-sm font-semibold leading-snug text-black md:text-xs">
                     {displayAuthor}
                 </p>
             {/if}
@@ -131,10 +133,9 @@
         'book-item group relative overflow-hidden rounded-r-lg transition-shadow hover:cursor-pointer hover:bg-black/30 hover:shadow-lg',
         className
     )}
-    style:background-color={coverColor}
-    role="button"
     tabindex="0"
-    aria-label={`书籍《${displayTitle}》`}
+    role="button"
+    aria-label={ariaLabel}
     title={displayTitle}
     onclick={onOpen}
     onkeydown={(event) => {
@@ -152,9 +153,11 @@
         {/if}
 
         {#if onDelete}
-            <button
+            <Button
                 type="button"
-                class="delete-icon absolute bottom-2 right-2 rounded-full bg-white p-2 opacity-0 transition duration-200 hover:bg-white/50 group-focus-within:opacity-100 group-hover:opacity-100"
+                variant="ghost"
+                size="icon"
+                class="delete-icon absolute bottom-2 right-2 bg-background/90 text-foreground opacity-0 shadow-sm backdrop-blur-sm transition duration-200 hover:bg-background group-focus-within:opacity-100 group-hover:opacity-100 rounded-full"
                 aria-label={`删除《${displayTitle}》`}
                 title="删除书籍"
                 onclick={(event) => {
@@ -162,8 +165,8 @@
                     onDelete?.();
                 }}
             >
-                <Trash2 class="h-4 w-4 text-black" />
-            </button>
+                <Trash2 class="h-4 w-4 text-foreground" />
+            </Button>
         {/if}
     </div>
 </div>
