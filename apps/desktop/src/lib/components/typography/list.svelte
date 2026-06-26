@@ -11,11 +11,14 @@
 </script>
 
 {#if ordered}
-    <ol start={Number(start)}>
+    <ol
+        class="my-4 list-outside list-decimal pl-6 text-[1em] leading-[inherit]"
+        start={Number(start)}
+    >
         {@render children()}
     </ol>
 {:else}
-    <ul>
+    <ul class="my-4 list-outside list-disc pl-6 text-[1em] leading-[inherit]">
         {@render children()}
     </ul>
 {/if}

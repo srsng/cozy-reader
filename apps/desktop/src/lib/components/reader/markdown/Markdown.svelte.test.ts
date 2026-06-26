@@ -23,10 +23,35 @@ describe('Markdown rendering', () => {
     it('renders fenced code blocks as pre/code markup', () => {
         const { body } = renderMarkdown('```ts\nconst answer = 42;\n```');
 
+        expect(body).toContain('代码块');
+        expect(body).toContain('ts');
         expect(body).toContain('<pre');
         expect(body).toContain('<code');
         expect(body).toContain('language-ts');
         expect(body).toContain('const answer = 42;');
+    });
+
+    it('renders fenced code blocks with line numbers and a copy button', () => {
+        const { body } = renderMarkdown('```ts\nconst a = 1;\nconst b = 2;\n```');
+        const normalizedBody = withoutSvelteCommentsAndWhitespace(body);
+
+        expect(body).toContain('aria-label="复制代码"');
+        expect(body).toContain('data-code-copy-button');
+        expect(body).toContain('data-code-line-number');
+        expect(normalizedBody).toMatch(/data-code-line-number[^>]*> ?1 ?<\/span>/);
+        expect(normalizedBody).toMatch(/data-code-line-number[^>]*> ?2 ?<\/span>/);
+        expect(body).toContain('const a = 1;');
+        expect(body).toContain('const b = 2;');
+    });
+
+    it('renders unordered and ordered lists with visible marker styles', () => {
+        const { body } = renderMarkdown('- item\n\n1. first');
+
+        expect(body).toContain('<ul');
+        expect(body).toContain('list-disc');
+        expect(body).toContain('<ol');
+        expect(body).toContain('list-decimal');
+        expect(body).toContain('text-[1em]');
     });
 
     it('renders strikethrough text with a del element', () => {
@@ -54,6 +79,35 @@ describe('Markdown rendering', () => {
         expect(body).toContain('<td');
         expect(withoutSvelteCommentsAndWhitespace(body)).toMatch(/<strong[^>]*>.*A.*<\/strong>/);
         expect(body).toContain('B');
+    });
+
+    it('renders horizontal rules without leaking the raw marker text', () => {
+        const { body } = renderMarkdown('###### H6 标题\n\n---\n');
+        const normalizedBody = withoutSvelteCommentsAndWhitespace(body);
+
+        expect(body).toContain('data-slot="separator"');
+        expect(body).toContain('data-orientation="horizontal"');
+        expect(normalizedBody).not.toContain('---');
+    });
+
+    it('wraps html tokens in a labeled block container', () => {
+        const { body } = renderMarkdown('<div class="note">hello</div>');
+
+        expect(body).toContain('data-html-block="true"');
+        expect(body).toContain('HTML');
+        expect(body).toContain('查看源码');
+        expect(body).toContain('aria-label="切换到 HTML 源码视图"');
+        expect(body).toContain('aria-pressed="false"');
+        expect(body).toContain('class="note"');
+        expect(body).toContain('hello');
+        expect(body).not.toContain('查看预览');
+    });
+
+    it('renders math formulas with original markdown copy text', () => {
+        const { body } = renderMarkdown('Before $a+b$ after.');
+
+        expect(body).toContain('<canvas');
+        expect(body).toContain('data-markdown-copy-text="$a+b$"');
     });
 
     it('does not render markdown link token internals as anchor attributes', () => {

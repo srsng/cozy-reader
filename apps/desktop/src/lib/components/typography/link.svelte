@@ -12,7 +12,7 @@
 
         if (!e.ctrlKey) {
             writeClipboard(href, {
-                message: '链接已复制',
+                message: '链接已复制'
                 // description: '按住 Ctrl 键点击链接以跳转'
             });
             e.preventDefault();
@@ -45,10 +45,7 @@
         href,
         target: '_blank',
         rel: 'noopener noreferrer',
-        class: cn(
-            'text-primary underline-offset-4 hover:underline',
-            className
-        ),
+        class: cn('text-primary leading-[inherit] underline-offset-4 hover:underline', className),
         onclick: (e: MouseEvent) => handleClick(e, href),
         ...restProps
     });
@@ -59,10 +56,10 @@
         <Tooltip.Trigger>
             {#snippet child({ props })}
                 {@const { type: _type, ...tooltipProps } = props}
-                <a {...mergeProps(anchorProps, tooltipProps)}>
+                <a {...mergeProps(anchorProps, tooltipProps)} data-markdown-raw-text={_raw}>
                     <LinkIcon
                         aria-hidden="true"
-                        class="text-secondary pointer-events-none inline-block size-3.5 align-[-0.125em]"
+                        class="text-muted-foreground pointer-events-none mr-1 inline size-3 align-[0.1em]"
                     />
                     {@render children()}
                 </a>

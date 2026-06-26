@@ -10,7 +10,11 @@
     const { task = false, checked = false, children }: Props = $props();
 </script>
 
-<li class={task ? 'flex items-start gap-2 [list-style:none]' : undefined}>
+<li
+    class={task
+        ? 'my-1 flex items-start gap-2 text-[1em] leading-[inherit] [list-style:none]'
+        : 'my-1 text-[1em] leading-[inherit]'}
+>
     {#if task}
         <input
             type="checkbox"

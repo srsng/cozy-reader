@@ -19,7 +19,17 @@ describe('Typography link', () => {
         expect(body).not.toContain('<button');
         expect(body).not.toContain('select-none');
         expect(body).not.toContain('inline-flex');
-        expect(body).not.toContain('decoration-primary/40');
+        expect(body).toContain('text-primary');
+        expect(body).toContain('underline-offset-4');
+        expect(body).toContain('hover:underline');
+        expect(body).toContain('text-muted-foreground');
+        expect(body).toContain('size-3');
+        expect(body).toContain('align-[0.1em]');
+        expect(body).not.toContain('text-secondary');
+        expect(body).not.toContain('after:');
+        expect(body).not.toContain('align-text-bottom');
+        expect(body).not.toContain('align-middle');
+        expect(body).not.toContain('<span class="relative inline');
         expect(body).not.toContain('<span class="min-w-0 break-words">');
     });
 });
