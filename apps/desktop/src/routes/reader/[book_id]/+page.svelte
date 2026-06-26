@@ -24,7 +24,7 @@
     {#if data.isText}
         <!-- 文本格式（txt/md/markdown/html）使用 Markdown 组件 -->
         <div class="mx-auto h-full max-w-3xl overflow-y-auto p-8">
-            <Markdown content={data.content} />
+            <Markdown filePath={data.filePath} content={data.content} />
         </div>
     {:else}
         <!-- epub/pdf/mobi等使用 FoliateReader -->

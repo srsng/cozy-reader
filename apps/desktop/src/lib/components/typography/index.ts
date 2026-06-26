@@ -9,16 +9,19 @@ import Paragraph from './paragraph.svelte';
 import Br from './br.svelte';
 import Em from './em.svelte';
 import Code from './code.svelte';
+import Del from './del.svelte';
 import { Separator as Hr } from '$ui/separator';
 import ListItem from './list-item.svelte';
 import List from './list.svelte';
 import Codespan from './codespan.svelte';
 import Formula from './formula.svelte';
+import Table from './table.svelte';
 
 const renderers = {
     blockquote: Blockquote,
     code: Code,
     codespan: Codespan,
+    del: Del,
     heading: Heading,
     image: Image,
     link: Link,
@@ -31,7 +34,8 @@ const renderers = {
     hr: Hr,
     list: List,
     list_item: ListItem,
-    math: Formula
+    math: Formula,
+    table: Table
 };
 
 export {
@@ -47,6 +51,8 @@ export {
     Em,
     Hr,
     Code,
+    Del,
     Formula,
+    Table,
     renderers
 };
