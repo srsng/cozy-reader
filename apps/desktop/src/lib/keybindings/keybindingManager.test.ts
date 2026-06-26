@@ -350,6 +350,30 @@ describe('KeybindingManager', () => {
         expect(event.stopPropagation).toHaveBeenCalledOnce();
     });
 
+    it('dispatches keyboard events from other documents through the same keybinding pipeline', () => {
+        const manager = new KeybindingManager();
+        const canExecute = vi.fn((_invocation: CommandInvocation) => true);
+        const execute = vi.fn(() => true);
+        manager.register(baseKeybinding);
+        manager.setCommandExecutor({ canExecute, execute });
+
+        const event = createKeyboardEvent('=', {
+            ctrlKey: true,
+            target: {
+                tagName: 'iframe',
+                contentEditable: 'false',
+                parentElement: null
+            } as unknown as EventTarget
+        });
+
+        manager.dispatchKeyboardEvent(event);
+
+        expect(canExecute).toHaveBeenCalledWith(expect.objectContaining({ commandId: 'zoom.in' }));
+        expect(execute).toHaveBeenCalledWith(expect.objectContaining({ commandId: 'zoom.in' }));
+        expect(event.preventDefault).toHaveBeenCalledOnce();
+        expect(event.stopPropagation).toHaveBeenCalledOnce();
+    });
+
     it('does not trigger command keybindings that cannot execute', () => {
         const manager = new KeybindingManager();
         const canExecute = vi.fn((_invocation: CommandInvocation) => false);

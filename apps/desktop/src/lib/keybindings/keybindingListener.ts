@@ -49,7 +49,7 @@ export class KeybindingListener {
         if (KeybindingUtils.isModifierKey(event.key)) return;
 
         // 解析键盘组合
-        const combination = this.parseKeyCombination(event);
+        const combination = this.toKeyCombination(event);
         if (!combination) return;
 
         // 创建事件上下文
@@ -68,7 +68,7 @@ export class KeybindingListener {
     /**
      * 解析键盘组合
      */
-    private parseKeyCombination(event: KeyboardEvent): KeyCombination | null {
+    toKeyCombination(event: KeyboardEvent): KeyCombination | null {
         const modifiers: ModifierKey[] = [];
         const key = KeybindingUtils.normalizeKey(event.key);
 
@@ -87,7 +87,7 @@ export class KeybindingListener {
     /**
      * 创建事件上下文
      */
-    private createEventContext(event: KeyboardEvent): KeyboardEventContext {
+    createEventContext(event: KeyboardEvent): KeyboardEventContext {
         const target = event.target as HTMLElement;
         const isInInput = this.isInputElement(target);
 

@@ -179,6 +179,14 @@ export class KeybindingManager {
         return this.resolver.inspect(this.keybindings.values(), combination);
     }
 
+    dispatchKeyboardEvent(event: KeyboardEvent): void {
+        const combination = this.keybindingListener.toKeyCombination(event);
+        if (!combination) return;
+
+        const context = this.keybindingListener.createEventContext(event);
+        this.handleKeyboardEvent(combination, context);
+    }
+
     /**
      * 手动触发按键绑定
      */
