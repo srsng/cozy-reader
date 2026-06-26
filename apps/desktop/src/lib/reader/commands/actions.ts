@@ -88,15 +88,18 @@ function canRunReaderCommand(
 const readerBookWhen = ReaderContextKey.BookOpen;
 const readerCommandWhen = `${readerBookWhen} && !${ReaderContextKey.SettingsOpen}`;
 const readerKeybindingWhen = `${readerCommandWhen} && !${ContextKey.TextInputFocus} && !${ContextKey.CommandPaletteOpen}`;
+const verticalPageKeybindingWhen = `${readerKeybindingWhen} && ${ReaderContextKey.ArrowKeyNavigationMode} == "vertical-page-horizontal-section"`;
+const verticalSectionKeybindingWhen = `${readerKeybindingWhen} && ${ReaderContextKey.ArrowKeyNavigationMode} != "vertical-page-horizontal-section"`;
 const readerSettingsCloseWhen = ReaderContextKey.SettingsOpen;
 const readerSettingsCloseKeybindingWhen = `${ReaderContextKey.SettingsOpen} && !${ContextKey.CommandPaletteOpen}`;
 
 function readerKeybinding(
-    keybinding: Omit<ActionKeybindingContribution, 'when'>
+    keybinding: Omit<ActionKeybindingContribution, 'when'>,
+    when = readerKeybindingWhen
 ): ActionKeybindingContribution {
     return {
         ...keybinding,
-        when: readerKeybindingWhen
+        when
     };
 }
 
@@ -124,12 +127,22 @@ export function createReaderActions(runtime: ReaderCommandRuntime) {
                     id: 'reader.page-previous-arrow',
                     combination: { key: 'Left', modifiers: [] },
                     source: 'feature'
-                }),
+                }, verticalSectionKeybindingWhen),
                 readerKeybinding({
                     id: 'reader.page-previous-h',
                     combination: { key: 'h', modifiers: [] },
                     source: 'feature'
-                })
+                }, verticalSectionKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.page-previous-up',
+                    combination: { key: 'Up', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.page-previous-k',
+                    combination: { key: 'k', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen)
             ]
         }),
         defineAction({
@@ -154,12 +167,22 @@ export function createReaderActions(runtime: ReaderCommandRuntime) {
                     id: 'reader.page-next-arrow',
                     combination: { key: 'Right', modifiers: [] },
                     source: 'feature'
-                }),
+                }, verticalSectionKeybindingWhen),
                 readerKeybinding({
                     id: 'reader.page-next-l',
                     combination: { key: 'l', modifiers: [] },
                     source: 'feature'
-                })
+                }, verticalSectionKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.page-next-down',
+                    combination: { key: 'Down', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.page-next-j',
+                    combination: { key: 'j', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen)
             ]
         }),
         defineAction({
@@ -184,12 +207,22 @@ export function createReaderActions(runtime: ReaderCommandRuntime) {
                     id: 'reader.section-previous-arrow',
                     combination: { key: 'Up', modifiers: [] },
                     source: 'feature'
-                }),
+                }, verticalSectionKeybindingWhen),
                 readerKeybinding({
                     id: 'reader.section-previous-k',
                     combination: { key: 'k', modifiers: [] },
                     source: 'feature'
-                })
+                }, verticalSectionKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.section-previous-left',
+                    combination: { key: 'Left', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.section-previous-h',
+                    combination: { key: 'h', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen)
             ]
         }),
         defineAction({
@@ -214,12 +247,22 @@ export function createReaderActions(runtime: ReaderCommandRuntime) {
                     id: 'reader.section-next-arrow',
                     combination: { key: 'Down', modifiers: [] },
                     source: 'feature'
-                }),
+                }, verticalSectionKeybindingWhen),
                 readerKeybinding({
                     id: 'reader.section-next-j',
                     combination: { key: 'j', modifiers: [] },
                     source: 'feature'
-                })
+                }, verticalSectionKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.section-next-right',
+                    combination: { key: 'Right', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen),
+                readerKeybinding({
+                    id: 'reader.section-next-l',
+                    combination: { key: 'l', modifiers: [] },
+                    source: 'feature'
+                }, verticalPageKeybindingWhen)
             ]
         }),
         defineAction({

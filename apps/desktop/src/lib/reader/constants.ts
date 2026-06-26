@@ -64,6 +64,7 @@ export const DEFAULT_BOOK_LAYOUT: BookLayout = {
     disableDoubleClick: false,
     fullscreenClickArea: false,
     volumeKeysToFlip: false,
+    arrowKeyNavigationMode: 'vertical-section-horizontal-page',
     continuousScroll: false,
     maxColumnCount: 2,
     maxInlineSize: getDefaultMaxInlineSize(),

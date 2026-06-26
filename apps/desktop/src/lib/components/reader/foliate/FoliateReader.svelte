@@ -37,6 +37,8 @@
     import { untrack } from 'svelte';
     import { bookDataStore } from '$lib/reader';
     import { readerCommandState } from '$lib/reader/stores/readerCommandState';
+    import { attachIframeKeybindingBridge } from '$lib/keybindings/iframeKeybindingBridge';
+    import { keybindingManager } from '$lib/keybindings/keybindingManager';
 
     // 获取全局 READER_SETTINGS（响应式）
     const globalReaderSettings = inject(READER_SETTINGS);
@@ -57,6 +59,8 @@
     // 保存 transformTarget 事件监听器引用，用于清理
     let transformTargetLoadHandler: ((event: Event) => void) | null = null;
     let transformTargetDataHandler: ((event: Event) => void) | null = null;
+    let iframeKeybindingDisposers: Array<() => void> = [];
+    const bridgedIframeDocs = new WeakSet<Document>();
 
     const bookKey = providedBookKey || `${book.id}-${uniqueId()}`;
     let viewState = $state(readerStore.getViewState(bookKey));
@@ -352,6 +356,13 @@
                 ? isCJKLang(bookDoc.metadata.language)
                 : false;
             mountAdditionalFonts(detail.doc, isCJK);
+
+            if (!bridgedIframeDocs.has(detail.doc)) {
+                iframeKeybindingDisposers.push(
+                    attachIframeKeybindingBridge(detail.doc, keybindingManager)
+                );
+                bridgedIframeDocs.add(detail.doc);
+            }
 
             // TODO: 挂载用户自定义字体（需要从设置中加载）
 
@@ -913,6 +924,9 @@
             clearTimeout(progressUpdateTimer);
             progressUpdateTimer = null;
         }
+
+        iframeKeybindingDisposers.forEach((dispose) => dispose());
+        iframeKeybindingDisposers = [];
 
         // 清理 transformTarget 事件监听器
         if (viewElement?.book?.transformTarget) {

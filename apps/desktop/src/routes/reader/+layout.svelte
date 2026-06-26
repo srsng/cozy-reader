@@ -6,6 +6,7 @@
     import { keybindingManager } from '$lib/keybindings/keybindingManager';
     import { MENU_SERVICE } from '$lib/menus';
     import { activateReaderCommands } from '$lib/reader/commands';
+    import { READER_SETTINGS } from '$lib/reader/stores/readerSettings';
     import { APP_STATE } from '$lib/stores/appState';
     import { USER_SETTINGS } from '$lib/stores/userSettings';
     import { inject } from '$lib/utils/context';
@@ -16,6 +17,7 @@
     const commandRouter = inject(COMMAND_ROUTER);
     const contextKeys = inject(CONTEXT_KEY_SERVICE);
     const menuService = inject(MENU_SERVICE);
+    const readerSettings = inject(READER_SETTINGS);
     const userSettings = inject(USER_SETTINGS);
 
     onMount(() => {
@@ -29,7 +31,8 @@
                     userSettings
                 }),
             keybindingManager,
-            menuService
+            menuService,
+            readerSettings
         });
 
         return () => {

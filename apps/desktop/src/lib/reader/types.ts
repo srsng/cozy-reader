@@ -144,6 +144,13 @@ export interface BookDoc {
 export type WritingMode = 'auto' | 'horizontal-tb' | 'horizontal-rl' | 'vertical-rl';
 
 /**
+ * 方向键导航模式
+ */
+export type ArrowKeyNavigationMode =
+    | 'vertical-page-horizontal-section'
+    | 'vertical-section-horizontal-page';
+
+/**
  * 页面信息
  * 表示页码信息，页码从 1 开始
  */
@@ -205,6 +212,8 @@ export interface BookLayout {
     fullscreenClickArea?: boolean;
     /** 是否使用音量键翻页 */
     volumeKeysToFlip: boolean;
+    /** 方向键导航模式 */
+    arrowKeyNavigationMode: ArrowKeyNavigationMode;
     /** 是否启用连续滚动（无分页） */
     continuousScroll: boolean;
     /** 最大列数（多列布局时的最大列数） */

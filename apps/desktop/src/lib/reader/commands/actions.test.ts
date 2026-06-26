@@ -19,6 +19,14 @@ import {
 } from './actions';
 import type { ReaderCommandRuntime } from './runtime';
 
+function expectNavigationKey(
+    keybindingManager: ReturnType<typeof createServices>['keybindingManager'],
+    key: string,
+    commandId: ReaderCommandId
+) {
+    expect(keybindingManager.inspect({ key, modifiers: [] }).matched?.commandId).toBe(commandId);
+}
+
 function createReaderRuntime(
     options: { activeBookKey?: string; hasBook?: boolean; settingsOpen?: boolean } = {}
 ): ReaderCommandRuntime {
@@ -133,7 +141,7 @@ describe('reader command actions', () => {
                 scope: READER_COMMAND_SCOPE,
                 commandId: 'reader.page.next'
             })
-        ).toHaveLength(2);
+        ).toHaveLength(4);
     });
 
     it('rejects invalid reader payloads before execution', async () => {
@@ -191,6 +199,52 @@ describe('reader command actions', () => {
 
         expect(canExecuteReaderCommand(commandRouter, ReaderCommandId.PageNext)).toBe(true);
         expect(keybindingManager.inspect({ key: 'Right', modifiers: [] }).matched).toBeNull();
+    });
+
+    it('maps arrow keys and hjkl with vi direction semantics in vertical-section mode', () => {
+        const runtime = createReaderRuntime({ activeBookKey: 'book-1', hasBook: true });
+        const { keybindingManager, context } = createServices(runtime);
+        context.contextKeys.set(ReaderContextKey.BookOpen, true);
+        context.contextKeys.set(ReaderContextKey.ActiveBookKey, 'book-1');
+        context.contextKeys.set(ReaderContextKey.SettingsOpen, false);
+        context.contextKeys.set(
+            ReaderContextKey.ArrowKeyNavigationMode,
+            'vertical-section-horizontal-page'
+        );
+        setAppContextState(context.appState, ContextKey.TextInputFocus, false);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, false);
+
+        expectNavigationKey(keybindingManager, 'Left', ReaderCommandId.PagePrevious);
+        expectNavigationKey(keybindingManager, 'h', ReaderCommandId.PagePrevious);
+        expectNavigationKey(keybindingManager, 'Right', ReaderCommandId.PageNext);
+        expectNavigationKey(keybindingManager, 'l', ReaderCommandId.PageNext);
+        expectNavigationKey(keybindingManager, 'Up', ReaderCommandId.SectionPrevious);
+        expectNavigationKey(keybindingManager, 'k', ReaderCommandId.SectionPrevious);
+        expectNavigationKey(keybindingManager, 'Down', ReaderCommandId.SectionNext);
+        expectNavigationKey(keybindingManager, 'j', ReaderCommandId.SectionNext);
+    });
+
+    it('maps arrow keys and hjkl with vi direction semantics in vertical-page mode', () => {
+        const runtime = createReaderRuntime({ activeBookKey: 'book-1', hasBook: true });
+        const { keybindingManager, context } = createServices(runtime);
+        context.contextKeys.set(ReaderContextKey.BookOpen, true);
+        context.contextKeys.set(ReaderContextKey.ActiveBookKey, 'book-1');
+        context.contextKeys.set(ReaderContextKey.SettingsOpen, false);
+        context.contextKeys.set(
+            ReaderContextKey.ArrowKeyNavigationMode,
+            'vertical-page-horizontal-section'
+        );
+        setAppContextState(context.appState, ContextKey.TextInputFocus, false);
+        setAppContextState(context.appState, ContextKey.CommandPaletteOpen, false);
+
+        expectNavigationKey(keybindingManager, 'Up', ReaderCommandId.PagePrevious);
+        expectNavigationKey(keybindingManager, 'k', ReaderCommandId.PagePrevious);
+        expectNavigationKey(keybindingManager, 'Down', ReaderCommandId.PageNext);
+        expectNavigationKey(keybindingManager, 'j', ReaderCommandId.PageNext);
+        expectNavigationKey(keybindingManager, 'Left', ReaderCommandId.SectionPrevious);
+        expectNavigationKey(keybindingManager, 'h', ReaderCommandId.SectionPrevious);
+        expectNavigationKey(keybindingManager, 'Right', ReaderCommandId.SectionNext);
+        expectNavigationKey(keybindingManager, 'l', ReaderCommandId.SectionNext);
     });
 
     it('uses Escape for reader settings only when command palette is not open', async () => {
