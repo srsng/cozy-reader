@@ -10,6 +10,9 @@
     "scripts": {
         "dev": "pnpm tauri dev",
         "dev:desktop": "pnpm tauri dev",
+        "test": "pnpm --recursive --if-present run test",
+        "test:desktop": "pnpm --filter @cozy-reader/desktop test",
+        "test:database": "pnpm --filter @cozy-reader/database test",
         "check:desktop": "pnpm --filter @cozy-reader/desktop check",
         "check:desktop:watch": "pnpm --filter @cozy-reader/desktop check:watch",
         "check:watch": "pnpm --filter @cozy-reader/desktop check:watch",

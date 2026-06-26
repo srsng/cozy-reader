@@ -20,12 +20,16 @@
 ## 开发、构建与测试命令
 
 - `pnpm dev`：启动 Tauri 桌面开发环境。
+- `pnpm test`：运行 workspace 级测试入口，等价于 `pnpm --recursive --if-present run test`，当前会执行 `@cozy-reader/database` 和 `@cozy-reader/desktop` 的测试脚本。
+- `pnpm test:desktop`：运行桌面端测试。
+- `pnpm test:database`：运行数据库包测试。
 - `pnpm check:desktop`：对桌面端运行 `svelte-check`。
 - `pnpm dev:storybook`：启动 `@cozy/ui` 的 Storybook，仅用于废弃包排查。
 - `pnpm format`：使用 Prettier 格式化仓库。
 - `pnpm db:gen`：在 schema 变更后生成 Drizzle 迁移。
 - `pnpm ts-rs:gen`：重新生成 Rust 导出的 TypeScript 绑定。
-- `pnpm --filter @cozy-reader/database test`：运行数据库包的 Vitest 测试。
+- `pnpm --filter @cozy-reader/database test`：运行数据库包的 Vitest 测试，等同于 `pnpm test:database`。
+- `pnpm --filter @cozy-reader/desktop test`：运行桌面端 Vitest 测试，等同于 `pnpm test:desktop`。
 - `cargo check -p cozy-database`：检查 Rust 数据库代码。
 
 ## 代码风格、技术栈与命名约定
@@ -34,4 +38,4 @@
 
 ## 测试规范
 
-当前自动化测试主要在 `packages/database/tests/`，框架为 Vitest。测试文件命名使用 `*.test.ts`，并按模块归类，例如 `tests/core/query/builder.test.ts`。修改数据库 schema、查询构造、序列化或校验逻辑时，应同步补充或更新测试。前端改动至少运行 `pnpm check:desktop`。
+当前自动化测试主要在 `apps/desktop/src/` 和 `packages/database/tests/`，框架为 Vitest。测试文件命名使用 `*.test.ts`，并按模块归类，例如 `tests/core/query/builder.test.ts`。`apps/desktop` 与 `packages/database` 目前定义了 `test` 脚本；`packages/ui`、`packages/foliate-js`、`crates/` 当前没有测试入口。修改数据库 schema、查询构造、序列化或校验逻辑时，应同步补充或更新测试；前端改动至少运行 `pnpm check:desktop`，涉及桌面端测试时优先运行 `pnpm test:desktop`，需要验证 workspace 级测试入口时运行 `pnpm test`。
