@@ -111,11 +111,11 @@
         extensions={BookFormatNames}
         handleFiles={handleDrop}
         {handleInvalidFiles}
-        class="h-full w-full"
+        class="min-h-full w-full"
         overlay
     >
         {#snippet children({ files, isDragOver })}
-            <div class="container mx-auto flex h-full min-h-0 flex-col px-6 py-6" transition:slide>
+            <div class="container mx-auto flex min-h-full flex-col px-6 py-6" transition:slide>
                 <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
                     <div class="space-y-1">
                         <h1 class="text-2xl font-semibold tracking-tight">我的书架</h1>
@@ -127,11 +127,9 @@
                     </Button>
                 </div>
 
-                <div class="min-h-0 flex-1 overflow-y-auto pb-2 pr-1">
+                <div class="flex flex-1 flex-col pb-2 pr-1">
                     {#if books.length === 0}
-                        <div
-                            class="flex min-h-full flex-col items-center justify-center text-center"
-                        >
+                        <div class="flex flex-1 flex-col items-center justify-center text-center">
                             <BookOpen class="text-muted-foreground mb-4 h-16 w-16" />
                             <h2 class="text-xl font-semibold">还没有添加任何书籍</h2>
                             <p class="text-muted-foreground mt-2 max-w-sm text-sm">

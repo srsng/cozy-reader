@@ -20,10 +20,10 @@
     });
 </script>
 
-<div class="h-full overflow-hidden" transition:slide>
+<div class={data.isText ? 'min-h-full' : 'h-full overflow-hidden'} transition:slide>
     {#if data.isText}
         <!-- 文本格式（txt/md/markdown/html）使用 Markdown 组件 -->
-        <div class="mx-auto h-full max-w-3xl overflow-y-auto p-8">
+        <div class="mx-auto max-w-3xl p-8">
             <Markdown filePath={data.filePath} content={data.content} />
         </div>
     {:else}
