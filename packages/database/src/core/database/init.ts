@@ -5,6 +5,11 @@
 import { DatabaseManager } from './manager';
 import { DatabaseRegistry } from './registry';
 import type { DatabaseConfig } from '../types';
+import { setDatabaseLogger, type DatabaseLogger } from '../logging';
+
+export interface InitializeDatabasesOptions {
+    logger?: DatabaseLogger;
+}
 
 /**
  * 验证数据库配置
@@ -41,7 +46,9 @@ export function validateDatabaseConfigs(configs: DatabaseConfig[]): void {
  * - 迁移由 Rust 端通过 tauri_plugin_sql 在应用启动时自动处理
  * - 数据库连接按需创建，在调用 getDatabase() 时自动创建
  */
-export async function initializeDatabases(): Promise<void> {
+export async function initializeDatabases(options?: InitializeDatabasesOptions): Promise<void> {
+    setDatabaseLogger(options?.logger);
+
     const registry = DatabaseRegistry.getInstance();
     const manager = DatabaseManager.getInstance();
 
@@ -55,4 +62,3 @@ export async function initializeDatabases(): Promise<void> {
     // 初始化管理器（仅初始化注册表，不创建连接）
     await manager.initialize();
 }
-

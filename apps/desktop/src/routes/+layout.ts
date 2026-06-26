@@ -4,6 +4,7 @@
 // import { getResources, initDatabase } from "$lib/database/database.js";
 // import { AppManager } from "$lib/stores/AppManager";
 import { Tauri } from '$lib/backend/tauri.js';
+import { databaseLogger } from '$lib/backend/databaseLogger.js';
 import { initializeDatabases } from '@cozy-reader/database';
 
 import type { UserSettings } from '$lib/settings/index';
@@ -42,7 +43,7 @@ export async function load({ params }) {
 
     try {
         // 初始化数据库（包含一致性检查）
-        await initializeDatabases();
+        await initializeDatabases({ logger: databaseLogger });
         console.log('App initialized in +layout.ts');
     } catch (error) {
         console.error('Failed to init App:', error);

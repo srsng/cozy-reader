@@ -16,6 +16,7 @@ import type { BaseQueryOptions } from '../core/types';
 import { validateUpdateClauses } from '../core/validation';
 import { deserializeJSON } from '../core/serialization';
 import { validateRecord } from '../core/validation';
+import { logDatabaseWarn } from '../core/logging';
 
 /**
  * JSON字段配置
@@ -178,7 +179,7 @@ export abstract class BaseService<T, TNew, TUpdate, TQueryOptions extends BaseQu
             } else {
                 // 非字符串类型（可能是已经反序列化的对象），记录警告并使用原值
                 // 如果原值不符合预期，使用默认值
-                console.warn(
+                logDatabaseWarn(
                     `Unexpected type for JSON field ${fieldName}: expected string, got ${typeof value}. Using original value.`
                 );
                 deserialized[fieldName] = value;

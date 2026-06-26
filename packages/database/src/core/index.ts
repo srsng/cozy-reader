@@ -8,6 +8,9 @@ export * from './database';
 // 错误处理
 export * from './errors';
 
+// 日志
+export * from './logging';
+
 // 执行和性能监控
 export * from './execution';
 

@@ -4,6 +4,9 @@
 
 export { DatabaseManager } from './manager';
 export { DatabaseRegistry, getDatabaseConfigByName } from './registry';
-export { initializeDatabases, validateDatabaseConfigs } from './init';
+export {
+    initializeDatabases,
+    validateDatabaseConfigs,
+    type InitializeDatabasesOptions
+} from './init';
 export * from './transaction';
-

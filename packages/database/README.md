@@ -92,11 +92,18 @@ packages/database/
 ```typescript
 import { initializeDatabases } from '@cozy-reader/database';
 
+const databaseLogger = {
+    warn: (...args: unknown[]) => console.warn('[cozy-reader/database]', ...args),
+    error: (...args: unknown[]) => console.error('[cozy-reader/database]', ...args)
+};
+
 // 初始化所有数据库（仅初始化注册表，不创建连接）
 // 注意：迁移由 Rust 端通过 tauri_plugin_sql 自动处理
 // 数据库连接按需创建，在调用 getDatabase() 时自动创建
-await initializeDatabases();
+await initializeDatabases({ logger: databaseLogger });
 ```
+
+`logger` 是可选项；如果不传，数据库包会使用空实现，不会依赖 `console`。
 
 ### 2. 使用服务层
 

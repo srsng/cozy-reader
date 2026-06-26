@@ -10,6 +10,7 @@ import { BOOKS_DEFAULTS } from '../../../drizzle/books/schema-defaults';
 import { booksAllowedUpdateFields } from '../../../drizzle/books/schema';
 import { buildSearchCondition, buildTagFilterCondition, escapeLikeQuery } from '../../core/query';
 import { serializeJSON } from '../../core/serialization';
+import { logDatabaseWarn } from '../../core/logging';
 
 // 基类导入
 import { BaseService } from '../BaseService';
@@ -318,6 +319,10 @@ export class BookService extends BaseService<Book, NewBook, BookUpdate, BookQuer
             updates.push('notes = ?');
             params.push(input.notes);
         }
+        if (input.cover !== undefined) {
+            updates.push('cover = ?');
+            params.push(input.cover);
+        }
         if (input.tags !== undefined) {
             updates.push('tags = ?');
             params.push(serializeJSON(input.tags));
@@ -337,6 +342,10 @@ export class BookService extends BaseService<Book, NewBook, BookUpdate, BookQuer
         if (input.readingTime !== undefined) {
             updates.push('reading_time = ?');
             params.push(input.readingTime);
+        }
+        if (input.fileSize !== undefined) {
+            updates.push('file_size = ?');
+            params.push(input.fileSize);
         }
         if (input.lastReadAt !== undefined) {
             updates.push('last_read_at = ?');
@@ -432,7 +441,7 @@ export class BookService extends BaseService<Book, NewBook, BookUpdate, BookQuer
                     }
                 } catch (error) {
                     // 记录错误但继续处理其他标签
-                    console.warn('Invalid tag value in getAllTags:', row.value, error);
+                    logDatabaseWarn('Invalid tag value in getAllTags:', row.value, error);
                 }
             });
 

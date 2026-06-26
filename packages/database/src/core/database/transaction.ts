@@ -4,6 +4,7 @@
 
 import Database from '@tauri-apps/plugin-sql';
 import { DatabaseError } from '../errors';
+import { logDatabaseError } from '../logging';
 
 /**
  * 事务类
@@ -31,7 +32,7 @@ export class Transaction {
             try {
                 await this.db.execute('ROLLBACK');
             } catch (rollbackError) {
-                console.error('Failed to rollback transaction:', rollbackError);
+                logDatabaseError('Failed to rollback transaction:', rollbackError);
                 // 不覆盖原始错误，只是记录回滚失败
             }
 
@@ -91,4 +92,3 @@ export class Transaction {
 export function createTransaction(db: Database): Transaction {
     return new Transaction(db);
 }
-
