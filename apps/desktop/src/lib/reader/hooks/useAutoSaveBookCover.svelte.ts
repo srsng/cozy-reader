@@ -8,23 +8,7 @@
 import { bookDataStore } from '../stores/bookDataStore';
 import { BookService } from '@cozy-reader/database';
 import type { BookDoc } from '../types';
-
-/**
- * 将 Blob 转换为 base64 字符串
- */
-async function blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64 = reader.result as string;
-            // 移除 data URL 前缀（data:image/png;base64,）
-            const base64Data = base64.split(',')[1];
-            resolve(base64Data);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-}
+import { extractCoverDataUrl } from '../utils/cover';
 
 /**
  * 自动保存书籍封面
@@ -55,19 +39,8 @@ export function useAutoSaveBookCover(bookKey: string, bookDoc: BookDoc | null): 
             }
 
             try {
-                // 获取封面图片
-                const coverBlob = await bookDoc.getCover();
-                if (!coverBlob) {
-                    return;
-                }
-
-                // 转换为 base64
-                const base64Data = await blobToBase64(coverBlob);
-
-                // 确定图片格式
-                const mimeType = coverBlob.type || 'image/png';
-                const format = mimeType.split('/')[1] || 'png';
-                const dataUrl = `data:${mimeType};base64,${base64Data}`;
+                const dataUrl = await extractCoverDataUrl(bookDoc);
+                if (!dataUrl) return;
 
                 // 保存到数据库
                 const result = await BookService.update(bookData.book.id, {

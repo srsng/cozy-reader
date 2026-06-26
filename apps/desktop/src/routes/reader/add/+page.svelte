@@ -7,14 +7,23 @@
     // import type { Component } from 'svelte';
 
     import { page } from '$app/state';
-    import { BookService } from '@cozy-reader/database';
+    import { bookImportService } from '$lib/reader/services/BookImportService';
     import { View } from '$lib/components/layout/views';
+    import type { Book, DatabaseResult } from '@cozy-reader/database';
 
     // todo: 解决ts报错paths不存在的问题
     // @ts-ignore
     const paths: string[] = page.state.paths || [];
 
-    const addResults = Promise.all(paths.map((path) => BookService.addBookByFsPath(path)));
+    async function addBooks(paths: string[]): Promise<DatabaseResult<Book>[]> {
+        const results: DatabaseResult<Book>[] = [];
+        for (const path of paths) {
+            results.push(await bookImportService.addBookByFsPath(path));
+        }
+        return results;
+    }
+
+    const addResults = addBooks(paths);
 
     // function getMsgs(results: DatabaseResult<Book>[]) {
     // 	if (results.length === 0) return '没有有效书籍';

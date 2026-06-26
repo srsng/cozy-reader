@@ -14,6 +14,7 @@
     import { inject } from '$lib/utils/context';
     import { formatDateWithLangCode } from '$lib/utils/date';
     import { BookService } from '@cozy-reader/database';
+    import { bookImportService } from '$lib/reader/services/BookImportService';
     import { open } from '@tauri-apps/plugin-dialog';
 </script>
 
@@ -60,7 +61,7 @@
             return;
         }
 
-        const result = await BookService.getInstance().addBookByFsPath(selected);
+        const result = await bookImportService.addBookByFsPath(selected);
 
         if (result.success) {
             toast.success('书籍添加成功');
