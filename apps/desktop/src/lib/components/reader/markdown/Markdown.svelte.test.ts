@@ -108,7 +108,7 @@ describe('Markdown rendering', () => {
         const { body } = renderMarkdown('Before $a+b$ after.');
 
         expect(body).toContain('<canvas');
-        expect(body).toContain('data-markdown-copy-text="$a+b$"');
+        expect(body).toContain(`${MARKDOWN_RAW_TEXT_ATTRIBUTE}="$a+b$"`);
     });
 
     it('renders links with copy metadata without leaking token internals as anchor attributes', () => {

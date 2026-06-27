@@ -4,6 +4,8 @@
     import { normalizeRatexLatex } from './formula-utils';
     import { isSelectionIntersectingNode } from './formula-selection';
     import { copyFormulaToClipboard, isFormulaCopyActivationKey } from './formula-copy';
+    import { cn } from '$lib/utils';
+    import { MARKDOWN_RAW_TEXT_ATTRIBUTE } from '$components/reader/markdown/markdown-copy';
 
     interface Props {
         raw?: string;
@@ -31,6 +33,21 @@
     let colorContext: CanvasRenderingContext2D | null = null;
     let renderFrame = 0;
     let delayedRenderTimeout: ReturnType<typeof setTimeout> | null = null;
+    const commonContainerClass =
+        'focus-visible:ring-ring/50 data-[selected=true]:bg-primary/10 data-[selected=true]:ring-primary/25 rounded-sm outline-none transition-colors focus-visible:ring-2 data-[selected=true]:ring-2';
+
+    const commonContainerProps = $derived({
+        tabindex: 0,
+        role: 'button',
+        'aria-label': `复制公式：${latex}`,
+        [MARKDOWN_RAW_TEXT_ATTRIBUTE]: copyText,
+        'data-selected': isSelected ? 'true' : undefined,
+        onclick: handleFormulaClick,
+        onkeydown: handleFormulaKeydown,
+        oncopy: handleFormulaCopy,
+        onfocus: handleFocus,
+        onblur: handleBlur
+    });
 
     function getColorContext() {
         if (colorContext || typeof document === 'undefined') {
@@ -220,17 +237,8 @@
 {#if displayMode}
     <div
         bind:this={containerElement}
-        class="focus-visible:ring-ring/50 data-[selected=true]:bg-primary/10 data-[selected=true]:ring-primary/25 my-6 overflow-x-auto rounded-sm text-center outline-none transition-colors focus-visible:ring-2 data-[selected=true]:ring-2"
-        tabindex="0"
-        role="button"
-        aria-label={`复制公式：${latex}`}
-        data-selected={isSelected ? 'true' : undefined}
-        data-markdown-copy-text={copyText}
-        onclick={handleFormulaClick}
-        onkeydown={handleFormulaKeydown}
-        oncopy={handleFormulaCopy}
-        onfocus={handleFocus}
-        onblur={handleBlur}
+        class={cn(commonContainerClass, 'my-6 overflow-x-auto text-center')}
+        {...commonContainerProps}
     >
         <canvas
             bind:this={canvasElement}
@@ -241,17 +249,8 @@
 {:else}
     <span
         bind:this={containerElement}
-        class="focus-visible:ring-ring/50 data-[selected=true]:bg-primary/10 data-[selected=true]:ring-primary/25 mx-0.5 inline-block max-w-full rounded-sm align-middle outline-none transition-colors focus-visible:ring-2 data-[selected=true]:ring-2"
-        tabindex="0"
-        role="button"
-        aria-label={`复制公式：${latex}`}
-        data-selected={isSelected ? 'true' : undefined}
-        data-markdown-copy-text={copyText}
-        onclick={handleFormulaClick}
-        onkeydown={handleFormulaKeydown}
-        oncopy={handleFormulaCopy}
-        onfocus={handleFocus}
-        onblur={handleBlur}
+        class={cn(commonContainerClass, 'mx-0.5 inline-block max-w-full align-middle')}
+        {...commonContainerProps}
     >
         <canvas bind:this={canvasElement} class="inline-block align-middle" aria-hidden="true"
         ></canvas>

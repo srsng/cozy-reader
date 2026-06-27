@@ -121,4 +121,15 @@ describe('serializeMarkdownCopyFragment', () => {
             'first\nsecond $z$'
         );
     });
+
+    it('serializes copied formula nodes using the raw markdown attribute', () => {
+        const selected = fragment([
+            taggedElement('p', [text('before '), element([text('rendered formula')], '$a+b$')]),
+            taggedElement('p', [text('after')])
+        ]);
+
+        expect(serializeMarkdownCopyFragment(selected as unknown as Node)).toBe(
+            'before $a+b$\n\nafter'
+        );
+    });
 });
