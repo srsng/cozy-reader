@@ -1,4 +1,4 @@
-# Repository Guidelines
+# AGENTS.md
 
 ## 项目结构与模块组织
 
@@ -14,8 +14,7 @@
 ## 智能体规则入口
 
 - 对 Codex 及其他读取 `AGENTS.md` 的智能体，仓库级规则统一以本文件为准。
-- 如果未来某个子目录新增局部 `AGENTS.md`，则该子目录内优先遵循局部规则。
-- `.claude/rules/` 目前仅保留兼容性说明，不再作为主规则入口。
+- 如果某个子目录存在局部 `AGENTS.md`，则该子目录内优先遵循局部规则。
 
 ## 开发、构建与测试命令
 
@@ -24,7 +23,6 @@
 - `pnpm test:desktop`：运行桌面端测试。
 - `pnpm test:database`：运行数据库包测试。
 - `pnpm check:desktop`：对桌面端运行 `svelte-check`。
-- `pnpm dev:storybook`：启动 `@cozy/ui` 的 Storybook，仅用于废弃包排查。
 - `pnpm format`：使用 Prettier 格式化仓库。
 - `pnpm db:gen`：在 schema 变更后生成 Drizzle 迁移。
 - `pnpm ts-rs:gen`：重新生成 Rust 导出的 TypeScript 绑定。
@@ -34,7 +32,7 @@
 
 ## 代码风格、技术栈与命名约定
 
-格式规则以 `.prettierrc` 为准：4 空格缩进、单引号、`printWidth: 100`、禁止尾随逗号。前端技术栈固定为 `Svelte 5 + Tauri v2 + Rust`。不要使用过时的 Svelte 4 写法；优先使用 Svelte 5 runes，但 runes 只能用于 `.svelte` 与 `.svelte.ts/.js`，普通 `.ts/.js` 文件不要使用。前端优先复用 `apps/desktop/src/lib/components/ui/` 下的组件，样式优先使用 Tailwind CSS v4。组件文件使用 PascalCase，例如 `BooksGrid.svelte`；工具函数使用 lowerCamelCase；SvelteKit 路由文件遵循 `+page.svelte`、`+layout.ts` 命名。遇到不熟悉的库或框架，优先查官方文档，必要时使用 Context7。
+格式规则以 `.prettierrc` 为准：4 空格缩进、单引号、`printWidth: 100`、禁止尾随逗号。前端技术栈固定为 `Svelte 5 + SvelteKit + Tauri v2 + Rust`。不要使用过时的 Svelte 4 写法；优先使用 Svelte 5 runes，但 runes 只能用于 `.svelte` 与 `.svelte.ts/.js`，普通 `.ts/.js` 文件不要使用。前端优先复用 `apps/desktop/src/lib/components/ui/` 下的组件，样式优先使用 Tailwind CSS v4。组件文件使用 PascalCase，例如 `BooksGrid.svelte`；工具函数使用 lowerCamelCase；SvelteKit 路由文件遵循 `+page.svelte`、`+layout.ts` 命名。遇到不熟悉的库或框架，优先查官方文档，必要时使用 Context7。
 
 ## 测试规范
 
