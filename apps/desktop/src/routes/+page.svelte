@@ -2,26 +2,20 @@
     import { goto } from '$app/navigation';
     import { Button } from '$ui/button';
     import * as Card from '$ui/card';
-    import {
-        goBgSettings,
-        goReaderBatchAddPaths,
-        goReaderHome,
-        goReadFsBook,
-        goSettings
-    } from '$lib/utils/route.svelte';
+    import { goBgSettings, goReaderHome } from '$lib/utils/route.svelte';
     import { BookOpen, Settings, Palette, FileText, Navigation } from 'lucide-svelte';
-    import { toast } from 'svelte-sonner';
     import { slide } from 'svelte/transition';
     import type { LayoutData } from './$types';
+    import { onMount } from 'svelte';
 
     const { data }: { data: LayoutData } = $props();
     const metaData = data.metaData;
 
-    let paths = [
-        `E:\\my_computer\\Documents\\电子书\\机器学习实践：测试驱动的开发方法_9787115396181.epub`,
-        'E:/my_computer/Documents/工作汇总/学业情况/作业要求/2.2-大二下/英语课/英语活动读稿.md',
-        '/pages/about'
-    ];
+    // 临时将阅读器作为主页面
+    onMount(() => {
+        // 重定向异步操作易失败
+        goReaderHome();
+    })
 </script>
 
 <div class="container mx-auto max-w-4xl px-4 py-8" in:slide>
@@ -33,14 +27,14 @@
 
     <!-- 功能模块卡片 -->
     <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <!-- Markdown 阅读器 -->
+        <!-- 阅读器 -->
         <Card.Root class="cursor-pointer transition-shadow hover:shadow-lg" onclick={goReaderHome}>
             <Card.Header>
                 <div class="flex items-center gap-3">
                     <BookOpen class="text-primary h-6 w-6" />
-                    <Card.Title>Markdown 阅读器</Card.Title>
+                    <Card.Title>阅读器</Card.Title>
                 </div>
-                <Card.Description>支持 Markdown 文档阅读，提供舒适的阅读体验</Card.Description>
+                <Card.Description>文档阅读，提供舒适的阅读体验</Card.Description>
             </Card.Header>
         </Card.Root>
 
@@ -54,7 +48,7 @@
                     <Settings class="text-primary h-6 w-6" />
                     <Card.Title>设置中心</Card.Title>
                 </div>
-                <Card.Description>基础设置、主题配置和阅读器个性化选项</Card.Description>
+                <Card.Description>个性化选项</Card.Description>
             </Card.Header>
         </Card.Root>
 
@@ -109,29 +103,6 @@
                 <BookOpen class="h-4 w-4" />
                 开始阅读
             </Button>
-            <Button variant="outline" onclick={() => goSettings('theme')} class="gap-2">
-                <Settings class="h-4 w-4" />
-                个性化设置
-            </Button>
-            <Button variant="outline" onclick={() => goBgSettings('golbal')} class="gap-2">
-                <Palette class="h-4 w-4" />
-                背景配置
-            </Button>
-            <Button
-                variant="outline"
-                onclick={() => {
-                    goReaderBatchAddPaths(paths);
-                }}
-                class="gap-2"
-            >
-                <Palette class="h-4 w-4" />
-                Test
-            </Button>
-            <Button variant="outline" onclick={() => goReadFsBook(`E:\\`)} class="gap-2">
-                <Palette class="h-4 w-4" />
-                Test err
-            </Button>
-            <Button onclick={() => toast('Hello world')}>Show toast</Button>
         </div>
     </div>
 </div>
