@@ -11,6 +11,7 @@
     } from '$lib/reader/types';
     import type { ReaderSettings } from '$lib/reader/settings';
     import { readerStore } from '$lib/reader/stores/readerStore';
+    import { View } from '$lib/components/layout/views';
     import {
         getStyles,
         transformStylesheet,
@@ -38,6 +39,7 @@
     import { bookDataStore } from '$lib/reader';
     import { readerCommandState } from '$lib/reader/stores/readerCommandState';
     import { attachIframeKeybindingBridge } from '$lib/keybindings/iframeKeybindingBridge';
+    import { goReaderHome } from '$utils/route.svelte';
     import { keybindingManager } from '$lib/keybindings/keybindingManager';
 
     // 获取全局 READER_SETTINGS（响应式）
@@ -997,21 +999,14 @@
     onpointerdown={activateReaderBook}
 >
     {#if error}
-        <div class="flex h-full items-center justify-center">
-            <div class="text-center">
-                <p class="text-destructive text-lg font-semibold">加载失败</p>
-                <p class="text-muted-foreground text-sm">{error}</p>
-            </div>
-        </div>
+        <View.Error
+            title="错误"
+            message={error}
+            footerBtnText="返回书架"
+            footerBtnOnclick={goReaderHome}
+        />
     {:else if loading}
-        <div class="flex h-full items-center justify-center">
-            <div class="text-center">
-                <div
-                    class="border-primary inline-block h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"
-                ></div>
-                <p class="text-muted-foreground mt-4 text-sm">正在加载书籍...</p>
-            </div>
-        </div>
+        <View.Loading title="正在加载书籍" message="请稍后..." />
     {:else if viewState}
         <!-- 外层 flex-row 容器：Sidebar 与整个内容区域并排显示 -->
         <div
