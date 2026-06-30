@@ -1,5 +1,9 @@
 # Cozy Reader
 
+本分支已过时。
+
+This branch is Out of Date. New master branch is `master`
+
 一款轻量的阅读软件，仅支持ePub格式电子书。  
 
 ## 特点
