@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { uniqueId } from '$lib/reader/utils/misc';
     import { readerStore } from '$lib/reader/stores/readerStore';
+    import { hideAppLayoutHeader } from '$lib/components/layout/appLayoutGridUtils';
     import Markdown from '$lib/components/reader/markdown/Markdown.svelte';
     import FoliateReader from '$lib/components/reader/foliate/FoliateReader.svelte';
 
@@ -17,6 +18,9 @@
         if (!currentBookKeys.includes(bookKey)) {
             readerStore.setBookKeys([...currentBookKeys, bookKey]);
         }
+
+        // 阅读页隐藏 titlebar，离开页面后移除覆盖
+        if (!data.isText) return hideAppLayoutHeader();
     });
 </script>
 
