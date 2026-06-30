@@ -16,7 +16,12 @@ import type {
     SettingsSnapshot,
     SettingsTab
 } from './types';
-import { createSettingOptions, createSettingViewModel, inferPresentation, isConditionMet } from './types';
+import {
+    createSettingOptions,
+    createSettingViewModel,
+    inferPresentation,
+    isConditionMet
+} from './types';
 
 function enumValuesFromRecord(record: Record<string, string>) {
     return Object.keys(record);
@@ -27,13 +32,14 @@ function enumLabelsFromRecord(record: Record<string, string>) {
 }
 
 export const settingsGroups: SettingGroup[] = [
-    {
-        id: 'base.language',
-        tab: 'base',
-        label: '语言设置',
-        description: '选择应用程序的显示语言',
-        order: 10
-    },
+    // TODO: hidden settings for tmp
+    // {
+    //     id: 'base.language',
+    //     tab: 'base',
+    //     label: '语言设置',
+    //     description: '选择应用程序的显示语言',
+    //     order: 10
+    // },
     {
         id: 'base.interface',
         tab: 'base',
@@ -41,13 +47,14 @@ export const settingsGroups: SettingGroup[] = [
         description: '控制应用程序界面的显示选项',
         order: 20
     },
-    {
-        id: 'base.layout',
-        tab: 'base',
-        label: '窗口布局',
-        description: '控制应用窗口的布局区域显示',
-        order: 30
-    },
+    // TODO: hidden settings for tmp
+    // {
+    //     id: 'base.layout',
+    //     tab: 'base',
+    //     label: '窗口布局',
+    //     description: '控制应用窗口的布局区域显示',
+    //     order: 30
+    // },
     {
         id: 'theme.mode',
         tab: 'theme',
@@ -75,21 +82,22 @@ export const settingsGroups: SettingGroup[] = [
         label: '窗口效果',
         description: '设置窗口背景层效果',
         order: 40
-    },
-    {
-        id: 'reader.font',
-        tab: 'reader',
-        label: '字体设置',
-        description: '配置阅读器的字体相关选项',
-        order: 10
-    },
-    {
-        id: 'reader.layout',
-        tab: 'reader',
-        label: '布局设置',
-        description: '配置阅读器的布局选项',
-        order: 20
     }
+    // TODO: hidden settings for tmp
+    // {
+    //     id: 'reader.font',
+    //     tab: 'reader',
+    //     label: '字体设置',
+    //     description: '配置阅读器的字体相关选项',
+    //     order: 10
+    // },
+    // {
+    //     id: 'reader.layout',
+    //     tab: 'reader',
+    //     label: '布局设置',
+    //     description: '配置阅读器的布局选项',
+    //     order: 20
+    // }
 ];
 
 export const settingsConfiguration: readonly SettingPropertySchema[] = [
@@ -320,111 +328,112 @@ export const settingsConfiguration: readonly SettingPropertySchema[] = [
         tags: ['theme', 'window', 'effects'],
         keywords: ['窗口效果', '背景效果', 'mica', 'acrylic', 'blur'],
         ui: { presentation: 'custom', component: 'themeEffects' }
-    },
-    {
-        key: 'reader.fontFamily',
-        category: 'reader',
-        group: 'reader.font',
-        title: '字体族',
-        description: '设置阅读器使用的字体',
-        type: 'string',
-        default: DefaultReaderSettings.fontFamily,
-        order: 160,
-        tags: ['reader', 'font'],
-        keywords: ['字体', 'font family'],
-        ui: {
-            presentation: 'custom',
-            component: 'fontFamily',
-            placeholder: "请输入字体名称，如：'Microsoft YaHei', sans-serif"
-        }
-    },
-    {
-        key: 'reader.fontSize',
-        category: 'reader',
-        group: 'reader.font',
-        title: '字体大小',
-        description: '调整文字大小',
-        type: 'number',
-        default: DefaultReaderSettings.fontSize,
-        minimum: 12,
-        maximum: 48,
-        multipleOf: 1,
-        order: 170,
-        tags: ['reader', 'font'],
-        keywords: ['字号', '文字大小', 'font size'],
-        ui: { presentation: 'slider', format: 'px' }
-    },
-    {
-        key: 'reader.lineHeight',
-        category: 'reader',
-        group: 'reader.font',
-        title: '行高',
-        description: '调整行间距',
-        type: 'number',
-        default: DefaultReaderSettings.lineHeight,
-        minimum: 120,
-        maximum: 300,
-        multipleOf: 10,
-        order: 180,
-        tags: ['reader', 'font'],
-        keywords: ['行间距', 'line height'],
-        ui: { presentation: 'slider', format: 'percentage' }
-    },
-    {
-        key: 'reader.viewerWidth',
-        category: 'reader',
-        group: 'reader.layout',
-        title: '阅读器宽度',
-        description: '调整阅读区域宽度',
-        type: 'number',
-        default: DefaultReaderSettings.viewerWidth,
-        minimum: 30,
-        maximum: 90,
-        multipleOf: 5,
-        order: 190,
-        tags: ['reader', 'layout'],
-        keywords: ['阅读区域', '宽度', 'viewer width'],
-        ui: { presentation: 'slider', format: 'percentage' }
-    },
-    {
-        key: 'reader.firstLineIndent',
-        category: 'reader',
-        group: 'reader.layout',
-        title: '首行缩进',
-        description: '段落首行自动缩进',
-        type: 'boolean',
-        default: DefaultReaderSettings.firstLineIndent,
-        order: 200,
-        tags: ['reader', 'layout', 'typography'],
-        keywords: ['段落缩进', 'indent'],
-        ui: { presentation: 'switch' }
-    },
-    {
-        key: 'reader.zoomLongPic',
-        category: 'reader',
-        group: 'reader.layout',
-        title: '长图缩放',
-        description: '自动缩放长图片以适应阅读高度',
-        type: 'boolean',
-        default: DefaultReaderSettings.zoomLongPic,
-        order: 210,
-        tags: ['reader', 'image'],
-        keywords: ['长图', '图片缩放', 'image'],
-        ui: { presentation: 'switch' }
-    },
-    {
-        key: 'reader.scrollBarVisable',
-        category: 'reader',
-        group: 'reader.layout',
-        title: '滚动条可见',
-        description: '显示滚动条',
-        type: 'boolean',
-        default: DefaultReaderSettings.scrollBarVisable,
-        order: 220,
-        tags: ['reader', 'layout'],
-        keywords: ['滚动条', 'scrollbar'],
-        ui: { presentation: 'switch' }
     }
+    // TODO: hidden settings for tmp
+    // {
+    //     key: 'reader.fontFamily',
+    //     category: 'reader',
+    //     group: 'reader.font',
+    //     title: '字体族',
+    //     description: '设置阅读器使用的字体',
+    //     type: 'string',
+    //     default: DefaultReaderSettings.fontFamily,
+    //     order: 160,
+    //     tags: ['reader', 'font'],
+    //     keywords: ['字体', 'font family'],
+    //     ui: {
+    //         presentation: 'custom',
+    //         component: 'fontFamily',
+    //         placeholder: "请输入字体名称，如：'Microsoft YaHei', sans-serif"
+    //     }
+    // },
+    // {
+    //     key: 'reader.fontSize',
+    //     category: 'reader',
+    //     group: 'reader.font',
+    //     title: '字体大小',
+    //     description: '调整文字大小',
+    //     type: 'number',
+    //     default: DefaultReaderSettings.fontSize,
+    //     minimum: 12,
+    //     maximum: 48,
+    //     multipleOf: 1,
+    //     order: 170,
+    //     tags: ['reader', 'font'],
+    //     keywords: ['字号', '文字大小', 'font size'],
+    //     ui: { presentation: 'slider', format: 'px' }
+    // },
+    // {
+    //     key: 'reader.lineHeight',
+    //     category: 'reader',
+    //     group: 'reader.font',
+    //     title: '行高',
+    //     description: '调整行间距',
+    //     type: 'number',
+    //     default: DefaultReaderSettings.lineHeight,
+    //     minimum: 120,
+    //     maximum: 300,
+    //     multipleOf: 10,
+    //     order: 180,
+    //     tags: ['reader', 'font'],
+    //     keywords: ['行间距', 'line height'],
+    //     ui: { presentation: 'slider', format: 'percentage' }
+    // },
+    // {
+    //     key: 'reader.viewerWidth',
+    //     category: 'reader',
+    //     group: 'reader.layout',
+    //     title: '阅读器宽度',
+    //     description: '调整阅读区域宽度',
+    //     type: 'number',
+    //     default: DefaultReaderSettings.viewerWidth,
+    //     minimum: 30,
+    //     maximum: 90,
+    //     multipleOf: 5,
+    //     order: 190,
+    //     tags: ['reader', 'layout'],
+    //     keywords: ['阅读区域', '宽度', 'viewer width'],
+    //     ui: { presentation: 'slider', format: 'percentage' }
+    // },
+    // {
+    //     key: 'reader.firstLineIndent',
+    //     category: 'reader',
+    //     group: 'reader.layout',
+    //     title: '首行缩进',
+    //     description: '段落首行自动缩进',
+    //     type: 'boolean',
+    //     default: DefaultReaderSettings.firstLineIndent,
+    //     order: 200,
+    //     tags: ['reader', 'layout', 'typography'],
+    //     keywords: ['段落缩进', 'indent'],
+    //     ui: { presentation: 'switch' }
+    // },
+    // {
+    //     key: 'reader.zoomLongPic',
+    //     category: 'reader',
+    //     group: 'reader.layout',
+    //     title: '长图缩放',
+    //     description: '自动缩放长图片以适应阅读高度',
+    //     type: 'boolean',
+    //     default: DefaultReaderSettings.zoomLongPic,
+    //     order: 210,
+    //     tags: ['reader', 'image'],
+    //     keywords: ['长图', '图片缩放', 'image'],
+    //     ui: { presentation: 'switch' }
+    // },
+    // {
+    //     key: 'reader.scrollBarVisable',
+    //     category: 'reader',
+    //     group: 'reader.layout',
+    //     title: '滚动条可见',
+    //     description: '显示滚动条',
+    //     type: 'boolean',
+    //     default: DefaultReaderSettings.scrollBarVisable,
+    //     order: 220,
+    //     tags: ['reader', 'layout'],
+    //     keywords: ['滚动条', 'scrollbar'],
+    //     ui: { presentation: 'switch' }
+    // }
 ];
 
 function createDefaultSettingViewModel(schema: SettingPropertySchema): SettingViewModel {
@@ -524,7 +533,9 @@ function groupSearchText(groupId: string): string {
 
 function isModified(schema: SettingPropertySchema, settingsSnapshot?: SettingsSnapshot): boolean {
     if (!settingsSnapshot) return false;
-    const entry = createSettingViewModel(schema, settingsSnapshot, { includeConditionallyHidden: true });
+    const entry = createSettingViewModel(schema, settingsSnapshot, {
+        includeConditionallyHidden: true
+    });
     return JSON.stringify(entry?.value) !== JSON.stringify(schema.default);
 }
 
@@ -535,8 +546,11 @@ function scoreTextMatch(schema: SettingPropertySchema, token: string): number {
     const markdownDescription = (schema.markdownDescription ?? '').toLowerCase();
     const tags = (schema.tags ?? []).join(' ').toLowerCase();
     const keywords = (schema.keywords ?? []).join(' ').toLowerCase();
-    const enumText = [...(schema.enum ?? []), ...(schema.enumItemLabels ?? [])].join(' ').toLowerCase();
-    const featureText = `${schema.category} ${schema.group} ${groupSearchText(schema.group)}`.toLowerCase();
+    const enumText = [...(schema.enum ?? []), ...(schema.enumItemLabels ?? [])]
+        .join(' ')
+        .toLowerCase();
+    const featureText =
+        `${schema.category} ${schema.group} ${groupSearchText(schema.group)}`.toLowerCase();
 
     if (key === token) return 1000;
     if (key.includes(token)) return 800;
@@ -556,9 +570,11 @@ function matchSearchToken(
 ): number {
     if (token.kind === 'modified') return isModified(schema, settingsSnapshot) ? 100 : 0;
     if (token.kind === 'id') return schema.key.toLowerCase().includes(token.value) ? 1000 : 0;
-    if (token.kind === 'tag') return (schema.tags ?? []).some((tag) => tag.toLowerCase().includes(token.value)) ? 500 : 0;
+    if (token.kind === 'tag')
+        return (schema.tags ?? []).some((tag) => tag.toLowerCase().includes(token.value)) ? 500 : 0;
     if (token.kind === 'feature') {
-        const featureText = `${schema.category} ${schema.group} ${groupSearchText(schema.group)}`.toLowerCase();
+        const featureText =
+            `${schema.category} ${schema.group} ${groupSearchText(schema.group)}`.toLowerCase();
         return featureText.includes(token.value) ? 300 : 0;
     }
     return scoreTextMatch(schema, token.value);
@@ -587,7 +603,9 @@ export function searchEntries(
 
     for (const match of matches) {
         const entry = settingsSnapshot
-            ? createSettingViewModel(match.schema, settingsSnapshot, { includeConditionallyHidden: true })
+            ? createSettingViewModel(match.schema, settingsSnapshot, {
+                  includeConditionallyHidden: true
+              })
             : defaultSettingViewModels.find((item) => item.key === match.schema.key);
         if (!entry) continue;
 

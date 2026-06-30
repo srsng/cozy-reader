@@ -1,9 +1,18 @@
 import type { UserSettings } from '$lib/settings';
 import { ContextKeyService, type ContextKeySnapshot } from '$lib/context-keys';
 
-export type SettingsTab = 'base' | 'theme' | 'reader';
+// TODO: hidden settings for tmp
+// export type SettingsTab = 'base' | 'theme' | 'reader';
+export type SettingsTab = 'base' | 'theme';
 export type SettingPrimitiveType = 'boolean' | 'number' | 'string';
-export type SettingPresentation = 'switch' | 'slider' | 'input' | 'select' | 'button-list' | 'button-group' | 'custom';
+export type SettingPresentation =
+    | 'switch'
+    | 'slider'
+    | 'input'
+    | 'select'
+    | 'button-list'
+    | 'button-group'
+    | 'custom';
 export type SettingFormat = 'ratio-percentage' | 'percentage' | 'px' | 'number';
 export type SettingCustomComponent = 'zoom' | 'fontFamily' | 'themeEffects';
 
@@ -116,7 +125,11 @@ export function resolveNestedValue(obj: unknown, path: string): unknown {
     }, obj);
 }
 
-export function setNestedValue<T extends Record<string, unknown>>(obj: T, path: string, value: unknown): T {
+export function setNestedValue<T extends Record<string, unknown>>(
+    obj: T,
+    path: string,
+    value: unknown
+): T {
     const keys = path.split('.');
     const lastKey = keys.pop();
 
@@ -135,7 +148,9 @@ export function setNestedValue<T extends Record<string, unknown>>(obj: T, path: 
     return obj;
 }
 
-export function createSettingsContextSnapshot(settingsSnapshot: SettingsSnapshot): ContextKeySnapshot {
+export function createSettingsContextSnapshot(
+    settingsSnapshot: SettingsSnapshot
+): ContextKeySnapshot {
     return Object.fromEntries(
         settingsConfigurationKeys.map((key) => [
             `config.${key}`,

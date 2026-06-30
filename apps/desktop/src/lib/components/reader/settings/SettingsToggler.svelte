@@ -38,6 +38,7 @@
     };
 </script>
 
-<Button variant="ghost" size="icon" onclick={handleToggleSettings} title="阅读器设置">
+<!-- // TODO: hidden settings for tmp -->
+<!-- <Button variant="ghost" size="icon" onclick={handleToggleSettings} title="阅读器设置">
     <Type class="h-4 w-4" />
-</Button>
+</Button> -->

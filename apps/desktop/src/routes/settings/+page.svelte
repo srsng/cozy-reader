@@ -22,10 +22,13 @@
 
     const tabLabels: Record<SettingsTab, string> = {
         base: m['settings.base'](),
-        theme: m['settings.theme'](),
-        reader: m['settings.reader']()
+        theme: m['settings.theme']()
+        // TODO: hidden settings for tmp
+        // reader: m['settings.reader']()
     };
-    const tabOrder: SettingsTab[] = ['base', 'theme', 'reader'];
+    // TODO: hidden settings for tmp
+    // const tabOrder: SettingsTab[] = ['base', 'theme', 'reader'];
+    const tabOrder: SettingsTab[] = ['base', 'theme'];
     const userSettings = data.userSettings;
 
     let tab = $state<SettingsTab>(getRouteTab());
@@ -64,7 +67,9 @@
         if (!searchMode || resultCount === 0) return;
         if ((searchResults.get(tab)?.length ?? 0) > 0) return;
 
-        const firstMatchedTab = tabOrder.find((tabName) => (searchResults.get(tabName)?.length ?? 0) > 0);
+        const firstMatchedTab = tabOrder.find(
+            (tabName) => (searchResults.get(tabName)?.length ?? 0) > 0
+        );
         if (firstMatchedTab && firstMatchedTab !== tab) {
             tab = firstMatchedTab;
             activeMatchIndex = 0;
@@ -157,11 +162,12 @@
 </script>
 
 <div transition:slide class="space-y-4" role="presentation" onkeydown={handleSearchKeydown}>
-    <SettingsSearch
+    <!-- // TODO: hidden settings for tmp -->
+    <!-- <SettingsSearch
         bind:value={searchText}
         {resultCount}
         onClear={clearSearch}
-    />
+    /> -->
 
     <Tabs.Root bind:value={tab} class="w-full">
         <Tabs.List class="grid w-full grid-cols-3">
@@ -174,14 +180,16 @@
             <Tabs.Content value={tabName} class="space-y-6">
                 {#if searchMode && resultCount === 0}
                     <Empty.Root>
-                        <Empty.Title>{"未找到匹配的设置项"}</Empty.Title>
-                        <Empty.Description>{"换一个关键词再试。"}</Empty.Description>
+                        <Empty.Title>{'未找到匹配的设置项'}</Empty.Title>
+                        <Empty.Description>{'换一个关键词再试。'}</Empty.Description>
                     </Empty.Root>
                 {:else}
                     {#each getTabGroups(tabName) as group (group.id)}
                         <SettingsGroup
                             {group}
-                            entries={getTabEntries(tabName).filter((entry) => entry.group === group.id)}
+                            entries={getTabEntries(tabName).filter(
+                                (entry) => entry.group === group.id
+                            )}
                             settingsStore={userSettings}
                             settings={$userSettings}
                             {searchMode}
